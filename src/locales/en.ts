@@ -1,0 +1,40 @@
+export default {
+  tabs: {
+    chapters: "Chapters",
+    juzs: "Juzs",
+    pages: "Pages",
+    settings: "Settings",
+  },
+  settings: {
+    title: "Settings",
+    appearance: "Appearance",
+    darkMode: "Dark Mode",
+    textSize: "Text Size",
+    fontFamily: "Font Family",
+    boldText: "Bold Text",
+    reciters: "Reciters",
+    translations: "Translations",
+    audioPlayer: "Audio Player",
+    autoPlay: "Auto Play",
+    playerDismiss: "Dismiss on end",
+    translatedBy: "Translated By",
+    language: "Language",
+    system: "System",
+    app: "App",
+    locale: "Locale",
+    version: "Version",
+    theme: "Theme",
+    device: "Device",
+    audio: "Audio",
+    fontStyle: "Font Styles",
+    light: "Light",
+    dark: "Dark",
+    auto: "Auto"
+  },
+  audio: {
+    chapters: "Chapters",
+    audio: "Audio",
+    audioChapters: "Chapters Audio", 
+    selectReciter: "Select Reciter",
+  }
+};
