@@ -30,7 +30,7 @@ const handleSearch = (query: string) => {
         <ion-item :button="true" :detail="false" v-for="page in pageStore.pages" :key="page.pageNumber"
           :router-link="`page/${page.pageNumber}`">
           <ion-label>
-            <strong>Page-{{ page.pageNumber }}</strong>
+            <ion-text>Page-{{ page.pageNumber }}</ion-text>
             <ion-text v-for="(chapter, index) in page.chaptersMap" :key="index" color="medium" class="d-flex">
               {{ chapter.nameSimple }}</ion-text>
           </ion-label>

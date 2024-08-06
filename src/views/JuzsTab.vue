@@ -74,7 +74,7 @@ const handleSearch = (query: string) => {
         <ion-item :button="true" :detail="false" v-for="juz in juzsMapWithChapters" :key="juz.id"
           :router-link="`juz/${juz.juz_number}`">
           <ion-label>
-            <strong>Juz-{{ juz.juz_number }}</strong>
+            <ion-text>Juz-{{ juz.juz_number }}</ion-text>
             <ion-text v-for="chapter in juz.chapters" :key="chapter.chapterId" color="medium" class="d-flex">
               {{ chapter.en }}</ion-text>
           </ion-label>
