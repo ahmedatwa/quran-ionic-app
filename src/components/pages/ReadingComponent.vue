@@ -70,7 +70,7 @@ const playAudio = () => {
     <div class="ion-page" v-if="isReadingView">
         <ion-toolbar color="light">
             <ion-buttons slot="start">
-                <ion-button :router-link="'/juzs'" router-direction="back">
+                <ion-button :router-link="'/pages'" router-direction="back">
                     <ion-icon :icon="chevronBackOutline"></ion-icon>
                 </ion-button>
             </ion-buttons>

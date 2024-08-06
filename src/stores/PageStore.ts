@@ -25,10 +25,6 @@ export const usePageStore = defineStore("page-store", () => {
 
   const pages = computed(() => {
     if (pagesList.value) {
-      isLoading.value = true;
-      setTimeout(() => {
-        isLoading.value = false;
-      }, 500);
       return pagesList.value.filter((page) => {
         return page.pageNumber
           .toLocaleString()
@@ -85,9 +81,8 @@ export const usePageStore = defineStore("page-store", () => {
       });
   };
 
-  onMounted(() => {
-    const pages = getAllPages();
-    if (pages) pagesList.value = pages;
+  onMounted(async () => {
+    await getAllPages().then((response) => pagesList.value.push(...response));
   });
 
   watch(
