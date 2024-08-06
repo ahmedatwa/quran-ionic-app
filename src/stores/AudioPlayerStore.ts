@@ -25,7 +25,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const isLoading = ref(false);
   const audioFiles = ref<AudioFile | null>(null);
   const autoStartPlayer = ref(false);
-  const chapterId = ref<number>(0);
+  const chapterId = ref<number>();
   const audioPayLoadSrc = ref<string | undefined>("");
   const selectedVerseKey = ref<string | undefined>("");
   const selectedReciter = ref<Recitations>({
@@ -84,9 +84,11 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   });
 
   const chapterName = computed(() => {
-    const chapter = getChapterNameByChapterId(chapterId.value);
-    if (chapter) {
-      return chapter.nameSimple;
+    if (chapterId.value) {
+      const chapter = getChapterNameByChapterId(chapterId.value);
+      if (chapter) {
+        return chapter.nameSimple;
+      }
     }
   });
 
@@ -148,7 +150,11 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
 
   const getRecition = async (reciter: Recitations) => {
     selectedReciter.value = reciter;
-    await getAudio({ audioID: chapterId.value });
+    if (chapterId.value) {
+      await getAudio({ audioID: chapterId.value });
+    } else {
+      await getAudio({ audioID: Number(audioFiles.value?.chapter_id) });
+    }
   };
 
   /**
@@ -193,7 +199,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
 
   onMounted(async () => {
     await getRecitations();
-    
+
     const userSettings = getStorage("user-setting");
     if (userSettings) {
       audioPlayerSetting.value = userSettings;

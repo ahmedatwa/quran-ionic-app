@@ -2,8 +2,8 @@
 import { computed, onMounted, ref } from "vue"
 import { IonButtons, IonButton, IonHeader, IonToolbar, IonSkeletonText, IonList } from "@ionic/vue"
 import { IonContent, modalController, IonRow, IonLabel, IonThumbnail, IonItem } from '@ionic/vue';
-import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonNote, IonAlert } from '@ionic/vue';
-import { playOutline, playBackOutline, playForwardOutline } from 'ionicons/icons';
+import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonAlert, IonText } from '@ionic/vue';
+import { playOutline, playBackOutline, playForwardOutline, checkmarkDoneCircleOutline } from 'ionicons/icons';
 import { pauseOutline, chevronDownOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
 import { volumeOffOutline, volumeHighOutline, repeatOutline } from 'ionicons/icons';
 // stores
@@ -64,7 +64,6 @@ const getCurrentVerseData = computed(() => {
     if (timing) {
         const verseKey = String(timing.verseKey)
         const verse = getVerseByVerseKey(verseKey)
-        console.log(verse);
         if (verse) {
             return {
                 juzNumber: verse.juz_number,
@@ -85,6 +84,28 @@ const alertInputs = computed(() => {
         }
     })
 })
+
+const handleSelectedReciter = async (ev: CustomEvent) => {
+    const reciter = ev.detail.data.values
+    await audioPlayerStore.getRecition(reciter)
+}
+
+// const downloadFile = () => {
+//     instance({
+//         url: props.audioUrl,
+//         method: 'GET',
+//         responseType: 'blob',
+//     }).then((response) => {
+//         const href = URL.createObjectURL(response.data);
+//         const link = document.createElement('a');
+//         link.href = href;
+//         link.setAttribute('download', props.chapterName + "." + props.audioFormat);
+//         document.body.appendChild(link);
+//         link.click();
+//         document.body.removeChild(link);
+//         URL.revokeObjectURL(href);
+//     });
+// }
 </script>
 
 <template>
@@ -133,30 +154,40 @@ const alertInputs = computed(() => {
                     </ion-range>
                 </ion-col>
             </ion-row>
-            <ion-row class="ion-align-items-stretch">
-                <ion-col size="12">
+            <ion-row class="ion-justify-content-evenly">
+                <ion-col>
                     <ion-button fill="clear" @click="audioPlayerStore.playPrevious" id="present-alert">
-                        <ion-icon :icon="ellipsisHorizontalOutline" size="large" color="primary"></ion-icon>
-                        <ion-alert trigger="present-alert" :header="getLine('audio.selectReciter')"
-                            :buttons="['Cancel', 'OK']" :inputs="alertInputs"></ion-alert>
-                    </ion-button>
-                    <ion-button fill="clear" @click="audioPlayerStore.playPrevious">
-                        <ion-icon :icon="playBackOutline" size="large" color="primary"></ion-icon>
-                    </ion-button>
-                    <ion-button fill="clear" @click="playAudio">
-                        <ion-icon :icon="audioPlayerStore.isPlaying ? pauseOutline : playOutline" size="large"
+                        <ion-icon slot="icon-only" :icon="ellipsisHorizontalOutline" size="large"
                             color="primary"></ion-icon>
+                        <ion-alert trigger="present-alert" :header="getLine('audio.selectReciter')"
+                            :buttons="['Cancel', 'OK']" :inputs="alertInputs"
+                            @will-dismiss="handleSelectedReciter"></ion-alert>
                     </ion-button>
+                </ion-col>
+                <ion-col>
+                    <ion-button fill="clear" @click="audioPlayerStore.playPrevious">
+                        <ion-icon slot="icon-only" :icon="playBackOutline" size="large" color="primary"></ion-icon>
+                    </ion-button>
+                </ion-col>
+                <ion-col>
+                    <ion-button fill="clear" @click="playAudio">
+                        <ion-icon slot="icon-only" :icon="audioPlayerStore.isPlaying ? pauseOutline : playOutline"
+                            size="large" color="primary"></ion-icon>
+                    </ion-button>
+                </ion-col>
+                <ion-col>
                     <ion-button fill="clear" @click="audioPlayerStore.playNext">
-                        <ion-icon :icon="playForwardOutline" size="large" color="primary"></ion-icon>
+                        <ion-icon slot="icon-only" :icon="playForwardOutline" size="large" color="primary"></ion-icon>
                     </ion-button>
+                </ion-col>
+                <ion-col>
                     <ion-button fill="clear" v-if="audioPlayerStore.loopAudio === 'none'"
                         @click="audioPlayerStore.loopAudio = 'repeat'">
-                        <ion-icon :icon="repeatOutline" size="large" color="medium"></ion-icon>
+                        <ion-icon slot="icon-only" :icon="repeatOutline" size="large" color="medium"></ion-icon>
                     </ion-button>
                     <ion-button fill="clear" v-else-if="audioPlayerStore.loopAudio === 'repeat'"
                         @click="audioPlayerStore.loopAudio = 'none'">
-                        <ion-icon :icon="repeatOutline" size="large" color="primary"></ion-icon>
+                        <ion-icon slot="icon-only" :icon="repeatOutline" size="large" color="primary"></ion-icon>
                     </ion-button>
                 </ion-col>
             </ion-row>
@@ -172,13 +203,19 @@ const alertInputs = computed(() => {
             <ion-row class="ion-justify-content-center ion-margin-vertical">
                 <ion-col size="12">
                     <ion-list style="height: 400px; overflow-y: scroll;" class="ion-padding">
+                        <ion-list-header>{{ getLine('audio.playlist') }}</ion-list-header>
                         <ion-item :button="true" v-for="chapter in chapters" :key="chapter.id"
                             @click="playChapterAudio(chapter.id)">
-                            <ion-label class="d-flex">
-                                <span v-if="isRtl">{{ chapter.nameArabic }}</span>
-                                <span v-else>{{ chapter.nameSimple }}</span>
+                            <ion-icon :icon="checkmarkDoneCircleOutline" color="primary" slot="start"
+                                v-if="audioPlayerStore.audioFiles?.chapter_id === chapter.id"></ion-icon>
+                            <ion-label>
+                                <h3>
+                                    <span v-if="isRtl">{{ chapter.nameArabic }}</span>
+                                    <span v-else>{{ chapter.nameSimple }}</span>
+                                </h3>
+                                <p class="ion-text-wrap">
+                                    {{ audioPlayerStore.selectedReciter.name }}</p>
                             </ion-label>
-                            <ion-note class="ion-text-wrap">{{ audioPlayerStore.selectedReciter.name }}</ion-note>
                         </ion-item>
                     </ion-list>
                 </ion-col>
@@ -187,8 +224,3 @@ const alertInputs = computed(() => {
 
     </ion-content>
 </template>
-<style scoped>
-.d-none {
-    display: none;
-}
-</style>

@@ -17,7 +17,6 @@ import { useSettingStore } from "@/stores/SettingStore";
 import { useChapterStore } from "@/stores/ChapterStore";
 // components
 import VerseActionSheet from "@/components/chapters/VerseActionSheet.vue";
-import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 import { useLocale } from "@/utils/useLocale";
 import { useRoute } from 'vue-router';
 
@@ -32,12 +31,6 @@ const { getLine } = useLocale()
 const router = useRoute()
 const { chapterId } = router.params
 
-
-const defaultStyles = reactive({
-    fontFamily: "var(--font-family-noto-kufi)",
-    fontSize: "var(--font-size-2)"
-})
-
 const emit = defineEmits<{
     "update:playAudio": [value: PlayAudioEmit];
     "update:headerData": [value: ChapterHeaderData];
@@ -49,7 +42,7 @@ const props = defineProps<{
     isAudioPlaying?: IsAudioPlayingProps
     groupedTranslationsAuthors?: string;
     audioExperience?: { autoScroll: boolean; tooltip: boolean };
-    cssVars?: Record<"fontSize" | "fontFamily", string>
+    defaultStyles: Record<"fontSize" | "fontFamily" | "fontWeight", string>
     selectedVerseNumber?: number;
     wordColor?: string
 }>()
@@ -69,7 +62,6 @@ const playAudio = async (event: { audioID: number, verseKey?: string }) => {
 const itemRefs = ref<HTMLDivElement[]>([])
 onMounted(() => {
     itemRefs.value.forEach((e) => {
-
     })
 
 })
@@ -139,7 +131,7 @@ const setBookmarked = (verseNumber: number) => {
             </ion-buttons>
             <ion-progress-bar type="indeterminate" v-if="juzStore.isLoading"></ion-progress-bar>
         </ion-toolbar>
-        <ion-content class="quran-translation-view" :fullscreen="true" :scroll-events="true" @ionScroll="testScroll">
+        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scroll-events="true" @ionScroll="testScroll">
             <ion-card class="ion-padding" v-for="(verses, chapterId) in juzStore.juzVersesByChapterMap" :key="chapterId"
                 :id="`card-${chapterId}`">
                 <ion-card-header class="ion-text-center">
@@ -153,7 +145,7 @@ const setBookmarked = (verseNumber: number) => {
                     :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number" ref="itemRefs">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
-                            <ion-col size="11" class="quran-translation-view ion-wrap">
+                            <ion-col size="11" class="translations-view-col">
                                 <ion-label v-for="word in verse.words" :key="word.id" class="word">
                                     <ion-text :color="isWordHighlighted(word) ? 'primary' : ''">
                                         <h3 v-if="word.char_type_name === 'end'" class="end">
@@ -184,15 +176,7 @@ const setBookmarked = (verseNumber: number) => {
                 <ion-infinite-scroll-content loading-text="Please wait..."
                     loading-spinner="bubbles"></ion-infinite-scroll-content>
             </ion-infinite-scroll>
-
-
-
         </ion-content>
-
-        <audio-player-component v-show="audioModelValue" @update:model-value="audioModelValue = $event">
-        </audio-player-component>
-
-
     </div>
 </template>
 <style scoped></style>

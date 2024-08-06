@@ -12,7 +12,6 @@ import { VerseTimingsProps, IsAudioPlayingProps } from "@/types/audio";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
-import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 
 const chapterStore = useChapterStore()
 const audioPlayerStore = useAudioPlayerStore()
@@ -25,6 +24,7 @@ const props = defineProps<{
     verseTiming?: VerseTimingsProps
     isAudioPlaying?: IsAudioPlayingProps
     audioExperience?: { autoScroll: boolean; tooltip: boolean };
+    defaultStyles: Record<"fontSize" | "fontFamily" | "fontWeight", string>
 }>()
 
 const verses = computed(() => {
@@ -88,12 +88,12 @@ const playAudio = () => {
                     <ion-card-subtitle>{{ chapterStore.selectedChapterBismillah }}</ion-card-subtitle>
                     <ion-card-title>{{ chapterStore.selectedChapter?.nameArabic }}</ion-card-title>
                 </ion-card-header>
-                <ion-card-content class="ion-padding quran-reader-container">
+                <ion-card-content class="ion-padding quran-reader-content-wrapper">
                     <ion-grid>
                         <ion-row v-for="(verses, page) in mapVersesByPage" :key="page" :id="`row-page-${page}`"
                             class="">
                             <ion-col class="verse-col" :id="`page-${page}`" size="12">
-                                <div class="reading-view-word-wrapper" v-for="verse in verses" :key="verse.id"
+                                <div class="word-wrapper" v-for="verse in verses" :key="verse.id"
                                     :id="`line-${verse.verse_number}`" :data-hizb-number="verse.hizb_number"
                                     :data-chapter-id="verse.chapter_id" :data-juz-number="verse.juz_number"
                                     :data-page-number="page" :data-verse-number="verse.verse_number">
@@ -126,25 +126,6 @@ const playAudio = () => {
 
                 </ion-card-content>
             </ion-card>
-            <audio-player-component v-show="audioModelValue" @update:model-value="audioModelValue = $event">
-            </audio-player-component>
         </ion-content>
     </div>
-
 </template>
-<style scoped>
-.flex {
-    display: inline;
-    flex-wrap: wrap;
-    text-align: center;
-    justify-content: center;
-    line-height: 60px;
-
-}
-
-.word {
-    text-align: right;
-    float: right;
-    padding: 0 2px;
-}
-</style>

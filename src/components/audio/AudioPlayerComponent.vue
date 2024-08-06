@@ -20,7 +20,7 @@ const metaStore = useMetaStore();
 const audioPlayerRef = ref<HTMLAudioElement>()
 const { getLocale } = useLocale()
 let animation: Animation;
-const footerRef = ref(null);
+const footerRef = ref<any>(null);
 
 onMounted(async () => {
     animation = createAnimation()
@@ -39,6 +39,10 @@ onMounted(async () => {
 
     await animation.play()
 });
+
+defineProps<{
+    modelValue: boolean
+}>()
 
 const emit = defineEmits<{
     "update:modelValue": [value: boolean]
@@ -111,6 +115,11 @@ const playbackEnded = async () => {
             audioPlayerStore.listenerActive = false;
 
             cleanupListeners();
+            // dismiss on playbavc ends
+            if (audioPlayerStore.audioPlayerSetting.dismissOnEnd) {
+                closePlayer()
+            }
+
             break;
     }
     //
@@ -118,17 +127,11 @@ const playbackEnded = async () => {
 
 //Remove listeners after audio play stops
 const cleanupListeners = () => {
-    if (audioPlayerRef.value) {
-        audioPlayerStore.listenerActive = false;
-        audioPlayerStore.isPlaying = false;
-        audioPlayerRef.value.removeEventListener("timeupdate", playbackListener);
-        audioPlayerRef.value.removeEventListener("ended", playbackEnded);
-        audioPlayerRef.value.removeEventListener("pause", audioPlayerStore.playbackPaused);
-        // dismiss on playbavc ends
-        if (audioPlayerStore.audioPlayerSetting.dismissOnEnd) {
-            closePlayer()
-        }
-    }
+    audioPlayerStore.listenerActive = false;
+    audioPlayerStore.isPlaying = false;
+    audioPlayerRef.value?.removeEventListener("timeupdate", playbackListener);
+    audioPlayerRef.value?.removeEventListener("ended", playbackEnded);
+    audioPlayerRef.value?.removeEventListener("pause", audioPlayerStore.playbackPaused);
 };
 
 const canPlayThrough = () => {
@@ -329,57 +332,63 @@ onUnmounted(() => {
 })
 
 const closePlayer = () => {
+    emit('update:modelValue', false)
     if (audioPlayerRef.value) {
         audioPlayerRef.value.pause();
     }
     audioPlayerStore.chapterId = 0
+    audioPlayerStore.audioFiles = null
     audioPlayerStore.selectedVerseKey = ""
     cleanupListeners()
-    emit('update:modelValue', false)
+
 }
 </script>
 
 <template>
-    <ion-footer ref=footerRef>
+    <ion-footer ref="footerRef" :class="!modelValue ? 'ion-hide' : ''" class="ion-no-border">
         <ion-toolbar>
             <ion-grid>
                 <ion-row>
-                    <ion-col @click="openModal" size="6">
+                    <ion-col @click="openModal">
                         <ion-avatar>
                             <img :alt="audioPlayerStore.selectedReciter.name"
                                 :src="`/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`" />
                         </ion-avatar>
                         <small style="color: #5f5f5f;">{{ audioPlayerStore.chapterName }}</small>
                     </ion-col>
-                    <ion-col size="6" class="ion-text-right">
+                    <ion-col size="5" class="ion-text-right">
                         <ion-button fill="clear" @click="playAudio">
                             <ion-spinner v-if="audioPlayerStore.isLoading"></ion-spinner>
-                            <ion-icon :icon="audioPlayerStore.isPlaying ? pauseOutline : playOutline" v-else></ion-icon>
+                            <ion-icon slot="icon-only" :icon="audioPlayerStore.isPlaying ? pauseOutline : playOutline"
+                                v-else></ion-icon>
                         </ion-button>
                         <ion-button fill="clear" @click="audioPlayerStore.playNext">
-                            <ion-icon :icon="playForwardOutline"></ion-icon>
+                            <ion-icon slot="icon-only" :icon="playForwardOutline"></ion-icon>
                         </ion-button>
                         <ion-button fill="clear" @click="closePlayer">
-                            <ion-icon :icon="closeOutline" color="danger"></ion-icon>
+                            <ion-icon slot="icon-only" :icon="closeOutline" color="danger"></ion-icon>
                         </ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>
+
+
+            <div class="d-none">
+                <audio controls :autoplay="audioPlayerStore.audioPlayerSetting.autoPlay" ref="audioPlayerRef"
+                    id="audioPlayerRef" :src="audioPlayerStore.audioFiles?.audio_url"
+                    :type="`audio/${audioPlayerStore.audioFiles?.format}`" @pause="audioPlayerStore.playbackPaused"
+                    @playing="audioPlayerStore.playbackPlaying" @ended="playbackEnded" @canplaythrough="canPlayThrough"
+                    @timeupdate="playbackListener" @loadeddata="loadedData" @progress="onProgress"
+                    @loadedmetadata="loadMetaData" @seek="playbackSeek">
+                </audio>
+            </div>
         </ion-toolbar>
-        <div v-if="audioPlayerStore.audioFiles">
-            <audio controls :autoplay="audioPlayerStore.audioPlayerSetting.autoPlay" ref="audioPlayerRef"
-                id="audioPlayerRef" class="d-none" :src="audioPlayerStore.audioFiles.audio_url"
-                :type="`audio/${audioPlayerStore.audioFiles.format}`" @pause="audioPlayerStore.playbackPaused"
-                @playing="audioPlayerStore.playbackPlaying" @ended="playbackEnded" @canplaythrough="canPlayThrough"
-                @timeupdate="playbackListener" @loadeddata="loadedData" @progress="onProgress"
-                @loadedmetadata="loadMetaData" @seek="playbackSeek">
-            </audio>
-        </div>
     </ion-footer>
+
 </template>
 <style scoped>
 .d-none {
-    display: none;
+    display: none !important;
 }
 
 ion-avatar {

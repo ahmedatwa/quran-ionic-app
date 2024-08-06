@@ -9,7 +9,7 @@ import { useSettingStore } from "@/stores/SettingStore";
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 // utils
-import { setStorage } from "@/utils/storage";
+import { setStorage, getStorage } from "@/utils/storage";
 import { useLocale } from '@/utils/useLocale';
 import { _range } from '@/utils/number';
 import { getLangFullLocale } from '@/utils/locale';
@@ -19,13 +19,7 @@ const audioPlayerStore = useAudioPlayerStore()
 const { getLine, getLocaleValue, supportedLocales, setLocale, getLocale } = useLocale()
 const translationStore = useTranslationsStore()
 const appVersion = computed(() => import.meta.env.VITE_APP_VERSION)
-const colorScheme = computed(() => {
-    if (settingStore.paletteToggle) {
-        return "dark"
-    } else {
-        return "light"
-    }
-})
+const colorScheme = computed(() => getStorage("color-scheme"))
 
 const appleColorScheme = (ev: CustomEvent) => {
     const value = ev.detail.value
@@ -52,6 +46,12 @@ const applyFontWeight = (ev: CustomEvent) => {
 const handleSelectedReciter = (ev: CustomEvent) => {
     const reciter = ev.detail.value
     audioPlayerStore.selectedReciter = reciter
+}
+
+const handleSelectedTranslations = (ev: CustomEvent) => {
+    const translation = ev.detail.value
+    translationStore.selectedTranslationIds = [translation]
+
 }
 
 const handleAudioSetting = (ev: CustomEvent) => {
@@ -126,54 +126,29 @@ const updateSelectedLocale = (ev: CustomEvent) => {
                     </ion-accordion>
                 </ion-accordion-group>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.reciters") }}</ion-list-header>
-                <ion-accordion-group value="first">
-                    <ion-accordion value="first">
-                        <ion-item slot="header">
-                            <ion-label>{{ getLine("settings.audioPlayer") }}</ion-label>
-                        </ion-item>
-                        <div slot="content">
-                            <ion-list class="ion-padding">
-
-                                <ion-item>
-                                    <ion-select :label="getLine('settings.reciters')"
-                                        @ion-change="handleSelectedReciter"
-                                        :placeholder="audioPlayerStore.selectedReciter.name">
-                                        <ion-select-option v-for="reciter in audioPlayerStore.recitations"
-                                            :key="reciter.id" :value="reciter">{{ reciter.name }} - {{
-                                                reciter.style.name }}
-                                        </ion-select-option>
-                                    </ion-select>
-                                </ion-item>
-                            </ion-list>
-                        </div>
-                    </ion-accordion>
-                </ion-accordion-group>
+                <ion-list class="ion-padding">
+                        <ion-select :label="getLine('settings.reciters')" @ion-change="handleSelectedReciter"
+                            :placeholder="audioPlayerStore.selectedReciter.name">
+                            <ion-select-option v-for="reciter in audioPlayerStore.recitations" :key="reciter.id"
+                                :value="reciter">{{ reciter.name }} - {{
+                                    reciter.style.name }}
+                            </ion-select-option>
+                        </ion-select>
+                </ion-list>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.translations") }}</ion-list-header>
-                <ion-accordion-group value="first">
-                    <ion-accordion value="first">
-                        <ion-item slot="header">
-                            <ion-label>{{ getLine("settings.audioPlayer") }}</ion-label>
-                        </ion-item>
-                        <div slot="content">
-                            <ion-list class="ion-padding">
-                                <ion-item>
-                                    <ion-select :label="getLine('settings.translatedBy')"
-                                        @ion-change="handleSelectedReciter"
-                                        :placeholder="translationStore.groupedTranslationsAuthors">
-                                        <ion-select-option
-                                            v-for="(translation, key) in translationStore.translationsList"
-                                            :key="translation.id" :value="translation.id">{{ translation.author_name }}
-                                            - {{
-                                                translation.language_name }}
-                                        </ion-select-option>
-                                    </ion-select>
-                                </ion-item>
-                            </ion-list>
-                        </div>
-                    </ion-accordion>
-                </ion-accordion-group>
+                <ion-list class="ion-padding">
+                    <ion-select :label="getLine('settings.translatedBy')" @ion-change="handleSelectedTranslations"
+                        :placeholder="translationStore.groupedTranslationsAuthors">
+                        <ion-select-option v-for="(translation, key) in translationStore.translationsList"
+                            :key="translation.id" :value="translation.id">{{ translation.author_name }}
+                            - {{
+                                translation.language_name }}
+                        </ion-select-option>
+                    </ion-select>
+
+                </ion-list>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.audio") }}</ion-list-header>
-                <ion-accordion-group value="first">
+                <ion-accordion-group>
                     <ion-accordion value="first">
                         <ion-item slot="header">
                             <ion-label>{{ getLine("settings.audioPlayer") }}</ion-label>

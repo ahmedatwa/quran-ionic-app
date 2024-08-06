@@ -11,22 +11,24 @@ import type { ChapterHeaderData, IntersectingData } from "@/types/chapter";
 import type { VerseWord } from "@/types/verse"
 import type { IsAudioPlayingProps, PlayAudioEmit } from "@/types/audio"
 // components
-import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 import VerseActionSheet from "@/components/chapters/VerseActionSheet.vue";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 import { useSettingStore } from "@/stores/SettingStore";
+import { useTranslationsStore } from "@/stores/TranslationsStore";
 import { useRoute } from 'vue-router';
+import { useLocale } from "@/utils/useLocale";
 
 
 const chapterStore = useChapterStore()
 const audioPlayerStore = useAudioPlayerStore()
 const { cssVars } = useSettingStore()
-const audioModelValue = ref(false)
+const { groupedTranslationsAuthors } = useTranslationsStore()
 const intersectingVerseNumber = ref<number>()
 const router = useRoute()
 const { chapterId } = router.params
+const { getLine } = useLocale()
 
 
 const verses = computed(() => {
@@ -57,14 +59,6 @@ const isWordHighlighted = (word: VerseWord) => {
         return audioPlayerStore.verseTiming.wordLocation === word.location
     }
 };
-
-
-const playAudio = async (event: { audioID: number, verseKey?: string }) => {
-    console.log(event);
-    
-    await audioPlayerStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
-    audioModelValue.value = true
-}
 
 const itemRefs = ref<HTMLDivElement[]>([])
 onMounted(() => {
@@ -131,32 +125,32 @@ const setBookmarked = (verseNumber: number) => {
                 </ion-button>
             </ion-buttons>
             <ion-buttons slot="end">
-                <ion-chip @click="playAudio({ audioID: Number(chapterId) })" color="primary">
+                <ion-chip @click="$emit('update:playAudio', { audioID: Number(chapterId) })" color="primary">
                     <ion-icon color="primary"
                         :icon="audioPlayerStore.isPlaying ? pauseOutline : playOutline"></ion-icon>
                     <ion-label>Play Audio</ion-label>
                 </ion-chip>
             </ion-buttons>
             <ion-progress-bar type="indeterminate" v-if="chapterStore.isLoading.verses"></ion-progress-bar>
-
         </ion-toolbar>
-        <ion-content class="quran-translation-view" :fullscreen="true" :scroll-events="true" @ionScroll="testScroll">
+        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scroll-events="true"
+            @ionScroll="testScroll">
             <ion-card class="ion-padding">
+                <ion-note>{{ getLine('quranReader.textTranslatedBy') }} {{ groupedTranslationsAuthors }}</ion-note>
                 <ion-card-header class="ion-text-center">
-                    <ion-card-title>{{ chapterStore.selectedChapterName.nameArabic }}</ion-card-title>
                     <ion-card-subtitle>{{ chapterStore.selectedChapterBismillah }}</ion-card-subtitle>
+                    <ion-card-title>{{ chapterStore.selectedChapterName.nameArabic }}</ion-card-title>
                 </ion-card-header>
                 <hr>
                 <ion-item v-for="verse in verses" :key="verse.verse_number" :data-verse-number="verse.verse_number"
                     :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number" ref="itemRefs">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
-                            <ion-col size="11" class="quran-translation-view ion-wrap">
-
-                                <ion-label v-for="word in verse.words" :key="word.id" class="word">
+                            <ion-col size="11" class="translations-view-col">
+                                <ion-label v-for="word in verse.words" :key="word.id">
                                     <ion-text :color="isWordHighlighted(word) ? 'primary' : ''">
-                                        <h3 v-if="word.char_type_name === 'end'" class="end">
-                                            ({{ word.text_uthmani }})</h3>
+                                        <span v-if="word.char_type_name === 'end'" class="end">
+                                            ({{ word.text_uthmani }})</span>
                                         <h3 :style="[defaultStyles, cssVars]" v-else>{{ word.text_uthmani }}</h3>
                                     </ion-text>
                                 </ion-label>
@@ -167,11 +161,11 @@ const setBookmarked = (verseNumber: number) => {
                                 <verse-action-sheet :verse="verse"
                                     :trigger-prop="`open-action-sheet${verse.verse_number}`"
                                     @update:bookmarked="setBookmarked"
-                                    @update:play-verse-audio="playAudio({ ...$event })"></verse-action-sheet>
+                                    @update:play-verse-audio="$emit('update:playAudio', { ...$event })"></verse-action-sheet>
                             </ion-col>
                             <ion-col size="12" class="ion-text-left">
                                 <ion-note v-for="translation in verse.translations" :key="translation.id"
-                                    class="translation ">
+                                    class="translation">
                                     <span v-html="translation.text"></span>
                                 </ion-note>
                             </ion-col>
@@ -184,8 +178,5 @@ const setBookmarked = (verseNumber: number) => {
                     loading-spinner="bubbles"></ion-infinite-scroll-content>
             </ion-infinite-scroll>
         </ion-content>
-
-        <audio-player-component v-show="audioModelValue" @update:model-value="audioModelValue = $event">
-        </audio-player-component>
     </div>
 </template>
