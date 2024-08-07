@@ -13,9 +13,9 @@ export const useSettingStore = defineStore("setting-store", () => {
   const highlightedWordColor = ref("blue-darken-2");
 
   const cssVars = ref<CssVars>({
-    quranFrontSize: 3,
+    quranFrontSize: 1,
     quranFontFamily: "Noto-Kufi",
-    translationsFontSize: 3,
+    translationsFontSize: 1,
     translationsFontFamily: "1",
     fontWeight: 400,
   });

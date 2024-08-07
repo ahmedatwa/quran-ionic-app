@@ -8,7 +8,7 @@ import { instance } from "@/axios";
 import { getVersesUrl } from "@/axios/url";
 // utils
 import { _range } from "@/utils/number";
-import { getAllPages } from "@/utils/pages";
+import { getAllPagesToChapters } from "@/utils/pages";
 // types
 import type { Page } from "@/types/page";
 import type { Verse } from "@/types/verse";
@@ -82,7 +82,9 @@ export const usePageStore = defineStore("page-store", () => {
   };
 
   onMounted(async () => {
-    await getAllPages().then((response) => pagesList.value.push(...response));
+    await getAllPagesToChapters().then((response) => {
+      response.forEach((res) => pagesList.value.push(res));
+    });
   });
 
   watch(

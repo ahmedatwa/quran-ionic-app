@@ -11,11 +11,11 @@ import type { Juz, juzVersesByPageMap } from "@/types/juz";
 import type { Verse } from "@/types/verse";
 // utils
 import { _range } from "@/utils/number";
+import { AllJuzsToChapters } from "@/utils/juz";
 
 export const useJuzStore = defineStore("juz-store", () => {
   const translationsStore = useTranslationsStore();
   const { chaptersList } = useChapterStore();
-
   const isLoading = ref(false);
   const juzList = ref<Juz[]>([]);
   const selectedJuz = ref<Juz | null>(null);
@@ -24,39 +24,7 @@ export const useJuzStore = defineStore("juz-store", () => {
   const searchValue = ref("");
   const perPage = ref(10);
 
-  /**
-   * map Juz by chapter id
-   * for translations tab
-   * @return []
-   */
-  const JuzMapByChaptersTest = computed(() => {
-    if (selectedJuz.value) {
-      const verse_mapping = Object.entries(selectedJuz.value.verse_mapping);
-      return verse_mapping.map((value) => {
-        const splitVersesRange = value[1].split("-");
-        return {
-          chapterId: value[0],
-          versesRange: {
-            from: splitVersesRange[0],
-            to: splitVersesRange[1],
-          },
-          verses: _range(
-            Number(splitVersesRange[1]),
-            Number(splitVersesRange[0])
-          ).map((verseNumber) => {
-            const found = selectedJuz.value?.verses?.find(
-              (v) => v.verse_number === verseNumber
-            );
-            if (found) {
-              return found;
-            } else {
-              return null;
-            }
-          }),
-        };
-      });
-    }
-  });
+
   const juzs = computed(() => {
     return juzList.value
       .filter((v) => {
@@ -147,7 +115,9 @@ export const useJuzStore = defineStore("juz-store", () => {
 
   onBeforeMount(async () => {
     if (!juzList.value.length) {
-      await getJuzs();
+      await AllJuzsToChapters().then((res) =>
+        res.forEach((result) => juzList.value.push(result))
+      );
     }
   });
 
@@ -216,7 +186,6 @@ export const useJuzStore = defineStore("juz-store", () => {
   return {
     isLoading,
     juzs,
-    JuzMapByChaptersTest,
     searchValue,
     selectedJuz,
     juzList,

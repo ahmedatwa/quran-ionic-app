@@ -20,7 +20,7 @@ interface Chapter {
   pagination?: Pagination | null;
 }
 
-type Pagination = Record<
+export type Pagination = Record<
   | "per_page"
   | "current_page"
   | "next_page"

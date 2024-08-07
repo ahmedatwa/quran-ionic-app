@@ -6,7 +6,8 @@ import { documentOutline, cogOutline, bookOutline, newspaperOutline } from 'ioni
 
 defineProps<{
     title: string
-    isLoading: boolean
+    isLoading?: boolean
+    search: boolean;
     collapse?: "condense" | "fade"
     translucent?: boolean
     icon: typeof documentOutline | typeof bookOutline | typeof newspaperOutline | typeof cogOutline
@@ -27,7 +28,7 @@ const handleInput = (ev: CustomEvent) => {
             <ion-title size="large" class="ion-margin">
                 <ion-icon :icon="icon" size="large"></ion-icon> {{ title }}</ion-title>
         </ion-toolbar>
-        <ion-toolbar>
+        <ion-toolbar v-if="search">
             <ion-searchbar @ionInput="handleInput"></ion-searchbar>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
         </ion-toolbar>

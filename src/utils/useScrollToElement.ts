@@ -9,6 +9,7 @@ export const scrollToElement = async (
     await delay(timeout);
     if (overLayHeight) {
       if (!el.classList.contains(`scroll-margin-top:${overLayHeight}px`)) {
+        el.classList.add(`scroll-margin-top:${overLayHeight}px`);
       }
     }
     el.scrollIntoView(options);
@@ -33,7 +34,7 @@ export const SCROLL_TO_NEAREST_ELEMENT = {
 
 const isInViewport = (element: HTMLElement) => {
   let rect = element.getBoundingClientRect();
-  let html = document.documentElement;
+  let html = document.documentElement;  
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&

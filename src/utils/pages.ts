@@ -1,6 +1,6 @@
 import jsonChaptersData from "@/json/chapters.json";
+import type { Verse } from "@/types/verse";
 import { localizeNumber, _range } from "@/utils/number";
-import type { Page } from "@/types/page";
 
 export const DEFAULT_NUMBER_OF_PAGES = 604;
 
@@ -75,4 +75,28 @@ export const getAllPages = (lang: string = "en") => {
     };
   });
   return Promise.all(pages);
+};
+
+interface GetAllPagesToChapters {
+  pageNumber: number;
+  verses: Verse[];
+  pagination: null;
+  chaptersMap: {
+    id: number;
+    nameArabic: string;
+    nameSimple: string;
+  }[];
+  audioFile: null;
+}
+
+export const getAllPagesToChapters = (): Promise<GetAllPagesToChapters[]> => {
+  return new Promise((resolve, reject) => {
+    try {
+      import("@/json/pages-to-chapters.json").then((res) =>
+        resolve(res.default)
+      );
+    } catch (error) {
+      reject(error);
+    }
+  });
 };

@@ -4,6 +4,9 @@ export default {
     juzs: "Juzs",
     pages: "Pages",
     settings: "Settings",
+    bookmarks: "Bookmarks",
+    translations: "Translations",
+    reading: "Reading",
   },
   settings: {
     title: "Settings",
@@ -27,9 +30,14 @@ export default {
     device: "Device",
     audio: "Audio",
     fontStyle: "Font Styles",
+    fontSize: "Font Size",
     light: "Light",
     dark: "Dark",
     auto: "Auto"
+  },
+  bookmark: {
+    title: 'Bookmarks',
+    content: "When you are reading the Quran, tap the Bookmark button to mark the current page",
   },
   audio: {
     chapters: "Chapters",
@@ -55,5 +63,5 @@ export default {
     prevJuz: "Previous Juz",
     startJuz: "Start of Juz",
     loadingChapterInfo: "Loading Surah Information...",
-  }
+  },
 };

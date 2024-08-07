@@ -1,12 +1,16 @@
 import { AudioFile } from "./audio";
 import { Verse } from "./verse";
 
+type VerseMapping = {
+  [key: string]: string | undefined;
+};
+
 interface Juz {
   first_verse_id: number;
   id: number;
   juz_number: number;
   last_verse_id: number;
-  verse_mapping: string[];
+  verse_mapping: VerseMapping;
   verses_count: number;
   verses: Verse[] | null;
   pagination?: Pagination | null;

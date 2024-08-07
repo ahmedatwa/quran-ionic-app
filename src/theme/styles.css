@@ -86,6 +86,10 @@
   margin-top: 2px;
 }
 
+.mt-1 {
+  margin-top: 2px;
+}
+
 ion-loading.custom-loading {
   --background: #e3edff;
   --spinner-color: #1c6dff;

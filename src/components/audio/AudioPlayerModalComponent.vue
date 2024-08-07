@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from "vue"
 import { IonButtons, IonButton, IonHeader, IonToolbar, IonSkeletonText, IonList } from "@ionic/vue"
 import { IonContent, modalController, IonRow, IonLabel, IonThumbnail, IonItem } from '@ionic/vue';
-import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonAlert, IonText } from '@ionic/vue';
+import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonAlert, IonText, IonListHeader } from '@ionic/vue';
 import { playOutline, playBackOutline, playForwardOutline, checkmarkDoneCircleOutline } from 'ionicons/icons';
 import { pauseOutline, chevronDownOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
 import { volumeOffOutline, volumeHighOutline, repeatOutline } from 'ionicons/icons';
@@ -21,25 +21,22 @@ const pinFormatter = (value: number) => `${value}%`
 const cancel = () => modalController.dismiss(null, 'cancel');
 const audioPlayerRef = ref<HTMLAudioElement>()
 
-const changeMediaVolume = (ev: CustomEvent) => {
+const changeMediaVolume = async (ev: CustomEvent) => {
     if (audioPlayerRef.value) {
         audioPlayerStore.mediaVolume = ev.detail.value
         audioPlayerRef.value.volume = audioPlayerStore.mediaVolume / 100
     }
 }
 
-const playbackSeek = () => {
-    if (audioPlayerRef.value) {
-        audioPlayerRef.value.currentTime = milliSecondsToSeconds(
-            audioPlayerStore.progressTimer
-        );
-        audioPlayerStore.progressTimer = secondsToMilliSeconds(
-            audioPlayerRef.value.currentTime
-        );
+const playbackSeek = (ev: CustomEvent) => {
+    const seekValue = ev.detail.value
+    if (audioPlayerRef.value) {       
+        audioPlayerStore.progressTimer = seekValue
+        audioPlayerRef.value.currentTime = seekValue / 1000
     }
 };
 
-const playAudio = () => {
+const playAudio = async () => {
     if (audioPlayerRef.value) {
         if (audioPlayerRef.value.paused) {
             audioPlayerRef.value.play();
@@ -148,9 +145,9 @@ const handleSelectedReciter = async (ev: CustomEvent) => {
             </ion-row>
             <ion-row class="ion-justify-content-center">
                 <ion-col size="12">
-                    <ion-range aria-label="Seek" color="primary" @ion-change="playbackSeek" :pin="true"
-                        :pin-formatter="pinFormatter" :value="audioPlayerStore.progressTimer / 1000" :min="0"
-                        :max="audioPlayerStore.duration">
+                    <ion-range aria-label="Seek" color="primary" @ion-input="playbackSeek" :pin="true"
+                        :pin-formatter="pinFormatter" :value="audioPlayerStore.progressTimer" :min="0"
+                        :max="audioPlayerStore.audioFiles?.duration">
                     </ion-range>
                 </ion-col>
             </ion-row>
@@ -221,6 +218,5 @@ const handleSelectedReciter = async (ev: CustomEvent) => {
                 </ion-col>
             </ion-row>
         </ion-grid>
-
     </ion-content>
 </template>

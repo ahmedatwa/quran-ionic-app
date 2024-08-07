@@ -8,8 +8,8 @@ export const lowerCase = (str: string) => {
   return str.toLowerCase();
 };
 
-export const upperCase = (str: string) => {
-  return str.toUpperCase();
+export const upperCase = (str: string | number) => {
+  return String(str).toUpperCase();
 };
 
 export const camelCase = (str: string) => {

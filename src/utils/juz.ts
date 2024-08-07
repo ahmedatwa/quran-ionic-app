@@ -48,8 +48,40 @@ export const getChapterNameByJuzId = (
 };
 
 export const getFirstVerseOfJuzByPage = (verses: Verse[]) => {
-  const first = verses[0];  
+  const first = verses[0];
   if (first) {
     return first.verse_key;
   }
+};
+
+type VerseMapping = {
+  [key: string]: string | undefined;
+};
+interface JuzsToChapters {
+  id: number;
+  juz_number: number;
+  verse_mapping: VerseMapping;
+  first_verse_id: number;
+  last_verse_id: number;
+  verses_count: number;
+  verses: Verse[];
+  chapters: {
+    juzNumber: number;
+    chapterId: string | number;
+    en: string;
+    ar: string;
+    verses: string;
+  }[];
+}
+
+export const AllJuzsToChapters = (): Promise<JuzsToChapters[]> => {
+  return new Promise((resolve, reject) => {
+    try {
+      import("@/json/juzs-to-chapters.json").then((res) =>
+        resolve(res.default)
+      );
+    } catch (error) {
+      reject(error);
+    }
+  });
 };

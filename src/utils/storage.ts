@@ -11,20 +11,36 @@ interface ItemObj {
  * @return void
  */
 
-const setStorage = (key: string, data: any, storageType?: Storage) => {
+const setStorage = (
+  key: string,
+  data: string | object[] | object | string[] | number[],
+  append: boolean = false,
+  storageType?: Storage
+) => {
   storageType = storageType ? storageType : localStorage;
   const found = getStorage(key);
-  if (found) {
-    removeStorageItem(key);
-  }
 
-  if (typeof data === "object") {
-    storageType.setItem(
-      key,
-      JSON.stringify({ ...data, date: dateToDateString() })
-    );
-  } else {
+  if (found) removeStorageItem(key);
+
+  if (typeof data === "string") {
     storageType.setItem(key, data);
+  } else {
+    if (append) {
+        storageType.setItem(
+          key,
+          found
+            ? JSON.stringify([
+                ...found,
+                { ...data, date: dateToDateString() },
+              ])
+            : JSON.stringify([{ ...data, date: dateToDateString() }])
+        );
+      } else {
+        storageType.setItem(
+          key,
+          JSON.stringify({ ...data, date: dateToDateString() })
+        );
+    }
   }
 };
 
@@ -36,14 +52,14 @@ const setStorage = (key: string, data: any, storageType?: Storage) => {
 const getStorage = (key: string, storageType?: Storage): any | undefined => {
   storageType = storageType ? storageType : localStorage;
 
-  const $_ = storageType.getItem(key);
+  const result = storageType.getItem(key);
 
-  if (!$_) return undefined;
+  if (!result) return undefined;
 
-  if ($_.charAt(0) === "{") {
-    return JSON.parse($_);
+  if (result.charAt(0) === "{" || result.charAt(0) === "[") {
+    return JSON.parse(result);
   }
-  return $_;
+  return result;
 };
 
 /**

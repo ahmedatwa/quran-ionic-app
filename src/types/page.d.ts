@@ -12,18 +12,19 @@ interface Page {
   audioFile?: AudioFiles | null;
 }
 
-type Pagination = Record<
-  | "per_page"
-  | "current_page"
-  | "next_page"
-  | "total_pages"
-  | "total_records"
-  | "totalRecordsFetched",
-  number
->;
+type Pagination = {
+  per_page: number;
+  current_page: number;
+  next_page: number;
+  total_pages: number;
+  total_records: number;
+  totalRecordsFetched: number;
+};
 
 interface PageHeaderData {
-  left: { nameArabic: string; nameSimple: string; bismillahPre: boolean } | undefined;
+  left:
+    | { nameArabic: string; nameSimple: string; bismillahPre: boolean }
+    | undefined;
   right: {
     pageNumber: string | number;
     hizbNumber: string | number;
@@ -42,12 +43,12 @@ type ChaptersForPageReturnData = {
 };
 
 type GroupVersesByChapterID = {
-  [key: number]: Verse[]
-}
-
+  [key: number]: Verse[];
+};
 
 export {
   Page,
+  Pagination,
   PageHeaderData,
   ChaptersForPage,
   ChaptersForPageReturnData,

@@ -1,44 +1,26 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onUnmounted, onMounted } from "vue"
+import { ref, watchEffect, computed, onUnmounted } from "vue"
 import { IonToolbar, IonFooter, IonRow, IonAvatar, IonSpinner } from '@ionic/vue';
-import { IonCol, IonGrid, IonIcon, modalController, IonButton, createAnimation } from '@ionic/vue';
+import { IonCol, IonGrid, IonIcon, modalController, IonButton } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline, closeOutline } from 'ionicons/icons';
-import { useAudioPlayerStore } from '@/stores/AudioPlayerStore';
-// types
-import AudioPlayerModalComponent from './AudioPlayerModalComponent.vue';
+// components
+import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalComponent.vue';
+// utils
 import { secondsFormatter, milliSecondsToSeconds, secondsToMilliSeconds } from "@/utils/datetime"
 import { getLangFullLocale } from "@/utils/locale"
 import { useLocale } from "@/utils/useLocale"
+import { makeWordLocation, getVerseNumberFromKey, getChapterIdfromKey } from "@/utils/verse"
 // types
 import type { VerseTimings, VerseTimingSegments } from "@/types/audio"
-import { makeWordLocation, getVerseNumberFromKey, getChapterIdfromKey } from "@/utils/verse"
+// stores
 import { useMetaStore } from "@/stores/MetaStore";
-import type { Animation } from '@ionic/vue';
+import { useAudioPlayerStore } from '@/stores/AudioPlayerStore';
 
 const audioPlayerStore = useAudioPlayerStore()
 const metaStore = useMetaStore();
 const audioPlayerRef = ref<HTMLAudioElement>()
 const { getLocale } = useLocale()
-let animation: Animation;
-const footerRef = ref<any>(null);
 
-onMounted(async () => {
-    animation = createAnimation()
-        .addElement(footerRef.value?.$el)
-        .duration(2000)
-        .beforeStyles({
-            filter: 'translateX(100px)',
-        })
-        .beforeClearStyles(['box-shadow'])
-        .afterClearStyles(['filter'])
-        .keyframes([
-            { offset: 0, transform: 'scale(1)' },
-            { offset: 0.5, transform: 'scale(1.5)' },
-            { offset: 1, transform: 'scale(1)' },
-        ]);
-
-    await animation.play()
-});
 
 defineProps<{
     modelValue: boolean
@@ -345,46 +327,47 @@ const closePlayer = () => {
 </script>
 
 <template>
-    <ion-footer ref="footerRef" :class="!modelValue ? 'ion-hide' : ''" class="ion-no-border">
-        <ion-toolbar>
-            <ion-grid>
-                <ion-row>
-                    <ion-col @click="openModal">
-                        <ion-avatar>
-                            <img :alt="audioPlayerStore.selectedReciter.name"
-                                :src="`/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`" />
-                        </ion-avatar>
-                        <small style="color: #5f5f5f;">{{ audioPlayerStore.chapterName }}</small>
-                    </ion-col>
-                    <ion-col size="5" class="ion-text-right">
-                        <ion-button fill="clear" @click="playAudio">
-                            <ion-spinner v-if="audioPlayerStore.isLoading"></ion-spinner>
-                            <ion-icon slot="icon-only" :icon="audioPlayerStore.isPlaying ? pauseOutline : playOutline"
-                                v-else></ion-icon>
-                        </ion-button>
-                        <ion-button fill="clear" @click="audioPlayerStore.playNext">
-                            <ion-icon slot="icon-only" :icon="playForwardOutline"></ion-icon>
-                        </ion-button>
-                        <ion-button fill="clear" @click="closePlayer">
-                            <ion-icon slot="icon-only" :icon="closeOutline" color="danger"></ion-icon>
-                        </ion-button>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+    <Transition name="slide-fade">
+        <ion-footer v-if="modelValue" class="footer">
+            <ion-toolbar>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col @click="openModal">
+                            <ion-avatar>
+                                <img :alt="audioPlayerStore.selectedReciter.name" class="img"
+                                    :src="`/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`" />
+                            </ion-avatar>
+                        </ion-col>
+                        <ion-col size="5" class="ion-text-right">
+                            <ion-button fill="clear" @click="playAudio">
+                                <ion-spinner v-if="audioPlayerStore.isLoading"></ion-spinner>
+                                <ion-icon slot="icon-only"
+                                    :icon="audioPlayerStore.isPlaying ? pauseOutline : playOutline" v-else></ion-icon>
+                            </ion-button>
+                            <ion-button fill="clear" @click="audioPlayerStore.playNext">
+                                <ion-icon slot="icon-only" :icon="playForwardOutline"></ion-icon>
+                            </ion-button>
+                            <ion-button fill="clear" @click="closePlayer">
+                                <ion-icon slot="icon-only" :icon="closeOutline" color="danger"></ion-icon>
+                            </ion-button>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
 
 
-            <div class="d-none">
-                <audio controls :autoplay="audioPlayerStore.audioPlayerSetting.autoPlay" ref="audioPlayerRef"
-                    id="audioPlayerRef" :src="audioPlayerStore.audioFiles?.audio_url"
-                    :type="`audio/${audioPlayerStore.audioFiles?.format}`" @pause="audioPlayerStore.playbackPaused"
-                    @playing="audioPlayerStore.playbackPlaying" @ended="playbackEnded" @canplaythrough="canPlayThrough"
-                    @timeupdate="playbackListener" @loadeddata="loadedData" @progress="onProgress"
-                    @loadedmetadata="loadMetaData" @seek="playbackSeek">
-                </audio>
-            </div>
-        </ion-toolbar>
-    </ion-footer>
+                <div class="d-none">
+                    <audio controls :autoplay="audioPlayerStore.audioPlayerSetting.autoPlay" ref="audioPlayerRef"
+                        id="audioPlayerRef" :src="audioPlayerStore.audioFiles?.audio_url"
+                        :type="`audio/${audioPlayerStore.audioFiles?.format}`" @pause="audioPlayerStore.playbackPaused"
+                        @playing="audioPlayerStore.playbackPlaying" @ended="playbackEnded"
+                        @canplaythrough="canPlayThrough" @timeupdate="playbackListener" @loadeddata="loadedData"
+                        @progress="onProgress" @loadedmetadata="loadMetaData" @seek="playbackSeek">
+                    </audio>
+                </div>
+            </ion-toolbar>
 
+        </ion-footer>
+    </Transition>
 </template>
 <style scoped>
 .d-none {
@@ -394,5 +377,34 @@ const closePlayer = () => {
 ion-avatar {
     --border-radius: 4px;
 
+}
+
+.footer {
+    height: 73px;
+}
+
+/*
+  Enter and leave animations can use different
+  durations and timing functions.
+*/
+.slide-fade-enter-active {
+    transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+    transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+}
+
+.img {
+    border-radius: 10px;
+    height: 45px;
+    width: 50px;
+    padding: 2px;
 }
 </style>

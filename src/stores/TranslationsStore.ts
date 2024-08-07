@@ -25,7 +25,7 @@ export const useTranslationsStore = defineStore("translations-store", () => {
     isLoading.value = true;
     await getAllTranslations()
       .then((response) => {
-        response.forEach((res) => translationsList.value?.push({...res}));
+        response.forEach((res) => translationsList.value?.push({ ...res }));
       })
       .catch((error) => {
         throw error;
@@ -90,11 +90,21 @@ export const useTranslationsStore = defineStore("translations-store", () => {
   });
 
   watch(translationsList.value, (val) => {
-    if (val) {      
+    if (val) {
       const found = val.find((tr) => tr.id === 131);
       if (found) {
         selectedTranslations.value.push(found);
       }
+    }
+  });
+
+  const groupTranslationsByLanguage = computed((): TranslationReduceMap | undefined => {
+    if (translationsList.value) {
+      return translationsList.value.reduce((o: any, i) => {
+        (o[i.language_name as keyof typeof o] =
+          o[i.language_name as keyof typeof o] || []).push(i);
+        return o;
+      }, {});
     }
   });
 
@@ -107,6 +117,7 @@ export const useTranslationsStore = defineStore("translations-store", () => {
     selectedTranslationIds,
     selectedTranslationsIdsString,
     groupedTranslationsAuthors,
+    groupTranslationsByLanguage,
     getTranslations,
   };
 });

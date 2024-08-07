@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { RouteRecordRaw } from "vue-router";
-import TabsPage from "@/views/TabsPage.vue";
+import Home from "@/views/Home.vue";
 import { loadingController } from "@ionic/vue";
 import { ref } from "vue";
 
@@ -11,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/",
-    component: TabsPage,
+    component: Home,
     children: [
       {
         path: "",
@@ -19,41 +19,40 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "chapters",
-        component: () => import("@/views/ChaptersTab.vue"),
+        component: () => import("@/views/tabs/ChaptersHomeTab.vue"),
         props: true,
       },
       {
         path: "juzs",
-        component: () => import("@/views/JuzsTab.vue"),
-        props: true,
+        component: () => import("@/views/tabs/JuzsHomeTab.vue"),
       },
-
       {
         path: "pages",
-        component: () => import("@/views/PagesTab.vue"),
-        props: true,
+        component: () => import("@/views/tabs/PagesHomeTab.vue"),
       },
-
+      {
+        path: "bookmarks",
+        component: () => import("@/views/tabs/BookmarkHomeTab.vue"),
+      },
       {
         path: "/settings",
-        component: () => import("@/views/SettingsTab.vue"),
-        props: true,
+        component: () => import("@/views/tabs/SettingsHomeTab.vue"),
       },
     ],
   },
   {
     path: "/page/:pageId",
-    component: () => import("@/views/pages/PagesPage.vue"),
+    component: () => import("@/views/pages/Page.vue"),
     props: true,
   },
   {
     path: "/juz/:juzId",
-    component: () => import("@/views/pages/JuzsPage.vue"),
+    component: () => import("@/views/pages/Juz.vue"),
     props: true,
   },
   {
     path: "/chapter/:chapterId",
-    component: () => import("@/views/pages/ChapterPage.vue"),
+    component: () => import("@/views/pages/Chapter.vue"),
     props: true,
   },
 ];
