@@ -82,12 +82,11 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                 <div>
                     <ion-chip
                         @click="$emit('update:playAudio', { audioID: versesMap[0].chapter_id, verseKey: versesMap[0].verse_key })"
-                        color="primary">
+                        color="primary" class="ion-float-right">
                         <ion-icon :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
                         <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
                     </ion-chip>
-                    <ion-button fill="clear" class="ion-float-right"
-                        @click="$emit('update:surahInfo', versesMap[0].chapter_id)">
+                    <ion-button fill="clear" @click="$emit('update:surahInfo', versesMap[0].chapter_id)">
                         <ion-icon :icon="informationCircleOutline" slot="icon-only"></ion-icon>
                     </ion-button>
                 </div>

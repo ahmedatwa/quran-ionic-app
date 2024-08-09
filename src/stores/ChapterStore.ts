@@ -12,7 +12,7 @@ import type { Verse } from "@/types/verse";
 import { useLocale } from "@/utils/useLocale";
 
 export const useChapterStore = defineStore("chapter-store", () => {
-  const translationsStore = useTranslationsStore();
+  const { selectedTranslation } = useTranslationsStore();
   const TOTAL_CHAPTERS = ref(114);
   const { getLine } = useLocale();
   const isLoading = ref<Loading>({ chapters: false, verses: false });
@@ -26,6 +26,13 @@ export const useChapterStore = defineStore("chapter-store", () => {
       return selectedChapter.value.id;
     }
     return 1;
+  });
+
+  const selectedTranslationId = computed(() => {
+    if (selectedTranslation?.id) {
+      return String(selectedTranslation.id);
+    }
+    return "131";
   });
 
   const selectedChapterPagination = computed(() => {
@@ -125,13 +132,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
     isLoading.value.length = perPage.value;
     await instance
       .get(
-        getVersesUrl(
-          "by_chapter",
-          id,
-          translationsStore.selectedTranslationsIdsString,
-          page,
-          limit
-        )
+        getVersesUrl("by_chapter", id, selectedTranslationId.value, page, limit)
       )
       .then((response) => {
         const chapter = chaptersList.value.find((s) => s.id === id);
@@ -166,13 +167,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
     isLoading.value.verses = true;
     isLoading.value.length = 1;
     await instance
-      .get(
-        getVersesUrl(
-          "by_key",
-          verseKey,
-          translationsStore.selectedTranslationsIdsString
-        )
-      )
+      .get(getVersesUrl("by_key", verseKey, selectedTranslationId.value))
       .then((response) => {
         const chapter = chaptersList.value.find((s) => s.id === id);
         if (chapter) {
@@ -204,7 +199,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
 
   // Add New Translations
   watch(
-    () => translationsStore.selectedTranslationsIdsString,
+    () => selectedTranslationId.value,
     async (resources) => {
       if (resources) {
         if (selectedChapter.value) {

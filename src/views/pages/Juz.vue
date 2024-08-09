@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted } from 'vue';
 import { IonContent, IonHeader, IonSegmentButton, IonButton } from '@ionic/vue';
-import { IonToolbar, IonSegment, IonLabel, IonPage } from '@ionic/vue';
+import { IonToolbar, IonSegment, IonLabel, IonPage, alertController } from '@ionic/vue';
 // components
 import TranslationsViewComponent from '@/components/juz/TranslationsViewComponent.vue';
 import ReadingViewComponent from '@/components/juz/ReadingViewComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 import ChapterInfoModalComponent from '@/components/chapter/ChapterInfoModalComponent.vue';
-import ModalInfoComponent from '@/components/common/ModalInfoComponent.vue';
 import { useRoute } from 'vue-router';
 // stores
 import { useJuzStore } from "@/stores/JuzStore"
@@ -22,35 +21,28 @@ import { useLocale } from '@/utils/useLocale';
 const currentSegment = ref("translations")
 const { getLine } = useLocale()
 const juzStore = useJuzStore()
-const { selectedTranslations } = useTranslationsStore()
+const transaltionStore = useTranslationsStore()
 const { selectedChapterName, selectedChapterBismillah, getchapterInfo } = useChapterStore()
 const { cssVars } = useSettingStore()
 const audioPlayerStore = useAudioPlayerStore()
-const translators = computed(() => selectedTranslations.map((t) => {
-    return {
-        title: t.language_name,
-        body: t.name
-    }
-}))
+
 const pagination = computed(() => juzStore.selectedJuz?.pagination)
 
 const audioModelValue = ref(false)
 const pageRef = ref()
 const pageRefEl = ref()
-const modelInfoRef = ref()
 const chapterInfo = ref<ChapterInfo | null>(null)
-const modalButtonRef = ref()
+const chapterInfoButtonRef = ref()
 const handleSegmentChange = (ev: CustomEvent) => {
     currentSegment.value = ev.detail.value
 }
 
 const router = useRoute()
-const { juzId } = router.params
 
 watchEffect(async () => {
-    if (juzId) {
+    if (router.params.juzId) {
         juzStore.selectedJuz = null
-        const found = juzStore.juzList.find((j) => j.juz_number === Number(juzId))
+        const found = juzStore.juzList.find((j) => j.juz_number === Number(router.params.juzId))
         if (found) {
             if (!found.verses?.length) {
                 await juzStore.getVerses(found.id, true)
@@ -75,6 +67,7 @@ const getVerses = async (ev: { key: string, nextPage: number }) => {
     };
 }
 
+
 const styles = computed(() => {
     return {
         fontFamily: `var(--font-family-${cssVars.quranFontFamily})`,
@@ -87,18 +80,25 @@ const getSurahInfo = async (ev: number) => {
     await getchapterInfo(ev).then((response) => {
         chapterInfo.value = response.data.chapter_info
     })
-    modalButtonRef.value.$el.click()
+    chapterInfoButtonRef.value.$el.click()
 }
 
-const openModal = () => {
-    modelInfoRef.value.$el.click()
+const getTranslationAlert = async () => {
+    const alert = await alertController.create({
+        header: transaltionStore.selectedTranslation?.language_name.toUpperCase(),
+        message: transaltionStore.selectedTranslation?.author_name,
+        buttons: ['Ok'],
+    });
+
+    await alert.present();
 }
+
 onMounted(() => pageRefEl.value = pageRef.value.$el)
 </script>
 
 
 <template>
-    <ion-page :data-juz-id="juzId" ref="pageRef">
+    <ion-page :data-juz-id="router.params.juzId" ref="pageRef">
         <ion-header>
             <ion-toolbar>
                 <ion-segment :value="currentSegment" @ion-change="handleSegmentChange">
@@ -113,7 +113,7 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
         </ion-header>
         <ion-content>
             <translations-view-component id="translations-juzs" :is-loading="juzStore.isLoading"
-                :is-playing="audioPlayerStore.isPlaying" @update:modal-value="openModal"
+                :is-playing="audioPlayerStore.isPlaying" @update:modal-value="getTranslationAlert"
                 :is-translations-view="currentSegment === 'translations'" @update:play-audio="playAudio"
                 :is-bismillah="selectedChapterBismillah" :styles="styles" :verses="juzStore.juzVersesByChapterMap"
                 :chapter-name="selectedChapterName.nameArabic" :verse-timing="audioPlayerStore.verseTiming"
@@ -125,17 +125,9 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
                 :pagination="pagination" @update:get-verses="getVerses" @update:surah-info="getSurahInfo">
             </reading-view-component>
             <div>
-                <ion-button ref="modalButtonRef" id="juz-chapter-info" class="ion-hide"></ion-button>
-                <chapter-info-modal-component trigger="juz-chapter-info" :chapter-info="chapterInfo"
-                    :page-el="pageRefEl"></chapter-info-modal-component>
-            </div>
-            <div>
-                <ion-button ref="modalButtonRefInfo" id="juz-chapter-modal" class="ion-hide"></ion-button>
+                <ion-button ref="chapterInfoButtonRef" id="juz-chapter-modal" class="ion-hide"></ion-button>
                 <chapter-info-modal-component trigger="juz-chapter-modal" :chapter-info="chapterInfo"
                     :page-el="pageRefEl"></chapter-info-modal-component>
-
-                <ion-button id="juz-translation-info" ref="modelInfoRef" class="ion-hide"></ion-button>
-                <modal-info-component trigger="juz-translation-info" :text="translators"></modal-info-component>
             </div>
         </ion-content>
         <audio-player-component :model-value="audioModelValue" @update:model-value="audioModelValue = $event">

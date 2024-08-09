@@ -33,7 +33,9 @@ export default {
     fontSize: "Font Size",
     light: "Light",
     dark: "Dark",
-    auto: "Auto"
+    auto: "Auto",
+    autoScroll: "Auto Scroll",
+    cache: "Cache"
   },
   bookmark: {
     title: 'Bookmarks',

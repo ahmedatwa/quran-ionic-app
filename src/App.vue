@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { IonApp, IonRouterOutlet, IonContent } from '@ionic/vue';
+// stores
 import { useMetaStore } from '@/stores/MetaStore';
 import { useSettingStore } from '@/stores/SettingStore';
+// utils
 import { getStorage, setStorage } from '@/utils/storage';
+
 
 const metaStore = useMetaStore()
 const settingStore = useSettingStore()
@@ -34,6 +37,8 @@ onMounted(() => {
     setStorage("color-scheme", "auto")
   }
 })
+
+
 </script>
 
 <template>

@@ -16,13 +16,18 @@ import type { Verse } from "@/types/verse";
 export const usePageStore = defineStore("page-store", () => {
   const isLoading = ref(false);
   const perPage = ref(10);
-  const translationsStore = useTranslationsStore();
+  const { selectedTranslation } = useTranslationsStore();
   const { getChapterNameByChapterId } = useChapterStore();
   const selectedPage = ref<Page | null>(null);
   const selectedPageId = ref<number>();
   const searchValue = ref("");
   const pagesList = ref<Page[]>([]);
-
+  const selectedTranslationId = computed(() => {
+    if (selectedTranslation?.id) {
+      return String(selectedTranslation.id);
+    }
+    return "131";
+  });
   const pages = computed(() => {
     if (pagesList.value) {
       return pagesList.value.filter((page) => {
@@ -43,13 +48,7 @@ export const usePageStore = defineStore("page-store", () => {
     selectedPageId.value = id;
     await instance
       .get(
-        getVersesUrl(
-          "by_page",
-          id,
-          translationsStore.selectedTranslationsIdsString,
-          page,
-          limit
-        )
+        getVersesUrl("by_page", id, selectedTranslationId.value, page, limit)
       )
       .then((response) => {
         const page = pagesList.value?.find((p) => p.pageNumber === id);
@@ -88,7 +87,7 @@ export const usePageStore = defineStore("page-store", () => {
   });
 
   watch(
-    () => translationsStore.selectedTranslationsIdsString,
+    () => selectedTranslationId.value,
     async (resources) => {
       if (resources) {
         if (selectedPage.value) {

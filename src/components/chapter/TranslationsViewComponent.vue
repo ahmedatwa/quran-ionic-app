@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, watch } from "vue"
+import { ref, computed, watch, watchEffect } from "vue"
 import { IonToolbar, IonButtons, IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
 import { IonChip, IonContent, IonNote, IonCardTitle, IonCardSubtitle } from "@ionic/vue";
 import { IonCol, IonRow, IonGrid, IonItem, IonCard } from "@ionic/vue";
@@ -33,10 +33,10 @@ const props = defineProps<{
     isTranslationsView: boolean
     isPlaying: boolean
     isLoading: boolean
-    translatedBy?: string;
     chapterName?: string
     isBismillah: string
     verses?: Verse[]
+    audioExperience: { autoScroll: boolean; tooltip: boolean };
     pagination?: Pagination | null
     verseTiming?: VerseTimingsProps
     styles: Record<"fontSize" | "fontFamily" | "fontWeight", string>
@@ -56,10 +56,16 @@ const onIntersectionObserver = ([{ isIntersecting, target, intersectionRatio }]:
     }
 }
 
+watchEffect(async () => {
+    if (props.audioExperience.autoScroll) {
+        intersectingVerseNumber.value = Number(props.verseTiming?.verseNumber)
+    }
+});
+
 // For Element Scroll
 watch(intersectingVerseNumber, (newVerseNumber) => {
     if (newVerseNumber) {
-        scrollToElement(`#verse-col-${newVerseNumber}`, 300)
+        scrollToElement(`#verse-col-${newVerseNumber}`, contentRef.value.$el, 300)
     }
 })
 
@@ -75,12 +81,6 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     }
 }
 
-const routerBackPath = computed(() => {
-    if (props.id) {
-        return props.id.split("-")[1]
-    }
-})
-
 const isWordHighlighted = (word: VerseWord) => {
     if (props.verseTiming) {
         return props.verseTiming.wordLocation === word.location
@@ -92,8 +92,9 @@ const isWordHighlighted = (word: VerseWord) => {
     <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${chapterId}`">
         <ion-toolbar color="light">
             <ion-buttons slot="start">
-                <ion-button @click="go(-1)" router-direction="back">
+                <ion-button @click="go(-1)" router-direction="back" color="primary">
                     <ion-icon :icon="chevronBackOutline"></ion-icon>
+                    <ion-label>{{ getLine('tabs.chapters') }}</ion-label>
                 </ion-button>
             </ion-buttons>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
@@ -101,11 +102,12 @@ const isWordHighlighted = (word: VerseWord) => {
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true">
             <ion-card class="ion-padding card-wrapper" ref="contentRef">
                 <div>
-                    <ion-chip @click="$emit('update:playAudio', { audioID: Number(params.chapterId) })" color="primary">
+                    <ion-chip @click="$emit('update:playAudio', { audioID: Number(params.chapterId) })" color="primary"
+                        class="ion-float-right">
                         <ion-icon color="primary" :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
                         <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
                     </ion-chip>
-                    <ion-button @click="$emit('update:modalValue', true)" fill="clear" class="ion-float-right">
+                    <ion-button @click="$emit('update:modalValue', true)" fill="clear">
                         <ion-icon :icon="languageOutline" slot="icon-only"></ion-icon>
                     </ion-button>
                 </div>
@@ -115,10 +117,11 @@ const isWordHighlighted = (word: VerseWord) => {
                 </ion-card-header>
                 <ion-item v-for="verse in verses" :key="verse.verse_number" :data-verse-number="verse.verse_number"
                     :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number"
+                    :id="`verse-col-${verse.verse_number}`"
                     v-intersection-observer="[onIntersectionObserver, { root: contentRef, immediate: false }]">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
-                            <ion-col size="11" class="translations-view-col" :id="`verse-col-${verse.verse_number}`">
+                            <ion-col size="11" class="translations-view-col">
                                 <ion-label v-for="word in verse.words" :key="word.id">
                                     <ion-text :color="isWordHighlighted(word) ? 'primary' : ''">
                                         <span v-if="word.char_type_name === 'end'" class="end">

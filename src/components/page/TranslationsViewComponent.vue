@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, watch } from "vue"
+import { ref, computed, watch, onMounted } from "vue"
 import { IonToolbar, IonButtons, IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
 import { IonChip, IonContent, IonNote, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
 import { IonCol, IonRow, IonGrid, IonItem, IonCard } from "@ionic/vue";
@@ -26,7 +26,8 @@ import { useChapterStore } from "@/stores/ChapterStore";
 const { getLine } = useLocale()
 const { getChapterNameByFirstVerse } = useChapterStore()
 const { params } = useRoute()
-const { go } = useRouter()
+const router = useRouter()
+const contentRef = ref()
 const pageId = computed((): number | undefined => Number(params.pageId))
 const intersectingVerseNumber = ref<number>()
 
@@ -62,7 +63,7 @@ const onIntersectionObserver = ([{ isIntersecting, target, intersectionRatio }]:
 // For Element Scroll
 watch(intersectingVerseNumber, (newVerseNumber) => {
     if (newVerseNumber) {
-        scrollToElement(`#verse-col-${newVerseNumber}`, 300)
+        scrollToElement(`#verse-col-${newVerseNumber}`, contentRef.value.$el, 300)
     }
 })
 
@@ -78,12 +79,10 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     }
 }
 
-const routerBackPath = computed(() => {
-    if (props.id) {
-        return props.id.split("-")[1]
-    }
+onMounted(() => {
+    router.afterEach((i) => console.log(i)
+    )
 })
-
 const isWordHighlighted = (word: VerseWord) => {
     if (props.verseTiming) {
         return props.verseTiming.wordLocation === word.location
@@ -94,23 +93,24 @@ const isWordHighlighted = (word: VerseWord) => {
     <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${pageId}`">
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button @click="go(-1)" router-direction="back">
+                <ion-button @click="go(-1)" router-direction="back" color="primary">
                     <ion-icon :icon="chevronBackOutline"></ion-icon>
+                    <ion-label>{{ getLine('tabs.pages') }}</ion-label>
                 </ion-button>
             </ion-buttons>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
         </ion-toolbar>
-        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true">
+        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef">
             <ion-card class="ion-padding card-wrapper" v-for="(verses, chapterId) in verses" :key="chapterId"
                 :id="`card-${chapterId}`">
                 <div>
                     <ion-chip
                         @click="$emit('update:playAudio', { audioID: verses[0].chapter_id, verseKey: verses[0].verse_key })"
-                        color="primary">
+                        color="primary" class="ion-float-right">
                         <ion-icon :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
                         <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
                     </ion-chip>
-                    <ion-button @click="$emit('update:modalValue', true)" fill="clear" class="ion-float-right">
+                    <ion-button @click="$emit('update:modalValue', true)" fill="clear">
                         <ion-icon :icon="languageOutline" slot="icon-only"></ion-icon>
                     </ion-button>
                 </div>

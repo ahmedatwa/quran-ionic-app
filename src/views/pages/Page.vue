@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted } from 'vue';
 import { IonContent, IonHeader, IonSegmentButton, IonButton } from '@ionic/vue';
-import { IonToolbar, IonSegment, IonLabel, IonPage } from '@ionic/vue';
+import { IonToolbar, IonSegment, IonLabel, IonPage, alertController } from '@ionic/vue';
 // components
 import TranslationsViewComponent from '@/components/page/TranslationsViewComponent.vue';
 import ReadingViewComponent from '@/components/page/ReadingViewComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 import ChapterInfoModalComponent from '@/components/chapter/ChapterInfoModalComponent.vue';
-import ModalInfoComponent from '@/components/common/ModalInfoComponent.vue';
 import { useRoute } from 'vue-router';
 // stores
 import { usePageStore } from "@/stores/PageStore"
@@ -24,16 +23,11 @@ import type { ChapterInfo } from '@/types/chapter';
 const currentSegment = ref("translations")
 const pageStore = usePageStore()
 const { getLine } = useLocale()
-const { selectedTranslations } = useTranslationsStore()
+const transaltionStore = useTranslationsStore()
 const { selectedChapterName, selectedChapterBismillah, getchapterInfo } = useChapterStore()
 const { cssVars } = useSettingStore()
 const audioPlayerStore = useAudioPlayerStore()
-const translators = computed(() => selectedTranslations.map((t) => {
-    return {
-        title: t.language_name,
-        body: t.name
-    }
-}))
+
 const audioModelValue = ref(false)
 const handleSegmentChange = (ev: CustomEvent) => {
     currentSegment.value = ev.detail.value
@@ -42,9 +36,8 @@ const handleSegmentChange = (ev: CustomEvent) => {
 const pagination = computed(() => pageStore.selectedPage?.pagination)
 const pageRef = ref()
 const pageRefEl = ref()
-const modelInfoRef = ref()
 const chapterInfo = ref<ChapterInfo | null>(null)
-const modalButtonRef = ref()
+const chapterInfoButtonRef = ref()
 const router = useRoute()
 const { pageId } = router.params
 
@@ -104,12 +97,19 @@ const getSurahInfo = async (ev: number) => {
     await getchapterInfo(ev).then((response) => {
         chapterInfo.value = response.data.chapter_info
     })
-    modalButtonRef.value.$el.click()
+    chapterInfoButtonRef.value.$el.click()
 }
 
-const openModal = () => {
-    modelInfoRef.value.$el.click()
+const getTranslationAlert = async () => {
+    const alert = await alertController.create({
+        header: transaltionStore.selectedTranslation?.language_name.toUpperCase(),
+        message: transaltionStore.selectedTranslation?.author_name,
+        buttons: ['Ok'],
+    });
+
+    await alert.present();
 }
+
 onMounted(() => pageRefEl.value = pageRef.value.$el)
 
 
@@ -135,7 +135,7 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
                 :is-playing="audioPlayerStore.isPlaying" :is-translations-view="currentSegment === 'translations'"
                 @update:play-audio="playAudio" :is-bismillah="selectedChapterBismillah" :styles="styles"
                 :verses="groupVersesByChapter" :chapter-name="selectedChapterName.nameArabic"
-                @update:modal-value="openModal" :verse-timing="audioPlayerStore.verseTiming"
+                @update:modal-value="getTranslationAlert" :verse-timing="audioPlayerStore.verseTiming"
                 @update:get-verses="getVerses" :pagination="pagination">
             </translations-view-component>
             <reading-view-component id="reading-pages" :is-reading-view="currentSegment === 'reading'"
@@ -144,12 +144,9 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
                 :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination">
             </reading-view-component>
             <div>
-                <ion-button ref="modalButtonRefInfo" id="page-chapter-modal" class="ion-hide"></ion-button>
+                <ion-button ref="chapterInfoButtonRef" id="page-chapter-modal" class="ion-hide"></ion-button>
                 <chapter-info-modal-component trigger="page-chapter-modal" :chapter-info="chapterInfo"
                     :page-el="pageRefEl"></chapter-info-modal-component>
-
-                <ion-button id="page-modal-info" ref="modelInfoRef" class="ion-hide"></ion-button>
-                <modal-info-component trigger="page-modal-info" :text="translators"></modal-info-component>
             </div>
         </ion-content>
         <audio-player-component :model-value="audioModelValue" @update:model-value="audioModelValue = $event">

@@ -14,7 +14,7 @@ import { _range } from "@/utils/number";
 import { AllJuzsToChapters } from "@/utils/juz";
 
 export const useJuzStore = defineStore("juz-store", () => {
-  const translationsStore = useTranslationsStore();
+  const { selectedTranslation } = useTranslationsStore();
   const { chaptersList } = useChapterStore();
   const isLoading = ref(false);
   const juzList = ref<Juz[]>([]);
@@ -23,7 +23,12 @@ export const useJuzStore = defineStore("juz-store", () => {
   const currentSort = ref("id");
   const searchValue = ref("");
   const perPage = ref(10);
-
+  const selectedTranslationId = computed(() => {
+    if (selectedTranslation?.id) {
+      return String(selectedTranslation.id);
+    }
+    return "131";
+  });
 
   const juzs = computed(() => {
     return juzList.value
@@ -54,7 +59,7 @@ export const useJuzStore = defineStore("juz-store", () => {
         getVersesUrl(
           "by_juz",
           juzNumber,
-          translationsStore.selectedTranslationsIdsString,
+          selectedTranslationId.value,
           page,
           limit
         )
@@ -143,7 +148,7 @@ export const useJuzStore = defineStore("juz-store", () => {
   };
 
   watch(
-    () => translationsStore.selectedTranslationsIdsString,
+    () => selectedTranslationId.value,
     async (resources) => {
       if (resources) {
         if (selectedJuz.value) {

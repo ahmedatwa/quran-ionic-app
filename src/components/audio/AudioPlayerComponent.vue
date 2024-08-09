@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onUnmounted } from "vue"
 import { IonToolbar, IonFooter, IonRow, IonAvatar, IonSpinner } from '@ionic/vue';
-import { IonCol, IonGrid, IonIcon, modalController, IonButton } from '@ionic/vue';
+import { IonCol, IonGrid, IonIcon, IonButton } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline, closeOutline } from 'ionicons/icons';
 // components
 import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalComponent.vue';
@@ -11,7 +11,7 @@ import { getLangFullLocale } from "@/utils/locale"
 import { useLocale } from "@/utils/useLocale"
 import { makeWordLocation, getVerseNumberFromKey, getChapterIdfromKey } from "@/utils/verse"
 // types
-import type { VerseTimings, VerseTimingSegments } from "@/types/audio"
+import type { VerseTimings, VerseTimingSegments, Recitations } from "@/types/audio"
 // stores
 import { useMetaStore } from "@/stores/MetaStore";
 import { useAudioPlayerStore } from '@/stores/AudioPlayerStore';
@@ -29,14 +29,6 @@ defineProps<{
 const emit = defineEmits<{
     "update:modelValue": [value: boolean]
 }>()
-
-const openModal = async () => {
-    const modal = await modalController.create({
-        component: AudioPlayerModalComponent,
-    });
-
-    modal.present();
-};
 
 const playAudio = () => {
     if (audioPlayerRef.value) {
@@ -154,10 +146,10 @@ const loadedData = () => {
     }
 };
 
-const playbackSeek = () => {
-    if (audioPlayerRef.value) {
-        audioPlayerRef.value.currentTime = milliSecondsToSeconds(audioPlayerStore.progressTimer);
-        audioPlayerStore.progressTimer = secondsToMilliSeconds(audioPlayerRef.value.currentTime)
+const playbackSeek = (seekValue: number) => {
+    if (audioPlayerRef.value) {        
+        audioPlayerStore.progressTimer = seekValue
+        audioPlayerRef.value.currentTime = seekValue / 1000
     }
 };
 
@@ -200,63 +192,66 @@ const loadMetaData = () => {
         ]);
     }
 
-    metaStore.setMetaData([
-        {
-            name: "twitter:image",
-            content: `/reciters/${audioPlayerStore.selectedReciter.reciter_id
-                }.jpg`,
-        },
-        {
-            property: "music:musician",
-            content: audioPlayerStore.selectedReciter.name,
-        },
-        {
-            property: "og:audio:artist",
-            content: audioPlayerStore.selectedReciter.name,
-        },
-        {
-            property: "og:image",
-            content: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
-        },
-    ]);
+    if (audioPlayerStore.selectedReciter) {
+        metaStore.setMetaData([
+            {
+                name: "twitter:image",
+                content: `/reciters/${audioPlayerStore.selectedReciter.reciter_id
+                    }.jpg`,
+            },
+            {
+                property: "music:musician",
+                content: audioPlayerStore.selectedReciter.name,
+            },
+            {
+                property: "og:audio:artist",
+                content: audioPlayerStore.selectedReciter.name,
+            },
+            {
+                property: "og:image",
+                content: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
+            },
+        ]);
 
-    if ("mediaSession" in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
-            title: audioPlayerStore.chapterName,
-            artist: audioPlayerStore.selectedReciter.name,
-            album: "Quran",
-            artwork: [
-                {
-                    src: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
-                    sizes: "96x96",
-                    type: "image/jpg",
-                },
-            ],
-        });
 
-        navigator.mediaSession.setActionHandler("play", () => {
-            playAudio();
-            // emit("update:modelValue", isPlaying.value);
-        });
-        navigator.mediaSession.setActionHandler("pause", () => {
-            playAudio();
-        });
+        if ("mediaSession" in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: audioPlayerStore.chapterName,
+                artist: audioPlayerStore.selectedReciter.name,
+                album: "Quran",
+                artwork: [
+                    {
+                        src: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
+                        sizes: "96x96",
+                        type: "image/jpg",
+                    },
+                ],
+            });
 
-        navigator.mediaSession.setActionHandler("seekto", ({ seekTime }) => {
-            if (seekTime) {
-                audioPlayerStore.progressTimer = secondsToMilliSeconds(seekTime);
-                playbackSeek();
-            }
-        });
+            navigator.mediaSession.setActionHandler("play", () => {
+                playAudio();
+                // emit("update:modelValue", isPlaying.value);
+            });
+            navigator.mediaSession.setActionHandler("pause", () => {
+                playAudio();
+            });
 
-        // Play next
-        navigator.mediaSession.setActionHandler("nexttrack", () => {
-            audioPlayerStore.playNext()
-        });
-        // Play prev
-        navigator.mediaSession.setActionHandler("previoustrack", () => {
-            audioPlayerStore.playPrevious();
-        });
+            navigator.mediaSession.setActionHandler("seekto", ({ seekTime }) => {
+                if (seekTime) {
+                    audioPlayerStore.progressTimer = secondsToMilliSeconds(seekTime);
+                    playbackSeek(seekTime);
+                }
+            });
+
+            // Play next
+            navigator.mediaSession.setActionHandler("nexttrack", () => {
+                audioPlayerStore.playNext()
+            });
+            // Play prev
+            navigator.mediaSession.setActionHandler("previoustrack", () => {
+                audioPlayerStore.playPrevious();
+            });
+        }
     }
 };
 
@@ -322,8 +317,29 @@ const closePlayer = () => {
     audioPlayerStore.audioFiles = null
     audioPlayerStore.selectedVerseKey = ""
     cleanupListeners()
-
 }
+
+const changeMediaVolume = async (volume: number) => {
+    if (audioPlayerRef.value) {
+        audioPlayerStore.mediaVolume = volume
+        audioPlayerRef.value.volume = audioPlayerStore.mediaVolume / 100
+    }
+}
+
+const playChapterAudio = (audioID: number) => {
+    audioPlayerStore.getAudio({ audioID })
+}
+
+const handleSelectedReciter = (reciter: Recitations) => {
+    audioPlayerStore.selectedReciter = reciter
+}
+
+const playNext = (ev: boolean) => {
+    console.log(ev);
+
+    audioPlayerStore.playNext()
+}
+
 </script>
 
 <template>
@@ -332,10 +348,10 @@ const closePlayer = () => {
             <ion-toolbar>
                 <ion-grid>
                     <ion-row>
-                        <ion-col @click="openModal">
+                        <ion-col id="audio-modal">
                             <ion-avatar>
-                                <img :alt="audioPlayerStore.selectedReciter.name" class="img"
-                                    :src="`/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`" />
+                                <img :alt="audioPlayerStore.selectedReciter?.name" class="img"
+                                    :src="`/reciters/${audioPlayerStore.selectedReciter?.reciter_id}.jpg`" />
                             </ion-avatar>
                         </ion-col>
                         <ion-col size="5" class="ion-text-right">
@@ -353,8 +369,6 @@ const closePlayer = () => {
                         </ion-col>
                     </ion-row>
                 </ion-grid>
-
-
                 <div class="d-none">
                     <audio controls :autoplay="audioPlayerStore.audioPlayerSetting.autoPlay" ref="audioPlayerRef"
                         id="audioPlayerRef" :src="audioPlayerStore.audioFiles?.audio_url"
@@ -365,9 +379,20 @@ const closePlayer = () => {
                     </audio>
                 </div>
             </ion-toolbar>
-
+            <audio-player-modal-component trigger="audio-modal" :is-playing="audioPlayerStore.isPlaying"
+                :verse-timing="audioPlayerStore.verseTiming" :selected-reciter="audioPlayerStore.selectedReciter"
+                :audio-files="audioPlayerStore.audioFiles" :chapter-name="audioPlayerStore.chapterName"
+                :loop-audio="audioPlayerStore.loopAudio" :media-volume="audioPlayerStore.mediaVolume"
+                :map-recitions="audioPlayerStore.mapRecitions" :progress-timer="audioPlayerStore.progressTimer"
+                @update:change-volume="changeMediaVolume" @update:seek="playbackSeek"
+                @update:play-chapter="playChapterAudio" @update:play-next="playNext"
+                @update:play-prev="audioPlayerStore.playPrevious()" @update:play-audio="playAudio"
+                @update:loop-audio="audioPlayerStore.loopAudio = $event"
+                @update:selected-reciter="handleSelectedReciter">
+            </audio-player-modal-component>
         </ion-footer>
     </Transition>
+
 </template>
 <style scoped>
 .d-none {
@@ -381,6 +406,7 @@ ion-avatar {
 
 .footer {
     height: 73px;
+    padding: 0px 10px;
 }
 
 /*

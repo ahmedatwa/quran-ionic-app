@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { ref, watchEffect } from 'vue';
 import { IonContent, IonHeader, IonToolbar, IonTitle } from '@ionic/vue';
-import { IonButtons, IonButton, IonModal, IonText } from '@ionic/vue';
+import { IonButtons, IonButton, IonModal, IonText, IonIcon } from '@ionic/vue';
 import type { ChapterInfo } from '@/types/chapter';
 import { useChapterStore } from '@/stores/ChapterStore';
+import { chevronDownOutline } from 'ionicons/icons';
 
 const modal = ref();
 const { getChapter } = useChapterStore()
@@ -27,13 +28,14 @@ watchEffect(() => {
 </script>
 
 <template>
-
-    <ion-modal ref="modal" :trigger="trigger" :can-dismiss="true" :presenting-element="pageEl">
+    <ion-modal ref="modal" :trigger="trigger" :can-dismiss="true">
         <ion-header>
             <ion-toolbar>
                 <ion-title>{{ chapterName }}</ion-title>
-                <ion-buttons slot="end">
-                    <ion-button @click="dismiss()">Close</ion-button>
+                <ion-buttons slot="start">
+                    <ion-button @click="dismiss" color="medium">
+                    <ion-icon :icon="chevronDownOutline"></ion-icon>
+                </ion-button>
                 </ion-buttons>
             </ion-toolbar>
         </ion-header>
