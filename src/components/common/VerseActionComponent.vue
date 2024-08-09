@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import { ref } from "vue"
 import { IonActionSheet } from '@ionic/vue';
+import { Clipboard } from '@capacitor/clipboard';
 // types
 import type { Verse } from "@/types/verse";
 
-const isCopied = ref(false)
 const props = defineProps<{
     verse: Verse
     triggerProp: string
@@ -16,7 +15,6 @@ const emit = defineEmits<{
     "update:playVerseAudio": [value: { audioID: number, verseKey: string }]
     "update:bookmarked": [value: Verse]
 }>()
-
 
 const actionSheetButtons = [
     {
@@ -52,9 +50,10 @@ const handleDismiss = (ev: CustomEvent) => {
     }
 }
 
-const copyText = (text: string) => {
-    navigator.clipboard.writeText(text)
-    isCopied.value = true
+const copyText = async (text: string) => {
+    await Clipboard.write({
+        string: text
+    });
 }
 
 </script>

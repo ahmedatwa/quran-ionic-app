@@ -1,33 +1,34 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted } from 'vue';
-import { IonContent, IonHeader, IonSegmentButton } from '@ionic/vue';
-import { IonToolbar, IonSegment, IonLabel, IonPage } from '@ionic/vue';
+import { IonContent, IonHeader, IonSegmentButton, IonButton } from '@ionic/vue';
+import { IonToolbar, IonSegment, IonLabel, IonPage, alertController } from '@ionic/vue';
 // components
 import TranslationsViewComponent from '@/components/chapter/TranslationsViewComponent.vue';
 import ReadingViewComponent from '@/components/chapter/ReadingViewComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
+import ChapterInfoModalComponent from '@/components/chapter/ChapterInfoModalComponent.vue';
 import { useRoute } from 'vue-router';
 // stores
 import { useChapterStore } from "@/stores/ChapterStore"
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
-import { useSettingStore } from '@/stores/SettingStore';
 import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
 import { useLocale } from '@/utils/useLocale';
+import { useStorage } from '@/utils/useStorage';
 // types
 import type { ChapterInfo } from '@/types/chapter';
+import type { Styles } from "@/types/settings"
 
 const currentSegment = ref("translations")
 const chapterStore = useChapterStore()
 const audioPlayerStore = useAudioPlayerStore()
-const { cssVars } = useSettingStore()
 const { getLine } = useLocale()
-const { selectedTranslations } = useTranslationsStore()
+const { getStorage } = useStorage("__settingsDB")
+const transaltionStore = useTranslationsStore()
 const pageRef = ref()
 const pageRefEl = ref()
-const modalButtonRef = ref()
-const modelInfoRef = ref()
-const translators = computed(() => selectedTranslations.map((t) => t.author_name))
+const chapterInfoModalRef = ref()
+const dbStyles = ref<Styles>()
 const audioModelValue = ref(false)
 const pagination = computed(() => chapterStore.selectedChapter?.pagination)
 const chapterInfo = ref<ChapterInfo | null>(null)
@@ -72,23 +73,33 @@ const getVerses = async (ev: { key: string, nextPage: number }) => {
 
 const styles = computed(() => {
     return {
-        fontFamily: `var(--font-family-${cssVars.quranFontFamily})`,
-        fontSize: `var(--font-size-${cssVars.quranFrontSize})`,
-        fontWeight: `var(--font-weight-${cssVars.fontWeight})`
+        fontFamily: `var(--font-family-${dbStyles.value?.fontFamily})`,
+        fontSize: `var(--font-size-${dbStyles.value?.fontSize})`,
+        fontWeight: `var(--font-weight-${dbStyles.value?.fontWeight})`
     }
 })
 
-const openModal = () => {
-    modelInfoRef.value.$el.click()
+const getTranslationAlert = async () => {
+    const alert = await alertController.create({
+        header: transaltionStore.selectedTranslation?.language_name.toUpperCase(),
+        message: transaltionStore.selectedTranslation?.author_name,
+        buttons: ['Ok'],
+    });
+
+    await alert.present();
 }
 
-onMounted(() => pageRefEl.value = pageRef.value.$el)
+onMounted(async () => {
+    const result = await getStorage("styles")
+    if (result) dbStyles.value = result
+    pageRefEl.value = pageRef.value.$el
+})
 
 const getSurahInfo = async (ev: number) => {
     await chapterStore.getchapterInfo(ev).then((response) => {
         chapterInfo.value = response.data.chapter_info
     })
-    modalButtonRef.value.$el.click()
+    chapterInfoModalRef.value.$el.click()
 }
 
 </script>
@@ -114,7 +125,7 @@ const getSurahInfo = async (ev: number) => {
                 @update:play-audio="playAudio" :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles"
                 :verses="verses" :chapter-name="chapterStore.selectedChapterName.nameArabic"
                 :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
-                @update:modal-value="openModal">
+                @update:modal-value="getTranslationAlert" :audio-experience="audioPlayerStore.audioPlayerSetting">
             </translations-view-component>
             <reading-view-component id="reading-chapters" :is-reading-view="currentSegment === 'reading'"
                 :is-playing="audioPlayerStore.isPlaying" :verses="verses" :is-loading="chapterStore.isLoading.verses"
@@ -122,15 +133,14 @@ const getSurahInfo = async (ev: number) => {
                 @update:surah-info="getSurahInfo" :pagination="pagination">
             </reading-view-component>
             <div>
-                <ion-button ref="modalButtonRefInfo" id="chapter-modal-info" class="ion-hide"></ion-button>
+                <ion-button ref="chapterInfoModalRef" id="chapter-modal-info" class="ion-hide"></ion-button>
                 <chapter-info-modal-component trigger="chapter-modal-info" :chapter-info="chapterInfo"
                     :page-el="pageRefEl"></chapter-info-modal-component>
-
-                <ion-button id="chapter-translation-info" ref="modelInfoRef" class="ion-hide"></ion-button>
-                <modal-info-component trigger="chapter-translation-info" :text="translators"></modal-info-component>
             </div>
         </ion-content>
-        <audio-player-component :model-value="audioModelValue" @update:model-value="audioModelValue = $event">
-        </audio-player-component>
+        <div class="footer">
+            <audio-player-component :model-value="audioModelValue" @update:model-value="audioModelValue = $event">
+            </audio-player-component>
+        </div>
     </ion-page>
 </template>

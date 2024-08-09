@@ -11,9 +11,10 @@ import { playOutline, ellipsisVerticalOutline, languageOutline } from "ionicons/
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
-import { setStorage } from "@/utils/storage";
+import { useStorage } from "@/utils/useStorage";
 import { useRoute, useRouter } from "vue-router";
 import { vIntersectionObserver } from "@vueuse/components";
+import { upperCaseFirst } from "@/utils/string"
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
@@ -24,9 +25,11 @@ import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
 import { useChapterStore } from "@/stores/ChapterStore";
 
 const { getLine } = useLocale()
-const { getChapterNameByFirstVerse } = useChapterStore()
+const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
+const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
 const { params } = useRoute()
-const { go } = useRouter()
+const router = useRouter()
+const contentRef = ref()
 const pageId = computed((): number | undefined => Number(params.pageId))
 const intersectingVerseNumber = ref<number>()
 
@@ -62,12 +65,24 @@ const onIntersectionObserver = ([{ isIntersecting, target, intersectionRatio }]:
 // For Element Scroll
 watch(intersectingVerseNumber, (newVerseNumber) => {
     if (newVerseNumber) {
-        scrollToElement(`#verse-col-${newVerseNumber}`, 300)
+        scrollToElement(`#verse-col-${newVerseNumber}`, contentRef.value.$el, 300)
     }
 })
 
-const setBookmarked = (verse: Verse) => {
-    setStorage("bookmark", verse)
+const setBookmarked = async (verse: Verse) => {
+    bookmarkedItems.value.push({
+        key: `/page/${verse.page_number}`,
+        value: {
+            pageNumber: verse.page_number,
+            verseNumber: verse.verse_number,
+            verseText: verse.text_uthmani,
+            chapterName: getChapterName(verse.chapter_id)?.nameSimple
+        }
+    })
+    bookmarkedItems.value.forEach(({ key, value }) => {
+        setStorage(key, value)
+    })
+
 };
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
@@ -78,39 +93,43 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     }
 }
 
-const routerBackPath = computed(() => {
-    if (props.id) {
-        return props.id.split("-")[1]
-    }
-})
 
 const isWordHighlighted = (word: VerseWord) => {
     if (props.verseTiming) {
         return props.verseTiming.wordLocation === word.location
     }
 };
+
+const routeBackName = computed(() => {
+    if (router.options.history.state.back) {
+        return upperCaseFirst(router.options.history.state.back.toString().substring(1))
+    }
+    return upperCaseFirst(getLine("tabs.pages"))
+})
+
 </script>
 <template>
     <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${pageId}`">
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button @click="go(-1)" router-direction="back">
+                <ion-button @click="router.go(-1)" router-direction="back" color="primary">
                     <ion-icon :icon="chevronBackOutline"></ion-icon>
+                    <ion-label>{{ routeBackName }}</ion-label>
                 </ion-button>
             </ion-buttons>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
         </ion-toolbar>
-        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true">
+        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef">
             <ion-card class="ion-padding card-wrapper" v-for="(verses, chapterId) in verses" :key="chapterId"
                 :id="`card-${chapterId}`">
                 <div>
                     <ion-chip
                         @click="$emit('update:playAudio', { audioID: verses[0].chapter_id, verseKey: verses[0].verse_key })"
-                        color="primary">
+                        color="primary" class="ion-float-right">
                         <ion-icon :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
                         <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
                     </ion-chip>
-                    <ion-button @click="$emit('update:modalValue', true)" fill="clear" class="ion-float-right">
+                    <ion-button @click="$emit('update:modalValue', true)" fill="clear">
                         <ion-icon :icon="languageOutline" slot="icon-only"></ion-icon>
                     </ion-button>
                 </div>
@@ -153,11 +172,12 @@ const isWordHighlighted = (word: VerseWord) => {
                     </ion-grid>
                 </ion-item>
                 <div v-if="pageId" class="ion-margin-top">
-                    <ion-button size="small" fill="clear" v-if="pageId > 1" :router-link="`/page/${pageId - 1}`">
+                    <ion-button size="small" fill="clear" :disabled="pageId === 1" :router-link="`/page/${pageId - 1}`">
                         <ion-icon :icon="arrowBackOutline" slot="start"></ion-icon>
                         {{ getLine('quranReader.prevPage') }}
                     </ion-button>
-                    <ion-button size="small" fill="clear" v-if="pageId <= 604" class="ion-float-right"
+
+                    <ion-button size="small" fill="clear" :disabled="pageId === 604" class="ion-float-right"
                         :router-link="`/page/${pageId + 1}`">
                         <ion-icon :icon="arrowForwardOutline" slot="start"></ion-icon>
                         {{ getLine('quranReader.nextPage') }}

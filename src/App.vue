@@ -1,29 +1,28 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onBeforeMount } from 'vue';
 import { IonApp, IonRouterOutlet, IonContent } from '@ionic/vue';
+// stores
 import { useMetaStore } from '@/stores/MetaStore';
-import { useSettingStore } from '@/stores/SettingStore';
-import { getStorage, setStorage } from '@/utils/storage';
+// utils
+import { useStorage } from '@/utils/useStorage';
+
 
 const metaStore = useMetaStore()
-const settingStore = useSettingStore()
+const { getStorage, setStorage } = useStorage("__settingsDB")
 
-onMounted(() => {
-  const colorScheme = getStorage("color-scheme")
+onBeforeMount(async () => {
+  const colorScheme = await getStorage("colorScheme")
   if (colorScheme) {
     switch (colorScheme) {
       case "auto":
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-        settingStore.paletteToggle = prefersDark.matches;
         document.documentElement.classList.toggle('ion-palette-dark', prefersDark.matches);
         break;
       case "dark":
-        settingStore.paletteToggle = true
         window.matchMedia(`(prefers-color-scheme: dark)`);
         document.documentElement.classList.toggle('ion-palette-dark', true);
         break;
       case "light":
-        settingStore.paletteToggle = false
         window.matchMedia(`(prefers-color-scheme: light)`);
         document.documentElement.classList.toggle('ion-palette-dark', false);
         break;
@@ -31,9 +30,30 @@ onMounted(() => {
         break;
     }
   } else {
-    setStorage("color-scheme", "auto")
+    setStorage("colorScheme", "auto")
+  }
+  // Audio Setting
+  const audioSettings = await getStorage("audioSettings")
+  if (!audioSettings) {
+    setStorage("audioSettings", {
+      autoPlay: true,
+      dismissOnEnd: true,
+      autoScroll: true,
+      autoDownload: false,
+    })
+  }
+  // Styles
+  const stylesSettings = await getStorage("styles")
+  if (!stylesSettings) {
+    setStorage("styles", {
+      fontSize: "1",
+      fontFamily: "Noto-Kufi",
+      fontWeight: "400",
+    })
   }
 })
+
+
 </script>
 
 <template>

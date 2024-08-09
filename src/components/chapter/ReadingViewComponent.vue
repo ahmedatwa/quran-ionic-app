@@ -61,12 +61,6 @@ const isWordHighlighted = (loaction: string, verseKey: string) => {
     }
 };
 
-const routerBackPath = computed(() => {
-    if (props.id) {
-        return props.id.split("-")[1]
-    }
-})
-
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     if (props.pagination?.next_page) {
         emit("update:getVerses", { key: props.id, nextPage: props.pagination.next_page })
@@ -83,13 +77,8 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
             <ion-buttons slot="start">
                 <ion-button @click="go(-1)" router-direction="back">
                     <ion-icon :icon="chevronBackOutline"></ion-icon>
+                    <ion-label>{{ getLine('tabs.chapters') }}</ion-label>
                 </ion-button>
-            </ion-buttons>
-            <ion-buttons slot="end">
-                <ion-chip @click="$emit('update:playAudio', { audioID: chapterId })" color="primary">
-                    <ion-icon color="primary" :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
-                    <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
-                </ion-chip>
             </ion-buttons>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
         </ion-toolbar>
@@ -97,12 +86,12 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
             <ion-card class="ion-padding" v-for="(verses, page) in mapVersesByPage" :key="page"
                 :id="`row-page-${page}`">
                 <div>
-                    <ion-chip @click="$emit('update:playAudio', { audioID: verses[0].chapter_id })" color="primary">
+                    <ion-chip @click="$emit('update:playAudio', { audioID: verses[0].chapter_id })" color="primary"
+                        class="ion-float-right">
                         <ion-icon :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
                         <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
                     </ion-chip>
-                    <ion-button fill="clear" class="ion-float-right"
-                        @click="$emit('update:surahInfo', verses[0].chapter_id)">
+                    <ion-button fill="clear" @click="$emit('update:surahInfo', verses[0].chapter_id)">
                         <ion-icon :icon="informationCircleOutline" slot="icon-only"></ion-icon>
                     </ion-button>
                 </div>

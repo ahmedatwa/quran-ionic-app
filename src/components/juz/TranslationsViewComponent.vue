@@ -11,7 +11,7 @@ import { playOutline, ellipsisVerticalOutline } from "ionicons/icons";
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
-import { setStorage } from "@/utils/storage";
+import { useStorage } from "@/utils/useStorage";
 import { useRoute, useRouter } from "vue-router";
 import { vIntersectionObserver } from "@vueuse/components";
 // types
@@ -26,7 +26,8 @@ import { useChapterStore } from "@/stores/ChapterStore";
 
 const contentRef = ref()
 const { getLine } = useLocale()
-const { getChapterNameByFirstVerse } = useChapterStore()
+const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
+const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
 const { params } = useRoute()
 const { go } = useRouter()
 const juzId = computed(() => Number(params.juzId))
@@ -53,8 +54,20 @@ const emit = defineEmits<{
     "update:modalValue": [value: boolean]
 }>();
 
-const setBookmarked = (verse: Verse) => {
-    setStorage("bookmarks", { route: `/page/${verse.page_number}`, value: verse }, true)
+const setBookmarked = async (verse: Verse) => {
+    bookmarkedItems.value.push({
+        key: `/page/${verse.page_number}`,
+        value: {
+            pageNumber: verse.page_number,
+            verseNumber: verse.verse_number,
+            verseText: verse.text_uthmani,
+            chapterName: getChapterName(verse.chapter_id)?.nameSimple
+        }
+    })
+    bookmarkedItems.value.forEach(({ key, value }) => {
+        setStorage(key, value)
+    })
+
 };
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
@@ -75,7 +88,7 @@ const onIntersectionObserver = ([{ isIntersecting, target, intersectionRatio }]:
 // For Element Scroll
 watch(intersectingVerseNumber, (newVerseNumber) => {
     if (newVerseNumber) {
-        scrollToElement(`#verse-col-${newVerseNumber}`, 300)
+        scrollToElement(`#verse-col-${newVerseNumber}`, contentRef.value.$el, 300)
     }
 })
 
@@ -90,8 +103,9 @@ const isWordHighlighted = (word: VerseWord) => {
     <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${juzId}`">
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button @click="go(-1)" router-direction="back">
+                <ion-button @click="go(-1)" router-direction="back" color="primary">
                     <ion-icon :icon="chevronBackOutline"></ion-icon>
+                    <ion-label>{{ getLine('tabs.juzs') }}</ion-label>
                 </ion-button>
             </ion-buttons>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
@@ -102,11 +116,11 @@ const isWordHighlighted = (word: VerseWord) => {
                 <div>
                     <ion-chip
                         @click="$emit('update:playAudio', { audioID: mappedVerses[0].chapter_id, verseKey: mappedVerses[0].verse_key })"
-                        color="primary">
+                        color="primary" class="ion-float-right">
                         <ion-icon :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
                         <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
                     </ion-chip>
-                    <ion-button @click="$emit('update:modalValue', true)" fill="clear" class="ion-float-right">
+                    <ion-button @click="$emit('update:modalValue', true)" fill="clear">
                         <ion-icon :icon="languageOutline" slot="icon-only"></ion-icon>
                     </ion-button>
                 </div>

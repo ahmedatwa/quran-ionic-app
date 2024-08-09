@@ -33,16 +33,21 @@ export default {
     fontSize: "Font Size",
     light: "Light",
     dark: "Dark",
-    auto: "Auto"
+    auto: "Auto",
+    autoScroll: "Auto Scroll",
+    cache: "Cache",
+    autoDownload: "Auto Download Audio",
+
   },
   bookmark: {
-    title: 'Bookmarks',
-    content: "When you are reading the Quran, tap the Bookmark button to mark the current page",
+    title: "Bookmarks",
+    content:
+      "When you are reading the Quran, tap the Bookmark button to mark the current page",
   },
   audio: {
     chapters: "Chapters",
     audio: "Audio",
-    audioChapters: "Chapters Audio", 
+    audioChapters: "Chapters Audio",
     selectReciter: "Select Reciter",
     playlist: "Playlist",
   },

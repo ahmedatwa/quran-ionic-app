@@ -54,8 +54,8 @@ interface Recitations {
   };
 }
 
-interface mapRecitions {
-  [key: string]: Recitations;
+interface MapRecitions {
+  [key: string]: Recitations[];
 }
 
 type IsAudioPlayingProps = {
@@ -64,7 +64,12 @@ type IsAudioPlayingProps = {
   format?: string;
 } | null;
 
-type PlayAudioEmit = { audioID: number; audioSrc?: string; verseKey?: string, pause?: boolean };
+type PlayAudioEmit = {
+  audioID: number;
+  audioSrc?: string;
+  verseKey?: string;
+  pause?: boolean;
+};
 
 type BottomSheetProps = {
   scrim: boolean;
@@ -72,14 +77,24 @@ type BottomSheetProps = {
   noClickAnimation: boolean;
 };
 
+type AudioPlayerSettings = {
+  autoPlay: boolean;
+  dismissOnEnd: boolean;
+  autoScroll: boolean;
+  tooltip?: boolean;
+  fullwidth?: boolean;
+  autoDownload?: boolean;
+};
+
 export {
   VerseTimings,
   AudioFile,
   Recitations,
-  mapRecitions,
+  MapRecitions,
   VerseTimingsProps,
   IsAudioPlayingProps,
   PlayAudioEmit,
   BottomSheetProps,
   VerseTimingSegments,
+  AudioPlayerSettings,
 };

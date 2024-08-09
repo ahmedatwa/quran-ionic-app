@@ -13,6 +13,13 @@ interface Juz {
   verse_mapping: VerseMapping;
   verses_count: number;
   verses: Verse[] | null;
+  chapters?: {
+    juzNumber: number;
+    chapterId: string | number;
+    en: string;
+    ar: string;
+    verses: string;
+  }[];
   pagination?: Pagination | null;
   audioFile?: AudioFiles | null;
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watchEffect, onMounted, computed } from "vue"
+import { ref, onBeforeMount, watchEffect } from "vue"
 import { IonContent, IonItem, IonLabel, IonNote } from '@ionic/vue';
 import { IonList, IonPage, IonIcon } from '@ionic/vue';
 import { bookmarkOutline, bookmarksOutline } from 'ionicons/icons';
@@ -7,13 +7,31 @@ import { bookmarkOutline, bookmarksOutline } from 'ionicons/icons';
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
 // utils
 import { useLocale } from '@/utils/useLocale';
-import { getStorage } from '@/utils/storage';
-// type
-import { useChapterStore } from "@/stores/ChapterStore";
+import { useStorage, BookmarkedItems } from "@/utils/useStorage";
+import { truncate } from "@/utils/string";
+
 
 const { getLine } = useLocale()
-const { getChapterName } = useChapterStore()
-const bookmarks = computed(() => getStorage("bookmarks"))
+const bookmarks = ref<BookmarkedItems[]>([])
+const { storage, bookmarkedItems, storageLength } = useStorage("__bookmarksDB")
+
+onBeforeMount(async () => {
+    const len = await storageLength()
+    if (len) {
+        storage.forEach((key, value) => {
+            bookmarks.value.push({ key: value, value: key })
+        })
+    }
+})
+
+watchEffect(() => {
+    if (bookmarkedItems.value) {
+        bookmarkedItems.value.forEach((item) => {
+            bookmarks.value?.push(item)
+        })
+    }
+})
+
 
 </script>
 
@@ -24,13 +42,13 @@ const bookmarks = computed(() => getStorage("bookmarks"))
         <ion-content :fullscreen="true">
             <div class="ion-padding">
                 <ion-list>
-                    <ion-item button v-for="item in bookmarks" :key="item.route" :router-link="item.route">
+                    <ion-item button v-for="item in bookmarks" :key="item.key" :router-link="item.key">
                         <ion-icon slot="start" :icon="bookmarkOutline" color="danger"></ion-icon>
                         <ion-label>
-                            <h3> {{ getChapterName(item.value.chapter_id)?.nameSimple }}</h3>
-                            <ion-note>{{ item.value.text_uthmani }}</ion-note>
+                            <h3> {{ item.value.chapterName }}</h3>
+                            <ion-note class="rtl">{{ truncate(item.value.verseText, 50) }}</ion-note>
                         </ion-label>
-                        <ion-note slot="end">{{ item.value.verse_number }}</ion-note>
+                        <ion-note slot="end">{{ item.value.verseNumber }}</ion-note>
                     </ion-item>
                 </ion-list>
             </div>
@@ -48,5 +66,9 @@ ion-item {
 
 ion-accordion {
     margin: 0 auto;
+}
+
+.rtl {
+    direction: rtl;
 }
 </style>

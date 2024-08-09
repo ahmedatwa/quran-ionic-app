@@ -1,13 +1,12 @@
 import { defineStore } from "pinia";
-import { ref, computed, onBeforeMount, watch } from "vue";
+import { ref, computed, onBeforeMount, watch, onMounted, watchEffect } from "vue";
 // types
 import { Translation, TranslationReduceMap } from "@/types/translations";
 
 export const useTranslationsStore = defineStore("translations-store", () => {
   const isLoading = ref(false);
   const translationsList = ref<Translation[]>([]);
-  const selectedTranslationIds = ref<number[]>([131]);
-  const selectedTranslations = ref<Translation[]>([]);
+  const selectedTranslation = ref<Translation>();
 
   const getAllTranslations = (): Promise<Translation[]> => {
     return new Promise((resolve, reject) => {
@@ -52,53 +51,13 @@ export const useTranslationsStore = defineStore("translations-store", () => {
     await getTranslations();
   });
 
-  const selectedTranslationsAuthors = computed(() => {
-    if (selectedTranslations.value) {
-      return selectedTranslations.value.map((t) => t.author_name);
-    } else {
-      return [];
+  watchEffect(() => {
+    if (!selectedTranslation.value) {
+      const result = translationsList.value.find((t) => t.id === 131);
+      if (result) selectedTranslation.value = result;
     }
   });
-
-  const selectedTranslationsIdsString = computed(() => {
-    return selectedTranslationIds.value.join(",");
-  });
-
-  const groupedTranslationsAuthors = computed(() => {
-    if (selectedTranslationsAuthors.value.length > 1) {
-      return (
-        selectedTranslationsAuthors.value[0] +
-        " and " +
-        (selectedTranslationsAuthors.value.length - 1) +
-        " others"
-      );
-    } else {
-      return selectedTranslationsAuthors.value[0];
-    }
-  });
-
-  watch(selectedTranslationIds, () => {
-    if (selectedTranslations) {
-      selectedTranslations.value = [];
-      selectedTranslationIds.value.forEach((id) => {
-        const found = translationsList.value?.find((tr) => tr.id === id);
-        if (found) {
-          selectedTranslations.value.push(found);
-        }
-      });
-    }
-  });
-
-  watch(translationsList.value, (val) => {
-    if (val) {
-      const found = val.find((tr) => tr.id === 131);
-      if (found) {
-        selectedTranslations.value.push(found);
-      }
-    }
-  });
-
-  const groupTranslationsByLanguage = computed((): TranslationReduceMap | undefined => {
+  const groupTranslationsByLanguage = computed(() => {
     if (translationsList.value) {
       return translationsList.value.reduce((o: any, i) => {
         (o[i.language_name as keyof typeof o] =
@@ -112,11 +71,7 @@ export const useTranslationsStore = defineStore("translations-store", () => {
     translations,
     isLoading,
     translationsList,
-    selectedTranslations,
-    selectedTranslationsAuthors,
-    selectedTranslationIds,
-    selectedTranslationsIdsString,
-    groupedTranslationsAuthors,
+    selectedTranslation,
     groupTranslationsByLanguage,
     getTranslations,
   };

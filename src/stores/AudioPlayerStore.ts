@@ -1,52 +1,38 @@
 import { defineStore } from "pinia";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watchEffect } from "vue";
+import { alertController } from "@ionic/vue";
 //axios
 import { instance } from "@/axios";
-import {
-  audioRecitersUrl,
-  recitationsUrl,
-  AVATAR_PLACEHOLDER_API,
-} from "@/axios/url";
+import { audioRecitersUrl, recitationsUrl } from "@/axios/url";
+import { AVATAR_PLACEHOLDER_API } from "@/axios/url";
 // types
-import type { AudioFile, Recitations } from "@/types/audio";
-import type { mapRecitions, PlayAudioEmit } from "@/types/audio";
+import type {
+  AudioFile,
+  AudioPlayerSettings,
+  Recitations,
+} from "@/types/audio";
+import type { MapRecitions, PlayAudioEmit } from "@/types/audio";
 import type { VerseTimingsProps } from "@/types/audio";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
-import { useSettingStore } from "@/stores/SettingStore";
 // utils
-import { getStorage, setStorage } from "@/utils/storage";
+import { useStorage } from "@/utils/useStorage";
+import { useBlob } from "@/utils/useBlob";
 
 export const useAudioPlayerStore = defineStore("audio-player-store", () => {
-  const settingStore = useSettingStore();
-
   const { getChapterNameByChapterId, TOTAL_CHAPTERS, getChapter } =
     useChapterStore();
   const isLoading = ref(false);
+  const settingsDB = useStorage("__settingsDB");
+  const audioDB = useStorage("__audioDB");
+  const { encodeBlobToBase64 } = useBlob();
+
   const audioFiles = ref<AudioFile | null>(null);
   const autoStartPlayer = ref(false);
   const chapterId = ref<number>();
   const audioPayLoadSrc = ref<string | undefined>("");
   const selectedVerseKey = ref<string | undefined>("");
-  const selectedReciter = ref<Recitations>({
-    id: 7,
-    reciter_id: 6,
-    name: "Mishari Rashid al-`Afasy",
-    translated_name: {
-      name: "Mishari Rashid al-`Afasy",
-      language_name: "english",
-    },
-    style: {
-      name: "Murattal",
-      language_name: "english",
-      description:
-        "Murattal is Quranic recitation at a slower pace, used for study and practice.",
-    },
-    qirat: {
-      name: "Hafs",
-      language_name: "english",
-    },
-  });
+  const selectedReciter = ref<Recitations>();
   const playbackSpeeds = ref([
     "0.25",
     "0.5",
@@ -59,10 +45,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   ]);
   const recitations = ref<Recitations[]>([]);
   const verseTiming = ref<VerseTimingsProps>();
-  // Start Testing
-  const audioPlayerRef = computed(() => {
-    document.querySelector("#audioPlayerRef");
-  });
+  const isDownloadSuccess = ref(false);
   const playbackRate = ref("Normal");
   const listenerActive = ref(false);
   const progressTimer = ref<number>(0);
@@ -95,45 +78,65 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const getAudio = async (payload: PlayAudioEmit, audioSrc?: string) => {
     //https://api.qurancdn.com/api/qdc/audio/reciters/9/audio_files?chapter=1&segments=true
     // if (payload.audioID === chapterId.value) return;
-    const chapter = getChapter(payload.audioID);
-    chapterId.value = payload.audioID;
-    selectedVerseKey.value = payload.verseKey;
-    audioPayLoadSrc.value = payload.audioSrc ? payload.audioSrc : audioSrc;
-    // stop the api call if audio files are already loaded
-    // to chapter from prev api call
-    if (
-      chapter?.audioFile?.reciterId === selectedReciter.value.id &&
-      chapter?.audioFile.chapter_id === payload.audioID
-    ) {
-      audioFiles.value = chapter.audioFile;
-      return;
-    }
 
-    isLoading.value = true;
-    await instance
-      .get(audioRecitersUrl(selectedReciter.value.id, payload.audioID))
-      .then((response) => {
-        // this triggers verseTiming computed func in audioPlayer Component
-        audioFiles.value = null;
-
+    if (selectedReciter.value) {
+      // check for DB files return if audio found
+      const audioStorage = await audioDB.getStorage(
+        `${selectedReciter.value.id}-${payload.audioID}`
+      );
+      if (audioStorage) {
         audioFiles.value = {
-          reciterId: selectedReciter.value.id,
-          ...response.data.audio_files[0],
+          ...audioStorage,
+          verse_timings: JSON.parse(audioStorage.verse_timings),
         };
-        // push audio chapter data
-        if (chapter) {
-          chapter.audioFile = {
-            reciterId: selectedReciter.value.id,
+        return;
+      }
+
+      const chapter = getChapter(payload.audioID);
+      chapterId.value = payload.audioID;
+      selectedVerseKey.value = payload.verseKey;
+      audioPayLoadSrc.value = payload.audioSrc ? payload.audioSrc : audioSrc;
+      // stop the api call if audio files are already loaded
+      // to chapter from prev api call
+      if (
+        chapter?.audioFile?.reciterId === selectedReciter.value.id &&
+        chapter?.audioFile.chapter_id === payload.audioID
+      ) {
+        audioFiles.value = chapter.audioFile;
+        return;
+      }
+
+      isLoading.value = true;
+      await instance
+        .get(audioRecitersUrl(selectedReciter.value?.id, payload.audioID))
+        .then((response) => {
+          // this triggers verseTiming computed func in audioPlayer Component
+          audioFiles.value = null;
+          verseTiming.value = undefined;
+          audioFiles.value = {
+            reciterId: selectedReciter.value?.id,
             ...response.data.audio_files[0],
           };
-        }
-      })
-      .catch((e) => {
-        throw e;
-      })
-      .finally(() => {
-        isLoading.value = false;
-      });
+          // push audio chapter data
+          if (chapter) {
+            chapter.audioFile = {
+              reciterId: selectedReciter.value?.id,
+              ...response.data.audio_files[0],
+            };
+          }
+        })
+        .catch((e) => {
+          throw e;
+        })
+        .finally(async () => {
+          isLoading.value = false;
+          const audioSettings: AudioPlayerSettings =
+            await settingsDB.getStorage("audioSettings");
+          if (audioSettings.autoDownload) {
+            downloadAudioFile();
+          }
+        });
+    }
   };
 
   const getRecitations = async () => {
@@ -164,29 +167,10 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
    */
   const playNext = async (audioSrc?: string) => {
     if (chapterId.value) {
-      settingStore.isAppLoading = true;
-
       chapterId.value =
         chapterId.value >= TOTAL_CHAPTERS ? 1 : chapterId.value + 1;
       // get the audio files
       await getAudio({ audioID: chapterId.value }, audioSrc);
-      // TODO: Auto switch translations view with audio loop on
-      // check chapter verses
-      // const chapter = chapterStore.chaptersList.find(
-      //   (c) => c.id === chapterId.value
-      // );
-      // fetch the chapter verses if not found
-      // if (chapter) {
-      //   if (!chapter.verses?.length) {
-      //     await chapterStore.getVerses(chapter.id, true);
-      //   }
-      //   chapterStore.selectedChapter = chapter;
-      // }
-
-      // Clear Loading interval when data is ready
-      if (audioFiles.value) {
-        settingStore.isAppLoading = false;
-      }
     }
   };
 
@@ -199,16 +183,15 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
 
   onMounted(async () => {
     await getRecitations();
-
-    const userSettings = getStorage("user-setting");
-    if (userSettings) {
-      audioPlayerSetting.value = userSettings;
-    } else {
-      setStorage("user-setting", audioPlayerSetting.value);
-    }
   });
 
-  const mapRecitions = computed((): mapRecitions[] | undefined => {
+  watchEffect(() => {
+    if (!selectedReciter.value) {
+      const found = recitations.value.find((r) => r.reciter_id === 6);
+      if (found) selectedReciter.value = found;
+    }
+  });
+  const mapRecitions = computed((): MapRecitions | undefined => {
     if (recitations.value) {
       return recitations.value.reduce((o: any, i) => {
         (o[i.style.name as keyof typeof o] =
@@ -227,7 +210,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   });
 
   const avatarPlaceholder = computed(() => {
-    return `${AVATAR_PLACEHOLDER_API}?name="${selectedReciter.value.name}`;
+    return `${AVATAR_PLACEHOLDER_API}?name="${selectedReciter.value?.name}`;
   });
 
   // Start Audio Test
@@ -239,6 +222,44 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const playbackPlaying = () => {
     isPlaying.value = true;
     listenerActive.value = true;
+  };
+
+  const downloadAudioFile = () => {
+    if (audioFiles.value) {
+      const audioUrl = audioFiles.value.audio_url;
+      const key = `${String(audioFiles.value.reciterId)}-${
+        audioFiles.value.chapter_id
+      }`;
+      instance
+        .get(audioUrl, {
+          responseType: "blob",
+        })
+        .then(async (response) => {
+          const base64Data = (await encodeBlobToBase64(
+            response.data
+          )) as string;
+          audioDB.setStorage(key, {
+            reciterId: String(audioFiles.value?.reciterId),
+            id: audioFiles.value?.id,
+            chapter_id: audioFiles.value?.chapter_id,
+            file_size: audioFiles.value?.file_size,
+            format: audioFiles.value?.format,
+            duration: audioFiles.value?.duration,
+            verse_timings: JSON.stringify(audioFiles.value?.verse_timings),
+            audio_url: base64Data,
+          });
+        })
+        .finally(async () => {
+          isDownloadSuccess.value = true;
+          const alert = await alertController.create({
+            header: chapterName.value + "." + audioFiles.value?.format,
+            message: "File has been downloaded!",
+            buttons: ["Ok"],
+          });
+
+          await alert.present();
+        });
+    }
   };
 
   return {
@@ -256,7 +277,6 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     audioPayLoadSrc,
     getReciterNameInitials,
     avatarPlaceholder,
-    audioPlayerRef,
     playbackRate,
     listenerActive,
     progressTimer,
@@ -277,5 +297,6 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     getRecition,
     playNext,
     playPrevious,
+    downloadAudioFile,
   };
 });

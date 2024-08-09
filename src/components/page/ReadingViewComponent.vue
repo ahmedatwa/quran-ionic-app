@@ -7,6 +7,7 @@ import { IonContent, IonItemDivider, IonInfiniteScroll } from "@ionic/vue";
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { useRoute, useRouter } from "vue-router";
+import { upperCaseFirst } from "@/utils/string"
 // Types
 import type { GroupVersesByChapterID, Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
@@ -15,10 +16,10 @@ import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 import { chevronBackOutline, pauseOutline, playOutline } from "ionicons/icons";
 import { informationCircleOutline, arrowForwardOutline, arrowBackOutline } from "ionicons/icons";
 
-const { params } = useRoute()
-const { go } = useRouter()
-const { getLine, isRtl } = useLocale()
-const pageId = computed((): number | undefined => Number(params.pageId))
+const route = useRoute()
+const router = useRouter()
+const { getLine } = useLocale()
+const pageId = computed((): number | undefined => Number(route.params.pageId))
 
 const props = defineProps<{
     id: string;
@@ -64,14 +65,23 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     }
 }
 
+
+const routeBackName = computed(() => {
+    if (router.options.history.state.back) {
+        return upperCaseFirst(router.options.history.state.back.toString().substring(1))
+    }
+    return upperCaseFirst(getLine("tabs.pages"))
+})
+
 </script>
 
 <template>
     <div class="ion-page" v-if="isReadingView" :id="`${id}-${pageId}`">
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button @click="go(-1)" router-direction="back">
+                <ion-button @click="router.go(-1)" router-direction="back" color="primary">
                     <ion-icon :icon="chevronBackOutline"></ion-icon>
+                    <ion-label>{{ routeBackName }}</ion-label>
                 </ion-button>
             </ion-buttons>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
@@ -81,12 +91,11 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                 <div>
                     <ion-chip
                         @click="$emit('update:playAudio', { audioID: versesMap[0].chapter_id, verseKey: versesMap[0].verse_key })"
-                        color="primary">
+                        color="primary" class="ion-float-right">
                         <ion-icon :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
                         <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
                     </ion-chip>
-                    <ion-button fill="clear" class="ion-float-right"
-                        @click="$emit('update:surahInfo', versesMap[0].chapter_id)">
+                    <ion-button fill="clear" @click="$emit('update:surahInfo', versesMap[0].chapter_id)">
                         <ion-icon :icon="informationCircleOutline" slot="icon-only"></ion-icon>
                     </ion-button>
                 </div>
@@ -124,11 +133,11 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                     </ion-grid>
                 </ion-card-content>
                 <div v-if="pageId" class="ion-margin-top">
-                    <ion-button size="small" fill="clear" v-if="pageId > 1" :router-link="`/page/${pageId - 1}`">
+                    <ion-button size="small" fill="clear" :disabled="pageId === 1" :router-link="`/page/${pageId - 1}`">
                         <ion-icon :icon="arrowBackOutline" slot="start"></ion-icon>
                         {{ getLine('quranReader.prevPage') }}
                     </ion-button>
-                    <ion-button size="small" fill="clear" v-if="pageId <= 604" class="ion-float-right"
+                    <ion-button size="small" fill="clear" :disabled="pageId === 604" class="ion-float-right"
                         :router-link="`/page/${pageId + 1}`">
                         <ion-icon :icon="arrowForwardOutline" slot="start"></ion-icon>
                         {{ getLine('quranReader.nextPage') }}
