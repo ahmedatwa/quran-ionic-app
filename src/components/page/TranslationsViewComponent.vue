@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted } from "vue"
+import { ref, computed, watch } from "vue"
 import { IonToolbar, IonButtons, IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
 import { IonChip, IonContent, IonNote, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
 import { IonCol, IonRow, IonGrid, IonItem, IonCard } from "@ionic/vue";
@@ -11,9 +11,10 @@ import { playOutline, ellipsisVerticalOutline, languageOutline } from "ionicons/
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
-import { setStorage } from "@/utils/storage";
+import { useStorage } from "@/utils/useStorage";
 import { useRoute, useRouter } from "vue-router";
 import { vIntersectionObserver } from "@vueuse/components";
+import { upperCaseFirst } from "@/utils/string"
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
@@ -24,7 +25,8 @@ import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
 import { useChapterStore } from "@/stores/ChapterStore";
 
 const { getLine } = useLocale()
-const { getChapterNameByFirstVerse } = useChapterStore()
+const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
+const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
 const { params } = useRoute()
 const router = useRouter()
 const contentRef = ref()
@@ -67,8 +69,20 @@ watch(intersectingVerseNumber, (newVerseNumber) => {
     }
 })
 
-const setBookmarked = (verse: Verse) => {
-    setStorage("bookmark", verse)
+const setBookmarked = async (verse: Verse) => {
+    bookmarkedItems.value.push({
+        key: `/page/${verse.page_number}`,
+        value: {
+            pageNumber: verse.page_number,
+            verseNumber: verse.verse_number,
+            verseText: verse.text_uthmani,
+            chapterName: getChapterName(verse.chapter_id)?.nameSimple
+        }
+    })
+    bookmarkedItems.value.forEach(({ key, value }) => {
+        setStorage(key, value)
+    })
+
 };
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
@@ -79,23 +93,28 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     }
 }
 
-onMounted(() => {
-    router.afterEach((i) => console.log(i)
-    )
-})
+
 const isWordHighlighted = (word: VerseWord) => {
     if (props.verseTiming) {
         return props.verseTiming.wordLocation === word.location
     }
 };
+
+const routeBackName = computed(() => {
+    if (router.options.history.state.back) {
+        return upperCaseFirst(router.options.history.state.back.toString().substring(1))
+    }
+    return upperCaseFirst(getLine("tabs.pages"))
+})
+
 </script>
 <template>
     <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${pageId}`">
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-button @click="go(-1)" router-direction="back" color="primary">
+                <ion-button @click="router.go(-1)" router-direction="back" color="primary">
                     <ion-icon :icon="chevronBackOutline"></ion-icon>
-                    <ion-label>{{ getLine('tabs.pages') }}</ion-label>
+                    <ion-label>{{ routeBackName }}</ion-label>
                 </ion-button>
             </ion-buttons>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
@@ -153,11 +172,12 @@ const isWordHighlighted = (word: VerseWord) => {
                     </ion-grid>
                 </ion-item>
                 <div v-if="pageId" class="ion-margin-top">
-                    <ion-button size="small" fill="clear" v-if="pageId > 1" :router-link="`/page/${pageId - 1}`">
+                    <ion-button size="small" fill="clear" :disabled="pageId === 1" :router-link="`/page/${pageId - 1}`">
                         <ion-icon :icon="arrowBackOutline" slot="start"></ion-icon>
                         {{ getLine('quranReader.prevPage') }}
                     </ion-button>
-                    <ion-button size="small" fill="clear" v-if="pageId <= 604" class="ion-float-right"
+
+                    <ion-button size="small" fill="clear" :disabled="pageId === 604" class="ion-float-right"
                         :router-link="`/page/${pageId + 1}`">
                         <ion-icon :icon="arrowForwardOutline" slot="start"></ion-icon>
                         {{ getLine('quranReader.nextPage') }}

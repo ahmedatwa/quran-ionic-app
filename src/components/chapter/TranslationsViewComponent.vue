@@ -10,20 +10,23 @@ import { chevronBackOutline, pauseOutline, playOutline, ellipsisVerticalOutline,
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
-import { setStorage } from "@/utils/storage";
+import { useStorage } from "@/utils/useStorage";
 import { useRoute, useRouter } from "vue-router";
 import { vIntersectionObserver } from "@vueuse/components";
 // types
 import type { Verse, VerseWord } from "@/types/verse";
-import { Pagination } from "@/types/chapter";
+import type { Pagination } from "@/types/chapter";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 // components
 import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
+import { useChapterStore } from "@/stores/ChapterStore";
 
 const { getLine } = useLocale()
 const { params } = useRoute()
+const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
 const { go } = useRouter()
+const { getChapterName } = useChapterStore()
 const contentRef = ref()
 const chapterId = computed(() => Number(params.chapterId))
 const intersectingVerseNumber = ref<number>()
@@ -69,8 +72,20 @@ watch(intersectingVerseNumber, (newVerseNumber) => {
     }
 })
 
-const setBookmarked = (verse: Verse) => {
-    setStorage("bookmark", verse)
+const setBookmarked = async (verse: Verse) => {
+    bookmarkedItems.value.push({
+        key: `/page/${verse.page_number}`,
+        value: {
+            pageNumber: verse.page_number,
+            verseNumber: verse.verse_number,
+            verseText: verse.text_uthmani,
+            chapterName: getChapterName(verse.chapter_id)?.nameSimple
+        }
+    })
+    bookmarkedItems.value.forEach(({ key, value }) => {
+        setStorage(key, value)
+    })
+
 };
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {

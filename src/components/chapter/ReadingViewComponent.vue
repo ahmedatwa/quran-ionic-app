@@ -77,6 +77,7 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
             <ion-buttons slot="start">
                 <ion-button @click="go(-1)" router-direction="back">
                     <ion-icon :icon="chevronBackOutline"></ion-icon>
+                    <ion-label>{{ getLine('tabs.chapters') }}</ion-label>
                 </ion-button>
             </ion-buttons>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>

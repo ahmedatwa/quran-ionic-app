@@ -26,12 +26,12 @@ import { useChapterStore } from "@/stores/ChapterStore";
 
 const contentRef = ref()
 const { getLine } = useLocale()
+const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
 const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
 const { params } = useRoute()
 const { go } = useRouter()
 const juzId = computed(() => Number(params.juzId))
 const intersectingVerseNumber = ref<number>()
-const { setStorage, bookmarkedItems } = useStorage("__bookmarksdb")
 
 const props = defineProps<{
     id: string;

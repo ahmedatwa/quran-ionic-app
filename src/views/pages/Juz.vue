@@ -12,19 +12,22 @@ import { useRoute } from 'vue-router';
 import { useJuzStore } from "@/stores/JuzStore"
 import { useTranslationsStore } from '@/stores/TranslationsStore';
 import { useChapterStore } from '@/stores/ChapterStore';
-import { useSettingStore } from '@/stores/SettingStore';
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 // types
 import type { ChapterInfo } from '@/types/chapter';
+import type { Styles } from "@/types/settings"
+// utils
 import { useLocale } from '@/utils/useLocale';
+import { useStorage } from '@/utils/useStorage';
 
 const currentSegment = ref("translations")
 const { getLine } = useLocale()
+const { getStorage } = useStorage("__settingsDB")
 const juzStore = useJuzStore()
 const transaltionStore = useTranslationsStore()
 const { selectedChapterName, selectedChapterBismillah, getchapterInfo } = useChapterStore()
-const { cssVars } = useSettingStore()
 const audioPlayerStore = useAudioPlayerStore()
+const dbStyles = ref<Styles>()
 
 const pagination = computed(() => juzStore.selectedJuz?.pagination)
 
@@ -70,9 +73,9 @@ const getVerses = async (ev: { key: string, nextPage: number }) => {
 
 const styles = computed(() => {
     return {
-        fontFamily: `var(--font-family-${cssVars.quranFontFamily})`,
-        fontSize: `var(--font-size-${cssVars.quranFrontSize})`,
-        fontWeight: `var(--font-weight-${cssVars.fontWeight})`
+        fontFamily: `var(--font-family-${dbStyles.value?.fontFamily})`,
+        fontSize: `var(--font-size-${dbStyles.value?.fontSize})`,
+        fontWeight: `var(--font-weight-${dbStyles.value?.fontWeight})`
     }
 })
 
@@ -93,7 +96,11 @@ const getTranslationAlert = async () => {
     await alert.present();
 }
 
-onMounted(() => pageRefEl.value = pageRef.value.$el)
+onMounted(async () => {
+    const result = await getStorage("styles")
+    if (result) dbStyles.value = result
+    pageRefEl.value = pageRef.value.$el
+})
 </script>
 
 

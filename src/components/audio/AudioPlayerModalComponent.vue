@@ -1,22 +1,19 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { IonButtons, IonButton, IonHeader, IonToolbar, IonSkeletonText, IonList } from "@ionic/vue"
 import { IonContent, modalController, IonRow, IonLabel, IonThumbnail, IonItem } from '@ionic/vue';
 import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonText, IonListHeader } from '@ionic/vue';
-import { IonItemOptions, IonItemOption, IonItemSliding, IonModal, alertController } from "@ionic/vue";
+import { IonItemOptions, IonItemOption, IonItemSliding, IonModal } from "@ionic/vue";
 // ionicons
 import { playOutline, playBackOutline, playForwardOutline, playCircleOutline } from 'ionicons/icons';
-import { checkmarkDoneCircleOutline, cloudDownloadOutline, downloadOutline } from 'ionicons/icons';
+import { musicalNoteOutline, cloudDownloadOutline, downloadOutline } from 'ionicons/icons';
 import { pauseOutline, chevronDownOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
 import { volumeOffOutline, volumeHighOutline, repeatOutline } from 'ionicons/icons';
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 // utils
 import { useLocale } from "@/utils/useLocale";
-import { useBlob } from "@/utils/useBlob";
 import { useStorage } from "@/utils/useStorage";
-// axios
-import { instance } from '@/axios';
 // components
 import ModalComponent from "@/components/common/ModalComponent.vue";
 // types
@@ -26,10 +23,9 @@ const modalRef = ref()
 const { chapters, getVerseByVerseKey } = useChapterStore()
 const { getLine, isRtl } = useLocale()
 const isImgLoading = ref(true)
+const { storageKeys } = useStorage("__audioDB")
 const pinFormatter = (value: number) => `${value}%`
 const dismiss = () => modalController.dismiss(null, 'cancel');
-const { setStorage, getStorage } = useStorage("__audio")
-const { encodeBlobToBase64, decodeBase64toBlob } = useBlob()
 
 const props = defineProps<{
     isPlaying: boolean
@@ -71,38 +67,19 @@ const getCurrentVerseData = computed(() => {
     }
 })
 
+const downloadedKeys = ref<string[]>()
+onMounted(async () => {
+    const result = await storageKeys()
+    if (result) downloadedKeys.value = result
+})
 
-
-const download = () => {
-    if (props.audioFiles) {
-        const audioUrl = props.audioFiles.audio_url
-        const key = `${String(props.audioFiles?.reciterId)}-${props.audioFiles?.chapter_id}`
-        instance.get(audioUrl, {
-            responseType: 'blob',
-        }).then(async (response) => {
-            const base64Data = await encodeBlobToBase64(response.data) as string;
-            setStorage(key, {
-                reciterId: String(props.audioFiles?.reciterId),
-                id: props.audioFiles?.id,
-                chapter_id: props.audioFiles?.chapter_id,
-                file_size: props.audioFiles?.file_size,
-                format: props.audioFiles?.format,
-                duration: props.audioFiles?.duration,
-                verse_timings: JSON.stringify(props.audioFiles?.verse_timings),
-                audio_url: base64Data,
-            })
-        }).finally(async () => {
-            const alert = await alertController.create({
-                header: props.chapterName + "." + props.audioFiles?.format,
-                message: 'File has been downloaded!',
-                buttons: ['Ok'],
-            });
-
-            await alert.present();
-        });
+const isDownloadDisabled = (reciterID: string, audioID: string) => {
+    const key = String(reciterID).concat("-").concat(String(audioID))
+    if (downloadedKeys.value) {
+        if (downloadedKeys.value.includes(key)) return true
     }
+    return false
 }
-
 
 </script>
 
@@ -191,7 +168,8 @@ const download = () => {
                         </ion-button>
                     </ion-col>
                     <ion-col>
-                        <ion-button fill="clear" @click="download">
+                        <ion-button fill="clear" @click="$emit('update:download', true)"
+                            :disabled="isDownloadDisabled(String(audioFiles?.reciterId), String(audioFiles?.chapter_id))">
                             <ion-icon slot="icon-only" :icon="cloudDownloadOutline" color="danger"></ion-icon>
                         </ion-button>
                     </ion-col>
@@ -208,12 +186,13 @@ const download = () => {
                 </ion-row>
                 <ion-row class="ion-justify-content-center ion-margin-vertical">
                     <ion-col size="12">
-                        <ion-list style="height: 400px; overflow-y: scroll;" class="ion-padding">
-                            <ion-list-header>{{ getLine('audio.playlist') }}</ion-list-header>
+                        <ion-list-header class="ion-margin-bottom">
+                            <ion-icon :icon="musicalNoteOutline" style="margin-right: 5px;"></ion-icon> {{
+                            getLine('audio.playlist') }}
+                        </ion-list-header>
+                        <ion-list style="height: 400px; overflow-y: scroll;" class="ion-padding" :inset="true">
                             <ion-item-sliding v-for="chapter in chapters" :key="chapter.id">
                                 <ion-item :button="true">
-                                    <ion-icon :icon="checkmarkDoneCircleOutline" color="primary" slot="start"
-                                        v-if="audioFiles?.chapter_id === chapter.id"></ion-icon>
                                     <ion-label>
                                         <h3>
                                             <span v-if="isRtl">{{ chapter.nameArabic }}</span>
@@ -223,7 +202,8 @@ const download = () => {
                                     </ion-label>
                                 </ion-item>
                                 <ion-item-options slot="end">
-                                    <ion-item-option color="warning" @click="download">
+                                    <ion-item-option color="success" @click="$emit('update:download', true)"
+                                        :disabled="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id))">
                                         <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
                                     </ion-item-option>
                                     <ion-item-option color="primary" @click="$emit('update:playChapter', chapter.id)">

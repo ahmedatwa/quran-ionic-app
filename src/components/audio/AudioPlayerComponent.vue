@@ -384,7 +384,7 @@ const playNext = (ev: boolean) => {
                 :audio-files="audioPlayerStore.audioFiles" :chapter-name="audioPlayerStore.chapterName"
                 :loop-audio="audioPlayerStore.loopAudio" :media-volume="audioPlayerStore.mediaVolume"
                 :map-recitions="audioPlayerStore.mapRecitions" :progress-timer="audioPlayerStore.progressTimer"
-                @update:change-volume="changeMediaVolume" @update:seek="playbackSeek"
+                @update:change-volume="changeMediaVolume" @update:seek="playbackSeek" @update:download="audioPlayerStore.downloadAudioFile"
                 @update:play-chapter="playChapterAudio" @update:play-next="playNext"
                 @update:play-prev="audioPlayerStore.playPrevious()" @update:play-audio="playAudio"
                 @update:loop-audio="audioPlayerStore.loopAudio = $event"

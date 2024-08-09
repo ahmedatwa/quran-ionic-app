@@ -18,23 +18,28 @@ const routes: Array<RouteRecordRaw> = [
         redirect: "/chapters",
       },
       {
+        name: "Chapters",
         path: "chapters",
         component: () => import("@/views/tabs/ChaptersHomeTab.vue"),
         props: true,
       },
       {
+        name: "Juzs",
         path: "juzs",
         component: () => import("@/views/tabs/JuzsHomeTab.vue"),
       },
       {
+        name: "Pages",
         path: "pages",
         component: () => import("@/views/tabs/PagesHomeTab.vue"),
       },
       {
+        name: "Bookmarks",
         path: "bookmarks",
         component: () => import("@/views/tabs/BookmarkHomeTab.vue"),
       },
       {
+        name: "Settings",
         path: "/settings",
         component: () => import("@/views/tabs/SettingsHomeTab.vue"),
       },
@@ -42,19 +47,24 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/page/:pageId",
+    name: "page",
     component: () => import("@/views/pages/Page.vue"),
     props: true,
   },
   {
     path: "/juz/:juzId",
+    name: "juz",
     component: () => import("@/views/pages/Juz.vue"),
-    props: true,
+    props: true
   },
   {
     path: "/chapter/:chapterId",
+    name: "chapter",
     component: () => import("@/views/pages/Chapter.vue"),
     props: true,
   },
+  // will match everything and put it under `route.params.pathMatch`
+  // { path: "/:pathMatch(.*)*", name: "NotFound", component:  },
 ];
 
 const router = createRouter({

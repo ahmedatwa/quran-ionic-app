@@ -10,14 +10,15 @@ import { useLocale } from '@/utils/useLocale';
 import { useStorage, BookmarkedItems } from "@/utils/useStorage";
 import { truncate } from "@/utils/string";
 
+
 const { getLine } = useLocale()
 const bookmarks = ref<BookmarkedItems[]>([])
-const { storage, bookmarkedItems, storageLength } = useStorage("__bookmarksdb")
+const { storage, bookmarkedItems, storageLength } = useStorage("__bookmarksDB")
 
 onBeforeMount(async () => {
     const len = await storageLength()
     if (len) {
-        storage.forEach((key, value, index) => {
+        storage.forEach((key, value) => {
             bookmarks.value.push({ key: value, value: key })
         })
     }
@@ -30,6 +31,7 @@ watchEffect(() => {
         })
     }
 })
+
 
 </script>
 

@@ -83,6 +83,7 @@ type AudioPlayerSettings = {
   autoScroll: boolean;
   tooltip?: boolean;
   fullwidth?: boolean;
+  autoDownload?: boolean;
 };
 
 export {

@@ -1,26 +1,32 @@
 import { defineStore } from "pinia";
 import { ref, onMounted, computed, watchEffect } from "vue";
+import { alertController } from "@ionic/vue";
 //axios
 import { instance } from "@/axios";
 import { audioRecitersUrl, recitationsUrl } from "@/axios/url";
 import { AVATAR_PLACEHOLDER_API } from "@/axios/url";
 // types
-import type { AudioFile, Recitations, VerseTimings } from "@/types/audio";
+import type {
+  AudioFile,
+  AudioPlayerSettings,
+  Recitations,
+} from "@/types/audio";
 import type { MapRecitions, PlayAudioEmit } from "@/types/audio";
 import type { VerseTimingsProps } from "@/types/audio";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
-import { useSettingStore } from "@/stores/SettingStore";
 // utils
 import { useStorage } from "@/utils/useStorage";
+import { useBlob } from "@/utils/useBlob";
 
 export const useAudioPlayerStore = defineStore("audio-player-store", () => {
-  const settingStore = useSettingStore();
-
   const { getChapterNameByChapterId, TOTAL_CHAPTERS, getChapter } =
     useChapterStore();
   const isLoading = ref(false);
-  const { getStorage, setStorage } = useStorage("__audio");
+  const settingsDB = useStorage("__settingsDB");
+  const audioDB = useStorage("__audioDB");
+  const { encodeBlobToBase64 } = useBlob();
+
   const audioFiles = ref<AudioFile | null>(null);
   const autoStartPlayer = ref(false);
   const chapterId = ref<number>();
@@ -39,7 +45,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   ]);
   const recitations = ref<Recitations[]>([]);
   const verseTiming = ref<VerseTimingsProps>();
-
+  const isDownloadSuccess = ref(false);
   const playbackRate = ref("Normal");
   const listenerActive = ref(false);
   const progressTimer = ref<number>(0);
@@ -75,13 +81,13 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
 
     if (selectedReciter.value) {
       // check for DB files return if audio found
-      const audioDB = await getStorage(
+      const audioStorage = await audioDB.getStorage(
         `${selectedReciter.value.id}-${payload.audioID}`
       );
-      if (audioDB) {
+      if (audioStorage) {
         audioFiles.value = {
-          ...audioDB,
-          verse_timings: JSON.parse(audioDB.verse_timings),
+          ...audioStorage,
+          verse_timings: JSON.parse(audioStorage.verse_timings),
         };
         return;
       }
@@ -122,8 +128,13 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
         .catch((e) => {
           throw e;
         })
-        .finally(() => {
+        .finally(async () => {
           isLoading.value = false;
+          const audioSettings: AudioPlayerSettings =
+            await settingsDB.getStorage("audioSettings");
+          if (audioSettings.autoDownload) {
+            downloadAudioFile();
+          }
         });
     }
   };
@@ -156,8 +167,6 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
    */
   const playNext = async (audioSrc?: string) => {
     if (chapterId.value) {
-      settingStore.isAppLoading = true;
-
       chapterId.value =
         chapterId.value >= TOTAL_CHAPTERS ? 1 : chapterId.value + 1;
       // get the audio files
@@ -174,13 +183,6 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
 
   onMounted(async () => {
     await getRecitations();
-
-    // const userSettings = getStorage("user-setting");
-    // if (userSettings) {
-    //   audioPlayerSetting.value = userSettings;
-    // } else {
-    //   setStorage("user-setting", audioPlayerSetting.value);
-    // }
   });
 
   watchEffect(() => {
@@ -222,6 +224,44 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     listenerActive.value = true;
   };
 
+  const downloadAudioFile = () => {
+    if (audioFiles.value) {
+      const audioUrl = audioFiles.value.audio_url;
+      const key = `${String(audioFiles.value.reciterId)}-${
+        audioFiles.value.chapter_id
+      }`;
+      instance
+        .get(audioUrl, {
+          responseType: "blob",
+        })
+        .then(async (response) => {
+          const base64Data = (await encodeBlobToBase64(
+            response.data
+          )) as string;
+          audioDB.setStorage(key, {
+            reciterId: String(audioFiles.value?.reciterId),
+            id: audioFiles.value?.id,
+            chapter_id: audioFiles.value?.chapter_id,
+            file_size: audioFiles.value?.file_size,
+            format: audioFiles.value?.format,
+            duration: audioFiles.value?.duration,
+            verse_timings: JSON.stringify(audioFiles.value?.verse_timings),
+            audio_url: base64Data,
+          });
+        })
+        .finally(async () => {
+          isDownloadSuccess.value = true;
+          const alert = await alertController.create({
+            header: chapterName.value + "." + audioFiles.value?.format,
+            message: "File has been downloaded!",
+            buttons: ["Ok"],
+          });
+
+          await alert.present();
+        });
+    }
+  };
+
   return {
     audioFiles,
     isLoading,
@@ -257,5 +297,6 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     getRecition,
     playNext,
     playPrevious,
+    downloadAudioFile,
   };
 });

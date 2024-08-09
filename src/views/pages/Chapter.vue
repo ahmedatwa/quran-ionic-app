@@ -11,23 +11,24 @@ import { useRoute } from 'vue-router';
 // stores
 import { useChapterStore } from "@/stores/ChapterStore"
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
-import { useSettingStore } from '@/stores/SettingStore';
 import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
 import { useLocale } from '@/utils/useLocale';
+import { useStorage } from '@/utils/useStorage';
 // types
 import type { ChapterInfo } from '@/types/chapter';
+import type { Styles } from "@/types/settings"
 
 const currentSegment = ref("translations")
 const chapterStore = useChapterStore()
 const audioPlayerStore = useAudioPlayerStore()
-const { cssVars } = useSettingStore()
 const { getLine } = useLocale()
+const { getStorage } = useStorage("__settingsDB")
 const transaltionStore = useTranslationsStore()
 const pageRef = ref()
 const pageRefEl = ref()
 const chapterInfoModalRef = ref()
-
+const dbStyles = ref<Styles>()
 const audioModelValue = ref(false)
 const pagination = computed(() => chapterStore.selectedChapter?.pagination)
 const chapterInfo = ref<ChapterInfo | null>(null)
@@ -72,9 +73,9 @@ const getVerses = async (ev: { key: string, nextPage: number }) => {
 
 const styles = computed(() => {
     return {
-        fontFamily: `var(--font-family-${cssVars.quranFontFamily})`,
-        fontSize: `var(--font-size-${cssVars.quranFrontSize})`,
-        fontWeight: `var(--font-weight-${cssVars.fontWeight})`
+        fontFamily: `var(--font-family-${dbStyles.value?.fontFamily})`,
+        fontSize: `var(--font-size-${dbStyles.value?.fontSize})`,
+        fontWeight: `var(--font-weight-${dbStyles.value?.fontWeight})`
     }
 })
 
@@ -88,7 +89,11 @@ const getTranslationAlert = async () => {
     await alert.present();
 }
 
-onMounted(() => pageRefEl.value = pageRef.value.$el)
+onMounted(async () => {
+    const result = await getStorage("styles")
+    if (result) dbStyles.value = result
+    pageRefEl.value = pageRef.value.$el
+})
 
 const getSurahInfo = async (ev: number) => {
     await chapterStore.getchapterInfo(ev).then((response) => {

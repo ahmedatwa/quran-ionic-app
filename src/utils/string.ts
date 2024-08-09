@@ -12,6 +12,10 @@ export const upperCase = (str: string | number) => {
   return String(str).toUpperCase();
 };
 
+export const upperCaseFirst = (string: string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
 export const camelCase = (str: string) => {
   str = replaceAccents(str);
   str = removeNonWord(str)

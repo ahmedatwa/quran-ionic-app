@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { IonContent, IonItem, IonList, IonListHeader, IonAccordion, IonAccordionGroup } from '@ionic/vue';
 import { IonToggle, IonPage, IonSelectOption, IonSelect } from "@ionic/vue"
 import { IonLabel, IonText } from '@ionic/vue';
+// icons
+import { cogOutline } from 'ionicons/icons';
 // stores
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 import { useTranslationsStore } from "@/stores/TranslationsStore";
@@ -14,24 +16,21 @@ import { getLangFullLocale } from '@/utils/locale';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
 import ModalComponent from '@/components/common/ModalComponent.vue';
-// icons
-import { cogOutline } from 'ionicons/icons';
 // types
-import type { Recitations } from '@/types/audio';
+import type { Recitations, AudioPlayerSettings } from '@/types/audio';
 import type { Translation } from '@/types/translations';
-import type { AudioPlayerSettings } from "@/types/audio"
+import type { Styles } from "@/types/settings"
 
 const audioPlayerStore = useAudioPlayerStore()
 const { getLine, getLocaleValue, supportedLocales, setLocale, getLocale } = useLocale()
 const translationStore = useTranslationsStore()
-const { getStorage, setStorage } = useStorage("__settingsdb")
+const { getStorage, setStorage } = useStorage("__settingsDB")
 const appVersion = computed(() => import.meta.env.VITE_APP_VERSION)
 const colorScheme = ref("auto")
 const pageRef = ref(null)
 
-
 const emit = defineEmits<{
-    "update:styles": [value: { fontSize: number | string, fontFamily: string, fontWeight: string | number }]
+    "update:styles": [value: Styles]
 }>()
 
 
@@ -46,6 +45,7 @@ const audioSettings = ref<AudioPlayerSettings>({
     autoPlay: true,
     dismissOnEnd: true,
     autoScroll: true,
+    autoDownload: false,
 })
 // Styles
 const styles = ref({
@@ -93,7 +93,10 @@ const handleSelectedReciter = (reciter: Recitations) => {
 
 const handleSelectedTranslation = (transaltion: Translation) => {
     translationStore.selectedTranslation = transaltion
+}
 
+const handleDownload = () => {
+    audioPlayerStore.downloadAudioFile()
 }
 
 const handleAudioSetting = (ev: CustomEvent) => {
@@ -125,14 +128,12 @@ onMounted(async () => {
     const stylesStorage = await getStorage("styles")
     if (stylesStorage) styles.value = stylesStorage
     // Audio
-    const audioStorage = await getStorage("audio")
+    const audioStorage = await getStorage("audioSettings")
     if (audioStorage) audioSettings.value = audioStorage
     // color scheme 
     const scheme = await getStorage("colorScheme")
     if (scheme) colorScheme.value = scheme
-
 })
-
 
 </script>
 
@@ -216,6 +217,11 @@ onMounted(async () => {
                                     <ion-toggle @ion-change="handleAudioSetting" value="autoScroll"
                                         :checked="audioSettings.autoScroll">{{
                                             getLine("settings.autoScroll") }}</ion-toggle>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-toggle @ion-change="handleDownload" value="download"
+                                        :checked="audioSettings.autoDownload">{{
+                                            getLine("settings.autoDownload") }}</ion-toggle>
                                 </ion-item>
                             </ion-list>
                         </div>
