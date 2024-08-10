@@ -126,7 +126,7 @@ const getSurahInfo = async (ev: number) => {
             <reading-view-component id="reading-chapters" :is-reading-view="currentSegment === 'reading'"
                 :is-playing="audioPlayerStore.isPlaying" :verses="verses" :is-loading="chapterStore.isLoading.verses"
                 :styles="styles" :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses"
-                @update:surah-info="getSurahInfo" :pagination="pagination">
+                @update:surah-info="getSurahInfo" :pagination="pagination" @update:play-audio="playAudio">
             </reading-view-component>
             <div>
                 <ion-button ref="chapterInfoModalRef" id="chapter-modal-info" class="ion-hide"></ion-button>

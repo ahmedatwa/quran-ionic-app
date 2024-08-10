@@ -123,8 +123,9 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
             </translations-view-component>
             <reading-view-component id="reading-juzs" :is-reading-view="currentSegment === 'reading'"
                 :is-playing="audioPlayerStore.isPlaying" :verses="juzStore.juzVersesByChapterMap"
-                :is-loading="juzStore.isLoading" :styles="styles" :verse-timing="audioPlayerStore.verseTiming"
-                :pagination="pagination" @update:get-verses="getVerses" @update:surah-info="getSurahInfo">
+                @update:play-audio="playAudio" :is-loading="juzStore.isLoading" :styles="styles"
+                :verse-timing="audioPlayerStore.verseTiming" :pagination="pagination" @update:get-verses="getVerses"
+                @update:surah-info="getSurahInfo">
             </reading-view-component>
             <div>
                 <ion-button ref="chapterInfoButtonRef" id="juz-chapter-modal" class="ion-hide"></ion-button>

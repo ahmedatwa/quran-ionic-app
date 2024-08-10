@@ -139,7 +139,7 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
                 @update:get-verses="getVerses" :pagination="pagination">
             </translations-view-component>
             <reading-view-component id="reading-pages" :is-reading-view="currentSegment === 'reading'"
-                :is-playing="audioPlayerStore.isPlaying" :verses="groupVersesByChapter"
+                :is-playing="audioPlayerStore.isPlaying" :verses="groupVersesByChapter" @update:play-audio="playAudio"
                 @update:surah-info="getSurahInfo" :is-loading="pageStore.isLoading" :styles="styles"
                 :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination">
             </reading-view-component>
