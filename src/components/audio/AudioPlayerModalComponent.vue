@@ -209,7 +209,8 @@ const isDownloadDisabled = (reciterID: string, audioID: string) => {
                                         <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
                                     </ion-item-option>
                                     <ion-item-option :color="isPlaying ? 'medium' : 'primary'"
-                                        @click="$emit('update:playChapter', chapter.id)" :disabled="isPlaying">
+                                        @click="$emit('update:playChapter', chapter.id)"
+                                        :disabled="isPlaying && (chapter.id === audioFiles?.id)">
                                         <ion-icon slot="icon-only" :icon="playCircleOutline"></ion-icon>
                                     </ion-item-option>
                                 </ion-item-options>
