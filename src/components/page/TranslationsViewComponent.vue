@@ -141,7 +141,9 @@ const routeBackName = computed(() => {
                 </ion-card-header>
                 <hr>
                 <ion-item v-for="verse in verses" :key="verse.verse_number" :data-verse-number="verse.verse_number"
-                    :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number">
+                    :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number"
+                    :id="`verse-col-${verse.verse_number}`"
+                    v-intersection-observer="[onIntersectionObserver, { root: contentRef, immediate: false }]">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
                             <ion-col size="11" class="translations-view-col">

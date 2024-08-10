@@ -11,7 +11,7 @@ import { useLocale } from '@/utils/useLocale';
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
 import { bookOutline } from "ionicons/icons";
 
-const { getLocale, isRtl, getLine } = useLocale()
+const { getLocale, getLine, isRtl } = useLocale()
 const chapterStore = useChapterStore()
 
 const handleSearch = (query: string) => {
@@ -24,7 +24,7 @@ const handleSearch = (query: string) => {
     <header-component :title="getLine('tabs.chapters')" :icon="bookOutline" @update:search-value="handleSearch" search>
     </header-component>
     <ion-content :fullscreen="true">
-      <ion-list v-if="chapterStore.isLoading.chapters">
+      <ion-list v-if="!chapterStore.chapters?.length">
         <ion-item v-for="n in chapterStore.TOTAL_CHAPTERS" :key="n">
           <ion-skeleton-text :animated="true" style="width: 100%; height: 20px;"></ion-skeleton-text>
         </ion-item>
@@ -32,11 +32,7 @@ const handleSearch = (query: string) => {
       <ion-list>
         <ion-item button detail v-for="chapter in chapterStore.chapters" :key="chapter.id"
           :router-link="`chapter/${chapter.id}`">
-          <ion-label>
-            <span v-if="isRtl">{{ localizeNumber(chapter.id,
-              getLocale) }}- {{ chapter.nameArabic }}
-            </span>
-            <span v-else>{{ chapter.id }}- {{ chapter.nameSimple }}</span>
+          <ion-label>{{ localizeNumber(chapter.id, getLocale) }}- {{ isRtl ? chapter.nameArabic : chapter.nameSimple }}
           </ion-label>
           <ion-note slot="end">{{ chapter.versesCount }}</ion-note>
         </ion-item>

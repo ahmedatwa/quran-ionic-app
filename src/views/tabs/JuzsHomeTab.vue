@@ -3,6 +3,7 @@ import { IonPage, IonSkeletonText, IonText, IonIcon } from '@ionic/vue';
 import { IonLabel, IonNote, IonContent, IonList, IonItem } from '@ionic/vue';
 // utils
 import { useLocale } from '@/utils/useLocale';
+import { localizeNumber } from '@/utils/number';
 // stores
 import { useJuzStore } from '@/stores/JuzStore';
 // components
@@ -11,7 +12,7 @@ import HeaderComponent from '@/components/common/HeaderComponent.vue';
 import { chevronForward, newspaperOutline } from "ionicons/icons";
 
 const juzStore = useJuzStore()
-const { getLine } = useLocale()
+const { getLine, getLocale } = useLocale()
 
 const handleSearch = (query: string) => {
   juzStore.searchValue = query
@@ -23,7 +24,7 @@ const handleSearch = (query: string) => {
     <header-component :title="getLine('tabs.juzs')" :icon="newspaperOutline" @update:search-value="handleSearch"
       search></header-component>
     <ion-content :fullscreen="true">
-      <ion-list v-if="juzStore.isLoading">
+      <ion-list v-if="!juzStore.juzs.length">
         <ion-item v-for="n in 30" :key="n">
           <ion-skeleton-text :animated="true" style="width: 100%; height: 20px;"></ion-skeleton-text>
         </ion-item>
@@ -32,7 +33,7 @@ const handleSearch = (query: string) => {
         <ion-item :button="true" :detail="false" v-for="juz in juzStore.juzs" :key="juz.id"
           :router-link="`juz/${juz.juz_number}`">
           <ion-label>
-            <ion-text>Juz-{{ juz.juz_number }}</ion-text>
+            <ion-text>{{ getLine('quranReader.textJuz') }} {{ localizeNumber(juz.juz_number, getLocale) }}</ion-text>
             <ion-text v-for="chapter in juz.chapters" :key="chapter.chapterId" color="medium" class="d-flex">
               {{ chapter.en }}</ion-text>
           </ion-label>

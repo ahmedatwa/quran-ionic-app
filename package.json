@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@capacitor-community/sqlite": "6.0.1",
+    "@capacitor/android": "6.1.1",
     "@capacitor/app": "6.0.0",
     "@capacitor/clipboard": "^6.0.0",
     "@capacitor/core": "6.1.1",

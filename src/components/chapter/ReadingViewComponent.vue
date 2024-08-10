@@ -4,6 +4,7 @@ import { IonToolbar, IonButton, IonButtons, IonChip, IonIcon } from "@ionic/vue"
 import { IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonInfiniteScrollContent } from "@ionic/vue";
 import { IonLabel, IonProgressBar, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
 import { IonContent, IonItemDivider, IonCardHeader, IonInfiniteScroll } from "@ionic/vue";
+import { IonItem } from "@ionic/vue";
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { useRoute, useRouter } from "vue-router";
@@ -103,15 +104,15 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                     </ion-card-title>
                 </ion-card-header>
                 <ion-card-content class="ion-padding quran-reader-content-wrapper">
-                    <ion-grid>
-                        <ion-row>
-                            <ion-col class="verse-col" :id="`page-${page}`" size="12">
+                    <!-- <ion-grid>
+                        <ion-row> -->
+                            <div class="verse-col" :id="`page-${page}`" size="12">
                                 <div class="word-wrapper" v-for="verse in verses" :key="verse.id"
                                     :id="`line-${verse.verse_number}`" :data-hizb-number="verse.hizb_number"
                                     :data-chapter-id="verse.chapter_id" :data-juz-number="verse.juz_number"
                                     :data-page-number="page" :data-verse-number="verse.verse_number">
-                                    <div v-for="word in verse.words" :key="word.id" :data-word-position="word.position"
-                                        class="flex" :data-hizb-number="verse.hizb_number"
+                                    <span v-for="word in verse.words" :key="word.id" :data-word-position="word.position"
+                                        class="" :data-hizb-number="verse.hizb_number"
                                         :data-juz-number="verse.juz_number" :data-chapter-id="verse.chapter_id"
                                         :data-page-number="page">
                                         <span :class="isWordHighlighted(word.location, word.verse_key)
@@ -123,17 +124,17 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                                             <h3 :style="styles" v-else>{{
                                                 word.text_uthmani }}</h3>
                                         </span>
-                                    </div>
+                                    </span> 
                                 </div>
-                            </ion-col>
+                            </div>
                             <ion-col size="12">
                                 <ion-item-divider>
                                     <ion-label class="m-auto">{{ getLine('quranReader.textPage') }} {{ page
                                         }}</ion-label>
                                 </ion-item-divider>
                             </ion-col>
-                        </ion-row>
-                    </ion-grid>
+                        <!-- </ion-row>
+                    </ion-grid> -->
 
                 </ion-card-content>
             </ion-card>

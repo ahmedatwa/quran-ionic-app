@@ -129,12 +129,12 @@ ion-loading.custom-loading {
 }
 
 .quran-reader-content-wrapper .verse-col {
-  line-height: 3.8vh;
+  line-height: 4.8vh;
   direction: rtl;
-  justify-content: center;
+  /* justify-content: center;
   padding-inline-start: var(--spacing-xxsmall);
   margin-inline-end: var(--gap-size);
-  margin-inline-start: var(--gap-size);
+  margin-inline-start: var(--gap-size); */
 }
 
 .quran-reader-content-wrapper .verse-col .word {
@@ -149,4 +149,10 @@ ion-loading.custom-loading {
   display: inline-flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+.icon-title {
+  top: 6px;
+  display: inline-flex;
+  position: sticky;
+  margin-right: 10px;
 }
