@@ -65,6 +65,7 @@ const isWordHighlighted = (loaction: string, verseKey: string) => {
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     if (props.pagination?.next_page) {
         emit("update:getVerses", { key: props.id, nextPage: props.pagination.next_page })
+        setTimeout(() => ev.target.complete(), 500);
     } else {
         ev.target.complete()
     }
