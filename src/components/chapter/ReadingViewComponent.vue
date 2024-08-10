@@ -1,25 +1,25 @@
 <script lang="ts" setup>
 import { computed } from "vue"
-import { IonToolbar, IonButton, IonButtons, IonChip, IonIcon } from "@ionic/vue";
-import { IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonInfiniteScrollContent } from "@ionic/vue";
-import { IonLabel, IonProgressBar, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
+import { IonButton, IonChip, IonIcon } from "@ionic/vue";
+import { IonCol, IonCard, IonCardContent, IonInfiniteScrollContent } from "@ionic/vue";
+import { IonLabel, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
 import { IonContent, IonItemDivider, IonCardHeader, IonInfiniteScroll } from "@ionic/vue";
-import { IonItem } from "@ionic/vue";
 // utils
 import { useLocale } from "@/utils/useLocale";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 // Types
 import type { Verse, MapVersesByPage } from "@/types/verse"
 import type { Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 // icons
-import { chevronBackOutline, pauseOutline, playOutline, informationCircleOutline } from "ionicons/icons";
+import { pauseOutline, playOutline, informationCircleOutline } from "ionicons/icons";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
+// components
+import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 
 const { params } = useRoute()
-const { go } = useRouter()
 const { getChapterNameByFirstVerse } = useChapterStore()
 const { getLine } = useLocale()
 const chapterId = computed(() => Number(params.chapterId))
@@ -75,15 +75,7 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
 
 <template>
     <div class="ion-page" v-if="isReadingView" :id="`${id}-${chapterId}`">
-        <ion-toolbar color="light">
-            <ion-buttons slot="start">
-                <ion-button @click="go(-1)" router-direction="back">
-                    <ion-icon :icon="chevronBackOutline"></ion-icon>
-                    <ion-label>{{ getLine('tabs.chapters') }}</ion-label>
-                </ion-button>
-            </ion-buttons>
-            <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
-        </ion-toolbar>
+        <toolbar-component :is-loading="isLoading" :route-back-label="getLine('tabs.chapters')"></toolbar-component>
         <ion-content>
             <ion-card class="ion-padding" v-for="(verses, page) in mapVersesByPage" :key="page"
                 :id="`row-page-${page}`">

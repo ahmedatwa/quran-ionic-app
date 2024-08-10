@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from "vue"
-import { IonToolbar, IonButtons, IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
+import { IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
 import { IonContent, IonNote, IonCardTitle, IonCardSubtitle } from "@ionic/vue";
 import { IonCol, IonRow, IonGrid, IonItem, IonCard, IonChip } from "@ionic/vue";
-import { IonLabel, IonProgressBar, IonText } from "@ionic/vue";
+import { IonLabel, IonText } from "@ionic/vue";
 import { IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 // icons
-import { chevronBackOutline, languageOutline, pauseOutline } from "ionicons/icons";
+import { languageOutline, pauseOutline } from "ionicons/icons";
 import { playOutline, ellipsisVerticalOutline } from "ionicons/icons";
 // utils
 import { useLocale } from "@/utils/useLocale";
@@ -22,6 +22,8 @@ import type { Pagination } from "@/types/page"
 import type { juzVersesByPageMap } from "@/types/juz";
 // components
 import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
+import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
+// stores
 import { useChapterStore } from "@/stores/ChapterStore";
 
 const contentRef = ref()
@@ -102,15 +104,7 @@ const isWordHighlighted = (word: VerseWord) => {
 </script>
 <template>
     <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${juzId}`">
-        <ion-toolbar>
-            <ion-buttons slot="start">
-                <ion-button @click="go(-1)" router-direction="back" color="primary">
-                    <ion-icon :icon="chevronBackOutline"></ion-icon>
-                    <ion-label>{{ getLine('tabs.juzs') }}</ion-label>
-                </ion-button>
-            </ion-buttons>
-            <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
-        </ion-toolbar>
+        <toolbar-component :route-back-label="getLine('tabs.juzs')" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true">
             <ion-card class="ion-padding card-wrapper" ref="contentRef" v-for="(mappedVerses, chapterId) in verses"
                 :key="chapterId" :id="`card-${chapterId}`">

@@ -1,24 +1,25 @@
 <script lang="ts" setup>
 import { computed } from "vue"
-import { IonToolbar, IonButton, IonButtons, IonIcon } from "@ionic/vue";
-import { IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonInfiniteScrollContent } from "@ionic/vue";
-import { IonLabel, IonProgressBar, IonCardSubtitle, IonCardTitle, IonChip, IonItem } from "@ionic/vue";
+import { IonButton, IonIcon, IonInfiniteScrollContent } from "@ionic/vue";
+import { IonGrid, IonRow, IonCol, IonCard, IonCardContent } from "@ionic/vue";
+import { IonLabel, IonCardSubtitle, IonCardTitle, IonChip, IonItem } from "@ionic/vue";
 import { IonContent, IonCardHeader, IonInfiniteScroll } from "@ionic/vue";
 // utils
 import { useLocale } from "@/utils/useLocale";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 // Types
 import type { juzVersesByPageMap } from "@/types/juz";
 import type { Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 // icons
-import { chevronBackOutline, pauseOutline, playOutline, languageOutline, informationCircleOutline } from "ionicons/icons";
+import { pauseOutline, playOutline, informationCircleOutline } from "ionicons/icons";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
+// components
+import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 
 const { params } = useRoute()
-const { go } = useRouter()
 const { getChapterNameByFirstVerse } = useChapterStore()
 const { getLine } = useLocale()
 const juzId = computed(() => Number(params.juzId))
@@ -51,12 +52,6 @@ const isWordHighlighted = (loaction: string, verseKey: string) => {
     }
 };
 
-const routerBackPath = computed(() => {
-    if (props.id) {
-        return props.id.split("-")[1]
-    }
-})
-
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     if (props.pagination?.next_page) {
         emit("update:getVerses", { key: props.id, nextPage: props.pagination.next_page })
@@ -70,15 +65,7 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
 
 <template>
     <div class="ion-page" v-if="isReadingView" :id="`${id}-${juzId}`">
-        <ion-toolbar>
-            <ion-buttons slot="start">
-                <ion-button @click="go(-1)" router-direction="back">
-                    <ion-icon :icon="chevronBackOutline"></ion-icon>
-                    <ion-label>{{ getLine('tabs.juzs') }}</ion-label>
-                </ion-button>
-            </ion-buttons>
-            <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
-        </ion-toolbar>
+        <toolbar-component :is-loading="isLoading" :route-back-label="getLine('tabs.juzs')"></toolbar-component>
         <ion-content>
             <ion-card class="ion-padding" v-for="(versesMap, page) in verses" :key="page" :id="`row-page-${page}`">
                 <div>

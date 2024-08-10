@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, watch } from 'vue';
 import { IonApp, IonRouterOutlet, IonContent } from '@ionic/vue';
 // stores
 import { useMetaStore } from '@/stores/MetaStore';
 // utils
 import { useStorage } from '@/utils/useStorage';
+import { useLocale } from "@/utils/useLocale"
 
 
 const metaStore = useMetaStore()
+const { setLocale, isRtl } = useLocale()
 const { getStorage, setStorage } = useStorage("__settingsDB")
 
 onBeforeMount(async () => {
@@ -51,8 +53,19 @@ onBeforeMount(async () => {
       fontWeight: "400",
     })
   }
+
+  const localeStorage = await getStorage("locale")
+  if (!localeStorage) {
+    setLocale("en", false)
+    setStorage("locale", { key: "en", rtl: false })
+  } else {
+    setLocale(localeStorage.key, localeStorage.rtl)
+  }
 })
 
+watch(isRtl, (rtl) => {
+  rtl ? document.documentElement.dir = "rtl" : document.documentElement.dir = "ltr"
+})
 
 </script>
 
