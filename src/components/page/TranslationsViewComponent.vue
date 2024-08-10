@@ -88,6 +88,7 @@ const setBookmarked = async (verse: Verse) => {
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     if (props.pagination?.next_page) {
         emit("update:getVerses", { key: props.id, nextPage: props.pagination.next_page })
+        setTimeout(() => ev.target.complete(), 500);
     } else {
         ev.target.complete()
     }
