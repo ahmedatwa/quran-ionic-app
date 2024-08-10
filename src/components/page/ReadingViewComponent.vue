@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from "vue"
-import { IonToolbar, IonButton, IonButtons, IonChip, IonIcon } from "@ionic/vue";
-import { IonGrid, IonRow, IonCol, IonCard, IonCardContent, IonInfiniteScrollContent } from "@ionic/vue";
-import { IonLabel, IonProgressBar } from "@ionic/vue";
+import { IonButton, IonChip, IonIcon } from "@ionic/vue";
+import { IonGrid, IonRow, IonCol, IonCard, IonCardContent } from "@ionic/vue";
+import { IonLabel, IonInfiniteScrollContent } from "@ionic/vue";
 import { IonContent, IonItemDivider, IonInfiniteScroll } from "@ionic/vue";
 // utils
 import { useLocale } from "@/utils/useLocale";
@@ -13,8 +13,10 @@ import type { GroupVersesByChapterID, Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 // icons
-import { chevronBackOutline, pauseOutline, playOutline } from "ionicons/icons";
+import { pauseOutline, playOutline } from "ionicons/icons";
 import { informationCircleOutline, arrowForwardOutline, arrowBackOutline } from "ionicons/icons";
+// components
+import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 
 const route = useRoute()
 const router = useRouter()
@@ -51,12 +53,6 @@ const isWordHighlighted = (loaction: string, verseKey: string) => {
     }
 };
 
-const routerBackPath = computed(() => {
-    if (props.id) {
-        return props.id.split("-")[1]
-    }
-})
-
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     if (props.pagination?.next_page) {
         emit("update:getv", { key: props.id, nextPage: props.pagination.next_page })
@@ -78,15 +74,7 @@ const routeBackName = computed(() => {
 
 <template>
     <div class="ion-page" v-if="isReadingView" :id="`${id}-${pageId}`">
-        <ion-toolbar>
-            <ion-buttons slot="start">
-                <ion-button @click="router.go(-1)" router-direction="back" color="primary">
-                    <ion-icon :icon="chevronBackOutline"></ion-icon>
-                    <ion-label>{{ routeBackName }}</ion-label>
-                </ion-button>
-            </ion-buttons>
-            <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
-        </ion-toolbar>
+        <toolbar-component :is-loading="isLoading" :route-back-label="routeBackName"></toolbar-component>
         <ion-content>
             <ion-card class="ion-padding" v-for="(versesMap, page) in verses" :key="page" :id="`row-page-${page}`">
                 <div>

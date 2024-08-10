@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { ref, computed, watch, watchEffect } from "vue"
-import { IonToolbar, IonButtons, IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
+import { IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
 import { IonChip, IonContent, IonNote, IonCardTitle, IonCardSubtitle } from "@ionic/vue";
 import { IonCol, IonRow, IonGrid, IonItem, IonCard } from "@ionic/vue";
-import { IonLabel, IonProgressBar, IonText } from "@ionic/vue";
+import { IonLabel, IonText } from "@ionic/vue";
 import { IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 // icons
-import { chevronBackOutline, pauseOutline, playOutline, ellipsisVerticalOutline, languageOutline } from "ionicons/icons";
+import { pauseOutline, playOutline, ellipsisVerticalOutline, languageOutline } from "ionicons/icons";
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { vIntersectionObserver } from "@vueuse/components";
 // types
 import type { Verse, VerseWord } from "@/types/verse";
@@ -20,12 +20,13 @@ import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 // components
 import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
+import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
+// stores
 import { useChapterStore } from "@/stores/ChapterStore";
 
 const { getLine } = useLocale()
 const { params } = useRoute()
 const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
-const { go } = useRouter()
 const { getChapterName } = useChapterStore()
 const contentRef = ref()
 const chapterId = computed(() => Number(params.chapterId))
@@ -106,15 +107,7 @@ const isWordHighlighted = (word: VerseWord) => {
 </script>
 <template>
     <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${chapterId}`">
-        <ion-toolbar color="light">
-            <ion-buttons slot="start">
-                <ion-button @click="go(-1)" router-direction="back" color="primary">
-                    <ion-icon :icon="chevronBackOutline"></ion-icon>
-                    <ion-label>{{ getLine('tabs.chapters') }}</ion-label>
-                </ion-button>
-            </ion-buttons>
-            <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
-        </ion-toolbar>
+        <toolbar-component :route-back-label="getLine('tabs.chapters')" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true">
             <ion-card class="ion-padding card-wrapper" ref="contentRef">
                 <div>

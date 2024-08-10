@@ -79,17 +79,15 @@ export const useSettings = () => {
     setStorage("audio", audioSettings);
   };
 
-  const updateSelectedLocale = (ev: CustomEvent) => {
-    const selected = ev.detail.data.values;
+  const updateSelectedLocale = (ev: CustomEvent) => {    
+    const selected = ev.detail.value;
     const localKeys = supportedLocales.value.map((lo) => lo.key);
     if (localKeys.includes(selected.key)) {
-      selected.rtl
-        ? (document.documentElement.dir = "rtl")
-        : (document.documentElement.dir = "ltr");
       setLocale(selected.key, selected.rtl);
-      setStorage("locale", selected.key);
+      setStorage("locale", { key: selected.key, rtl: selected.rtl });
     }
   };
+
   onMounted(async () => {
     // styles
     const stylesStorage = await getStorage("styles");
@@ -115,6 +113,6 @@ export const useSettings = () => {
     applyFontFamily,
     applyFontWeight,
     handleAudioSetting,
-    updateSelectedLocale
+    updateSelectedLocale,
   };
 };
