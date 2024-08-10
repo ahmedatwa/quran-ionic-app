@@ -41,7 +41,7 @@ export default {
   },
   bookmark: {
     title: "Bookmarks",
-    content:
+    emptyContent:
       "When you are reading the Quran, tap the Bookmark button to mark the current page",
   },
   audio: {
@@ -53,6 +53,7 @@ export default {
   },
   quranReader: {
     textPage: "Page",
+    textJuz: "Juz",
     textTranslation: "Translation",
     textReading: "Reading",
     textBismillah: "بسم الله الرحمن الرحيم",

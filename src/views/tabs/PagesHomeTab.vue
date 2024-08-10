@@ -4,6 +4,7 @@ import { IonText, IonLabel, IonNote, IonIcon } from '@ionic/vue';
 // utils
 import { useLocale } from '@/utils/useLocale';
 import { DEFAULT_NUMBER_OF_PAGES } from "@/utils/pages"
+import { localizeNumber } from '@/utils/number';
 // stores
 import { usePageStore } from "@/stores/PageStore";
 // components
@@ -11,7 +12,7 @@ import HeaderComponent from '@/components/common/HeaderComponent.vue';
 // icons
 import { chevronForward, documentOutline } from 'ionicons/icons';
 
-const { getLine } = useLocale()
+const { getLine, getLocale } = useLocale()
 const pageStore = usePageStore()
 
 const handleSearch = (query: string) => {
@@ -34,7 +35,7 @@ const handleSearch = (query: string) => {
         <ion-item :button="true" :detail="false" v-for="page in pageStore.pages" :key="page.pageNumber"
           :router-link="`page/${page.pageNumber}`">
           <ion-label>
-            <ion-text>Page-{{ page.pageNumber }}</ion-text>
+            <ion-text>{{ getLine('quranReader.textPage') }} {{ localizeNumber(page.pageNumber, getLocale) }}</ion-text>
             <ion-text v-for="(chapter, index) in page.chaptersMap" :key="index" color="medium" class="d-flex">
               {{ chapter.nameSimple }}</ion-text>
           </ion-label>

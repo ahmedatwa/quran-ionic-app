@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onUnmounted } from "vue"
 import { IonHeader, IonToolbar, IonTitle, IonSearchbar, IonProgressBar } from "@ionic/vue";
-import { IonIcon, toastController } from "@ionic/vue";
+import { IonIcon, toastController, IonLabel } from "@ionic/vue";
 // icons
 import { documentOutline, cogOutline, bookOutline, newspaperOutline } from 'ionicons/icons';
 import { Network } from '@capacitor/network';
@@ -51,7 +51,9 @@ const presentToast = async (message: string) => {
     <ion-header :translucent="translucent" :collapse="collapse">
         <ion-toolbar>
             <ion-title size="large" class="ion-margin">
-                <ion-icon :icon="icon" size="large"></ion-icon> {{ title }}</ion-title>
+                <ion-icon :icon="icon" size="large" class="icon-title"></ion-icon>
+                <ion-label>{{ title }}</ion-label>
+            </ion-title>
         </ion-toolbar>
         <ion-toolbar v-if="search">
             <ion-searchbar @ionInput="handleInput"></ion-searchbar>
@@ -59,19 +61,3 @@ const presentToast = async (message: string) => {
         </ion-toolbar>
     </ion-header>
 </template>
-<style>
-/* ion-toast#network-toast {
-    --background: #ffc409;
-    --box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
-    --color: #4b4a50;
-}
-
-ion-toast#network-toast ::part(message) {
-    font-style: italic;
-    color: #5f5f5f;
-    text-align: center;
-    justify-content: center;
-} */
-
-
-</style>

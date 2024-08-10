@@ -188,7 +188,7 @@ const isDownloadDisabled = (reciterID: string, audioID: string) => {
                     <ion-col size="12">
                         <ion-list-header class="ion-margin-bottom">
                             <ion-icon :icon="musicalNoteOutline" style="margin-right: 5px;"></ion-icon> {{
-                            getLine('audio.playlist') }}
+                                getLine('audio.playlist') }}
                         </ion-list-header>
                         <ion-list style="height: 400px; overflow-y: scroll;" class="ion-padding" :inset="true">
                             <ion-item-sliding v-for="chapter in chapters" :key="chapter.id">
@@ -202,11 +202,14 @@ const isDownloadDisabled = (reciterID: string, audioID: string) => {
                                     </ion-label>
                                 </ion-item>
                                 <ion-item-options slot="end">
-                                    <ion-item-option color="success" @click="$emit('update:download', true)"
+                                    <ion-item-option
+                                        :color="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id)) ? 'medium' : 'success'"
+                                        @click="$emit('update:download', true)"
                                         :disabled="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id))">
                                         <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
                                     </ion-item-option>
-                                    <ion-item-option color="primary" @click="$emit('update:playChapter', chapter.id)">
+                                    <ion-item-option :color="isPlaying ? 'medium' : 'primary'"
+                                        @click="$emit('update:playChapter', chapter.id)" :disabled="isPlaying">
                                         <ion-icon slot="icon-only" :icon="playCircleOutline"></ion-icon>
                                     </ion-item-option>
                                 </ion-item-options>

@@ -1,7 +1,7 @@
-import { onBeforeMount, ref, toValue, watchEffect } from "vue";
+import { onBeforeMount, ref, toValue } from "vue";
 import { Drivers, Storage } from "@ionic/storage";
 import CordovaSQLiteDriver from "localforage-cordovasqlitedriver";
-import type { ComputedRef, Ref } from "vue";
+import type { MaybeRefOrGetter, Ref } from "vue";
 
 export type BookmarkedItems = {
   key: string;
@@ -15,51 +15,58 @@ export type BookmarkedItems = {
 const bookmarkedItems = ref<BookmarkedItems[]>([]);
 
 export const useStorage = (key: string) => {
-  const storage = new Storage({
-    name: key,
-    driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage],
-  });
+  const storage = ref<Storage | null>(null);
 
   const storageKeys = async () => {
-    const keys = await storage.keys();
+    const keys = await storage.value?.keys();
     if (keys) return keys;
   };
 
-  const removeItem = async (key: string) => {
-    await storage.remove(key);
+  const removeItem = async (key: MaybeRefOrGetter | string) => {
+    const toVal = toValue(key);
+    await storage.value?.remove(toVal);
   };
 
-  const getStorage = async (key: string | number) => {
-    const result = await storage.get(String(key));
+  const getStorage = async (key: MaybeRefOrGetter | string) => {
+    const toVal = toValue(key);
+    const result = await storage.value?.get(toVal);
     if (result) return result;
   };
 
   const setStorage = async (
     key: string | number,
-    value: Ref | ComputedRef | string | object
+    value: MaybeRefOrGetter | string | object
   ) => {
-    const items = toValue(value);
+    const toVal = toValue(value);
 
-    await storage.set(
+    await storage.value?.set(
       String(key),
-      typeof items === "object" ? { ...items } : items
+      typeof toVal === "object" ? { ...toVal } : toVal
     );
   };
 
   const clearStorage = async () => {
-    await storage.clear();
+    await storage.value?.clear();
   };
 
   const storageLength = async () => {
-    const len = await storage.length();
+    const len = await storage.value?.length();
     if (len) return len;
   };
 
   onBeforeMount(async () => {
-    await storage.create();
-    if (!storage.defineDriver(CordovaSQLiteDriver)) {
-      await storage.defineDriver(CordovaSQLiteDriver);
-    }
+    storage.value = new Storage({
+      name: key,
+      driverOrder: [
+        CordovaSQLiteDriver._driver,
+        Drivers.IndexedDB,
+        Drivers.LocalStorage,
+      ],
+    });
+
+    await storage.value.create();
+    if (!storage.value.driver)
+      await storage.value.defineDriver(CordovaSQLiteDriver);
   });
 
   return {

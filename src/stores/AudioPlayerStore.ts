@@ -252,8 +252,9 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
         .finally(async () => {
           isDownloadSuccess.value = true;
           const alert = await alertController.create({
-            header: chapterName.value + "." + audioFiles.value?.format,
-            message: "File has been downloaded!",
+            header: selectedReciter.value?.name,
+            subHeader: selectedReciter.value?.style.name,
+            message: chapterName.value + " File has been downloaded!",
             buttons: ["Ok"],
           });
 

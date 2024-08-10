@@ -14,21 +14,20 @@ import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
 import { useLocale } from '@/utils/useLocale';
-import { useStorage } from '@/utils/useStorage';
+import { useSettings } from '@/utils/useSettings';
+
 // types
 import type { ChapterInfo } from '@/types/chapter';
-import type { Styles } from "@/types/settings"
 
 const currentSegment = ref("translations")
 const chapterStore = useChapterStore()
 const audioPlayerStore = useAudioPlayerStore()
 const { getLine } = useLocale()
-const { getStorage } = useStorage("__settingsDB")
 const transaltionStore = useTranslationsStore()
 const pageRef = ref()
 const pageRefEl = ref()
+const settings = useSettings()
 const chapterInfoModalRef = ref()
-const dbStyles = ref<Styles>()
 const audioModelValue = ref(false)
 const pagination = computed(() => chapterStore.selectedChapter?.pagination)
 const chapterInfo = ref<ChapterInfo | null>(null)
@@ -73,9 +72,9 @@ const getVerses = async (ev: { key: string, nextPage: number }) => {
 
 const styles = computed(() => {
     return {
-        fontFamily: `var(--font-family-${dbStyles.value?.fontFamily})`,
-        fontSize: `var(--font-size-${dbStyles.value?.fontSize})`,
-        fontWeight: `var(--font-weight-${dbStyles.value?.fontWeight})`
+        fontFamily: `var(--font-family-${settings.styles.value.fontFamily})`,
+        fontSize: `var(--font-size-${settings.styles.value.fontSize})`,
+        fontWeight: `var(--font-weight-${settings.styles.value.fontWeight})`
     }
 })
 
@@ -89,11 +88,8 @@ const getTranslationAlert = async () => {
     await alert.present();
 }
 
-onMounted(async () => {
-    const result = await getStorage("styles")
-    if (result) dbStyles.value = result
-    pageRefEl.value = pageRef.value.$el
-})
+onMounted(() => pageRefEl.value = pageRef.value.$el)
+
 
 const getSurahInfo = async (ev: number) => {
     await chapterStore.getchapterInfo(ev).then((response) => {

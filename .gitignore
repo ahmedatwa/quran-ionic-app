@@ -104,6 +104,10 @@ dist/
 
 # production
 /build
+/ios
+/android
+/dist
+
 
 # misc
 .DS_Store

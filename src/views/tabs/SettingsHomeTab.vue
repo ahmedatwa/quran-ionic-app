@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed } from 'vue';
 import { IonContent, IonItem, IonList, IonListHeader, IonAccordion, IonAccordionGroup } from '@ionic/vue';
 import { IonToggle, IonPage, IonSelectOption, IonSelect } from "@ionic/vue"
 import { IonLabel, IonText } from '@ionic/vue';
@@ -9,83 +9,24 @@ import { cogOutline } from 'ionicons/icons';
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 // utils
-import { useStorage } from '@/utils/useStorage';
 import { useLocale } from '@/utils/useLocale';
 import { _range } from '@/utils/number';
 import { getLangFullLocale } from '@/utils/locale';
+import { useSettings } from '@/utils/useSettings';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
 import ModalComponent from '@/components/common/ModalComponent.vue';
 // types
-import type { Recitations, AudioPlayerSettings } from '@/types/audio';
+import type { Recitations } from '@/types/audio';
 import type { Translation } from '@/types/translations';
-import type { Styles } from "@/types/settings"
 
 const audioPlayerStore = useAudioPlayerStore()
-const { getLine, getLocaleValue, supportedLocales, setLocale, getLocale } = useLocale()
+const { getLine, getLocaleValue, supportedLocales, getLocale } = useLocale()
 const translationStore = useTranslationsStore()
-const { getStorage, setStorage } = useStorage("__settingsDB")
 const appVersion = computed(() => import.meta.env.VITE_APP_VERSION)
 const colorScheme = ref("auto")
 const pageRef = ref(null)
-
-const emit = defineEmits<{
-    "update:styles": [value: Styles]
-}>()
-
-
-// Color Schemes
-const colorSchemes = ref([
-    { key: "dark", value: getLine('settings.dark') },
-    { key: "light", value: getLine('settings.light') },
-    { key: "auto", value: getLine('settings.auto') },
-])
-// Audio
-const audioSettings = ref<AudioPlayerSettings>({
-    autoPlay: true,
-    dismissOnEnd: true,
-    autoScroll: true,
-    autoDownload: false,
-})
-// Styles
-const styles = ref({
-    fontSize: "1",
-    fontFamily: "Noto-Kufi",
-    fontWeight: "400"
-})
-
-const fontWeights = ref([400, 500, 600, 700, 800]);
-const fontFamilyGroup = ref([
-    "Amiri",
-    "Noto-Kufi",
-    "Hafs-Nastaleeq",
-    "Uthman-Taha-Naskh",
-]);
-
-const appleColorScheme = (ev: CustomEvent) => {
-    const value = ev.detail.value
-    document.documentElement.classList.toggle('ion-palette-dark', value === 'dark' ? true : false);
-    colorScheme.value = value
-    setStorage("colorScheme", value);
-};
-
-const applyFontSize = async (ev: CustomEvent) => {
-    styles.value.fontSize = ev.detail.value
-    emit("update:styles", styles.value)
-    await setStorage("styles", styles);
-}
-
-const applyFontFamily = (ev: CustomEvent) => {
-    styles.value.fontFamily = ev.detail.value
-    emit("update:styles", styles.value)
-    setStorage("styles", styles);
-}
-
-const applyFontWeight = (ev: CustomEvent) => {
-    styles.value.fontWeight = ev.detail.value
-    emit("update:styles", styles.value)
-    setStorage("styles", styles);
-}
+const settings = useSettings()
 
 const handleSelectedReciter = (reciter: Recitations) => {
     audioPlayerStore.selectedReciter = reciter
@@ -98,43 +39,6 @@ const handleSelectedTranslation = (transaltion: Translation) => {
 const handleDownload = () => {
     audioPlayerStore.downloadAudioFile()
 }
-
-const handleAudioSetting = (ev: CustomEvent) => {
-    const audio = ev.detail
-    if (audio.value === "autoPlay") {
-        audioSettings.value.autoPlay = audio.checked
-    } else if (audio.value === "dismissOnEnd") {
-        audioSettings.value.dismissOnEnd = audio.checked
-    }
-    else if (audio.value === "autoScroll") {
-        audioSettings.value.autoScroll = audio.checked
-    }
-    setStorage("audio", audioSettings)
-}
-
-const updateSelectedLocale = (ev: CustomEvent) => {
-    const selected = ev.detail.data.values
-    const localKeys = supportedLocales.value.map((lo) => lo.key)
-    if (localKeys.includes(selected.key)) {
-        selected.rtl ? document.documentElement.dir = "rtl" : document.documentElement.dir = "ltr";
-        setLocale(selected.key, selected.rtl)
-        setStorage("locale", selected.key)
-    }
-}
-
-
-onMounted(async () => {
-    // styles
-    const stylesStorage = await getStorage("styles")
-    if (stylesStorage) styles.value = stylesStorage
-    // Audio
-    const audioStorage = await getStorage("audioSettings")
-    if (audioStorage) audioSettings.value = audioStorage
-    // color scheme 
-    const scheme = await getStorage("colorScheme")
-    if (scheme) colorScheme.value = scheme
-})
-
 </script>
 
 <template>
@@ -152,23 +56,26 @@ onMounted(async () => {
                         <div slot="content">
                             <ion-list class="ion-padding">
                                 <ion-item>
-                                    <ion-select :label="getLine('settings.fontSize')" :placeholder="styles.fontSize"
-                                        @ion-change="applyFontSize">
+                                    <ion-select :label="getLine('settings.fontSize')"
+                                        :placeholder="String(settings.styles.value.fontSize)"
+                                        @ion-change="settings.applyFontSize">
                                         <ion-select-option :value="n" v-for="n in 10" :key="n">{{ n
                                             }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-select :label="getLine('settings.fontFamily')" :placeholder="styles.fontFamily"
-                                        @ion-change="applyFontFamily">
-                                        <ion-select-option :value="n" v-for="n in fontFamilyGroup" :key="n">
+                                    <ion-select :label="getLine('settings.fontFamily')"
+                                        :placeholder="settings.styles.value.fontFamily"
+                                        @ion-change="settings.applyFontFamily">
+                                        <ion-select-option :value="n" v-for="n in settings.fontFamilyGroup.value"
+                                            :key="n">
                                             {{ n }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-select :placeholder="styles.fontWeight" :label="getLine('settings.boldText')"
-                                        @ion-change="applyFontWeight">
-                                        <ion-select-option v-for="weight in fontWeights" :key="weight">
+                                    <ion-select :placeholder="String(settings.styles.value.fontWeight)"
+                                        :label="getLine('settings.boldText')" @ion-change="settings.applyFontWeight">
+                                        <ion-select-option v-for="weight in settings.fontWeights.value" :key="weight">
                                             {{ weight }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
@@ -195,7 +102,7 @@ onMounted(async () => {
                     @update:selected-translation="handleSelectedTranslation">
                 </modal-component>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.audio") }}</ion-list-header>
-                <ion-accordion-group>
+                <ion-accordion-group value="first">
                     <ion-accordion value="first">
                         <ion-item slot="header">
                             <ion-label>{{ getLine("settings.audioPlayer") }}</ion-label>
@@ -203,24 +110,24 @@ onMounted(async () => {
                         <div slot="content">
                             <ion-list class="ion-padding">
                                 <ion-item>
-                                    <ion-toggle @ion-change="handleAudioSetting" value="autoPlay"
-                                        :checked="audioSettings.autoPlay">{{
+                                    <ion-toggle @ion-change="settings.handleAudioSetting" value="autoPlay"
+                                        :checked="settings.audioSettings.value.autoPlay">{{
                                             getLine("settings.autoPlay")
                                         }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="handleAudioSetting" value="dismissOnEnd"
-                                        :checked="audioSettings.dismissOnEnd">{{
+                                    <ion-toggle @ion-change="settings.handleAudioSetting" value="dismissOnEnd"
+                                        :checked="settings.audioSettings.value.dismissOnEnd">{{
                                             getLine("settings.playerDismiss") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="handleAudioSetting" value="autoScroll"
-                                        :checked="audioSettings.autoScroll">{{
+                                    <ion-toggle @ion-change="settings.handleAudioSetting" value="autoScroll"
+                                        :checked="settings.audioSettings.value.autoScroll">{{
                                             getLine("settings.autoScroll") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
                                     <ion-toggle @ion-change="handleDownload" value="download"
-                                        :checked="audioSettings.autoDownload">{{
+                                        :checked="settings.audioSettings.value.autoDownload">{{
                                             getLine("settings.autoDownload") }}</ion-toggle>
                                 </ion-item>
                             </ion-list>
@@ -239,7 +146,7 @@ onMounted(async () => {
                                 <ion-item>
                                     <ion-select :label="getLine('settings.language')"
                                         :aria-label="getLine('settings.language')" interface="popover"
-                                        :placeholder="getLocaleValue" @ion-change="updateSelectedLocale">
+                                        :placeholder="getLocaleValue" @ion-change="settings.updateSelectedLocale">
                                         <ion-select-option :value="locale" v-for="locale in supportedLocales"
                                             :key="locale.key">{{
                                                 locale.value }}</ion-select-option>
@@ -261,8 +168,8 @@ onMounted(async () => {
                                 <ion-item>
                                     <ion-select :aria-label="getLine('settings.darkMode')"
                                         :label="getLine('settings.theme')" interface="popover"
-                                        :placeholder="colorScheme" @ion-change="appleColorScheme">
-                                        <ion-select-option v-for="item in colorSchemes" :key="item.key"
+                                        :placeholder="colorScheme" @ion-change="settings.appleColorScheme">
+                                        <ion-select-option v-for="item in settings.colorSchemes.value" :key="item.key"
                                             :value="item.key">{{ item.value
                                             }}</ion-select-option>
                                     </ion-select>
