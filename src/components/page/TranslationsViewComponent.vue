@@ -31,7 +31,7 @@ const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
 const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
 const { params } = useRoute()
 const router = useRouter()
-const contentRef = ref()
+const cardRef = ref()
 const pageId = computed((): number | undefined => Number(params.pageId))
 const intersectingVerseNumber = ref<number>()
 
@@ -67,7 +67,7 @@ const onIntersectionObserver = ([{ isIntersecting, target, intersectionRatio }]:
 // For Element Scroll
 watch(intersectingVerseNumber, (newVerseNumber) => {
     if (newVerseNumber) {
-        scrollToElement(`#verse-col-${newVerseNumber}`, contentRef.value.$el, 300)
+        scrollToElement(`#verse-col-${newVerseNumber}`, cardRef.value.$el, 300)
     }
 })
 
@@ -116,7 +116,7 @@ const routeBackName = computed(() => {
         <toolbar-component :route-back-label="routeBackName" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef">
             <ion-card class="ion-padding card-wrapper" v-for="(verses, chapterId) in verses" :key="chapterId"
-                :id="`card-${chapterId}`">
+                :id="`card-${chapterId}`" ref="cardRef">
                 <div>
                     <ion-chip
                         @click="$emit('update:playAudio', { audioID: verses[0].chapter_id, verseKey: verses[0].verse_key })"
@@ -138,7 +138,7 @@ const routeBackName = computed(() => {
                 <ion-item v-for="verse in verses" :key="verse.verse_number" :data-verse-number="verse.verse_number"
                     :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number"
                     :id="`verse-col-${verse.verse_number}`"
-                    v-intersection-observer="[onIntersectionObserver, { root: contentRef, immediate: false }]">
+                    v-intersection-observer="[onIntersectionObserver, { root: cardRef, immediate: false }]">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
                             <ion-col size="11" class="translations-view-col">

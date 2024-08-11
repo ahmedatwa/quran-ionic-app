@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { RouteRecordRaw } from "vue-router";
 import Home from "@/views/Home.vue";
 import { loadingController } from "@ionic/vue";
-import { ref } from "vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -79,19 +78,19 @@ const router = createRouter({
   routes,
 });
 
-const loader = ref<HTMLIonLoadingElement>();
+let loader: HTMLIonLoadingElement | null;
 router.beforeEach(async (to, from, next) => {
   // Loading
-  loader.value = await loadingController.create({
+  loader = await loadingController.create({
     message: "Loading...",
   });
 
-  loader.value.present();
-
+  loader.present();
   next();
 });
+
 router.afterEach(() => {
-  loader.value?.dismiss();
+  loader?.dismiss();
 });
 
 export default router;
