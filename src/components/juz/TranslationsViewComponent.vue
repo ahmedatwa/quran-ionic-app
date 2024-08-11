@@ -12,7 +12,7 @@ import { playOutline, ellipsisVerticalOutline } from "ionicons/icons";
 import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { vIntersectionObserver } from "@vueuse/components";
 // types
 import type { Verse, VerseWord } from "@/types/verse";
@@ -26,12 +26,11 @@ import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 
-const contentRef = ref()
+const cardRef = ref()
 const { getLine } = useLocale()
 const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
 const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
 const { params } = useRoute()
-const { go } = useRouter()
 const juzId = computed(() => Number(params.juzId))
 const intersectingVerseNumber = ref<number>()
 
@@ -91,7 +90,7 @@ const onIntersectionObserver = ([{ isIntersecting, target, intersectionRatio }]:
 // For Element Scroll
 watch(intersectingVerseNumber, (newVerseNumber) => {
     if (newVerseNumber) {
-        scrollToElement(`#verse-col-${newVerseNumber}`, contentRef.value.$el, 300)
+        scrollToElement(`#verse-col-${newVerseNumber}`, cardRef.value.$el, 300)
     }
 })
 
@@ -106,7 +105,7 @@ const isWordHighlighted = (word: VerseWord) => {
     <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${juzId}`">
         <toolbar-component :route-back-label="getLine('tabs.juzs')" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true">
-            <ion-card class="ion-padding card-wrapper" ref="contentRef" v-for="(mappedVerses, chapterId) in verses"
+            <ion-card class="ion-padding card-wrapper" ref="cardRef" v-for="(mappedVerses, chapterId) in verses"
                 :key="chapterId" :id="`card-${chapterId}`">
                 <div>
                     <ion-chip
@@ -129,7 +128,7 @@ const isWordHighlighted = (word: VerseWord) => {
                 <ion-item v-for="verse in mappedVerses" :key="verse.verse_number"
                     :data-verse-number="verse.verse_number" :data-hizb-number="verse.hizb_number"
                     :data-juz-number="verse.juz_number"
-                    v-intersection-observer="[onIntersectionObserver, { root: contentRef, immediate: false }]">
+                    v-intersection-observer="[onIntersectionObserver, { root: cardRef, immediate: false }]">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
                             <ion-col size="11" class="translations-view-col" :id="`verse-col-${verse.verse_number}`">
