@@ -77,10 +77,10 @@ const routeBackName = computed(() => {
         <toolbar-component :is-loading="isLoading" :route-back-label="routeBackName"></toolbar-component>
         <ion-content>
             <ion-card class="ion-padding" v-for="(versesMap, page) in verses" :key="page" :id="`row-page-${page}`">
-                <div>
+                <div class="d-flex ion-justify-content-between">
                     <ion-chip
                         @click="$emit('update:playAudio', { audioID: versesMap[0].chapter_id, verseKey: versesMap[0].verse_key })"
-                        color="primary" class="ion-float-right">
+                        color="primary">
                         <ion-icon :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
                         <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
                     </ion-chip>

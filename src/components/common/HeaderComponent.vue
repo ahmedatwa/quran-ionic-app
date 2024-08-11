@@ -5,6 +5,9 @@ import { IonIcon, toastController, IonLabel, IonProgressBar } from "@ionic/vue";
 // icons
 import { documentOutline, cogOutline, bookOutline, newspaperOutline } from 'ionicons/icons';
 import { Network } from '@capacitor/network';
+import { useLocale } from "@/utils/useLocale";
+
+const { isRtl } = useLocale()
 
 defineProps<{
     title: string
@@ -52,7 +55,7 @@ const presentToast = async (message: string) => {
         <ion-toolbar>
             <ion-title size="large" class="ion-margin">
                 <ion-icon :icon="icon" size="large"></ion-icon>
-                <ion-label class="header-label">{{ title }}</ion-label>
+                <ion-label :class="isRtl ? 'header-label-rtl' : 'header-label'">{{ title }}</ion-label>
             </ion-title>
         </ion-toolbar>
         <ion-toolbar v-if="search">
@@ -66,6 +69,12 @@ const presentToast = async (message: string) => {
     position: absolute;
     top: 3px;
     margin-left: 5px;
+}
+
+.header-label-rtl {
+    position: absolute;
+    top: 3px;
+    margin-right: 5px;
 }
 
 #network-toast .toast-message {
