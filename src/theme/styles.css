@@ -159,8 +159,3 @@ ion-loading.custom-loading {
   flex-wrap: wrap;
   justify-content: center;
 }
-.icon-title {
-  top: 6px;
-  position: relative;
-  margin-right: 10px;
-}
