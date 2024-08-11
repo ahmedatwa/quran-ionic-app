@@ -18,8 +18,8 @@ const audioSettings = ref<AudioPlayerSettings>({
 // Styles
 const styles = ref<Styles>({
   fontSize: "1",
-  fontFamily: "Noto-Kufi",
-  fontWeight: "400",
+  fontFamily: "noto-Kufi",
+  fontWeight: "normal",
 });
 
 export const useSettings = () => {
@@ -34,13 +34,19 @@ export const useSettings = () => {
   ]);
 
   const fontFamilyGroup = ref([
-    "Amiri",
-    "Noto-Kufi",
-    "Hafs-Nastaleeq",
-    "Uthman-Taha-Naskh",
+    { key: "amiri", value: "Amiri" },
+    { key: "noto-kufi", value: "Noto-Kufi" },
+    { key: "hafs-nastaleeq", value: "Hafs-Nastaleeq" },
+    { key: "uthman-taha-naskh", value: "Uthman-Taha-Naskh" },
   ]);
 
-  const fontWeights = ref([400, 500, 600, 700, 800]);
+  const fontWeights = ref([
+    { key: "normal", value: "Normal" },
+    { key: "medium", value: "Medium" },
+    { key: "semibold", value: "Semi Bold" },
+    { key: "bold", value: "Bold" },
+    { key: "extra-bold", value: "Extra Bold" },
+  ]);
   const appVersion = computed(() => import.meta.env.VITE_APP_VERSION);
 
   const appleColorScheme = (ev: CustomEvent) => {
@@ -79,7 +85,7 @@ export const useSettings = () => {
     setStorage("audio", audioSettings);
   };
 
-  const updateSelectedLocale = (ev: CustomEvent) => {    
+  const updateSelectedLocale = (ev: CustomEvent) => {
     const selected = ev.detail.value;
     const localKeys = supportedLocales.value.map((lo) => lo.key);
     if (localKeys.includes(selected.key)) {

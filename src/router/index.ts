@@ -50,12 +50,19 @@ const routes: Array<RouteRecordRaw> = [
     name: "page",
     component: () => import("@/views/pages/Page.vue"),
     props: true,
+    children: [
+      {
+        path: "verse/:verseId",
+        name: "",
+        component: () => import("@/views/pages/Page.vue"),
+      },
+    ],
   },
   {
     path: "/juz/:juzId",
     name: "juz",
     component: () => import("@/views/pages/Juz.vue"),
-    props: true
+    props: true,
   },
   {
     path: "/chapter/:chapterId",

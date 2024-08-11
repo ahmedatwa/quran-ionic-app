@@ -1,7 +1,7 @@
 interface Styles {
   fontSize: number | string;
   fontFamily: string;
-  fontWeight: string | number;
+  fontWeight: string;
 }
 
 type FontFamilyGroup = string[];

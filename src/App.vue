@@ -49,8 +49,8 @@ onBeforeMount(async () => {
   if (!stylesSettings) {
     setStorage("styles", {
       fontSize: "1",
-      fontFamily: "Noto-Kufi",
-      fontWeight: "400",
+      fontFamily: "noto-kufi",
+      fontWeight: "normal",
     })
   }
 

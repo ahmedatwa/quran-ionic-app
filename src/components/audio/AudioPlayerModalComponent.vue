@@ -73,7 +73,7 @@ onMounted(async () => {
     if (result) downloadedKeys.value = result
 })
 
-const isDownloadDisabled = (reciterID: string, audioID: string) => {
+const isDownloadDisabled = (reciterID: string | number, audioID: string | number) => {
     const key = String(reciterID).concat("-").concat(String(audioID))
     if (downloadedKeys.value) {
         if (downloadedKeys.value.includes(key)) return true
@@ -208,9 +208,8 @@ const isDownloadDisabled = (reciterID: string, audioID: string) => {
                                         :disabled="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id))">
                                         <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
                                     </ion-item-option>
-                                    <ion-item-option :color="isPlaying ? 'medium' : 'primary'"
-                                        @click="$emit('update:playChapter', chapter.id)"
-                                        :disabled="isPlaying && (chapter.id === audioFiles?.id)">
+                                    <ion-item-option color="primary" @click="$emit('update:playChapter', chapter.id)"
+                                        :disabled="audioFiles?.chapter_id === chapter.id">
                                         <ion-icon slot="icon-only" :icon="playCircleOutline"></ion-icon>
                                     </ion-item-option>
                                 </ion-item-options>

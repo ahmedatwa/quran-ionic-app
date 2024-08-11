@@ -1,3 +1,4 @@
+@import "./fonts.scss";
 :root {
   --direct: rtl;
   --font-family-amiri: "Amiri", serif;
@@ -8,16 +9,16 @@
   /* Noto Naskh Arabic Variable', serif */
   --quran-reader-direction: rtl;
   --quran-content-title: "Gulzar", serif;
-  --font-size-1: 4.5vw;
-  --font-size-2: 3.2vh;
-  --font-size-3: 3.4vh;
-  --font-size-4: 3.7vh;
-  --font-size-5: 3.95vh;
-  --font-size-6: 5.08vh;
-  --font-size-7: 6.21vh;
-  --font-size-8: 7.34vh;
-  --font-size-9: 8.47vh;
-  --font-size-10: 9.6vh;
+  --font-size-1: 2.2vh;
+  --font-size-2: 2.8vh;
+  --font-size-3: 3vh;
+  --font-size-4: 3.2vh;
+  --font-size-5: 3.7vh;
+  --font-size-6: 4vh;
+  --font-size-7: 4.21vh;
+  --font-size-8: 4.7vh;
+  --font-size-9: 5.1vh;
+  --font-size-10: 5.6vh;
   --translation-font-size-1: 0.85rem;
   --translation-font-size-2: 1rem;
   --translation-font-size-3: 1.18rem;
@@ -122,6 +123,11 @@ ion-loading.custom-loading {
   line-height: 3.8vh;
 }
 
+.translation {
+  font-weight: var(--font-weight-normal);
+  margin-inline: var(--spacing-micro);
+  font-size: 15px;
+}
 /* Quran Reader */
 .quran-reader-content-wrapper {
   text-align: center;

@@ -22,6 +22,13 @@ import "@ionic/vue/css/text-transformation.css";
 import "@ionic/vue/css/flex-utils.css";
 import "@ionic/vue/css/display.css";
 
+// fonts
+import '@fontsource/gulzar';
+import '@fontsource/amiri';
+// Supports weights 100-900
+import '@fontsource-variable/noto-kufi-arabic';
+
+
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------

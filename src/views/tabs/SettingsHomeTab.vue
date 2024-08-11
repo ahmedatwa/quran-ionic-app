@@ -19,6 +19,7 @@ import ModalComponent from '@/components/common/ModalComponent.vue';
 // types
 import type { Recitations } from '@/types/audio';
 import type { Translation } from '@/types/translations';
+import { properCase } from '@/utils/string';
 
 const audioPlayerStore = useAudioPlayerStore()
 const { getLine, getLocaleValue, supportedLocales, getLocale } = useLocale()
@@ -65,18 +66,18 @@ const handleDownload = () => {
                                 </ion-item>
                                 <ion-item>
                                     <ion-select :label="getLine('settings.fontFamily')"
-                                        :placeholder="settings.styles.value.fontFamily"
+                                        :placeholder="properCase(settings.styles.value.fontFamily)"
                                         @ion-change="settings.applyFontFamily">
                                         <ion-select-option :value="n" v-for="n in settings.fontFamilyGroup.value"
-                                            :key="n">
-                                            {{ n }}</ion-select-option>
+                                            :key="n.key">{{ n.value }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-select :placeholder="String(settings.styles.value.fontWeight)"
+                                    <ion-select :placeholder="properCase(settings.styles.value.fontWeight)"
                                         :label="getLine('settings.boldText')" @ion-change="settings.applyFontWeight">
-                                        <ion-select-option v-for="weight in settings.fontWeights.value" :key="weight">
-                                            {{ weight }}</ion-select-option>
+                                        <ion-select-option v-for="weight in settings.fontWeights.value"
+                                            :key="weight.key">
+                                            {{ weight.value }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                             </ion-list>

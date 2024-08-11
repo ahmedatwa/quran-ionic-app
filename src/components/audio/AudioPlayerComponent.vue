@@ -354,7 +354,7 @@ const playNext = (ev: boolean) => {
                                     :src="`/reciters/${audioPlayerStore.selectedReciter?.reciter_id}.jpg`" />
                             </ion-avatar>
                         </ion-col>
-                        <ion-col size="5" class="ion-text-right">
+                        <ion-col size="5" size-md="3" size-lg="3" class="ion-text-right">
                             <ion-button fill="clear" @click="playAudio">
                                 <ion-spinner v-if="audioPlayerStore.isLoading"></ion-spinner>
                                 <ion-icon slot="icon-only"
