@@ -159,6 +159,17 @@ ion-loading.custom-loading {
   flex-wrap: wrap;
   justify-content: center;
 }
+
+
+/* Selected Translations Alert */
 #translation-alert .alert-button-group {
   justify-content: center;
+}
+
+#translation-alert .alert-message {
+  text-align: center;
+}
+
+#translation-alert .alert-title {
+  text-align: center;
 }
