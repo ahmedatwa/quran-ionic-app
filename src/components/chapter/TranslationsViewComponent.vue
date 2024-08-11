@@ -70,7 +70,7 @@ watchEffect(async () => {
 // For Element Scroll
 watch(intersectingVerseNumber, (newVerseNumber) => {
     if (newVerseNumber) {
-       scrollToElement(`#verse-col-${newVerseNumber}`, cardRef.value.$el, 300)
+        scrollToElement(`#verse-col-${newVerseNumber}`, cardRef.value.$el, 300)
     }
 })
 
@@ -111,9 +111,8 @@ const isWordHighlighted = (word: VerseWord) => {
         <toolbar-component :route-back-label="getLine('tabs.chapters')" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef">
             <ion-card class="ion-padding card-wrapper" ref="cardRef">
-                <div>
-                    <ion-chip @click="$emit('update:playAudio', { audioID: chapterId })" color="primary"
-                        class="ion-float-right">
+                <div class="d-flex ion-justify-content-between">
+                    <ion-chip @click="$emit('update:playAudio', { audioID: chapterId })" color="primary">
                         <ion-icon color="primary" :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
                         <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
                     </ion-chip>

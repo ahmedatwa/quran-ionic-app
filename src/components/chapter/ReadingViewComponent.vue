@@ -79,9 +79,8 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
         <ion-content>
             <ion-card class="ion-padding" v-for="(verses, page) in mapVersesByPage" :key="page"
                 :id="`row-page-${page}`">
-                <div>
-                    <ion-chip @click="$emit('update:playAudio', { audioID: verses[0].chapter_id })" color="primary"
-                        class="ion-float-right">
+                <div class="d-flex ion-justify-content-between">
+                    <ion-chip @click="$emit('update:playAudio', { audioID: verses[0].chapter_id })" color="primary">
                         <ion-icon :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
                         <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
                     </ion-chip>
@@ -99,34 +98,33 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                 <ion-card-content class="ion-padding quran-reader-content-wrapper">
                     <!-- <ion-grid>
                         <ion-row> -->
-                            <div class="verse-col" :id="`page-${page}`" size="12">
-                                <div class="word-wrapper" v-for="verse in verses" :key="verse.id"
-                                    :id="`line-${verse.verse_number}`" :data-hizb-number="verse.hizb_number"
-                                    :data-chapter-id="verse.chapter_id" :data-juz-number="verse.juz_number"
-                                    :data-page-number="page" :data-verse-number="verse.verse_number">
-                                    <span v-for="word in verse.words" :key="word.id" :data-word-position="word.position"
-                                        class="" :data-hizb-number="verse.hizb_number"
-                                        :data-juz-number="verse.juz_number" :data-chapter-id="verse.chapter_id"
-                                        :data-page-number="page">
-                                        <span :class="isWordHighlighted(word.location, word.verse_key)
-                                            ? 'text-blue'
-                                            : ''" class="word">
-                                            <div v-if="word.char_type_name === 'end'" class="end">({{ word.text_uthmani
-                                                }})
-                                            </div>
-                                            <h3 :style="styles" v-else>{{
-                                                word.text_uthmani }}</h3>
-                                        </span>
-                                    </span> 
-                                </div>
-                            </div>
-                            <ion-col size="12">
-                                <ion-item-divider>
-                                    <ion-label class="m-auto">{{ getLine('quranReader.textPage') }} {{ page
-                                        }}</ion-label>
-                                </ion-item-divider>
-                            </ion-col>
-                        <!-- </ion-row>
+                    <div class="verse-col" :id="`page-${page}`" size="12">
+                        <div class="word-wrapper" v-for="verse in verses" :key="verse.id"
+                            :id="`line-${verse.verse_number}`" :data-hizb-number="verse.hizb_number"
+                            :data-chapter-id="verse.chapter_id" :data-juz-number="verse.juz_number"
+                            :data-page-number="page" :data-verse-number="verse.verse_number">
+                            <span v-for="word in verse.words" :key="word.id" :data-word-position="word.position"
+                                class="" :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number"
+                                :data-chapter-id="verse.chapter_id" :data-page-number="page">
+                                <span :class="isWordHighlighted(word.location, word.verse_key)
+                                    ? 'text-blue'
+                                    : ''" class="word">
+                                    <div v-if="word.char_type_name === 'end'" class="end">({{ word.text_uthmani
+                                        }})
+                                    </div>
+                                    <h3 :style="styles" v-else>{{
+                                        word.text_uthmani }}</h3>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <ion-col size="12">
+                        <ion-item-divider>
+                            <ion-label class="m-auto">{{ getLine('quranReader.textPage') }} {{ page
+                                }}</ion-label>
+                        </ion-item-divider>
+                    </ion-col>
+                    <!-- </ion-row>
                     </ion-grid> -->
 
                 </ion-card-content>
