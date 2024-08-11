@@ -10,7 +10,9 @@ export const scrollToElement = async (
   if (el && !isInViewport(el, parent)) {
     await delay(timeout || 100);
     if (overLayHeight) {
-      if (!el.classList.contains(`scroll-margin-top:${overLayHeight || 300}px`)) {
+      if (
+        !el.classList.contains(`scroll-margin-top:${overLayHeight || 300}px`)
+      ) {
         el.classList.add(`scroll-margin-top:${overLayHeight}px`);
       }
     }
@@ -34,7 +36,6 @@ export const SCROLL_TO_NEAREST_ELEMENT = {
   block: "nearest",
 } as ScrollIntoViewOptions;
 
- 
 const isInViewport = (element: HTMLElement, root?: HTMLElement) => {
   let rect = element.getBoundingClientRect();
   let html = root ? root : document.documentElement;
@@ -44,6 +45,25 @@ const isInViewport = (element: HTMLElement, root?: HTMLElement) => {
     rect.bottom <= (window.innerHeight || html.clientHeight) &&
     rect.right <= (window.innerWidth || html.clientWidth)
   );
+};
+
+/**
+ *
+ * @param {HTMLElement} el
+ * @return {{top: number, left: number}}
+ */
+export const getElOffset = (el: HTMLElement | string) => {
+  let element: HTMLElement =
+    typeof el === "string" ? (document.querySelector(el) as HTMLElement) : el;
+  let top = 0,
+    left = 0;
+   // offsetParent = 0;
+  while (element !== null) {
+    top += element.offsetTop;
+    left += element.offsetLeft;
+   // offsetParent = element.offsetParent;
+  }
+  return { top, left };
 };
 
 const delay = (length: number): Promise<void> => {

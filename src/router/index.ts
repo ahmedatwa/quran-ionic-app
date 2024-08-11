@@ -64,7 +64,7 @@ const routes: Array<RouteRecordRaw> = [
     props: true,
   },
   // will match everything and put it under `route.params.pathMatch`
-  // { path: "/:pathMatch(.*)*", name: "NotFound", component:  },
+  // { path: "/:pathMatch(.*)*", name: "NotFound", component: import("@/views/404NotFound.vue") },
 ];
 
 const router = createRouter({
