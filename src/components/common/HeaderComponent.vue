@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onUnmounted } from "vue"
-import { IonHeader, IonToolbar, IonTitle, IonSearchbar, IonProgressBar } from "@ionic/vue";
-import { IonIcon, toastController, IonLabel } from "@ionic/vue";
+import { IonHeader, IonToolbar, IonTitle, IonSearchbar } from "@ionic/vue";
+import { IonIcon, toastController, IonLabel, IonProgressBar } from "@ionic/vue";
 // icons
 import { documentOutline, cogOutline, bookOutline, newspaperOutline } from 'ionicons/icons';
 import { Network } from '@capacitor/network';
@@ -38,7 +38,7 @@ onUnmounted(() => Network.removeAllListeners())
 const presentToast = async (message: string) => {
     const toast = await toastController.create({
         message,
-        duration: 1500,
+        // duration: 1500,
         position: "top",
         id: 'network-toast'
     });
@@ -66,5 +66,9 @@ const presentToast = async (message: string) => {
     position: absolute;
     top: 3px;
     margin-left: 5px;
+}
+
+#network-toast .toast-message {
+    text-align: center;
 }
 </style>
