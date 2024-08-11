@@ -141,7 +141,7 @@ const isWordHighlighted = (word: VerseWord) => {
                                     </ion-text>
                                 </ion-label>
                             </ion-col>
-                            <ion-col size="1">
+                            <ion-col size="1" class="action-sheet">
                                 <ion-icon :icon="ellipsisVerticalOutline" color="primary"
                                     :id="`open-action-sheet${verse.verse_number}`"></ion-icon>
                                 <verse-action-component :verse="verse"
