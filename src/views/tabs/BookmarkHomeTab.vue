@@ -62,18 +62,18 @@ const deleteBookmark = async (key: string) => {
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
-            <ion-list>
+            <ion-list :inset="true">
                 <ion-card v-if="!bookmarks.length">
                     <ion-card-content class="ion-text-center">{{ getLine('bookmark.emptyContent') }}</ion-card-content>
                 </ion-card>
                 <ion-item-sliding v-for="item in bookmarks" :key="item.key">
-                    <ion-item button :router-link="item.key">
+                    <ion-item button :detail="true" :router-link="item.key">
                         <ion-icon slot="start" :icon="bookmarkOutline" color="danger"></ion-icon>
                         <ion-label>
                             <h3> {{ item.value.chapterName }}</h3>
                             <ion-note class="rtl">{{ truncate(item.value.verseText, 50) }}</ion-note>
                         </ion-label>
-                        <ion-note slot="end">{{ item.value.verseNumber }}</ion-note>
+                        <ion-note slot="end" class="pt-24">{{ item.value.verseNumber }}</ion-note>
                     </ion-item>
                     <ion-item-options>
                         <ion-item-option color="danger" @click="deleteBookmark(item.key)">
@@ -100,5 +100,9 @@ ion-accordion {
 
 .rtl {
     direction: rtl;
+}
+
+.pt-24 {
+    padding-top: 24px
 }
 </style>

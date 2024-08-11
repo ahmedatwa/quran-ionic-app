@@ -51,8 +51,8 @@ const presentToast = async (message: string) => {
     <ion-header :translucent="translucent" :collapse="collapse">
         <ion-toolbar>
             <ion-title size="large" class="ion-margin">
-                <ion-icon :icon="icon" size="large" class="icon-title"></ion-icon>
-                <ion-label>{{ title }}</ion-label>
+                <ion-icon :icon="icon" size="large"></ion-icon>
+                <ion-label class="header-label">{{ title }}</ion-label>
             </ion-title>
         </ion-toolbar>
         <ion-toolbar v-if="search">
@@ -61,3 +61,10 @@ const presentToast = async (message: string) => {
         </ion-toolbar>
     </ion-header>
 </template>
+<style scoped>
+.header-label {
+    position: absolute;
+    top: 3px;
+    margin-left: 5px;
+}
+</style>
