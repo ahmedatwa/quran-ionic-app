@@ -15,7 +15,7 @@ import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
 import { useLocale } from '@/utils/useLocale';
 import { useSettings } from '@/utils/useSettings';
-
+import { properCase } from '@/utils/string';
 // types
 import type { ChapterInfo } from '@/types/chapter';
 
@@ -80,8 +80,9 @@ const styles = computed(() => {
 
 const getTranslationAlert = async () => {
     const alert = await alertController.create({
-        header: transaltionStore.selectedTranslation?.language_name.toUpperCase(),
+        header: properCase(String(transaltionStore.selectedTranslation?.language_name)),
         message: transaltionStore.selectedTranslation?.author_name,
+        id: "translation-alert",
         buttons: ['Ok'],
     });
 

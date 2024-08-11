@@ -15,10 +15,10 @@ import { useChapterStore } from '@/stores/ChapterStore';
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 // types
 import type { ChapterInfo } from '@/types/chapter';
-import type { Styles } from "@/types/settings"
 // utils
 import { useLocale } from '@/utils/useLocale';
 import { useSettings } from '@/utils/useSettings';
+import { properCase } from '@/utils/string';
 
 const currentSegment = ref("translations")
 const { getLine } = useLocale()
@@ -87,8 +87,9 @@ const getSurahInfo = async (ev: number) => {
 
 const getTranslationAlert = async () => {
     const alert = await alertController.create({
-        header: transaltionStore.selectedTranslation?.language_name.toUpperCase(),
+        header: properCase(String(transaltionStore.selectedTranslation?.language_name)),
         message: transaltionStore.selectedTranslation?.author_name,
+        id: "translation-alert",
         buttons: ['Ok'],
     });
 

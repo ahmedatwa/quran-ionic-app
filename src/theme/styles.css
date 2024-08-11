@@ -159,3 +159,6 @@ ion-loading.custom-loading {
   flex-wrap: wrap;
   justify-content: center;
 }
+#translation-alert .alert-button-group {
+  justify-content: center;
+}
