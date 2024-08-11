@@ -169,10 +169,9 @@ const handleDownload = () => {
                                 <ion-item>
                                     <ion-select :aria-label="getLine('settings.darkMode')"
                                         :label="getLine('settings.theme')" interface="popover"
-                                        :placeholder="colorScheme" @ion-change="settings.appleColorScheme">
+                                        :placeholder="properCase(colorScheme)" @ion-change="settings.appleColorScheme">
                                         <ion-select-option v-for="item in settings.colorSchemes.value" :key="item.key"
-                                            :value="item.key">{{ item.value
-                                            }}</ion-select-option>
+                                            :value="item.key">{{ item.value }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
