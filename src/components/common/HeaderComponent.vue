@@ -38,7 +38,7 @@ onUnmounted(() => Network.removeAllListeners())
 const presentToast = async (message: string) => {
     const toast = await toastController.create({
         message,
-        // duration: 1500,
+        duration: 1500,
         position: "top",
         id: 'network-toast'
     });
