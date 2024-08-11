@@ -134,6 +134,9 @@ ion-loading.custom-loading {
   direction: rtl;
 }
 
+.action-sheet {
+  top: 3px;
+}
 .quran-reader-content-wrapper .verse-col {
   line-height: 4.8vh;
   direction: rtl;
