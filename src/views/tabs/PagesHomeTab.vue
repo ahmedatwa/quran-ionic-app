@@ -10,9 +10,9 @@ import { usePageStore } from "@/stores/PageStore";
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
 // icons
-import { chevronForward, documentOutline } from 'ionicons/icons';
+import { chevronForward, documentOutline, chevronBack } from 'ionicons/icons';
 
-const { getLine, getLocale } = useLocale()
+const { getLine, getLocale, isRtl } = useLocale()
 const pageStore = usePageStore()
 
 const handleSearch = (query: string) => {
@@ -41,7 +41,7 @@ const handleSearch = (query: string) => {
           </ion-label>
           <div class="metadata-end-wrapper" slot="end">
             <ion-note color="medium">{{ page.chaptersMap?.length }}</ion-note>
-            <ion-icon color="medium" :icon="chevronForward"></ion-icon>
+            <ion-icon color="medium" :icon="isRtl ? chevronBack :chevronForward"></ion-icon>
           </div>
         </ion-item>
       </ion-list>
