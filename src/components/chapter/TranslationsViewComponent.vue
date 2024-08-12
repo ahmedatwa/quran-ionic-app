@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { ref, computed, watch, watchEffect } from "vue"
-import { IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
+import { IonButton, IonIcon, IonCardHeader, IonItem, IonGrid, IonRow } from "@ionic/vue";
 import { IonChip, IonContent, IonNote, IonCardTitle, IonCardSubtitle } from "@ionic/vue";
-import { IonCol, IonRow, IonGrid, IonItem, IonCard } from "@ionic/vue";
-import { IonLabel, IonText } from "@ionic/vue";
+import { IonLabel, IonText, IonCol, IonCard } from "@ionic/vue";
 import { IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 // icons
 import { pauseOutline, playOutline, ellipsisVerticalOutline, languageOutline } from "ionicons/icons";
@@ -121,8 +120,8 @@ const isWordHighlighted = (word: VerseWord) => {
                     </ion-button>
                 </div>
                 <ion-card-header class="ion-text-center">
-                    <ion-card-subtitle>{{ isBismillah }}</ion-card-subtitle>
                     <ion-card-title>{{ chapterName }}</ion-card-title>
+                    <ion-card-subtitle>{{ isBismillah }}</ion-card-subtitle>
                 </ion-card-header>
                 <ion-item v-for="verse in verses" :key="verse.verse_number" :data-verse-number="verse.verse_number"
                     :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number"
@@ -132,10 +131,13 @@ const isWordHighlighted = (word: VerseWord) => {
                         <ion-row class="ion-align-items-start">
                             <ion-col size="11" class="translations-view-col">
                                 <ion-label v-for="word in verse.words" :key="word.id">
-                                    <ion-text :color="isWordHighlighted(word) ? 'primary' : ''">
+                                    <ion-text :color="isWordHighlighted(word) ? 'primary' : ''"
+                                        :id="`word-${verse.verse_number}`">
                                         <span v-if="word.char_type_name === 'end'" class="end">
                                             ({{ word.text_uthmani }})</span>
-                                        <h3 :style="styles" v-else>{{ word.text_uthmani }}</h3>
+                                        <h3 :style="styles" v-else>{{
+                                            word.text_uthmani }}
+                                        </h3>
                                     </ion-text>
                                 </ion-label>
                             </ion-col>
