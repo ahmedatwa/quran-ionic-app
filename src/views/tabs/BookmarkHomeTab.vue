@@ -73,7 +73,7 @@ const deleteBookmark = async (key: string) => {
                             <h3> {{ item.value.chapterName }}</h3>
                             <ion-note class="rtl">{{ truncate(item.value.verseText, 50) }}</ion-note>
                         </ion-label>
-                        <ion-note slot="end" class="pt-24">{{ item.value.verseNumber }}</ion-note>
+                        <ion-note slot="end">{{ item.value.verseNumber }}</ion-note>
                     </ion-item>
                     <ion-item-options>
                         <ion-item-option color="danger" @click="deleteBookmark(item.key)">
