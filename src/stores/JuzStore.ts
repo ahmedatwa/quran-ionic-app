@@ -12,10 +12,14 @@ import type { Verse } from "@/types/verse";
 // utils
 import { _range } from "@/utils/number";
 import { AllJuzsToChapters } from "@/utils/juz";
+import { useStorage } from "@/utils/useStorage";
+import { useToast } from "@/utils/useToast";
 
 export const useJuzStore = defineStore("juz-store", () => {
   const { selectedTranslation } = useTranslationsStore();
   const { chaptersList } = useChapterStore();
+  const { getStorage, setStorage } = useStorage("__juzDB");
+  const { presentToast } = useToast();
   const isLoading = ref(false);
   const juzList = ref<Juz[]>([]);
   const selectedJuz = ref<Juz | null>(null);
@@ -53,6 +57,15 @@ export const useJuzStore = defineStore("juz-store", () => {
     isLoading.value = loading;
     page = page ? page : 1;
     limit = limit ? limit : perPage.value;
+    const juz = juzList.value.find((s) => s.juz_number === juzNumber);
+    // Check for DB Storage to avoid the api call
+    if (juz) {
+      const check = await isDBStorageData(juzNumber, juz);
+      if (check) {
+        isLoading.value = false;
+        return;
+      }
+    }
 
     await instance
       .get(
@@ -65,7 +78,6 @@ export const useJuzStore = defineStore("juz-store", () => {
         )
       )
       .then((response) => {
-        const juz = juzList.value.find((s) => s.juz_number === juzNumber);
         if (juz) {
           response.data.verses.forEach((verse: Verse) => {
             const verseFound = juz.verses?.find(
@@ -82,11 +94,16 @@ export const useJuzStore = defineStore("juz-store", () => {
           }
         }
       })
-      .catch((error) => {
-        throw error;
+      .catch(async (error) => {
+        await presentToast({ message: String(error) });
       })
       .finally(() => {
         isLoading.value = false;
+        // save chapter in DB
+        setStorage(String(selectedJuz.value?.juz_number), {
+          data: JSON.stringify(selectedJuz.value),
+          length: selectedJuz.value?.verses?.length,
+        });
       });
   };
 
@@ -110,8 +127,8 @@ export const useJuzStore = defineStore("juz-store", () => {
           });
         }
       })
-      .catch((e) => {
-        throw e;
+      .catch(async (error) => {
+        await presentToast({ message: String(error) });
       })
       .finally(() => {
         isLoading.value = false;
@@ -187,6 +204,37 @@ export const useJuzStore = defineStore("juz-store", () => {
     }
     return 0;
   });
+
+  const isDBStorageData = async (chapterId: number, juz: Juz) => {
+    const juzsDB: { data: string; length: number } = await getStorage(
+      String(chapterId)
+    );
+    if (juzsDB) {
+      // first fetch check onmounted
+
+      // versecount === length
+      if (juz.verses?.length === 0) {
+        juz.verses = JSON.parse(juzsDB.data).verses;
+        juz.pagination = JSON.parse(juzsDB.data).pagination;
+        selectedJuz.value = juz;
+        return true;
+      } else if (juz.verses?.length) {
+        if (juzsDB.length > juz.verses.length) {
+          juz.verses = JSON.parse(juzsDB.data).verses;
+          juz.pagination = JSON.parse(juzsDB.data).pagination;
+          selectedJuz.value = juz;
+          return true;
+        }
+      } else if (juzsDB.length === juz.verses_count) {
+        juz.verses = JSON.parse(juzsDB.data).verses;
+        juz.pagination = JSON.parse(juzsDB.data).pagination;
+        selectedJuz.value = juz;
+        return true;
+      }
+    }
+
+    return false;
+  };
 
   return {
     isLoading,

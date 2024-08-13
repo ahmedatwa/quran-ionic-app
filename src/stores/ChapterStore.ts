@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
+
 // stores
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 // axios
@@ -9,12 +10,17 @@ import { getVersesUrl, makeChapterInfoUrl } from "@/axios/url";
 import type { Chapter, ChapterInfo } from "@/types/chapter";
 import type { Loading } from "@/types/chapter";
 import type { Verse } from "@/types/verse";
+// utils
 import { useLocale } from "@/utils/useLocale";
+import { useStorage } from "@/utils/useStorage";
+import { useToast } from "@/utils/useToast";
 
 export const useChapterStore = defineStore("chapter-store", () => {
   const { selectedTranslation } = useTranslationsStore();
+  const { getStorage, setStorage } = useStorage("__chaptersDB");
   const TOTAL_CHAPTERS = ref(114);
   const { getLine } = useLocale();
+  const { presentToast } = useToast();
   const isLoading = ref<Loading>({ chapters: false, verses: false });
   const chaptersList = ref<Chapter[]>([]);
   const currentSortDir = ref("asc");
@@ -40,6 +46,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
       return selectedChapter.value.pagination;
     }
   });
+
   const chapterInfo = ref<ChapterInfo | null>(null);
   const perPage = ref(10);
 
@@ -68,7 +75,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
           resolve(response.chapters);
         });
       } catch (error) {
-        reject(error);
+        presentToast({ message: String(error) });
       }
     });
   };
@@ -90,8 +97,8 @@ export const useChapterStore = defineStore("chapter-store", () => {
           });
         });
       })
-      .catch((error) => {
-        throw error;
+      .catch(async (error) => {
+        await presentToast({ message: String(error) });
       })
       .finally(() => {
         isLoading.value.chapters = false;
@@ -130,12 +137,21 @@ export const useChapterStore = defineStore("chapter-store", () => {
     page = page ? page : 1;
     limit = limit ? limit : perPage.value;
     isLoading.value.length = perPage.value;
+    const chapter = chaptersList.value.find((s) => s.id === id);
+    // Check for DB Storage to avoid the api call
+    if (chapter) {
+      const check = await isDBStorageData(id, chapter);
+      if (check) {
+        isLoading.value.verses = false;
+        return;
+      }
+    }
+
     await instance
       .get(
         getVersesUrl("by_chapter", id, selectedTranslationId.value, page, limit)
       )
       .then((response) => {
-        const chapter = chaptersList.value.find((s) => s.id === id);
         if (chapter) {
           response.data.verses.forEach((verse: Verse) => {
             const verseFound = chapter.verses?.find(
@@ -154,11 +170,16 @@ export const useChapterStore = defineStore("chapter-store", () => {
           }
         }
       })
-      .catch((e) => {
-        throw e;
+      .catch(async (error) => {
+        await presentToast({ message: String(error) });
       })
       .finally(() => {
         isLoading.value.verses = false;
+        // save chapter in DB
+        setStorage(String(selectedChapter.value?.id), {
+          data: JSON.stringify(selectedChapter.value),
+          length: selectedChapter.value?.verses?.length,
+        });
       });
   };
 
@@ -179,8 +200,8 @@ export const useChapterStore = defineStore("chapter-store", () => {
           }
         }
       })
-      .catch((e) => {
-        throw e;
+      .catch(async (error) => {
+        await presentToast({ message: String(error) });
       })
       .finally(() => {
         isLoading.value.verses = false;
@@ -295,6 +316,37 @@ export const useChapterStore = defineStore("chapter-store", () => {
     if (chapter) {
       return chapter.verses?.find((v) => v.verse_number === Number(split[1]));
     }
+  };
+
+  const isDBStorageData = async (chapterId: number, chapter: Chapter) => {
+    const chaptersDB: { data: string; length: number } = await getStorage(
+      String(chapterId)
+    );
+    if (chaptersDB) {
+      // first fetch check onmounted
+
+      // versecount === length
+      if (chapter.verses?.length === 0) {
+        chapter.verses = JSON.parse(chaptersDB.data).verses;
+        chapter.pagination = JSON.parse(chaptersDB.data).pagination;
+        selectedChapter.value = chapter;
+        return true;
+      } else if (chapter.verses?.length) {
+        if (chaptersDB.length > chapter.verses.length) {
+          chapter.verses = JSON.parse(chaptersDB.data).verses;
+          chapter.pagination = JSON.parse(chaptersDB.data).pagination;
+          selectedChapter.value = chapter;
+         return true;
+        }
+      } else if (chaptersDB.length === chapter.versesCount) {
+        chapter.verses = JSON.parse(chaptersDB.data).verses;
+        chapter.pagination = JSON.parse(chaptersDB.data).pagination;
+        selectedChapter.value = chapter;
+        return true;
+      }
+    }
+
+    return false;
   };
 
   return {

@@ -9,6 +9,8 @@ import { getVersesUrl } from "@/axios/url";
 // utils
 import { _range } from "@/utils/number";
 import { getAllPagesToChapters } from "@/utils/pages";
+import { useStorage } from "@/utils/useStorage";
+import { useToast } from "@/utils/useToast";
 // types
 import type { Page } from "@/types/page";
 import type { Verse } from "@/types/verse";
@@ -18,6 +20,8 @@ export const usePageStore = defineStore("page-store", () => {
   const perPage = ref(10);
   const { selectedTranslation } = useTranslationsStore();
   const { getChapterNameByChapterId } = useChapterStore();
+  const { getStorage, setStorage } = useStorage("__pageDB");
+  const { presentToast } = useToast();
   const selectedPage = ref<Page | null>(null);
   const selectedPageId = ref<number>();
   const searchValue = ref("");
@@ -46,37 +50,51 @@ export const usePageStore = defineStore("page-store", () => {
   ) => {
     isLoading.value = loading;
     selectedPageId.value = id;
+    const currentPage = pagesList.value?.find((p) => p.pageNumber === id);
+    // Check for DB Storage to avoid the api call
+    if (currentPage) {
+      const check = await isDBStorageData(id, currentPage);
+      if (check) {
+        isLoading.value = false;
+        return;
+      }
+    }
+
     await instance
       .get(
         getVersesUrl("by_page", id, selectedTranslationId.value, page, limit)
       )
       .then((response) => {
-        const page = pagesList.value?.find((p) => p.pageNumber === id);
-        if (page) {
+        if (currentPage) {
           response.data.verses.forEach((verse: Verse) => {
-            const verseFound = page.verses?.find(
+            const verseFound = currentPage.verses?.find(
               (v) => v.verse_key === verse.verse_key
             );
 
             if (!verseFound) {
-              page.verses?.push({ ...verse, bookmarked: false });
+              currentPage.verses?.push({ ...verse, bookmarked: false });
             }
           });
 
-          page.pagination = response.data.pagination;
-          if (selectedPage.value?.pageNumber === page.pageNumber) {
+          currentPage.pagination = response.data.pagination;
+          if (selectedPage.value?.pageNumber === currentPage.pageNumber) {
             if (selectedPage.value) {
-              selectedPage.value.verses = page.verses;
-              selectedPage.value.pagination = page.pagination;
+              selectedPage.value.verses = currentPage.verses;
+              selectedPage.value.pagination = currentPage.pagination;
             }
           }
         }
       })
-      .catch((error) => {
-        throw error;
+      .catch(async (error) => {
+        await presentToast({ message: String(error) });
       })
       .finally(() => {
         isLoading.value = false;
+        // save chapter in DB
+        setStorage(String(selectedPage.value?.pageNumber), {
+          data: JSON.stringify(selectedPage.value),
+          length: selectedPage.value?.verses?.length,
+        });
       });
   };
 
@@ -122,6 +140,21 @@ export const usePageStore = defineStore("page-store", () => {
       };
     }
   });
+
+  const isDBStorageData = async (chapterId: number, page: Page) => {
+    const pagesDB: { data: string; length: number } = await getStorage(
+      String(chapterId)
+    );
+    if (pagesDB) {
+        page.verses = JSON.parse(pagesDB.data).verses;
+        page.pagination = JSON.parse(pagesDB.data).pagination;
+        selectedPage.value = page;
+        return true;
+    }
+
+    return false;
+  };
+
   return {
     pages,
     pagesList,

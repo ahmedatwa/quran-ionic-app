@@ -129,10 +129,10 @@ const routeBackName = computed(() => {
                     </ion-button>
                 </div>
                 <ion-card-header class="ion-text-center">
-                    <ion-card-title>{{ getChapterNameByFirstVerse(verses[0])?.nameArabic }} </ion-card-title>
                     <ion-card-subtitle> {{ getChapterNameByFirstVerse(verses[0])?.bismillahPre ?
                         getLine("quranReader.textBismillah") : '' }}
                     </ion-card-subtitle>
+                    <ion-card-title>{{ getChapterNameByFirstVerse(verses[0])?.nameArabic }} </ion-card-title>
                 </ion-card-header>
                 <hr>
                 <ion-item v-for="verse in verses" :key="verse.verse_number" :data-verse-number="verse.verse_number"
