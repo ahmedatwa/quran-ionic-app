@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onUnmounted } from "vue"
-import { IonToolbar, IonFooter, IonRow, IonAvatar, IonSpinner } from '@ionic/vue';
+import { IonToolbar, IonFooter, IonRow, IonAvatar, IonSpinner, isPlatform } from '@ionic/vue';
 import { IonCol, IonGrid, IonIcon, IonButton } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline, closeOutline } from 'ionicons/icons';
 // components
@@ -147,7 +147,7 @@ const loadedData = () => {
 };
 
 const playbackSeek = (seekValue: number) => {
-    if (audioPlayerRef.value) {        
+    if (audioPlayerRef.value) {
         audioPlayerStore.progressTimer = seekValue
         audioPlayerRef.value.currentTime = seekValue / 1000
     }
@@ -253,92 +253,95 @@ const loadMetaData = () => {
             });
         }
     }
-};
 
-const isCurrentTimeInRange = (currentTimeValue: number, timestampFrom: number, timestampTo: number) =>
-    currentTimeValue >= timestampFrom && currentTimeValue < timestampTo;
+    // controls for android 
+  
+}
+
+    const isCurrentTimeInRange = (currentTimeValue: number, timestampFrom: number, timestampTo: number) =>
+        currentTimeValue >= timestampFrom && currentTimeValue < timestampTo;
 
 
-// get verse timing
-const getVerseTiming = computed((): VerseTimings[] | undefined => {
-    if (audioPlayerStore.audioFiles) {
-        return audioPlayerStore.audioFiles.verse_timings.map((vt) => {
-            return {
-                inRange: false,
-                wordLocation: "",
-                wordPosition: 0,
-                verseNumber: 0,
-                ...vt
-            }
-        })
-    }
-})
+    // get verse timing
+    const getVerseTiming = computed((): VerseTimings[] | undefined => {
+        if (audioPlayerStore.audioFiles) {
+            return audioPlayerStore.audioFiles.verse_timings.map((vt) => {
+                return {
+                    inRange: false,
+                    wordLocation: "",
+                    wordPosition: 0,
+                    verseNumber: 0,
+                    ...vt
+                }
+            })
+        }
+    })
 
-watchEffect(() => {
-    if (getVerseTiming) {
-        const currentTime = Math.ceil(secondsToMilliSeconds(audioPlayerStore.currentTimestamp))
-        // Find current verse Key 
-        const currentVerseTimingData = getVerseTiming.value?.find((vt) => currentTime >= vt.timestamp_from && currentTime <= vt.timestamp_to)
-        if (currentVerseTimingData) {
-            const isVerseInRange = isCurrentTimeInRange(currentTime, currentVerseTimingData.timestamp_from, currentVerseTimingData?.timestamp_to)
+    watchEffect(() => {
+        if (getVerseTiming) {
+            const currentTime = Math.ceil(secondsToMilliSeconds(audioPlayerStore.currentTimestamp))
+            // Find current verse Key 
+            const currentVerseTimingData = getVerseTiming.value?.find((vt) => currentTime >= vt.timestamp_from && currentTime <= vt.timestamp_to)
+            if (currentVerseTimingData) {
+                const isVerseInRange = isCurrentTimeInRange(currentTime, currentVerseTimingData.timestamp_from, currentVerseTimingData?.timestamp_to)
 
-            if (isVerseInRange) {
-                currentVerseTimingData.segments.map((vt: VerseTimingSegments) => {
+                if (isVerseInRange) {
+                    currentVerseTimingData.segments.map((vt: VerseTimingSegments) => {
 
-                    const isSegmentInRange = isCurrentTimeInRange(currentTime, vt[1], vt[2])
-                    if (isSegmentInRange) {
-                        audioPlayerStore.verseTiming = {
-                            chapterId: getChapterIdfromKey(currentVerseTimingData.verse_key),
-                            verseKey: currentVerseTimingData.verse_key,
-                            inRange: isSegmentInRange,
-                            verseNumber: getVerseNumberFromKey(currentVerseTimingData.verse_key),
-                            wordLocation: makeWordLocation(currentVerseTimingData.verse_key, vt[0]),
-                            wordPosition: vt[0],
-                            audioSrc: audioPlayerStore.audioPayLoadSrc
+                        const isSegmentInRange = isCurrentTimeInRange(currentTime, vt[1], vt[2])
+                        if (isSegmentInRange) {
+                            audioPlayerStore.verseTiming = {
+                                chapterId: getChapterIdfromKey(currentVerseTimingData.verse_key),
+                                verseKey: currentVerseTimingData.verse_key,
+                                inRange: isSegmentInRange,
+                                verseNumber: getVerseNumberFromKey(currentVerseTimingData.verse_key),
+                                wordLocation: makeWordLocation(currentVerseTimingData.verse_key, vt[0]),
+                                wordPosition: vt[0],
+                                audioSrc: audioPlayerStore.audioPayLoadSrc
+                            }
+                            return;
                         }
-                        return;
-                    }
-                })
+                    })
+                }
             }
         }
+    })
+
+    onUnmounted(() => {
+        audioPlayerStore.audioFiles = null
+    })
+
+    const closePlayer = () => {
+        emit('update:modelValue', false)
+        if (audioPlayerRef.value) {
+            audioPlayerRef.value.pause();
+        }
+        audioPlayerStore.chapterId = 0
+        audioPlayerStore.audioFiles = null
+        audioPlayerStore.selectedVerseKey = ""
+        cleanupListeners()
     }
-})
 
-onUnmounted(() => {
-    audioPlayerStore.audioFiles = null
-})
-
-const closePlayer = () => {
-    emit('update:modelValue', false)
-    if (audioPlayerRef.value) {
-        audioPlayerRef.value.pause();
+    const changeMediaVolume = async (volume: number) => {
+        if (audioPlayerRef.value) {
+            audioPlayerStore.mediaVolume = volume
+            audioPlayerRef.value.volume = audioPlayerStore.mediaVolume / 100
+        }
     }
-    audioPlayerStore.chapterId = 0
-    audioPlayerStore.audioFiles = null
-    audioPlayerStore.selectedVerseKey = ""
-    cleanupListeners()
-}
 
-const changeMediaVolume = async (volume: number) => {
-    if (audioPlayerRef.value) {
-        audioPlayerStore.mediaVolume = volume
-        audioPlayerRef.value.volume = audioPlayerStore.mediaVolume / 100
+    const playChapterAudio = (audioID: number) => {
+        audioPlayerStore.getAudio({ audioID })
     }
-}
 
-const playChapterAudio = (audioID: number) => {
-    audioPlayerStore.getAudio({ audioID })
-}
+    const handleSelectedReciter = (reciter: Recitations) => {
+        audioPlayerStore.selectedReciter = reciter
+    }
 
-const handleSelectedReciter = (reciter: Recitations) => {
-    audioPlayerStore.selectedReciter = reciter
-}
+    const playNext = (ev: boolean) => {
+        console.log(ev);
 
-const playNext = (ev: boolean) => {
-    console.log(ev);
-
-    audioPlayerStore.playNext()
-}
+        audioPlayerStore.playNext()
+    }
 
 </script>
 
@@ -384,10 +387,10 @@ const playNext = (ev: boolean) => {
                 :audio-files="audioPlayerStore.audioFiles" :chapter-name="audioPlayerStore.chapterName"
                 :loop-audio="audioPlayerStore.loopAudio" :media-volume="audioPlayerStore.mediaVolume"
                 :map-recitions="audioPlayerStore.mapRecitions" :progress-timer="audioPlayerStore.progressTimer"
-                @update:change-volume="changeMediaVolume" @update:seek="playbackSeek" @update:download="audioPlayerStore.downloadAudioFile"
-                @update:play-chapter="playChapterAudio" @update:play-next="playNext"
-                @update:play-prev="audioPlayerStore.playPrevious()" @update:play-audio="playAudio"
-                @update:loop-audio="audioPlayerStore.loopAudio = $event"
+                @update:change-volume="changeMediaVolume" @update:seek="playbackSeek"
+                @update:download="audioPlayerStore.downloadAudioFile" @update:play-chapter="playChapterAudio"
+                @update:play-next="playNext" @update:play-prev="audioPlayerStore.playPrevious()"
+                @update:play-audio="playAudio" @update:loop-audio="audioPlayerStore.loopAudio = $event"
                 @update:selected-reciter="handleSelectedReciter">
             </audio-player-modal-component>
         </ion-footer>

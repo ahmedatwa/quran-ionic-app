@@ -8,7 +8,7 @@ import { IonItemOptions, IonItemOption, IonItemSliding, IonModal } from "@ionic/
 import { playOutline, playBackOutline, playForwardOutline, playCircleOutline } from 'ionicons/icons';
 import { musicalNoteOutline, cloudDownloadOutline, downloadOutline } from 'ionicons/icons';
 import { pauseOutline, chevronDownOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
-import { volumeOffOutline, volumeHighOutline, repeatOutline } from 'ionicons/icons';
+import { repeatOutline } from 'ionicons/icons';
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 // utils
@@ -24,7 +24,12 @@ const { chapters, getVerseByVerseKey } = useChapterStore()
 const { getLine, isRtl } = useLocale()
 const isImgLoading = ref(true)
 const { storageKeys } = useStorage("__audioDB")
-const pinFormatter = (value: number) => `${value}%`
+const pinFormatter = (value: number) => {
+    emit("update:changeVolume", value / 100)
+    return `${value}%`
+}
+    
+ 
 const dismiss = () => modalController.dismiss(null, 'cancel');
 
 const props = defineProps<{
@@ -48,7 +53,7 @@ const emit = defineEmits<{
     "update:selectedReciter": [value: Recitations]
     "update:playNext": [value: boolean]
     "update:playPrev": [value: boolean]
-    "update:loop": [value: string]
+    "update:loopAudio": [value: string]
 }>()
 
 const getCurrentVerseData = computed(() => {
@@ -159,11 +164,11 @@ const isDownloadDisabled = (reciterID: string | number, audioID: string | number
                         </ion-button>
                     </ion-col>
                     <ion-col>
-                        <ion-button fill="clear" v-if="loopAudio === 'none'" @click="$emit('update:loop', 'repeat')">
+                        <ion-button fill="clear" v-if="loopAudio === 'none'" @click="$emit('update:loopAudio', 'repeat')">
                             <ion-icon slot="icon-only" :icon="repeatOutline" color="medium"></ion-icon>
                         </ion-button>
                         <ion-button fill="clear" v-else-if="loopAudio === 'repeat'"
-                            @click="$emit('update:loop', 'none')">
+                            @click="$emit('update:loopAudio', 'none')">
                             <ion-icon slot="icon-only" :icon="repeatOutline" color="primary"></ion-icon>
                         </ion-button>
                     </ion-col>
@@ -174,16 +179,15 @@ const isDownloadDisabled = (reciterID: string | number, audioID: string | number
                         </ion-button>
                     </ion-col>
                 </ion-row>
-                <ion-row class="ion-justify-content-center">
+                <!-- <ion-row class="ion-justify-content-center">
                     <ion-col size="12">
-                        <ion-range aria-label="Volume"
-                            @ion-change="$emit('update:changeVolume', Number($event.detail.value))" :pin="true"
-                            :pin-formatter="pinFormatter" :value="mediaVolume * 100">
+                        <ion-range aria-label="Volume" :pin="true"
+                            :pin-formatter="pinFormatter" :value="mediaVolume" :min="0" :max="100">
                             <ion-icon slot="start" :icon="volumeOffOutline"></ion-icon>
                             <ion-icon slot="end" :icon="volumeHighOutline"></ion-icon>
                         </ion-range>
                     </ion-col>
-                </ion-row>
+                </ion-row> -->
                 <ion-row class="ion-justify-content-center ion-margin-vertical">
                     <ion-col size="12">
                         <ion-list-header class="ion-margin-bottom">
