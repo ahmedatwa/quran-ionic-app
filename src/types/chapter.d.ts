@@ -5,7 +5,6 @@ interface Chapter {
   id: number;
   revelationOrder: number;
   revelationPlace: string;
-  versesCount: number;
   bismillahPre: boolean;
   pages: Number[];
   nameSimple: string;
@@ -143,6 +142,12 @@ type IntersectingData = {
   lastVerseNumber: number;
 };
 
+type ChapterDBStorage = {
+  pageNumber: number;
+  verses: string;
+  pagination: string;
+};
+
 type ChapterAutoScrollData = { activeVerseNumber: number };
 export {
   Chapter,
@@ -154,4 +159,5 @@ export {
   SingleTafsir,
   IntersectingData,
   ChapterAutoScrollData,
+  ChapterDBStorage,
 };

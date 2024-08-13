@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onUnmounted } from "vue"
-import { IonToolbar, IonFooter, IonRow, IonAvatar, IonSpinner, isPlatform } from '@ionic/vue';
-import { IonCol, IonGrid, IonIcon, IonButton } from '@ionic/vue';
+import { IonToolbar, IonFooter, IonButtons, IonAvatar } from '@ionic/vue';
+import { IonIcon, IonButton, IonSpinner, IonChip, IonLabel } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline, closeOutline } from 'ionicons/icons';
 // components
 import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalComponent.vue';
@@ -230,7 +230,6 @@ const loadMetaData = () => {
 
             navigator.mediaSession.setActionHandler("play", () => {
                 playAudio();
-                // emit("update:modelValue", isPlaying.value);
             });
             navigator.mediaSession.setActionHandler("pause", () => {
                 playAudio();
@@ -255,93 +254,93 @@ const loadMetaData = () => {
     }
 
     // controls for android 
-  
+
 }
 
-    const isCurrentTimeInRange = (currentTimeValue: number, timestampFrom: number, timestampTo: number) =>
-        currentTimeValue >= timestampFrom && currentTimeValue < timestampTo;
+const isCurrentTimeInRange = (currentTimeValue: number, timestampFrom: number, timestampTo: number) =>
+    currentTimeValue >= timestampFrom && currentTimeValue < timestampTo;
 
 
-    // get verse timing
-    const getVerseTiming = computed((): VerseTimings[] | undefined => {
-        if (audioPlayerStore.audioFiles) {
-            return audioPlayerStore.audioFiles.verse_timings.map((vt) => {
-                return {
-                    inRange: false,
-                    wordLocation: "",
-                    wordPosition: 0,
-                    verseNumber: 0,
-                    ...vt
-                }
-            })
-        }
-    })
+// get verse timing
+const getVerseTiming = computed((): VerseTimings[] | undefined => {
+    if (audioPlayerStore.audioFiles) {
+        return audioPlayerStore.audioFiles.verse_timings.map((vt) => {
+            return {
+                inRange: false,
+                wordLocation: "",
+                wordPosition: 0,
+                verseNumber: 0,
+                ...vt
+            }
+        })
+    }
+})
 
-    watchEffect(() => {
-        if (getVerseTiming) {
-            const currentTime = Math.ceil(secondsToMilliSeconds(audioPlayerStore.currentTimestamp))
-            // Find current verse Key 
-            const currentVerseTimingData = getVerseTiming.value?.find((vt) => currentTime >= vt.timestamp_from && currentTime <= vt.timestamp_to)
-            if (currentVerseTimingData) {
-                const isVerseInRange = isCurrentTimeInRange(currentTime, currentVerseTimingData.timestamp_from, currentVerseTimingData?.timestamp_to)
+watchEffect(() => {
+    if (getVerseTiming) {
+        const currentTime = Math.ceil(secondsToMilliSeconds(audioPlayerStore.currentTimestamp))
+        // Find current verse Key 
+        const currentVerseTimingData = getVerseTiming.value?.find((vt) => currentTime >= vt.timestamp_from && currentTime <= vt.timestamp_to)
+        if (currentVerseTimingData) {
+            const isVerseInRange = isCurrentTimeInRange(currentTime, currentVerseTimingData.timestamp_from, currentVerseTimingData?.timestamp_to)
 
-                if (isVerseInRange) {
-                    currentVerseTimingData.segments.map((vt: VerseTimingSegments) => {
+            if (isVerseInRange) {
+                currentVerseTimingData.segments.map((vt: VerseTimingSegments) => {
 
-                        const isSegmentInRange = isCurrentTimeInRange(currentTime, vt[1], vt[2])
-                        if (isSegmentInRange) {
-                            audioPlayerStore.verseTiming = {
-                                chapterId: getChapterIdfromKey(currentVerseTimingData.verse_key),
-                                verseKey: currentVerseTimingData.verse_key,
-                                inRange: isSegmentInRange,
-                                verseNumber: getVerseNumberFromKey(currentVerseTimingData.verse_key),
-                                wordLocation: makeWordLocation(currentVerseTimingData.verse_key, vt[0]),
-                                wordPosition: vt[0],
-                                audioSrc: audioPlayerStore.audioPayLoadSrc
-                            }
-                            return;
+                    const isSegmentInRange = isCurrentTimeInRange(currentTime, vt[1], vt[2])
+                    if (isSegmentInRange) {
+                        audioPlayerStore.verseTiming = {
+                            chapterId: getChapterIdfromKey(currentVerseTimingData.verse_key),
+                            verseKey: currentVerseTimingData.verse_key,
+                            inRange: isSegmentInRange,
+                            verseNumber: getVerseNumberFromKey(currentVerseTimingData.verse_key),
+                            wordLocation: makeWordLocation(currentVerseTimingData.verse_key, vt[0]),
+                            wordPosition: vt[0],
+                            audioSrc: audioPlayerStore.audioPayLoadSrc
                         }
-                    })
-                }
+                        return;
+                    }
+                })
             }
         }
-    })
-
-    onUnmounted(() => {
-        audioPlayerStore.audioFiles = null
-    })
-
-    const closePlayer = () => {
-        emit('update:modelValue', false)
-        if (audioPlayerRef.value) {
-            audioPlayerRef.value.pause();
-        }
-        audioPlayerStore.chapterId = 0
-        audioPlayerStore.audioFiles = null
-        audioPlayerStore.selectedVerseKey = ""
-        cleanupListeners()
     }
+})
 
-    const changeMediaVolume = async (volume: number) => {
-        if (audioPlayerRef.value) {
-            audioPlayerStore.mediaVolume = volume
-            audioPlayerRef.value.volume = audioPlayerStore.mediaVolume / 100
-        }
+onUnmounted(() => {
+    audioPlayerStore.audioFiles = null
+})
+
+const closePlayer = () => {
+    emit('update:modelValue', false)
+    if (audioPlayerRef.value) {
+        audioPlayerRef.value.pause();
     }
+    audioPlayerStore.chapterId = 0
+    audioPlayerStore.audioFiles = null
+    audioPlayerStore.selectedVerseKey = ""
+    cleanupListeners()
+}
 
-    const playChapterAudio = (audioID: number) => {
-        audioPlayerStore.getAudio({ audioID })
+const changeMediaVolume = async (volume: number) => {
+    if (audioPlayerRef.value) {
+        audioPlayerStore.mediaVolume = volume
+        audioPlayerRef.value.volume = audioPlayerStore.mediaVolume / 100
     }
+}
 
-    const handleSelectedReciter = (reciter: Recitations) => {
-        audioPlayerStore.selectedReciter = reciter
-    }
+const playChapterAudio = (audioID: number) => {
+    audioPlayerStore.getAudio({ audioID })
+}
 
-    const playNext = (ev: boolean) => {
-        console.log(ev);
+const handleSelectedReciter = (reciter: Recitations) => {
+    audioPlayerStore.selectedReciter = reciter
+}
 
-        audioPlayerStore.playNext()
-    }
+const playNext = (ev: boolean) => {
+    console.log(ev);
+
+    audioPlayerStore.playNext()
+}
 
 </script>
 
@@ -349,29 +348,28 @@ const loadMetaData = () => {
     <Transition name="slide-fade">
         <ion-footer v-if="modelValue" class="footer">
             <ion-toolbar>
-                <ion-grid>
-                    <ion-row>
-                        <ion-col id="audio-modal">
-                            <ion-avatar>
-                                <img :alt="audioPlayerStore.selectedReciter?.name" class="img"
-                                    :src="`/reciters/${audioPlayerStore.selectedReciter?.reciter_id}.jpg`" />
-                            </ion-avatar>
-                        </ion-col>
-                        <ion-col size="5" size-md="3" size-lg="3" class="ion-text-right">
-                            <ion-button fill="clear" @click="playAudio">
-                                <ion-spinner v-if="audioPlayerStore.isLoading"></ion-spinner>
-                                <ion-icon slot="icon-only"
-                                    :icon="audioPlayerStore.isPlaying ? pauseOutline : playOutline" v-else></ion-icon>
-                            </ion-button>
-                            <ion-button fill="clear" @click="audioPlayerStore.playNext">
-                                <ion-icon slot="icon-only" :icon="playForwardOutline"></ion-icon>
-                            </ion-button>
-                            <ion-button fill="clear" @click="closePlayer">
-                                <ion-icon slot="icon-only" :icon="closeOutline" color="danger"></ion-icon>
-                            </ion-button>
-                        </ion-col>
-                    </ion-row>
-                </ion-grid>
+                <div id="audio-modal">
+                    <ion-chip :outline="true" class="reciter-chip">
+                    <ion-avatar>
+                        <img :alt="audioPlayerStore.selectedReciter?.name" class="img"
+                            :src="`/reciters/${audioPlayerStore.selectedReciter?.reciter_id}.jpg`" />
+                    </ion-avatar>
+                    <ion-label color="medium">{{ audioPlayerStore.chapterName }}</ion-label>
+                </ion-chip>
+                </div>
+                <ion-buttons slot="end">
+                    <ion-button fill="clear" @click="playAudio" size="small">
+                        <ion-spinner v-if="audioPlayerStore.isLoading"></ion-spinner>
+                        <ion-icon slot="icon-only" :icon="audioPlayerStore.isPlaying ? pauseOutline : playOutline"
+                            v-else></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" @click="audioPlayerStore.playNext" size="small">
+                        <ion-icon slot="icon-only" :icon="playForwardOutline"></ion-icon>
+                    </ion-button>
+                    <ion-button fill="clear" @click="closePlayer" size="small">
+                        <ion-icon slot="icon-only" :icon="closeOutline" color="danger"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
                 <div class="d-none">
                     <audio controls :autoplay="audioPlayerStore.audioPlayerSetting.autoPlay" ref="audioPlayerRef"
                         id="audioPlayerRef" :src="audioPlayerStore.audioFiles?.audio_url"
@@ -408,7 +406,7 @@ ion-avatar {
 }
 
 .footer {
-    height: 73px;
+    height: 57px;
     padding: 0px 10px;
 }
 
@@ -429,11 +427,7 @@ ion-avatar {
     transform: translateX(20px);
     opacity: 0;
 }
-
-.img {
-    border-radius: 10px;
-    height: 45px;
-    width: 50px;
-    padding: 2px;
+.reciter-chip {
+    border-style: none;
 }
 </style>

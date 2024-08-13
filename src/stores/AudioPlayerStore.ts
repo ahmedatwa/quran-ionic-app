@@ -20,8 +20,7 @@ import { useStorage } from "@/utils/useStorage";
 import { useBlob } from "@/utils/useBlob";
 
 export const useAudioPlayerStore = defineStore("audio-player-store", () => {
-  const { getChapterNameByChapterId, TOTAL_CHAPTERS, getChapter } =
-    useChapterStore();
+  const {getChapterNameByChapterId, getChapter, TOTAL_CHAPTERS} = useChapterStore();
   const isLoading = ref(false);
   const settingsDB = useStorage("__settingsDB");
   const audioDB = useStorage("__audioDB");
@@ -89,6 +88,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
           ...audioStorage,
           verse_timings: JSON.parse(audioStorage.verse_timings),
         };
+        chapterId.value = payload.audioID;
         return;
       }
 

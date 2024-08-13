@@ -119,10 +119,10 @@ const isWordHighlighted = (word: VerseWord) => {
                     </ion-button>
                 </div>
                 <ion-card-header class="ion-text-center">
-                    <ion-card-title>{{ getChapterNameByFirstVerse(mappedVerses[0])?.nameArabic }} </ion-card-title>
                     <ion-card-subtitle> {{ getChapterNameByFirstVerse(mappedVerses[0])?.bismillahPre ?
                         getLine("quranReader.textBismillah") : '' }}
                     </ion-card-subtitle>
+                    <ion-card-title>{{ getChapterNameByFirstVerse(mappedVerses[0])?.nameArabic }} </ion-card-title>
                 </ion-card-header>
                 <hr>
                 <ion-item v-for="verse in mappedVerses" :key="verse.verse_number"
