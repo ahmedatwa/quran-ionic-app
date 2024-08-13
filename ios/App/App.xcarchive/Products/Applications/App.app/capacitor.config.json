@@ -1,0 +1,15 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "Nobel Quran",
+	"webDir": "dist",
+	"packageClassList": [
+		"CapacitorSQLitePlugin",
+		"AppPlugin",
+		"ClipboardPlugin",
+		"FilesystemPlugin",
+		"HapticsPlugin",
+		"KeyboardPlugin",
+		"CAPNetworkPlugin",
+		"StatusBarPlugin"
+	]
+}

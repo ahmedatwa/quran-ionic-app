@@ -1,0 +1,1 @@
+import{g as o}from"./ChapterStore-BzKdIpaO.js";const p=(t,r)=>{if(typeof t=="string"){const n=/[\-\:]/g,c=t.match(n);if(c){const s=c[0],e=t.split(s),a=Number(e[0]).toLocaleString(o(r)),g=Number(e[1]).toLocaleString(o(r));return a.concat(s,g)}else return Number(t).toLocaleString(o(r))}return t.toLocaleString(o(r))};export{p as l};
