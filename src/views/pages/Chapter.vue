@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted } from 'vue';
 import { IonContent, IonHeader, IonSegmentButton, IonButton } from '@ionic/vue';
-import { IonToolbar, IonSegment, IonLabel, IonPage, alertController } from '@ionic/vue';
+import { IonToolbar, IonSegment, IonLabel, IonPage } from '@ionic/vue';
 // components
 import TranslationsViewComponent from '@/components/chapter/TranslationsViewComponent.vue';
 import ReadingViewComponent from '@/components/chapter/ReadingViewComponent.vue';
@@ -15,7 +15,7 @@ import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
 import { useLocale } from '@/utils/useLocale';
 import { useSettings } from '@/utils/useSettings';
-import { properCase } from '@/utils/string';
+import { useAlert } from '@/utils/useAlert';
 // types
 import type { ChapterInfo } from '@/types/chapter';
 
@@ -23,6 +23,7 @@ const currentSegment = ref("translations")
 const chapterStore = useChapterStore()
 const audioPlayerStore = useAudioPlayerStore()
 const { getLine } = useLocale()
+const { presentAlert } = useAlert()
 const transaltionStore = useTranslationsStore()
 const pageRef = ref()
 const pageRefEl = ref()
@@ -79,14 +80,14 @@ const styles = computed(() => {
 })
 
 const getTranslationAlert = async () => {
-    const alert = await alertController.create({
-        header: properCase(String(transaltionStore.selectedTranslation?.language_name)),
-        message: transaltionStore.selectedTranslation?.author_name,
-        id: "translation-alert",
-        buttons: ['Ok'],
-    });
-
-    await alert.present();
+    if (transaltionStore.selectedTranslation) {
+        await presentAlert({
+            header: transaltionStore.selectedTranslation?.language_name,
+            message: transaltionStore.selectedTranslation.author_name,
+            id: "translation-alert",
+            buttons: ['Ok']
+        })
+    }
 }
 
 onMounted(() => pageRefEl.value = pageRef.value.$el)
