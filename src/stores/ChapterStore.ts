@@ -13,14 +13,15 @@ import type { Verse } from "@/types/verse";
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { useStorage } from "@/utils/useStorage";
-import { useToast } from "@/utils/useToast";
+import { useAlert } from "@/utils/useAlert";
 
 export const useChapterStore = defineStore("chapter-store", () => {
   const { selectedTranslation } = useTranslationsStore();
   const { getStorage, setStorage } = useStorage("__chaptersDB");
   const TOTAL_CHAPTERS = ref(114);
   const { getLine } = useLocale();
-  const { presentToast } = useToast();
+  const { presentToast } = useAlert();
+
   const isLoading = ref<Loading>({ chapters: false, verses: false });
   const chaptersList = ref<Chapter[]>([]);
   const currentSortDir = ref("asc");

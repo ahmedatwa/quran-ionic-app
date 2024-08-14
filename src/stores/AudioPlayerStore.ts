@@ -18,14 +18,16 @@ import { useChapterStore } from "@/stores/ChapterStore";
 // utils
 import { useStorage } from "@/utils/useStorage";
 import { useBlob } from "@/utils/useBlob";
+import { useAlert } from "@/utils/useAlert";
 
 export const useAudioPlayerStore = defineStore("audio-player-store", () => {
-  const {getChapterNameByChapterId, getChapter, TOTAL_CHAPTERS} = useChapterStore();
+  const { getChapterNameByChapterId, getChapter, TOTAL_CHAPTERS } =
+    useChapterStore();
   const isLoading = ref(false);
   const settingsDB = useStorage("__settingsDB");
   const audioDB = useStorage("__audioDB");
   const { encodeBlobToBase64 } = useBlob();
-
+  const { presentToast } = useAlert();
   const audioFiles = ref<AudioFile | null>(null);
   const autoStartPlayer = ref(false);
   const chapterId = ref<number>();
@@ -125,8 +127,8 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
             };
           }
         })
-        .catch((e) => {
-          throw e;
+        .catch(async (error) => {
+          await presentToast({ message: String(error) });
         })
         .finally(async () => {
           isLoading.value = false;
@@ -146,8 +148,8 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
       .then((response) => {
         recitations.value = response.data.reciters;
       })
-      .catch((e) => {
-        throw e;
+      .catch(async (error) => {
+        await presentToast({ message: String(error) });
       });
   };
 
@@ -248,6 +250,9 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
             verse_timings: JSON.stringify(audioFiles.value?.verse_timings),
             audio_url: base64Data,
           });
+        })
+        .catch(async (error) => {
+          await presentToast({ message: String(error) });
         })
         .finally(async () => {
           isDownloadSuccess.value = true;
