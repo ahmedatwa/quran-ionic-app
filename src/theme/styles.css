@@ -173,3 +173,7 @@ ion-loading.custom-loading {
 #translation-alert .alert-title {
   text-align: center;
 }
+
+.smooth-scroll-behaviour {
+  transform: translate3d(0, 0, 0);
+}

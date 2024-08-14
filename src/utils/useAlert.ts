@@ -1,10 +1,19 @@
-import { toastController } from "@ionic/vue";
+import { toastController, alertController } from "@ionic/vue";
+import { properCase } from "@/utils/string";
 
 type ToastParams = {
   message: string;
   position?: "top" | "middle" | "bottom";
   duration?: number;
   color?: "primary" | "secondary" | "success" | "warning" | "danger";
+};
+
+type AlertParams = {
+  header: string;
+  message: string;
+  buttons: string[];
+  id?: string;
+  subHeader?: string;
 };
 
 export const useAlert = () => {
@@ -19,5 +28,17 @@ export const useAlert = () => {
     await toast.present();
   };
 
-  return { presentToast };
+  const presentAlert = async (args: AlertParams) => {
+    const alert = await alertController.create({
+      header: properCase(args.header),
+      subHeader: args.subHeader,
+      message: args.message,
+      id: args.id || "alert",
+      buttons: args.buttons || ["Ok"],
+    });
+
+    await alert.present();
+  };
+
+  return { presentToast, presentAlert };
 };

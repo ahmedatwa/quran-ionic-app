@@ -33,3 +33,7 @@
 ion-item-divider {
   --background: transparent;
 }
+
+ion-card {
+  border-radius: 12px !important;
+}

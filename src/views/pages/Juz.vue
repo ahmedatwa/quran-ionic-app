@@ -18,10 +18,11 @@ import type { ChapterInfo } from '@/types/chapter';
 // utils
 import { useLocale } from '@/utils/useLocale';
 import { useSettings } from '@/utils/useSettings';
-import { properCase } from '@/utils/string';
+import { useAlert } from '@/utils/useAlert';
 
 const currentSegment = ref("translations")
 const { getLine } = useLocale()
+const { presentAlert } = useAlert()
 const settings = useSettings()
 const juzStore = useJuzStore()
 const transaltionStore = useTranslationsStore()
@@ -86,14 +87,14 @@ const getSurahInfo = async (ev: number) => {
 }
 
 const getTranslationAlert = async () => {
-    const alert = await alertController.create({
-        header: properCase(String(transaltionStore.selectedTranslation?.language_name)),
-        message: transaltionStore.selectedTranslation?.author_name,
-        id: "translation-alert",
-        buttons: ['Ok'],
-    });
-
-    await alert.present();
+    if (transaltionStore.selectedTranslation) {
+        await presentAlert({
+            header: transaltionStore.selectedTranslation?.language_name,
+            message: transaltionStore.selectedTranslation.author_name,
+            id: "translation-alert",
+            buttons: ['Ok']
+        })
+    }
 }
 
 onMounted(() => pageRefEl.value = pageRef.value.$el)
