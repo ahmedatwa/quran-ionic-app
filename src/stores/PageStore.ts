@@ -10,7 +10,7 @@ import { getVersesUrl } from "@/axios/url";
 import { _range } from "@/utils/number";
 import { getAllPagesToChapters } from "@/utils/pages";
 import { useStorage } from "@/utils/useStorage";
-import { useToast } from "@/utils/useToast";
+import { useAlert } from "@/utils/useAlert";
 // types
 import type { Page } from "@/types/page";
 import type { Verse } from "@/types/verse";
@@ -21,7 +21,7 @@ export const usePageStore = defineStore("page-store", () => {
   const { selectedTranslation } = useTranslationsStore();
   const { getChapterNameByChapterId } = useChapterStore();
   const { getStorage, setStorage } = useStorage("__pageDB");
-  const { presentToast } = useToast();
+  const { presentToast } = useAlert();
   const selectedPage = ref<Page | null>(null);
   const selectedPageId = ref<number>();
   const searchValue = ref("");

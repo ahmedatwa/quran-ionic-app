@@ -12,7 +12,7 @@ const audioSettings = ref<AudioPlayerSettings>({
   autoPlay: true,
   dismissOnEnd: true,
   autoScroll: true,
-  autoDownload: false,
+  autoDownload: true,
 });
 
 // Styles
@@ -74,15 +74,23 @@ export const useSettings = () => {
   };
 
   const handleAudioSetting = (ev: CustomEvent) => {
-    const audio = ev.detail;
-    if (audio.value === "autoPlay") {
-      audioSettings.value.autoPlay = audio.checked;
-    } else if (audio.value === "dismissOnEnd") {
-      audioSettings.value.dismissOnEnd = audio.checked;
-    } else if (audio.value === "autoScroll") {
-      audioSettings.value.autoScroll = audio.checked;
+    const audio: {checked: boolean, value: string} = ev.detail;          
+    switch (audio.value) {
+      case "autoPlay":
+        audioSettings.value.autoPlay = audio.checked;
+        break;
+      case "dismissOnEnd":
+        audioSettings.value.dismissOnEnd = audio.checked;
+        break;
+      case "autoScroll":
+        audioSettings.value.autoScroll = audio.checked;
+        break;
+      case "autoDownload":
+        audioSettings.value.autoDownload = audio.checked;
+        break;
     }
-    setStorage("audio", audioSettings);
+
+    setStorage("audioSettings", audioSettings);
   };
 
   const updateSelectedLocale = (ev: CustomEvent) => {

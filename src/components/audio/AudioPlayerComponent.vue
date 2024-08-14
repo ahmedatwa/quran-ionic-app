@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onUnmounted } from "vue"
-import { IonToolbar, IonFooter, IonButtons, IonAvatar } from '@ionic/vue';
+import { ref, watchEffect, computed, onUnmounted, onMounted } from "vue"
+import { IonToolbar, IonFooter, IonButtons, IonAvatar, isPlatform } from '@ionic/vue';
 import { IonIcon, IonButton, IonSpinner, IonChip, IonLabel } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline, closeOutline } from 'ionicons/icons';
+
 // components
 import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalComponent.vue';
 // utils
@@ -30,6 +31,7 @@ const emit = defineEmits<{
     "update:modelValue": [value: boolean]
 }>()
 
+
 const playAudio = () => {
     if (audioPlayerRef.value) {
         if (audioPlayerRef.value.paused) {
@@ -40,6 +42,8 @@ const playAudio = () => {
             audioPlayerStore.isPlaying = false;
         }
     }
+
+
 };
 
 const onProgress = () => {
@@ -106,6 +110,7 @@ const cleanupListeners = () => {
     audioPlayerRef.value?.removeEventListener("timeupdate", playbackListener);
     audioPlayerRef.value?.removeEventListener("ended", playbackEnded);
     audioPlayerRef.value?.removeEventListener("pause", audioPlayerStore.playbackPaused);
+    audioPlayerStore.verseTiming = undefined
 };
 
 const canPlayThrough = () => {
@@ -336,9 +341,7 @@ const handleSelectedReciter = (reciter: Recitations) => {
     audioPlayerStore.selectedReciter = reciter
 }
 
-const playNext = (ev: boolean) => {
-    console.log(ev);
-
+const playNext = (_ev: boolean) => {
     audioPlayerStore.playNext()
 }
 
@@ -350,12 +353,12 @@ const playNext = (ev: boolean) => {
             <ion-toolbar>
                 <div id="audio-modal">
                     <ion-chip :outline="true" class="reciter-chip">
-                    <ion-avatar>
-                        <img :alt="audioPlayerStore.selectedReciter?.name" class="img"
-                            :src="`/reciters/${audioPlayerStore.selectedReciter?.reciter_id}.jpg`" />
-                    </ion-avatar>
-                    <ion-label color="medium">{{ audioPlayerStore.chapterName }}</ion-label>
-                </ion-chip>
+                        <ion-avatar>
+                            <img :alt="audioPlayerStore.selectedReciter?.name" class="img"
+                                :src="`/reciters/${audioPlayerStore.selectedReciter?.reciter_id}.jpg`" />
+                        </ion-avatar>
+                        <ion-label color="medium">{{ audioPlayerStore.chapterName }}</ion-label>
+                    </ion-chip>
                 </div>
                 <ion-buttons slot="end">
                     <ion-button fill="clear" @click="playAudio" size="small">
@@ -406,7 +409,6 @@ ion-avatar {
 }
 
 .footer {
-    height: 57px;
     padding: 0px 10px;
 }
 
@@ -427,6 +429,7 @@ ion-avatar {
     transform: translateX(20px);
     opacity: 0;
 }
+
 .reciter-chip {
     border-style: none;
 }

@@ -13,13 +13,13 @@ import type { Verse } from "@/types/verse";
 import { _range } from "@/utils/number";
 import { AllJuzsToChapters } from "@/utils/juz";
 import { useStorage } from "@/utils/useStorage";
-import { useToast } from "@/utils/useToast";
+import { useAlert } from "@/utils/useAlert";
 
 export const useJuzStore = defineStore("juz-store", () => {
   const { selectedTranslation } = useTranslationsStore();
   const { chaptersList } = useChapterStore();
   const { getStorage, setStorage } = useStorage("__juzDB");
-  const { presentToast } = useToast();
+  const { presentToast } = useAlert();
   const isLoading = ref(false);
   const juzList = ref<Juz[]>([]);
   const selectedJuz = ref<Juz | null>(null);

@@ -7,7 +7,7 @@ type ToastParams = {
   color?: "primary" | "secondary" | "success" | "warning" | "danger";
 };
 
-export const useToast = () => {
+export const useAlert = () => {
   const presentToast = async (event: ToastParams) => {
     const toast = await toastController.create({
       message: event.message,

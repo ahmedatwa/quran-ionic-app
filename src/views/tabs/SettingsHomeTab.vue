@@ -37,9 +37,6 @@ const handleSelectedTranslation = (transaltion: Translation) => {
     translationStore.selectedTranslation = transaltion
 }
 
-const handleDownload = () => {
-    audioPlayerStore.downloadAudioFile()
-}
 </script>
 
 <template>
@@ -118,18 +115,18 @@ const handleDownload = () => {
                                 </ion-item>
                                 <ion-item>
                                     <ion-toggle @ion-change="settings.handleAudioSetting" value="dismissOnEnd"
-                                        :checked="settings.audioSettings.value.dismissOnEnd">{{
-                                            getLine("settings.playerDismiss") }}</ion-toggle>
+                                        :checked="settings.audioSettings.value.dismissOnEnd">
+                                        {{ getLine("settings.playerDismiss") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
                                     <ion-toggle @ion-change="settings.handleAudioSetting" value="autoScroll"
-                                        :checked="settings.audioSettings.value.autoScroll">{{
-                                            getLine("settings.autoScroll") }}</ion-toggle>
+                                        :checked="settings.audioSettings.value.autoScroll">
+                                        {{ getLine("settings.autoScroll") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="handleDownload" value="download"
-                                        :checked="settings.audioSettings.value.autoDownload">{{
-                                            getLine("settings.autoDownload") }}</ion-toggle>
+                                    <ion-toggle @ion-change="settings.handleAudioSetting" value="autoDownload"
+                                        :checked="settings.audioSettings.value.autoDownload">
+                                        {{ getLine("settings.autoDownload") }}</ion-toggle>
                                 </ion-item>
                             </ion-list>
                         </div>

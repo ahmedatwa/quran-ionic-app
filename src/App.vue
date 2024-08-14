@@ -41,7 +41,7 @@ onBeforeMount(async () => {
       autoPlay: true,
       dismissOnEnd: true,
       autoScroll: true,
-      autoDownload: false,
+      autoDownload: true,
     })
   }
   // Styles
