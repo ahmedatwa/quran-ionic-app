@@ -24,12 +24,6 @@ const { chapters, getVerseByVerseKey } = useChapterStore()
 const { getLine, isRtl } = useLocale()
 const isImgLoading = ref(true)
 const { storageKeys } = useStorage("__audioDB")
-const pinFormatter = (value: number) => {
-    emit("update:changeVolume", value / 100)
-    return `${value}%`
-}
-    
- 
 const dismiss = () => modalController.dismiss(null, 'cancel');
 
 const props = defineProps<{
@@ -103,10 +97,10 @@ const isDownloadDisabled = (reciterID: string | number, audioID: string | number
             <ion-grid>
                 <ion-row class="ion-justify-content-center">
                     <ion-col size="11">
-                        <ion-thumbnail style="height: 331px; width: 331px;" v-if="isImgLoading">
+                        <ion-thumbnail style="height: 300px; width: 300px;" v-if="isImgLoading">
                             <ion-skeleton-text :animated="true"></ion-skeleton-text>
                         </ion-thumbnail>
-                        <ion-img @ionImgDidLoad="isImgLoading = false"
+                        <ion-img @ion-img-did-load="isImgLoading = false"
                             :src="`/reciters/${selectedReciter?.reciter_id}.jpg`"
                             :alt="selectedReciter?.name"></ion-img>
                     </ion-col>
@@ -131,9 +125,8 @@ const isDownloadDisabled = (reciterID: string | number, audioID: string | number
                 <ion-row class="ion-justify-content-center">
                     <ion-col size="12">
                         <ion-range aria-label="Seek" color="primary"
-                            @ion-input="$emit('update:seek', Number($event.detail.value))" :pin="true"
-                            :pin-formatter="pinFormatter" :value="Math.round(progressTimer)" :min="0"
-                            :max="audioFiles?.duration">
+                            @ion-input="$emit('update:seek', Number($event.detail.value))"
+                            :value="Math.round(progressTimer)" :min="0" :max="audioFiles?.duration">
                         </ion-range>
                     </ion-col>
                 </ion-row>
@@ -164,7 +157,8 @@ const isDownloadDisabled = (reciterID: string | number, audioID: string | number
                         </ion-button>
                     </ion-col>
                     <ion-col>
-                        <ion-button fill="clear" v-if="loopAudio === 'none'" @click="$emit('update:loopAudio', 'repeat')">
+                        <ion-button fill="clear" v-if="loopAudio === 'none'"
+                            @click="$emit('update:loopAudio', 'repeat')">
                             <ion-icon slot="icon-only" :icon="repeatOutline" color="medium"></ion-icon>
                         </ion-button>
                         <ion-button fill="clear" v-else-if="loopAudio === 'repeat'"
@@ -172,12 +166,12 @@ const isDownloadDisabled = (reciterID: string | number, audioID: string | number
                             <ion-icon slot="icon-only" :icon="repeatOutline" color="primary"></ion-icon>
                         </ion-button>
                     </ion-col>
-                    <ion-col>
+                    <!-- <ion-col>
                         <ion-button fill="clear" @click="$emit('update:download', true)"
                             :disabled="isDownloadDisabled(String(audioFiles?.reciterId), String(audioFiles?.chapter_id))">
                             <ion-icon slot="icon-only" :icon="cloudDownloadOutline" color="danger"></ion-icon>
                         </ion-button>
-                    </ion-col>
+                    </ion-col> -->
                 </ion-row>
                 <!-- <ion-row class="ion-justify-content-center">
                     <ion-col size="12">
