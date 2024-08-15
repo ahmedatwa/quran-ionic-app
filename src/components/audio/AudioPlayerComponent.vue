@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onUnmounted, onMounted } from "vue"
-import { IonToolbar, IonFooter, IonButtons, IonAvatar, isPlatform } from '@ionic/vue';
+import { ref, watchEffect, computed, onUnmounted } from "vue"
+import { IonToolbar, IonFooter, IonButtons, IonAvatar } from '@ionic/vue';
 import { IonIcon, IonButton, IonSpinner, IonChip, IonLabel } from '@ionic/vue';
-import { playOutline, playForwardOutline, pauseOutline, closeOutline } from 'ionicons/icons';
+import { playOutline, playForwardOutline, pauseOutline } from 'ionicons/icons';
 
 // components
 import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalComponent.vue';
@@ -10,6 +10,7 @@ import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalCompon
 import { secondsFormatter, milliSecondsToSeconds, secondsToMilliSeconds } from "@/utils/datetime"
 import { getLangFullLocale } from "@/utils/locale"
 import { useLocale } from "@/utils/useLocale"
+import { useAlert } from "@/utils/useAlert";
 import { makeWordLocation, getVerseNumberFromKey, getChapterIdfromKey } from "@/utils/verse"
 // types
 import type { VerseTimings, VerseTimingSegments, Recitations } from "@/types/audio"
@@ -21,6 +22,7 @@ const audioPlayerStore = useAudioPlayerStore()
 const metaStore = useMetaStore();
 const audioPlayerRef = ref<HTMLAudioElement>()
 const { getLocale } = useLocale()
+const { presentAlert } = useAlert()
 
 
 defineProps<{
@@ -42,8 +44,6 @@ const playAudio = () => {
             audioPlayerStore.isPlaying = false;
         }
     }
-
-
 };
 
 const onProgress = () => {
@@ -82,7 +82,7 @@ const playbackEnded = async () => {
             if (audioPlayerRef.value) {
                 audioPlayerRef.value.currentTime = 0;
                 audioPlayerStore.isPlaying = true;
-                audioPlayerRef.value?.play();
+                audioPlayerRef.value.play();
             }
             break;
         case "repeat":
@@ -91,7 +91,7 @@ const playbackEnded = async () => {
         case "none":
             audioPlayerStore.isPlaying = false;
             audioPlayerStore.listenerActive = false;
-
+            audioPlayerStore.verseTiming = undefined
             cleanupListeners();
             // dismiss on playbavc ends
             if (audioPlayerStore.audioPlayerSetting.dismissOnEnd) {
@@ -146,7 +146,7 @@ const loadedData = () => {
             }
             audioPlayerStore.isLoading = false;
         } else {
-            throw "Failed to fetch Audio";
+            presentAlert({ message: "Failed to fetch Audio", header: "Error", buttons: ["Ok"] })
         }
     }
 };
@@ -369,16 +369,16 @@ const playNext = (_ev: boolean) => {
                     <ion-button fill="clear" @click="audioPlayerStore.playNext" size="small">
                         <ion-icon slot="icon-only" :icon="playForwardOutline"></ion-icon>
                     </ion-button>
-                    <ion-button fill="clear" @click="closePlayer" size="small">
+                    <!-- <ion-button fill="clear" @click="closePlayer" size="small">
                         <ion-icon slot="icon-only" :icon="closeOutline" color="danger"></ion-icon>
-                    </ion-button>
+                    </ion-button> -->
                 </ion-buttons>
                 <div class="d-none">
                     <audio controls :autoplay="audioPlayerStore.audioPlayerSetting.autoPlay" ref="audioPlayerRef"
-                        id="audioPlayerRef" :src="audioPlayerStore.audioFiles?.audio_url"
+                        :src="audioPlayerStore.audioFiles?.audio_url"
                         :type="`audio/${audioPlayerStore.audioFiles?.format}`" @pause="audioPlayerStore.playbackPaused"
-                        @playing="audioPlayerStore.playbackPlaying" @ended="playbackEnded"
-                        @canplaythrough="canPlayThrough" @timeupdate="playbackListener" @loadeddata="loadedData"
+                        @ended="playbackEnded" @playing="audioPlayerStore.playbackPlaying"
+                        @timeupdate="playbackListener" @canplaythrough="canPlayThrough" @loadeddata="loadedData"
                         @progress="onProgress" @loadedmetadata="loadMetaData" @seek="playbackSeek">
                     </audio>
                 </div>
