@@ -159,7 +159,7 @@ const routeBackName = computed(() => {
                                     @update:play-verse-audio="$emit('update:playAudio', $event)">
                                 </verse-action-component>
                             </ion-col>
-                            <ion-col size="12" class="ion-text-left">
+                            <ion-col size="11" class="ion-text-left">
                                 <ion-note v-for="translation in verse.translations" :key="translation.id"
                                     class="translation ">
                                     <span v-html="translation.text"></span>
