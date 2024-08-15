@@ -152,6 +152,8 @@ const loadedData = () => {
 };
 
 const playbackSeek = (seekValue: number) => {
+    console.log(seekValue);
+
     if (audioPlayerRef.value) {
         audioPlayerStore.progressTimer = seekValue
         audioPlayerRef.value.currentTime = seekValue / 1000
@@ -242,8 +244,8 @@ const loadMetaData = () => {
 
             navigator.mediaSession.setActionHandler("seekto", ({ seekTime }) => {
                 if (seekTime) {
-                    audioPlayerStore.progressTimer = secondsToMilliSeconds(seekTime);
-                    playbackSeek(seekTime);
+                    const time = secondsToMilliSeconds(seekTime)
+                    playbackSeek(time);
                 }
             });
 
@@ -259,6 +261,8 @@ const loadMetaData = () => {
     }
 
     // controls for android 
+
+        
 
 }
 
