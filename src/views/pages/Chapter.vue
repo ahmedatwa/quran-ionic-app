@@ -44,9 +44,9 @@ const router = useRoute()
 const { chapterId } = router.params
 
 watchEffect(async () => {
-    if (chapterId) {
+    if (chapterId) {        
         chapterStore.selectedChapter = null
-        const found = chapterStore.chaptersList.find((c) => c.id === Number(chapterId))
+        const found = chapterStore.chaptersList.find((c) => c.id === Number(chapterId) || c.slug === chapterId)
         if (found) {
             if (!found.verses?.length) {
                 await chapterStore.getVerses(found.id, true)
@@ -75,7 +75,8 @@ const styles = computed(() => {
     return {
         fontFamily: `var(--font-family-${settings.styles.value.fontFamily})`,
         fontSize: `var(--font-size-${settings.styles.value.fontSize})`,
-        fontWeight: `var(--font-weight-${settings.styles.value.fontWeight})`
+        fontWeight: `var(--font-weight-${settings.styles.value.fontWeight})`,
+        color: settings.styles.value.color
     }
 })
 
@@ -92,13 +93,13 @@ const getTranslationAlert = async () => {
 
 onMounted(() => pageRefEl.value = pageRef.value.$el)
 
-
 const getSurahInfo = async (ev: number) => {
     await chapterStore.getchapterInfo(ev).then((response) => {
         chapterInfo.value = response.data.chapter_info
     })
     chapterInfoModalRef.value.$el.click()
 }
+
 
 </script>
 
@@ -122,6 +123,7 @@ const getSurahInfo = async (ev: number) => {
                 :is-playing="audioPlayerStore.isPlaying" :is-translations-view="currentSegment === 'translations'"
                 @update:play-audio="playAudio" :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles"
                 :verses="verses" :chapter-name="chapterStore.selectedChapterName.nameArabic"
+                :last-chapter-verse="chapterStore.getLastVerseNumberOfChapter"
                 :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
                 @update:modal-value="getTranslationAlert" :audio-experience="audioPlayerStore.audioPlayerSetting">
             </translations-view-component>

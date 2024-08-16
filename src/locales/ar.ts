@@ -37,7 +37,8 @@ export default {
     autoScroll: "التمرير التلقائي",
     cache: "Cache",
     autoDownload: "تنزيل الصوت تلقائيًا",
-
+    keepAwake: "منع النوم أثناء التشغيل",
+    highlightedWordColor: "لون الكلمة",
   },
   bookmark: {
     title: "الإشارات المرجعية",

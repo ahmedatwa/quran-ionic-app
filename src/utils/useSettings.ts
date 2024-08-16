@@ -1,10 +1,11 @@
 import { ref, computed, onMounted } from "vue";
+// utils
 import { useStorage } from "@/utils/useStorage";
 import { useLocale } from "@/utils/useLocale";
-
 // types
-import type { AudioPlayerSettings } from "@/types/audio";
+import type { AudioPlayerSettings, Recitations } from "@/types/audio";
 import type { Styles } from "@/types/settings";
+import type { Translation } from "@/types/translations";
 
 const colorScheme = ref("auto");
 // Audio
@@ -20,11 +21,20 @@ const styles = ref<Styles>({
   fontSize: "1",
   fontFamily: "noto-Kufi",
   fontWeight: "normal",
+  color: "primary"
 });
+
+const selectedWordColor = ref({ key: "Blue", code: "primary" },);
 
 export const useSettings = () => {
   const { getLine, setLocale, supportedLocales } = useLocale();
   const { getStorage, setStorage } = useStorage("__settingsDB");
+  const wordColors = ref([
+    { key: "Blue", code: "primary" },
+    { key: "Green", code: "success" },
+    { key: "Red", code: "danger" },
+    { key: "Tertiary", code: "tertiary" },
+  ]);
 
   // Color Schemes
   const colorSchemes = ref([
@@ -59,22 +69,28 @@ export const useSettings = () => {
     setStorage("colorScheme", value);
   };
 
-  const applyFontSize = async (ev: CustomEvent) => {
-    styles.value.fontSize = ev.detail.value;
-    await setStorage("styles", styles);
-  };
-  const applyFontFamily = (ev: CustomEvent) => {
-    styles.value.fontFamily = ev.detail.value;
-    setStorage("styles", styles);
-  };
-
-  const applyFontWeight = (ev: CustomEvent) => {
-    styles.value.fontWeight = ev.detail.value;
+  const applyStyle = (key: string, ev: CustomEvent) => {
+    switch (key) {
+      case "fontWeight":
+        styles.value.fontWeight = ev.detail.value;
+        break;
+      case "fontFamily":
+        styles.value.fontFamily = ev.detail.value;
+        break;
+      case "fontSize":
+        styles.value.fontSize = ev.detail.value;
+        break;
+        case "color":
+        styles.value.color = ev.detail.value;
+        break;
+      default:
+        break;
+    }
     setStorage("styles", styles);
   };
 
   const handleAudioSetting = (ev: CustomEvent) => {
-    const audio: {checked: boolean, value: string} = ev.detail;          
+    const audio: { checked: boolean; value: string } = ev.detail;
     switch (audio.value) {
       case "autoPlay":
         audioSettings.value.autoPlay = audio.checked;
@@ -102,6 +118,14 @@ export const useSettings = () => {
     }
   };
 
+  const updateSelectedReciter = (reciter: Recitations) => {
+    setStorage("reciter", JSON.stringify(reciter));
+  };
+
+  const updateSelectedTranslations = (translation: Translation) => {
+    setStorage("translation", JSON.stringify(translation));
+  };
+
   onMounted(async () => {
     // styles
     const stylesStorage = await getStorage("styles");
@@ -120,12 +144,14 @@ export const useSettings = () => {
     appVersion,
     audioSettings,
     styles,
+    wordColors,
     fontWeights,
     fontFamilyGroup,
+    selectedWordColor,
+    updateSelectedReciter,
+    updateSelectedTranslations,
     appleColorScheme,
-    applyFontSize,
-    applyFontFamily,
-    applyFontWeight,
+    applyStyle,
     handleAudioSetting,
     updateSelectedLocale,
   };

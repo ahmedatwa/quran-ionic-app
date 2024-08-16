@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { IonContent, IonItem, IonList, IonListHeader, IonAccordion, IonAccordionGroup } from '@ionic/vue';
-import { IonToggle, IonPage, IonSelectOption, IonSelect } from "@ionic/vue"
+import { IonContent, IonItem, IonList, IonListHeader, IonAccordion } from '@ionic/vue';
+import { IonToggle, IonPage, IonSelectOption, IonSelect, IonAccordionGroup } from "@ionic/vue"
 import { IonLabel, IonText } from '@ionic/vue';
 // icons
-import { cogOutline } from 'ionicons/icons';
+import { cogOutline, eye, leaf } from 'ionicons/icons';
 // stores
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 import { useTranslationsStore } from "@/stores/TranslationsStore";
@@ -13,13 +13,15 @@ import { useLocale } from '@/utils/useLocale';
 import { _range } from '@/utils/number';
 import { getLangFullLocale } from '@/utils/locale';
 import { useSettings } from '@/utils/useSettings';
+import { properCase } from '@/utils/string';
+import { useKeepAwake } from '@/utils/useKeepAwake';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
 import ModalComponent from '@/components/common/ModalComponent.vue';
 // types
 import type { Recitations } from '@/types/audio';
 import type { Translation } from '@/types/translations';
-import { properCase } from '@/utils/string';
+
 
 const audioPlayerStore = useAudioPlayerStore()
 const { getLine, getLocaleValue, supportedLocales, getLocale } = useLocale()
@@ -28,13 +30,22 @@ const appVersion = computed(() => import.meta.env.VITE_APP_VERSION)
 const colorScheme = ref("auto")
 const pageRef = ref(null)
 const settings = useSettings()
+const keepAwake = useKeepAwake()
+const isAwake = ref(false)
 
 const handleSelectedReciter = (reciter: Recitations) => {
     audioPlayerStore.selectedReciter = reciter
+    settings.updateSelectedReciter(reciter)
 }
 
 const handleSelectedTranslation = (transaltion: Translation) => {
     translationStore.selectedTranslation = transaltion
+    settings.updateSelectedTranslations(transaltion)
+}
+
+const handleKeepAwake = async () => {
+    await keepAwake.keepAwake()
+    isAwake.value = await keepAwake.isKeptAwake()
 }
 
 </script>
@@ -56,7 +67,7 @@ const handleSelectedTranslation = (transaltion: Translation) => {
                                 <ion-item>
                                     <ion-select :label="getLine('settings.fontSize')"
                                         :placeholder="String(settings.styles.value.fontSize)"
-                                        @ion-change="settings.applyFontSize">
+                                        @ion-change="settings.applyStyle('fontSize', $event)">
                                         <ion-select-option :value="n" v-for="n in 10" :key="n">{{ n
                                             }}</ion-select-option>
                                     </ion-select>
@@ -64,17 +75,27 @@ const handleSelectedTranslation = (transaltion: Translation) => {
                                 <ion-item>
                                     <ion-select :label="getLine('settings.fontFamily')"
                                         :placeholder="properCase(settings.styles.value.fontFamily)"
-                                        @ion-change="settings.applyFontFamily">
+                                        @ion-change="settings.applyStyle('fontFamily', $event)">
                                         <ion-select-option :value="n" v-for="n in settings.fontFamilyGroup.value"
                                             :key="n.key">{{ n.value }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
                                     <ion-select :placeholder="properCase(settings.styles.value.fontWeight)"
-                                        :label="getLine('settings.boldText')" @ion-change="settings.applyFontWeight">
+                                        :label="getLine('settings.boldText')"
+                                        @ion-change="settings.applyStyle('fontWeight', $event)">
                                         <ion-select-option v-for="weight in settings.fontWeights.value"
                                             :key="weight.key">
                                             {{ weight.value }}</ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-select :placeholder="settings.styles.value.color"
+                                        :label="getLine('settings.highlightedWordColor')"
+                                        @ion-change="settings.applyStyle('color', $event)">
+                                        <ion-select-option v-for="item in settings.wordColors.value" :key="item.code"
+                                            :value="item.code">{{ item.key }}
+                                        </ion-select-option>
                                     </ion-select>
                                 </ion-item>
                             </ion-list>
@@ -82,7 +103,7 @@ const handleSelectedTranslation = (transaltion: Translation) => {
                     </ion-accordion>
                 </ion-accordion-group>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.reciters") }}</ion-list-header>
-                <ion-item button id="reciters-modal">
+                <ion-item button :detail="true" id="reciters-modal">
                     <ion-label>{{ audioPlayerStore.selectedReciter?.name }}</ion-label>
                 </ion-item>
                 <!-- reciters Modal -->
@@ -91,7 +112,7 @@ const handleSelectedTranslation = (transaltion: Translation) => {
                     @update:selected-recition="handleSelectedReciter">
                 </modal-component>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.translations") }}</ion-list-header>
-                <ion-item button id="translations-modal">
+                <ion-item button :detail="true" id="translations-modal">
                     <ion-label>{{ translationStore.selectedTranslation?.author_name }}</ion-label>
                 </ion-item>
                 <modal-component :title="getLine('settings.translations')"
@@ -100,7 +121,7 @@ const handleSelectedTranslation = (transaltion: Translation) => {
                     @update:selected-translation="handleSelectedTranslation">
                 </modal-component>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.audio") }}</ion-list-header>
-                <ion-accordion-group value="first">
+                <ion-accordion-group>
                     <ion-accordion value="first">
                         <ion-item slot="header">
                             <ion-label>{{ getLine("settings.audioPlayer") }}</ion-label>
@@ -128,11 +149,14 @@ const handleSelectedTranslation = (transaltion: Translation) => {
                                         :checked="settings.audioSettings.value.autoDownload">
                                         {{ getLine("settings.autoDownload") }}</ion-toggle>
                                 </ion-item>
+                                <ion-item>
+                                    <ion-toggle @ion-change="handleKeepAwake" :checked="isAwake">
+                                        {{ getLine("settings.keepAwake") }}</ion-toggle>
+                                </ion-item>
                             </ion-list>
                         </div>
                     </ion-accordion>
                 </ion-accordion-group>
-
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.device") }}</ion-list-header>
                 <ion-accordion-group>
                     <ion-accordion value="first">
@@ -175,10 +199,6 @@ const handleSelectedTranslation = (transaltion: Translation) => {
                                     <ion-label>{{ getLine('settings.version') }}</ion-label>
                                     <ion-text>{{ appVersion }}</ion-text>
                                 </ion-item>
-                                <!-- <ion-item>
-                                    <ion-label>{{ getLine('settings.cache') }}</ion-label>
-                                    <ion-text>ss{{ appCache }}</ion-text>
-                                </ion-item> -->
                             </ion-list>
                         </div>
                     </ion-accordion>
@@ -198,5 +218,14 @@ ion-item {
 
 ion-accordion {
     margin: 0 auto;
+}
+
+.codeColorBlock_R_PT {
+    border: 1px solid #0000001a;
+    border-radius: 4px;
+    display: inline-block;
+    height: 20px;
+    margin-right: 2px;
+    width: 20px;
 }
 </style>

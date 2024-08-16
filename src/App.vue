@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { onBeforeMount, watch } from 'vue';
+import { onBeforeMount, watch, watchEffect } from 'vue';
 import { IonApp, IonRouterOutlet, IonContent } from '@ionic/vue';
 // stores
 import { useMetaStore } from '@/stores/MetaStore';
+import { useAudioPlayerStore } from '@/stores/AudioPlayerStore';
+import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
 import { useStorage } from '@/utils/useStorage';
 import { useLocale } from "@/utils/useLocale"
 
-
 const metaStore = useMetaStore()
+const audioPlayerStore = useAudioPlayerStore()
+const translationsStore = useTranslationsStore()
 const { setLocale, isRtl } = useLocale()
 const { getStorage, setStorage } = useStorage("__settingsDB")
 
@@ -51,15 +54,26 @@ onBeforeMount(async () => {
       fontSize: "1",
       fontFamily: "noto-kufi",
       fontWeight: "normal",
+      color: "primary"
     })
   }
-
+  // Locale
   const localeStorage = await getStorage("locale")
   if (!localeStorage) {
     setLocale("en", false)
     setStorage("locale", { key: "en", rtl: false })
   } else {
     setLocale(localeStorage.key, localeStorage.rtl)
+  }
+  // Translations
+  const translation = await getStorage("translation")
+  if (translation) {
+    translationsStore.selectedTranslation = JSON.parse(translation)
+  }
+  // Reciter
+  const reciter = await getStorage("reciter")
+  if (reciter) {
+    audioPlayerStore.selectedReciter = JSON.parse(reciter)
   }
 })
 

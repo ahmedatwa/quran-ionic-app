@@ -37,6 +37,8 @@ export default {
     autoScroll: "Auto Scroll",
     cache: "Cache",
     autoDownload: "Auto Download Audio",
+    keepAwake: "Prevent sleep while playing",
+    highlightedWordColor: "Highlighted word color",
 
   },
   bookmark: {
