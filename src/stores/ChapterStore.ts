@@ -117,6 +117,12 @@ export const useChapterStore = defineStore("chapter-store", () => {
     }
   };
 
+  const getChapterBySlug = (slug: string) => {
+    if (chaptersList.value) {
+      return chaptersList.value.find((chapter) => chapter.slug === slug);
+    }
+  };
+
   const getChapterNameByChapterId = (chapterId: number | string) => {
     const chapter = getChapter(Number(chapterId));
     if (chapter) {
@@ -337,7 +343,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
           chapter.verses = JSON.parse(chaptersDB.data).verses;
           chapter.pagination = JSON.parse(chaptersDB.data).pagination;
           selectedChapter.value = chapter;
-         return true;
+          return true;
         }
       } else if (chaptersDB.length === chapter.versesCount) {
         chapter.verses = JSON.parse(chaptersDB.data).verses;
@@ -375,6 +381,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
     getChapterName,
     getchapterInfo,
     getVerses,
+    getChapterBySlug,
     getVerseByKey,
     getChapters,
     getChapter,

@@ -8,7 +8,7 @@ import { IonContent, IonItemDivider, IonCardHeader, IonInfiniteScroll } from "@i
 import { useLocale } from "@/utils/useLocale";
 import { useRoute } from "vue-router";
 // Types
-import type { Verse, MapVersesByPage } from "@/types/verse"
+import type { Verse, MapVersesByPage, VerseWord } from "@/types/verse"
 import type { Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
@@ -32,7 +32,7 @@ const props = defineProps<{
     verses?: Verse[]
     isLoading: boolean
     pagination?: Pagination | null
-    styles: Record<"fontSize" | "fontFamily" | "fontWeight", string>
+    styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "color", string>
 }>()
 
 const emit = defineEmits<{
@@ -51,14 +51,9 @@ const mapVersesByPage = computed((): MapVersesByPage | undefined => {
 });
 
 // Highlight Active Words
-const isWordHighlighted = (loaction: string, verseKey: string) => {
-    if (props.isReadingView) {
-        if (props.verseTiming) {
-            return (
-                props.verseTiming.wordLocation === loaction &&
-                verseKey === props.verseTiming.verseKey
-            );
-        }
+const isWordHighlighted = (word: VerseWord) => {
+    if (props.verseTiming) {        
+        return props.verseTiming.wordLocation === word.location
     }
 };
 
@@ -106,9 +101,7 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                             <span v-for="word in verse.words" :key="word.id" :data-word-position="word.position"
                                 class="" :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number"
                                 :data-chapter-id="verse.chapter_id" :data-page-number="page">
-                                <span :class="isWordHighlighted(word.location, word.verse_key)
-                                    ? 'text-blue'
-                                    : ''" class="word">
+                                <span :class="isWordHighlighted(word) ? styles.color : ''" class="word">
                                     <div v-if="word.char_type_name === 'end'" class="end">({{ word.text_uthmani
                                         }})
                                     </div>
