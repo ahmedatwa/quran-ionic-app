@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed } from "vue"
-import { IonButton, IonIcon, IonInfiniteScrollContent } from "@ionic/vue";
+import { IonButton, IonIcon, IonInfiniteScrollContent, IonText } from "@ionic/vue";
 import { IonGrid, IonRow, IonCol, IonCard, IonCardContent } from "@ionic/vue";
 import { IonLabel, IonCardSubtitle, IonCardTitle, IonChip, IonItem } from "@ionic/vue";
 import { IonContent, IonCardHeader, IonInfiniteScroll } from "@ionic/vue";
@@ -97,7 +97,7 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                                     <div v-for="word in v.words" :key="word.id" :data-word-position="word.position"
                                         class="flex" :data-hizb-number="v.hizb_number" :data-juz-number="v.juz_number"
                                         :data-chapter-id="v.chapter_id" :data-page-number="page">
-                                        <span :class="isWordHighlighted(word.location, word.verse_key)
+                                        <ion-text :color="isWordHighlighted(word.location, word.verse_key)
                                             ? 'text-blue'
                                             : ''" class="word">
                                             <div v-if="word.char_type_name === 'end'" class="end">({{ word.text_uthmani
@@ -105,7 +105,7 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                                             </div>
                                             <h3 :style="styles" v-else>{{
                                                 word.text_uthmani }}</h3>
-                                        </span>
+                                        </ion-text>
                                     </div>
                                 </div>
                             </ion-col>

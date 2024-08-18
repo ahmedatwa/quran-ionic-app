@@ -7,6 +7,7 @@ export default {
     bookmarks: "الإشارات المرجعية",
     translations: "ترجمة",
     reading: "قراءة",
+    audio: "الصوت",
   },
   settings: {
     title: "إعدادات",

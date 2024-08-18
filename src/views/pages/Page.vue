@@ -60,8 +60,9 @@ watchEffect(async () => {
 
 
 const playAudio = async (event: { audioID: number, verseKey?: string }) => {
-    await audioPlayerStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
     audioModelValue.value = true
+    audioPlayerStore.resetValues()
+    await audioPlayerStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
 }
 
 const getVerses = async (ev: { key: string, nextPage: number }) => {

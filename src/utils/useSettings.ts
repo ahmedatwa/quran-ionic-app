@@ -6,6 +6,7 @@ import { useLocale } from "@/utils/useLocale";
 import type { AudioPlayerSettings, Recitations } from "@/types/audio";
 import type { Styles } from "@/types/settings";
 import type { Translation } from "@/types/translations";
+import { lowerCase } from "@/utils/string";
 
 const colorScheme = ref("auto");
 // Audio
@@ -72,7 +73,7 @@ export const useSettings = () => {
   const applyStyle = (key: string, ev: CustomEvent) => {
     switch (key) {
       case "fontWeight":
-        styles.value.fontWeight = ev.detail.value;
+        styles.value.fontWeight = lowerCase(ev.detail.value);
         break;
       case "fontFamily":
         styles.value.fontFamily = ev.detail.value;

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed } from "vue"
-import { IonButton, IonChip, IonIcon } from "@ionic/vue";
+import { IonButton, IonChip, IonIcon, IonText } from "@ionic/vue";
 import { IonCol, IonCard, IonCardContent, IonInfiniteScrollContent } from "@ionic/vue";
 import { IonLabel, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
 import { IonContent, IonItemDivider, IonCardHeader, IonInfiniteScroll } from "@ionic/vue";
@@ -52,7 +52,7 @@ const mapVersesByPage = computed((): MapVersesByPage | undefined => {
 
 // Highlight Active Words
 const isWordHighlighted = (word: VerseWord) => {
-    if (props.verseTiming) {        
+    if (props.verseTiming) {                        
         return props.verseTiming.wordLocation === word.location
     }
 };
@@ -101,13 +101,12 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                             <span v-for="word in verse.words" :key="word.id" :data-word-position="word.position"
                                 class="" :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number"
                                 :data-chapter-id="verse.chapter_id" :data-page-number="page">
-                                <span :class="isWordHighlighted(word) ? styles.color : ''" class="word">
-                                    <div v-if="word.char_type_name === 'end'" class="end">({{ word.text_uthmani
-                                        }})
+                                <ion-text :color="isWordHighlighted(word) ? styles.color : ''" class="word">
+                                    <div v-if="word.char_type_name === 'end'" class="end">
+                                        ({{ word.text_uthmani }})
                                     </div>
-                                    <h3 :style="styles" v-else>{{
-                                        word.text_uthmani }}</h3>
-                                </span>
+                                    <h3 :style="styles" v-else>{{ word.text_uthmani }}</h3>
+                                </ion-text>
                             </span>
                         </div>
                     </div>

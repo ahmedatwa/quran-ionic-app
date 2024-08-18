@@ -44,7 +44,7 @@ const router = useRoute()
 const { chapterId } = router.params
 
 watchEffect(async () => {
-    if (chapterId) {        
+    if (chapterId) {
         chapterStore.selectedChapter = null
         const found = chapterStore.chaptersList.find((c) => c.id === Number(chapterId) || c.slug === chapterId)
         if (found) {
@@ -59,6 +59,7 @@ watchEffect(async () => {
 })
 
 const playAudio = async (event: { audioID: number, verseKey?: string }) => {
+    audioPlayerStore.resetValues()
     await audioPlayerStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
     audioModelValue.value = true
 }

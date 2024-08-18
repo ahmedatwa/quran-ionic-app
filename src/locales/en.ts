@@ -7,6 +7,7 @@ export default {
     bookmarks: "Bookmarks",
     translations: "Translations",
     reading: "Reading",
+    audio: "Audio",
   },
   settings: {
     title: "Settings",
@@ -39,7 +40,6 @@ export default {
     autoDownload: "Auto Download Audio",
     keepAwake: "Prevent sleep while playing",
     highlightedWordColor: "Highlighted word color",
-
   },
   bookmark: {
     title: "Bookmarks",

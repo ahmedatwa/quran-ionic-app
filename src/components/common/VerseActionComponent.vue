@@ -61,6 +61,6 @@ const copyText = async (text: string) => {
 <template>
     <div class="container">
         <ion-action-sheet :trigger="triggerProp" :header="`Verse ${verse.verse_key}`" :buttons="actionSheetButtons"
-            @didDismiss="$emit('update:didDismiss', $event)" @did-dismiss="handleDismiss($event)"></ion-action-sheet>
+            @did-dismiss="handleDismiss($event)"></ion-action-sheet>
     </div>
 </template>
