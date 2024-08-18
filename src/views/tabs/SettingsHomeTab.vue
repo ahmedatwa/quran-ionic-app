@@ -85,7 +85,7 @@ const handleKeepAwake = async () => {
                                         :label="getLine('settings.boldText')"
                                         @ion-change="settings.applyStyle('fontWeight', $event)">
                                         <ion-select-option v-for="weight in settings.fontWeights.value"
-                                            :key="weight.key">
+                                            :key="weight.key" :value="weight.key">
                                             {{ weight.value }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
