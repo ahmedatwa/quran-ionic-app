@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ionic
-import { IonPage, IonContent, IonSkeletonText } from '@ionic/vue';
+import { IonPage, IonContent, IonSkeletonText} from '@ionic/vue';
 import { IonNote, IonItem, IonList, IonLabel } from '@ionic/vue';
 // stores
 import { useChapterStore } from '@/stores/ChapterStore';
@@ -17,6 +17,7 @@ const chapterStore = useChapterStore()
 const handleSearch = (query: string) => {
   chapterStore.searchValue = query
 }
+
 </script>
 
 <template>

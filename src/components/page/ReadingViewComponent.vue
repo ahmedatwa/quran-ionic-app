@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed } from "vue"
-import { IonButton, IonChip, IonIcon } from "@ionic/vue";
+import { IonButton, IonChip, IonIcon, IonText } from "@ionic/vue";
 import { IonGrid, IonRow, IonCol, IonCard, IonCardContent } from "@ionic/vue";
 import { IonLabel, IonInfiniteScrollContent } from "@ionic/vue";
 import { IonContent, IonItemDivider, IonInfiniteScroll } from "@ionic/vue";
@@ -100,7 +100,7 @@ const routeBackName = computed(() => {
                                         class="flex" :data-hizb-number="verse.hizb_number"
                                         :data-juz-number="verse.juz_number" :data-chapter-id="verse.chapter_id"
                                         :data-page-number="page">
-                                        <span :class="isWordHighlighted(word.location, word.verse_key)
+                                        <ion-text :color="isWordHighlighted(word.location, word.verse_key)
                                             ? 'text-blue'
                                             : ''" class="word">
                                             <div v-if="word.char_type_name === 'end'" class="end">({{ word.text_uthmani
@@ -108,7 +108,7 @@ const routeBackName = computed(() => {
                                             </div>
                                             <h3 :style="styles" v-else>{{
                                                 word.text_uthmani }}</h3>
-                                        </span>
+                                        </ion-text>
                                     </div>
                                 </div>
                             </ion-col>

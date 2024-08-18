@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onUnmounted } from "vue"
+import { ref, watchEffect, computed, onUnmounted, watch } from "vue"
 import { IonToolbar, IonFooter, IonButtons, IonAvatar } from '@ionic/vue';
 import { IonIcon, IonButton, IonSpinner, IonChip, IonLabel } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline } from 'ionicons/icons';
@@ -24,7 +24,6 @@ const audioPlayerRef = ref<HTMLAudioElement>()
 const { getLocale } = useLocale()
 const { presentAlert } = useAlert()
 
-
 defineProps<{
     modelValue: boolean
 }>()
@@ -35,16 +34,28 @@ const emit = defineEmits<{
 
 
 const playAudio = () => {
-    if (audioPlayerRef.value) {
-        if (audioPlayerRef.value.paused) {
-            audioPlayerRef.value.play();
-            audioPlayerStore.isPlaying = true;
-        } else {
-            audioPlayerRef.value.pause();
-            audioPlayerStore.isPlaying = false;
-        }
+    if (audioPlayerRef.value?.paused) {
+        audioPlayerRef.value.play();
+        audioPlayerStore.isPlaying = true;
+        audioPlayerStore.isPaused = false
+    } else {
+        audioPlayerRef.value?.pause();
+        audioPlayerStore.isPlaying = false;
+        audioPlayerStore.isPaused = true
     }
 };
+
+watch(() => audioPlayerStore.isPaused, (paused) => {
+    if (paused) {
+        pauseAudio()
+    }
+})
+
+const pauseAudio = () => {
+    audioPlayerRef.value?.pause();
+    audioPlayerStore.isPlaying = false;
+    audioPlayerStore.isPaused = true
+}
 
 const onProgress = () => {
     if (
@@ -262,7 +273,7 @@ const loadMetaData = () => {
 
     // controls for android 
 
-        
+
 
 }
 

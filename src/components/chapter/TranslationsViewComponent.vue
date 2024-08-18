@@ -2,7 +2,9 @@
 import { ref, computed, watch, watchEffect, onMounted, onUnmounted } from "vue"
 import { IonButton, IonIcon, IonCardHeader, IonItem, IonGrid, IonRow } from "@ionic/vue";
 import { IonChip, IonContent, IonNote, IonCardTitle, IonCardSubtitle } from "@ionic/vue";
-import { IonLabel, IonText, IonCol, IonCard } from "@ionic/vue";
+import { IonLabel, IonText, IonCol, IonCard, IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
+import { App } from '@capacitor/app';
+
 // icons
 import { pauseOutline, playOutline, ellipsisVerticalOutline, languageOutline } from "ionicons/icons";
 // utils
@@ -15,6 +17,8 @@ import { vIntersectionObserver } from "@vueuse/components";
 import type { Verse, VerseWord } from "@/types/verse";
 import type { Pagination } from "@/types/chapter";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
+import type { InfiniteScrollCustomEvent } from "@ionic/vue"
+
 // components
 import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
 import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
@@ -29,7 +33,6 @@ const contentRef = ref()
 const cardRef = ref()
 const chapterId = computed(() => Number(params.chapterId))
 const intersectingVerseNumber = ref(1)
-const currentVerseNumberTiming = computed(() => props.verseTiming?.verseNumber)
 
 const props = defineProps<{
     id: string;
@@ -56,7 +59,6 @@ const onIntersectionObserver = ([{ isIntersecting, target, intersectionRatio }]:
     if (isIntersecting && intersectionRatio >= 0.8) {
         const verseNumber = Number(target.getAttribute("data-verse-number"));
         intersectingVerseNumber.value = verseNumber
-        loadMoreVerses()
     }
 }
 
@@ -70,7 +72,6 @@ watchEffect(() => {
 watch(intersectingVerseNumber, (value) => {
     if (value) {
         scroll()
-        loadMoreVerses()
     }
 })
 
@@ -97,28 +98,44 @@ const isWordHighlighted = (word: VerseWord) => {
 };
 
 const loadMoreVerses = () => {
-    if (props.verses?.length) {
-        if (intersectingVerseNumber.value === props.lastChapterVerse || intersectingVerseNumber.value >= (props.lastChapterVerse - 5)) {
-            if (props.pagination?.next_page) {
-                emit("update:getVerses", { key: props.id, nextPage: props.pagination?.next_page })
-
-            }
-        }
+    if (props.pagination?.next_page) {
+        emit("update:getVerses", { key: props.id, nextPage: props.pagination?.next_page })
     }
 }
 
-const scroll = () => scrollToElement(`#verse-col-${intersectingVerseNumber.value}`, cardRef.value.$el, 300)
+
+watch(() => props.verseTiming, (v) => {
+    if (v) {
+        if (v?.verseNumber === props.lastChapterVerse || v?.verseNumber >= (props.lastChapterVerse - 5)) {
+            loadMoreVerses()
+        }
+    }
+})
 
 onMounted(() => {
     if (cardRef.value) {
         (cardRef.value.$el as HTMLDivElement).addEventListener("scroll", scroll)
     }
+
+    App.addListener('appStateChange', ({ isActive }) => {
+        if (isActive) {
+            scroll()
+        }
+    });
 })
 onUnmounted(() => {
     if (cardRef.value) {
         (cardRef.value.$el as HTMLDivElement).removeEventListener("scroll", scroll)
     }
+    App.removeAllListeners()
 })
+
+const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
+    loadMoreVerses()
+    setTimeout(() => ev.target.complete(), 500);
+}
+
+const scroll = () => scrollToElement(`#verse-col-${intersectingVerseNumber.value}`, cardRef.value.$el, 300)
 
 </script>
 <template>
@@ -142,7 +159,7 @@ onUnmounted(() => {
                 <ion-item v-for="verse in verses" :key="verse.verse_number" :data-verse-number="verse.verse_number"
                     :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number"
                     :id="`verse-col-${verse.verse_number}`"
-                    v-intersection-observer="[onIntersectionObserver, { root: contentRef }]">
+                    v-intersection-observer="[onIntersectionObserver, { root: contentRef, immediate: false }]">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
                             <ion-col size="11" class="translations-view-col">
@@ -176,6 +193,10 @@ onUnmounted(() => {
                     </ion-grid>
                 </ion-item>
             </ion-card>
+            <ion-infinite-scroll @ion-infinite="ionInfinite">
+                <ion-infinite-scroll-content loading-text="Please wait..."
+                    loading-spinner="bubbles"></ion-infinite-scroll-content>
+            </ion-infinite-scroll>
         </ion-content>
     </div>
 </template>

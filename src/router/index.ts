@@ -37,6 +37,11 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/tabs/BookmarkHomeTab.vue"),
       },
       {
+        name: "Audio",
+        path: "audio",
+        component: () => import("@/views/tabs/AudioHomeTab.vue"),
+      },
+      {
         name: "Settings",
         path: "/settings",
         component: () => import("@/views/tabs/SettingsHomeTab.vue"),

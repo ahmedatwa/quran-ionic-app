@@ -56,6 +56,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const mediaVolume = ref(1);
   const isPlaying = ref(false);
   const isMuted = ref(false);
+  const isPaused = ref(false)
   const loopAudio = ref("none");
   const audioBuffer = ref();
   const currentTimestamp = ref(0);
@@ -79,7 +80,10 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const getAudio = async (payload: PlayAudioEmit, audioSrc?: string) => {
     //https://api.qurancdn.com/api/qdc/audio/reciters/9/audio_files?chapter=1&segments=true
     // if (payload.audioID === chapterId.value) return;
-
+    chapterId.value = payload.audioID;
+    selectedVerseKey.value = payload.verseKey;
+    audioPayLoadSrc.value = payload.audioSrc ? payload.audioSrc : audioSrc;
+    const chapter = getChapter(payload.audioID);
     if (selectedReciter.value) {
       // check for DB files return if audio found
       const audioStorage = await audioDB.getStorage(
@@ -93,11 +97,6 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
         chapterId.value = payload.audioID;
         return;
       }
-
-      const chapter = getChapter(payload.audioID);
-      chapterId.value = payload.audioID;
-      selectedVerseKey.value = payload.verseKey;
-      audioPayLoadSrc.value = payload.audioSrc ? payload.audioSrc : audioSrc;
       // stop the api call if audio files are already loaded
       // to chapter from prev api call
       if (
@@ -112,9 +111,6 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
       await instance
         .get(audioRecitersUrl(selectedReciter.value?.id, payload.audioID))
         .then((response) => {
-          // this triggers verseTiming computed func in audioPlayer Component
-          audioFiles.value = null;
-          verseTiming.value = undefined;
           audioFiles.value = {
             reciterId: selectedReciter.value?.id,
             ...response.data.audio_files[0],
@@ -268,6 +264,15 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     }
   };
 
+  const resetValues = () => {
+    verseTiming.value = undefined;
+    selectedVerseKey.value = "";
+    chapterId.value = undefined;
+    audioFiles.value = null;
+    currentTimestamp.value = 0;
+    isPlaying.value = false;
+  };
+
   return {
     audioFiles,
     isLoading,
@@ -296,6 +301,8 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     audioBuffer,
     currentTimestamp,
     audioPlayerSetting,
+    isPaused,
+    resetValues,
     playbackPlaying,
     playbackPaused,
     getRecitations,
