@@ -120,7 +120,7 @@ const getSurahInfo = async (ev: number) => {
             @update:selected-segment="currentSegment = $event"></segments-component>
         <ion-content>
             <translations-view-component id="translations-chapters" :is-loading="chapterStore.isLoading.verses"
-                :is-playing="isPlaying" :is-translations-view="currentSegment === 'translations'"
+                :is-playing="isPlaying" v-if="currentSegment === 'translations'"
                 :is-audio-loading="audioPlayerStore.isLoading" @update:play-audio="playAudio"
                 :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles" :verses="verses"
                 :chapter-name="chapterStore.selectedChapterName.nameArabic"
@@ -129,7 +129,7 @@ const getSurahInfo = async (ev: number) => {
                 @update:get-verses="getVerses" :pagination="pagination" @update:modal-value="getTranslationAlert"
                 :audio-experience="audioPlayerStore.audioPlayerSetting">
             </translations-view-component>
-            <reading-view-component id="reading-chapters" :is-reading-view="currentSegment === 'reading'"
+            <reading-view-component id="reading-chapters" v-else
                 :is-playing="isPlaying" :verses="verses" :is-loading="chapterStore.isLoading.verses" :styles="styles"
                 :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses"
                 :is-audio-loading="audioPlayerStore.isLoading" @update:surah-info="getSurahInfo"

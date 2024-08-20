@@ -27,7 +27,6 @@ const juzStore = useJuzStore()
 const transaltionStore = useTranslationsStore()
 const { selectedChapterName, selectedChapterBismillah, getchapterInfo } = useChapterStore()
 const audioPlayerStore = useAudioPlayerStore()
-
 const pagination = computed(() => juzStore.selectedJuz?.pagination)
 
 const audioModelValue = ref(false)
@@ -35,10 +34,6 @@ const pageRef = ref()
 const pageRefEl = ref()
 const chapterInfo = ref<ChapterInfo | null>(null)
 const chapterInfoButtonRef = ref()
-const handleSegmentChange = (ev: CustomEvent) => {
-    currentSegment.value = ev.detail.value
-}
-
 const router = useRoute()
 
 watchEffect(async () => {
@@ -99,6 +94,7 @@ const getTranslationAlert = async () => {
 }
 
 onMounted(() => pageRefEl.value = pageRef.value.$el)
+
 </script>
 
 
@@ -109,18 +105,19 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
         <ion-content>
             <translations-view-component id="translations-juzs" :is-loading="juzStore.isLoading"
                 :is-playing="audioPlayerStore.isPlaying" @update:modal-value="getTranslationAlert"
-                :is-translations-view="currentSegment === 'translations'" @update:play-audio="playAudio"
+                v-if="currentSegment === 'translations'" @update:play-audio="playAudio"
                 :is-bismillah="selectedChapterBismillah" :styles="styles" :verses="juzStore.juzVersesByChapterMap"
                 :chapter-name="selectedChapterName.nameArabic" :verse-timing="audioPlayerStore.verseTiming"
                 :audio-experience="audioPlayerStore.audioPlayerSetting" @update:get-verses="getVerses"
-                :pagination="pagination" :is-audio-loading="audioPlayerStore.isLoading">
+                :pagination="pagination" :is-audio-loading="audioPlayerStore.isLoading"
+                :active-audio-id="audioPlayerStore.audioFiles?.chapter_id">
             </translations-view-component>
-            <reading-view-component id="reading-juzs" :is-reading-view="currentSegment === 'reading'"
-                :is-playing="audioPlayerStore.isPlaying" :verses="juzStore.juzVersesByChapterMap"
-                @update:play-audio="playAudio" :is-loading="juzStore.isLoading" :styles="styles"
-                :audio-experience="audioPlayerStore.audioPlayerSetting" :verse-timing="audioPlayerStore.verseTiming"
-                :pagination="pagination" @update:get-verses="getVerses" @update:surah-info="getSurahInfo"
-                :is-audio-loading="audioPlayerStore.isLoading">
+            <reading-view-component id="reading-juzs" v-else :is-playing="audioPlayerStore.isPlaying"
+                :verses="juzStore.juzVersesByChapterMap" @update:play-audio="playAudio" :is-loading="juzStore.isLoading"
+                :styles="styles" :audio-experience="audioPlayerStore.audioPlayerSetting"
+                :verse-timing="audioPlayerStore.verseTiming" :pagination="pagination" @update:get-verses="getVerses"
+                @update:surah-info="getSurahInfo" :is-audio-loading="audioPlayerStore.isLoading"
+                :active-audio-id="audioPlayerStore.audioFiles?.chapter_id">
             </reading-view-component>
             <div>
                 <ion-button ref="chapterInfoButtonRef" id="juz-chapter-modal" class="ion-hide"></ion-button>

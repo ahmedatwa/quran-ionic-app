@@ -29,7 +29,7 @@ const cardRef = ref()
 const juzId = computed(() => Number(params.juzId))
 const props = defineProps<{
     id: string;
-    isReadingView: boolean
+    isReadingView?: boolean
     isPlaying: boolean
     verseTiming?: VerseTimingsProps
     verses?: juzVersesByPageMap
@@ -37,6 +37,7 @@ const props = defineProps<{
     isLoading: boolean
     isAudioLoading: boolean
     pagination?: Pagination | null
+    activeAudioId?: number
     styles: Record<"fontSize" | "fontFamily" | "fontWeight", string>
 }>()
 
@@ -96,11 +97,13 @@ const handleRefresh = (event: RefresherCustomEvent) => {
 
 const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el, 300)
 
-
+const isPlaying = (chapterId: number) => {
+    return props.isPlaying && chapterId === props.activeAudioId
+}
 </script>
 
 <template>
-    <div class="ion-page" v-if="isReadingView" :id="`${id}-${juzId}`">
+    <div class="ion-page" :id="`${id}-${juzId}`">
         <toolbar-component :is-loading="isLoading" :route-back-label="getLine('tabs.juzs')"></toolbar-component>
         <ion-content ref="contentRef">
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
@@ -109,7 +112,7 @@ const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumbe
             <ion-card class="ion-padding" v-for="(versesMap, page) in verses" :key="page" :id="`row-page-${page}`"
                 ref="cardRef">
                 <card-header-buttons-component :chapter-id="versesMap[0].chapter_id" :verse-key="versesMap[0].verse_key"
-                    :is-playing="isPlaying" @update:play-audio="$emit('update:playAudio', $event)"
+                    :is-playing="isPlaying(versesMap[0].chapter_id)" @update:play-audio="$emit('update:playAudio', $event)"
                     :is-audio-loading="isAudioLoading" @update:surah-info="$emit('update:surahInfo', $event)"
                     chapter-info>
                 </card-header-buttons-component>
