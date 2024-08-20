@@ -8,6 +8,7 @@ export default {
     translations: "Translations",
     reading: "Reading",
     audio: "Audio",
+    search: "Search {0}"
   },
   settings: {
     title: "Settings",

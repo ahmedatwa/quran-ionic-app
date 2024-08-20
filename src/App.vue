@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, watch, watchEffect } from 'vue';
+import { onBeforeMount, watch } from 'vue';
 import { IonApp, IonRouterOutlet, IonContent } from '@ionic/vue';
 // stores
 import { useMetaStore } from '@/stores/MetaStore';
@@ -91,7 +91,7 @@ watch(isRtl, (rtl) => {
   </teleport>
   <ion-app>
     <ion-content class="ion-padding" fixed-slot-placement="before">
-      <ion-router-outlet />
+      <ion-router-outlet></ion-router-outlet>
     </ion-content>
   </ion-app>
 </template>

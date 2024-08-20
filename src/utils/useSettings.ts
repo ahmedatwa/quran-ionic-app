@@ -58,6 +58,7 @@ export const useSettings = () => {
     { key: "bold", value: "Bold" },
     { key: "extra-bold", value: "Extra Bold" },
   ]);
+  
   const appVersion = computed(() => import.meta.env.VITE_APP_VERSION);
 
   const appleColorScheme = (ev: CustomEvent) => {

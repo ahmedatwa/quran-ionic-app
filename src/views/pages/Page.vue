@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted } from 'vue';
-import { IonContent, IonHeader, IonSegmentButton, IonButton } from '@ionic/vue';
-import { IonToolbar, IonSegment, IonLabel, IonPage, alertController } from '@ionic/vue';
+import { IonContent, IonPage, IonButton } from '@ionic/vue';
 // components
 import TranslationsViewComponent from '@/components/page/TranslationsViewComponent.vue';
 import ReadingViewComponent from '@/components/page/ReadingViewComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 import ChapterInfoModalComponent from '@/components/chapter/ChapterInfoModalComponent.vue';
+import SegmentsComponent from '@/components/common/SegmentsComponent.vue';
+
 import { useRoute } from 'vue-router';
 // stores
 import { usePageStore } from "@/stores/PageStore"
@@ -14,7 +15,6 @@ import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 import { useTranslationsStore } from '@/stores/TranslationsStore';
 import { useChapterStore } from '@/stores/ChapterStore';
 // utils
-import { useLocale } from '@/utils/useLocale';
 import { useSettings } from '@/utils/useSettings';
 import { useAlert } from '@/utils/useAlert';
 // types
@@ -23,7 +23,6 @@ import type { ChapterInfo } from '@/types/chapter';
 
 const currentSegment = ref("translations")
 const pageStore = usePageStore()
-const { getLine } = useLocale()
 const { presentAlert } = useAlert()
 const settings = useSettings()
 const transaltionStore = useTranslationsStore()
@@ -122,30 +121,21 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
 
 <template>
     <ion-page :data-page-id="pageId" ref="pageRef">
-        <ion-header>
-            <ion-toolbar>
-                <ion-segment :value="currentSegment" @ion-change="handleSegmentChange">
-                    <ion-segment-button value="translations">
-                        <ion-label>{{ getLine('tabs.translations') }}</ion-label>
-                    </ion-segment-button>
-                    <ion-segment-button value="reading">
-                        <ion-label>{{ getLine('tabs.reading') }}</ion-label>
-                    </ion-segment-button>
-                </ion-segment>
-            </ion-toolbar>
-        </ion-header>
+        <segments-component :selected-segment="currentSegment"
+            @update:selected-segment="currentSegment = $event"></segments-component>
         <ion-content>
             <translations-view-component id="translations-pages" :is-loading="pageStore.isLoading"
                 :is-playing="audioPlayerStore.isPlaying" :is-translations-view="currentSegment === 'translations'"
                 @update:play-audio="playAudio" :is-bismillah="selectedChapterBismillah" :styles="styles"
                 :verses="groupVersesByChapter" :chapter-name="selectedChapterName.nameArabic"
                 @update:modal-value="getTranslationAlert" :verse-timing="audioPlayerStore.verseTiming"
-                @update:get-verses="getVerses" :pagination="pagination">
+                @update:get-verses="getVerses" :pagination="pagination" :is-audio-loading="audioPlayerStore.isLoading">
             </translations-view-component>
             <reading-view-component id="reading-pages" :is-reading-view="currentSegment === 'reading'"
                 :is-playing="audioPlayerStore.isPlaying" :verses="groupVersesByChapter" @update:play-audio="playAudio"
                 @update:surah-info="getSurahInfo" :is-loading="pageStore.isLoading" :styles="styles"
-                :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination">
+                :is-audio-loading="audioPlayerStore.isLoading" :verse-timing="audioPlayerStore.verseTiming"
+                @update:get-verses="getVerses" :pagination="pagination">
             </reading-view-component>
             <div>
                 <ion-button ref="chapterInfoButtonRef" id="page-chapter-modal" class="ion-hide"></ion-button>

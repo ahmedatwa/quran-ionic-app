@@ -37,11 +37,6 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/tabs/BookmarkHomeTab.vue"),
       },
       {
-        name: "Audio",
-        path: "audio",
-        component: () => import("@/views/tabs/AudioHomeTab.vue"),
-      },
-      {
         name: "Settings",
         path: "/settings",
         component: () => import("@/views/tabs/SettingsHomeTab.vue"),
@@ -73,8 +68,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/pages/Chapter.vue"),
     props: true,
   },
-  // will match everything and put it under `route.params.pathMatch`
-  // { path: "/:pathMatch(.*)*", name: "NotFound", component: import("@/views/404NotFound.vue") },
 ];
 
 const router = createRouter({

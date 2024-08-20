@@ -11,7 +11,7 @@ type ToastParams = {
 type AlertParams = {
   header: string;
   message: string;
-  buttons: string[];
+  buttons?: string[];
   id?: string;
   subHeader?: string;
 };

@@ -25,6 +25,8 @@ export const usePageStore = defineStore("page-store", () => {
   const selectedPage = ref<Page | null>(null);
   const selectedPageId = ref<number>();
   const searchValue = ref("");
+  const pagesPageSize = ref(20);
+  const pagesCurrentPage = ref(1);
   const pagesList = ref<Page[]>([]);
   const selectedTranslationId = computed(() => {
     if (selectedTranslation?.id) {
@@ -34,11 +36,18 @@ export const usePageStore = defineStore("page-store", () => {
   });
   const pages = computed(() => {
     if (pagesList.value) {
-      return pagesList.value.filter((page) => {
-        return page.pageNumber
-          .toLocaleString()
-          .includes(searchValue.value.toLocaleLowerCase());
-      });
+      return pagesList.value
+        .filter((page) => {
+          return page.pageNumber
+            .toLocaleString()
+            .includes(searchValue.value.toLocaleLowerCase());
+        })
+        .sort((a, b) => a.pageNumber - b.pageNumber)
+        .filter((__, index) => {
+          let start = (pagesCurrentPage.value - 1) * pagesPageSize.value;
+          let end = pagesCurrentPage.value * pagesPageSize.value;
+          if (index >= start && index < end) return true;
+        });
     }
   });
 
@@ -146,10 +155,10 @@ export const usePageStore = defineStore("page-store", () => {
       String(chapterId)
     );
     if (pagesDB) {
-        page.verses = JSON.parse(pagesDB.data).verses;
-        page.pagination = JSON.parse(pagesDB.data).pagination;
-        selectedPage.value = page;
-        return true;
+      page.verses = JSON.parse(pagesDB.data).verses;
+      page.pagination = JSON.parse(pagesDB.data).pagination;
+      selectedPage.value = page;
+      return true;
     }
 
     return false;
@@ -166,6 +175,8 @@ export const usePageStore = defineStore("page-store", () => {
     getLastVerseOfPage,
     getFirstVerseOfPage,
     getInitialHeaderData,
+    pagesCurrentPage,
+    pagesPageSize,
     getVerses,
   };
 });

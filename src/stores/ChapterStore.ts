@@ -53,11 +53,12 @@ export const useChapterStore = defineStore("chapter-store", () => {
 
   const chapters = computed((): Chapter[] | undefined => {
     if (chaptersList.value) {
-      const searchableKeys = ["nameSimple", "nameArabic"];
+      const searchableKeys = ["nameSimple", "nameArabic", "id"];
       return chaptersList.value.filter(
-        (chapter: { nameSimple: string; nameArabic: string }) => {
+        (chapter: { nameSimple: string; nameArabic: string; id: number }) => {
           return searchableKeys.some((key) => {
             return chapter[key as keyof typeof chapter]
+              .toString()
               .toLocaleLowerCase()
               .replace(/([\-\'])/, "")
               .includes(

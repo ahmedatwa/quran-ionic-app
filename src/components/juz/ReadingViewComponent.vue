@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from "vue"
-import { IonButton, IonIcon, IonInfiniteScrollContent, IonText } from "@ionic/vue";
+import { IonInfiniteScrollContent, IonText } from "@ionic/vue";
 import { IonGrid, IonRow, IonCol, IonCard, IonCardContent } from "@ionic/vue";
-import { IonLabel, IonCardSubtitle, IonCardTitle, IonChip, IonItem } from "@ionic/vue";
+import { IonLabel, IonCardSubtitle, IonCardTitle, IonItem } from "@ionic/vue";
 import { IonContent, IonCardHeader, IonInfiniteScroll } from "@ionic/vue";
 // utils
 import { useLocale } from "@/utils/useLocale";
@@ -12,12 +12,11 @@ import type { juzVersesByPageMap } from "@/types/juz";
 import type { Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
-// icons
-import { pauseOutline, playOutline, informationCircleOutline } from "ionicons/icons";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 // components
 import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
+import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
 
 const { params } = useRoute()
 const { getChapterNameByFirstVerse } = useChapterStore()
@@ -30,6 +29,7 @@ const props = defineProps<{
     verseTiming?: VerseTimingsProps
     verses?: juzVersesByPageMap
     isLoading: boolean
+    isAudioLoading: boolean
     pagination?: Pagination | null
     styles: Record<"fontSize" | "fontFamily" | "fontWeight", string>
 }>()
@@ -68,17 +68,10 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
         <toolbar-component :is-loading="isLoading" :route-back-label="getLine('tabs.juzs')"></toolbar-component>
         <ion-content>
             <ion-card class="ion-padding" v-for="(versesMap, page) in verses" :key="page" :id="`row-page-${page}`">
-                <div class="d-flex ion-justify-content-between">
-                    <ion-chip
-                        @click="$emit('update:playAudio', { audioID: versesMap[0].chapter_id, verseKey: versesMap[0].verse_key })"
-                        color="primary">
-                        <ion-icon :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
-                        <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
-                    </ion-chip>
-                    <ion-button fill="clear" @click="$emit('update:surahInfo', versesMap[0].chapter_id)">
-                        <ion-icon :icon="informationCircleOutline" slot="icon-only"></ion-icon>
-                    </ion-button>
-                </div>
+                <card-header-buttons-component :chapter-id="versesMap[0].chapter_id" :verse-key="versesMap[0].verse_key" :is-playing="isPlaying"
+                    @update:play-audio="$emit('update:playAudio', $event)" :is-audio-loading="isAudioLoading"
+                    @update:surah-info="$emit('update:surahInfo', $event)" chapter-info>
+                </card-header-buttons-component>
                 <ion-card-header class="ion-text-center">
                     <ion-card-subtitle>{{ getChapterNameByFirstVerse(versesMap[0])?.bismillahPre ?
                         getLine('quranReader.textBismillah') : '' }}</ion-card-subtitle>
