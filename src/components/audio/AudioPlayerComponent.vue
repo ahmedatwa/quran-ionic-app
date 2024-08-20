@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onUnmounted, watch } from "vue"
 import { IonToolbar, IonFooter, IonButtons, IonAvatar } from '@ionic/vue';
-import { IonIcon, IonButton, IonSpinner, IonChip, IonLabel } from '@ionic/vue';
+import { IonIcon, IonButton, IonSpinner, IonChip, IonText } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline } from 'ionicons/icons';
 
 // components
@@ -17,6 +17,7 @@ import type { VerseTimings, VerseTimingSegments, Recitations } from "@/types/aud
 // stores
 import { useMetaStore } from "@/stores/MetaStore";
 import { useAudioPlayerStore } from '@/stores/AudioPlayerStore';
+import { truncate } from "@/utils/string";
 
 const audioPlayerStore = useAudioPlayerStore()
 const metaStore = useMetaStore();
@@ -47,15 +48,16 @@ const playAudio = () => {
 
 watch(() => audioPlayerStore.isPaused, (paused) => {
     if (paused) {
-        pauseAudio()
+        playAudio()
     }
 })
 
-const pauseAudio = () => {
-    audioPlayerRef.value?.pause();
-    audioPlayerStore.isPlaying = false;
-    audioPlayerStore.isPaused = true
-}
+watch(() => audioPlayerStore.isResumed, (resume) => {
+    if (resume) {
+        playAudio()
+    }
+})
+
 
 const onProgress = () => {
     if (
@@ -108,10 +110,8 @@ const playbackEnded = async () => {
             if (audioPlayerStore.audioPlayerSetting.dismissOnEnd) {
                 closePlayer()
             }
-
             break;
     }
-    //
 };
 
 //Remove listeners after audio play stops
@@ -157,7 +157,7 @@ const loadedData = () => {
             }
             audioPlayerStore.isLoading = false;
         } else {
-            presentAlert({ message: "Failed to fetch Audio", header: "Error", buttons: ["Ok"] })
+            presentAlert({ message: "Failed to fetch Audio", header: "Error" })
         }
     }
 };
@@ -364,7 +364,7 @@ const playNext = (_ev: boolean) => {
 
 <template>
     <Transition name="slide-fade">
-        <ion-footer v-if="modelValue" class="footer">
+        <ion-footer v-if="modelValue" :translucent="true" class="footer ion-no-border">
             <ion-toolbar>
                 <div id="audio-modal">
                     <ion-chip :outline="true" class="reciter-chip">
@@ -372,7 +372,9 @@ const playNext = (_ev: boolean) => {
                             <img :alt="audioPlayerStore.selectedReciter?.name" class="img"
                                 :src="`/reciters/${audioPlayerStore.selectedReciter?.reciter_id}.jpg`" />
                         </ion-avatar>
-                        <ion-label color="medium">{{ audioPlayerStore.chapterName }}</ion-label>
+                        <ion-text>{{ truncate(String(audioPlayerStore.selectedReciter?.name), 25) }}
+                            <p style="margin: 1px;">{{ audioPlayerStore.chapterName }} </p>
+                        </ion-text>
                     </ion-chip>
                 </div>
                 <ion-buttons slot="end">
@@ -384,9 +386,6 @@ const playNext = (_ev: boolean) => {
                     <ion-button fill="clear" @click="audioPlayerStore.playNext" size="small">
                         <ion-icon slot="icon-only" :icon="playForwardOutline"></ion-icon>
                     </ion-button>
-                    <!-- <ion-button fill="clear" @click="closePlayer" size="small">
-                        <ion-icon slot="icon-only" :icon="closeOutline" color="danger"></ion-icon>
-                    </ion-button> -->
                 </ion-buttons>
                 <div class="d-none">
                     <audio controls :autoplay="audioPlayerStore.audioPlayerSetting.autoPlay" ref="audioPlayerRef"
@@ -414,13 +413,8 @@ const playNext = (_ev: boolean) => {
 
 </template>
 <style scoped>
-.d-none {
-    display: none !important;
-}
-
 ion-avatar {
     --border-radius: 4px;
-
 }
 
 .footer {

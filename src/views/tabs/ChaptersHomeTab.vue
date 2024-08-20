@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // ionic
-import { IonPage, IonContent, IonSkeletonText} from '@ionic/vue';
+import { IonPage, IonContent, IonSkeletonText } from '@ionic/vue';
 import { IonNote, IonItem, IonList, IonLabel } from '@ionic/vue';
 // stores
 import { useChapterStore } from '@/stores/ChapterStore';
@@ -22,7 +22,8 @@ const handleSearch = (query: string) => {
 
 <template>
   <ion-page>
-    <header-component :title="getLine('tabs.chapters')" :icon="bookOutline" @update:search-value="handleSearch" search>
+    <header-component :title="getLine('tabs.chapters')" :icon="bookOutline"
+      @update:search-value="handleSearch" search>
     </header-component>
     <ion-content :fullscreen="true">
       <ion-list v-if="!chapterStore.chapters?.length">

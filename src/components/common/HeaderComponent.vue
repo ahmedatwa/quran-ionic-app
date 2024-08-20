@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { onUnmounted } from "vue"
 import { IonHeader, IonToolbar, IonTitle, IonSearchbar } from "@ionic/vue";
-import { IonIcon, toastController, IonLabel, IonProgressBar } from "@ionic/vue";
+import { IonIcon, IonLabel, IonProgressBar } from "@ionic/vue";
 // icons
 import { documentOutline, cogOutline, bookOutline, newspaperOutline } from 'ionicons/icons';
-import { Network } from '@capacitor/network';
 import { useLocale } from "@/utils/useLocale";
 
 const { isRtl } = useLocale()
@@ -15,6 +13,7 @@ defineProps<{
     search: boolean;
     collapse?: "condense" | "fade"
     translucent?: boolean
+    searchPlaceholder?: string;
     icon: typeof documentOutline | typeof bookOutline | typeof newspaperOutline | typeof cogOutline
 }>()
 
@@ -27,28 +26,6 @@ const handleInput = (ev: CustomEvent) => {
 
 }
 
-Network.addListener('networkStatusChange', status => {
-    if (!status.connected) {
-        presentToast(`Network connnection lost`);
-    } else {
-        presentToast(`Network connnection restored`);
-    }
-});
-
-
-onUnmounted(() => Network.removeAllListeners())
-
-const presentToast = async (message: string) => {
-    const toast = await toastController.create({
-        message,
-        duration: 1500,
-        position: "top",
-        id: 'network-toast'
-    });
-
-    await toast.present();
-}
-
 </script>
 <template>
     <ion-header :translucent="translucent" :collapse="collapse">
@@ -59,7 +36,8 @@ const presentToast = async (message: string) => {
             </ion-title>
         </ion-toolbar>
         <ion-toolbar v-if="search">
-            <ion-searchbar @ionInput="handleInput"></ion-searchbar>
+            <ion-searchbar @ion-input="handleInput" :animated="true" :placeholder="searchPlaceholder"
+                autocomplete="on" inputmode="text" type="text"></ion-searchbar>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
         </ion-toolbar>
     </ion-header>
@@ -67,7 +45,7 @@ const presentToast = async (message: string) => {
 <style scoped>
 .header-label {
     position: absolute;
-    top: 3px;
+    top: 0px;
     margin-left: 5px;
 }
 

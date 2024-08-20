@@ -1,18 +1,13 @@
 import { defineStore } from "pinia";
-import { ref, onMounted, computed, watchEffect } from "vue";
-import { alertController } from "@ionic/vue";
+import { ref, onMounted, computed, watchEffect, onUnmounted } from "vue";
 //axios
 import { instance } from "@/axios";
 import { audioRecitersUrl, recitationsUrl } from "@/axios/url";
 import { AVATAR_PLACEHOLDER_API } from "@/axios/url";
 // types
-import type {
-  AudioFile,
-  AudioPlayerSettings,
-  Recitations,
-} from "@/types/audio";
+import type { AudioFile, AudioPlayerSettings } from "@/types/audio";
 import type { MapRecitions, PlayAudioEmit } from "@/types/audio";
-import type { VerseTimingsProps } from "@/types/audio";
+import type { VerseTimingsProps, Recitations } from "@/types/audio";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 // utils
@@ -23,11 +18,12 @@ import { useAlert } from "@/utils/useAlert";
 export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const { getChapterNameByChapterId, getChapter, TOTAL_CHAPTERS } =
     useChapterStore();
+  const isVisible = ref(false);
   const isLoading = ref(false);
   const settingsDB = useStorage("__settingsDB");
   const audioDB = useStorage("__audioDB");
   const { encodeBlobToBase64 } = useBlob();
-  const { presentToast } = useAlert();
+  const { presentToast, presentAlert } = useAlert();
   const audioFiles = ref<AudioFile | null>(null);
   const autoStartPlayer = ref(false);
   const chapterId = ref<number>();
@@ -56,7 +52,8 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const mediaVolume = ref(1);
   const isPlaying = ref(false);
   const isMuted = ref(false);
-  const isPaused = ref(false)
+  const isPaused = ref(false);
+  const isResumed = ref(false);
   const loopAudio = ref("none");
   const audioBuffer = ref();
   const currentTimestamp = ref(0);
@@ -80,6 +77,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const getAudio = async (payload: PlayAudioEmit, audioSrc?: string) => {
     //https://api.qurancdn.com/api/qdc/audio/reciters/9/audio_files?chapter=1&segments=true
     // if (payload.audioID === chapterId.value) return;
+    isLoading.value = true;
     chapterId.value = payload.audioID;
     selectedVerseKey.value = payload.verseKey;
     audioPayLoadSrc.value = payload.audioSrc ? payload.audioSrc : audioSrc;
@@ -95,6 +93,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
           verse_timings: JSON.parse(audioStorage.verse_timings),
         };
         chapterId.value = payload.audioID;
+        isLoading.value = false;
         return;
       }
       // stop the api call if audio files are already loaded
@@ -104,10 +103,10 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
         chapter?.audioFile.chapter_id === payload.audioID
       ) {
         audioFiles.value = chapter.audioFile;
+        isLoading.value = false;
         return;
       }
 
-      isLoading.value = true;
       await instance
         .get(audioRecitersUrl(selectedReciter.value?.id, payload.audioID))
         .then((response) => {
@@ -131,7 +130,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
           const audioSettings: AudioPlayerSettings =
             await settingsDB.getStorage("audioSettings");
           if (audioSettings.autoDownload) {
-            downloadAudioFile();
+            await downloadAudioFile();
           }
         });
     }
@@ -183,6 +182,8 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     await getRecitations();
   });
 
+  onUnmounted(() => resetValues());
+
   watchEffect(() => {
     if (!selectedReciter.value) {
       const found = recitations.value.find((r) => r.reciter_id === 6);
@@ -222,13 +223,13 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     listenerActive.value = true;
   };
 
-  const downloadAudioFile = () => {
+  const downloadAudioFile = async () => {
     if (audioFiles.value) {
       const audioUrl = audioFiles.value.audio_url;
       const key = `${String(audioFiles.value.reciterId)}-${
         audioFiles.value.chapter_id
       }`;
-      instance
+      await instance
         .get(audioUrl, {
           responseType: "blob",
         })
@@ -252,14 +253,11 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
         })
         .finally(async () => {
           isDownloadSuccess.value = true;
-          const alert = await alertController.create({
-            header: selectedReciter.value?.name,
+          presentAlert({
+            header: String(selectedReciter.value?.name),
             subHeader: selectedReciter.value?.style.name,
             message: chapterName.value + " File has been downloaded!",
-            buttons: ["Ok"],
           });
-
-          await alert.present();
         });
     }
   };
@@ -271,6 +269,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     audioFiles.value = null;
     currentTimestamp.value = 0;
     isPlaying.value = false;
+    listenerActive.value = false;
   };
 
   return {
@@ -298,10 +297,12 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     isPlaying,
     isMuted,
     loopAudio,
+    isResumed,
     audioBuffer,
     currentTimestamp,
     audioPlayerSetting,
     isPaused,
+    isVisible,
     resetValues,
     playbackPlaying,
     playbackPaused,

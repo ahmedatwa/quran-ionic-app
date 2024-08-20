@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
 import { newspaperOutline, documentOutline, bookOutline } from 'ionicons/icons';
-import { cogOutline, bookmarkOutline, musicalNote } from 'ionicons/icons';
+import { cogOutline, bookmarkOutline } from 'ionicons/icons';
 // utils
 import { useLocale } from '@/utils/useLocale';
 
@@ -29,10 +29,6 @@ const { getLine } = useLocale()
         <ion-tab-button tab="bookmarks" href="/bookmarks">
           <ion-icon :icon="bookmarkOutline" />
           <ion-label>{{ getLine('tabs.bookmarks') }}</ion-label>
-        </ion-tab-button>
-        <ion-tab-button tab="audio" href="/audio">
-          <ion-icon :icon="musicalNote" />
-          <ion-label>{{ getLine('tabs.audio') }}</ion-label>
         </ion-tab-button>
         <ion-tab-button tab="settings" href="/settings">
           <ion-icon :icon="cogOutline" />

@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { ref, computed, watch } from "vue"
 import { IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
-import { IonChip, IonContent, IonNote, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
+import { IonContent, IonNote, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
 import { IonCol, IonRow, IonGrid, IonItem, IonCard } from "@ionic/vue";
 import { IonLabel, IonText } from "@ionic/vue";
 import { IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 // icons
-import { arrowBackOutline, arrowForwardOutline, pauseOutline } from "ionicons/icons";
-import { playOutline, ellipsisVerticalOutline, languageOutline } from "ionicons/icons";
+import { arrowBackOutline, arrowForwardOutline, ellipsisVerticalOutline } from "ionicons/icons";
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
@@ -23,6 +22,7 @@ import type { GroupVersesByChapterID, Pagination } from "@/types/page"
 // components
 import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
 import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
+import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 
@@ -40,6 +40,7 @@ const props = defineProps<{
     isTranslationsView: boolean
     isPlaying: boolean
     isLoading: boolean
+    isAudioLoading: boolean
     translatedBy?: string;
     chapterName?: string
     isBismillah: string
@@ -117,17 +118,11 @@ const routeBackName = computed(() => {
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef">
             <ion-card class="ion-padding card-wrapper" v-for="(verses, chapterId) in verses" :key="chapterId"
                 :id="`card-${chapterId}`" ref="cardRef">
-                <div class="d-flex ion-justify-content-between">
-                    <ion-chip
-                        @click="$emit('update:playAudio', { audioID: verses[0].chapter_id, verseKey: verses[0].verse_key })"
-                        color="primary">
-                        <ion-icon :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
-                        <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
-                    </ion-chip>
-                    <ion-button @click="$emit('update:modalValue', true)" fill="clear">
-                        <ion-icon :icon="languageOutline" slot="icon-only"></ion-icon>
-                    </ion-button>
-                </div>
+                <card-header-buttons-component :chapter-id="verses[0].chapter_id"
+                    :verse-key="verses[0].verse_key" :is-playing="isPlaying"
+                    @update:play-audio="$emit('update:playAudio', $event)" :is-audio-loading="isAudioLoading"
+                    @update:language-modal-value="$emit('update:modalValue', $event)">
+                </card-header-buttons-component>
                 <ion-card-header class="ion-text-center">
                     <ion-card-subtitle> {{ getChapterNameByFirstVerse(verses[0])?.bismillahPre ?
                         getLine("quranReader.textBismillah") : '' }}

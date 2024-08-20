@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { computed } from "vue"
-import { IonButton, IonChip, IonIcon, IonText } from "@ionic/vue";
 import { IonCol, IonCard, IonCardContent, IonInfiniteScrollContent } from "@ionic/vue";
-import { IonLabel, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
+import { IonLabel, IonCardSubtitle, IonCardTitle, IonText } from "@ionic/vue";
 import { IonContent, IonItemDivider, IonCardHeader, IonInfiniteScroll } from "@ionic/vue";
 // utils
 import { useLocale } from "@/utils/useLocale";
@@ -12,12 +11,11 @@ import type { Verse, MapVersesByPage, VerseWord } from "@/types/verse"
 import type { Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
-// icons
-import { pauseOutline, playOutline, informationCircleOutline } from "ionicons/icons";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 // components
 import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
+import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
 
 const { params } = useRoute()
 const { getChapterNameByFirstVerse } = useChapterStore()
@@ -31,6 +29,7 @@ const props = defineProps<{
     verseTiming?: VerseTimingsProps
     verses?: Verse[]
     isLoading: boolean
+    isAudioLoading: boolean
     pagination?: Pagination | null
     styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "color", string>
 }>()
@@ -52,7 +51,7 @@ const mapVersesByPage = computed((): MapVersesByPage | undefined => {
 
 // Highlight Active Words
 const isWordHighlighted = (word: VerseWord) => {
-    if (props.verseTiming) {                        
+    if (props.verseTiming) {
         return props.verseTiming.wordLocation === word.location
     }
 };
@@ -74,15 +73,10 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
         <ion-content>
             <ion-card class="ion-padding" v-for="(verses, page) in mapVersesByPage" :key="page"
                 :id="`row-page-${page}`">
-                <div class="d-flex ion-justify-content-between">
-                    <ion-chip @click="$emit('update:playAudio', { audioID: verses[0].chapter_id })" color="primary">
-                        <ion-icon :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
-                        <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
-                    </ion-chip>
-                    <ion-button fill="clear" @click="$emit('update:surahInfo', verses[0].chapter_id)">
-                        <ion-icon :icon="informationCircleOutline" slot="icon-only"></ion-icon>
-                    </ion-button>
-                </div>
+                <card-header-buttons-component :chapter-id="verses[0].chapter_id" :is-playing="isPlaying"
+                    @update:play-audio="$emit('update:playAudio', $event)" :is-audio-loading="isAudioLoading"
+                    @update:surah-info="$emit('update:surahInfo', $event)" chapter-info>
+                </card-header-buttons-component>
                 <ion-card-header class="ion-text-center">
                     <ion-card-subtitle>{{ getChapterNameByFirstVerse(verses[0])?.bismillahPre ?
                         getLine('quranReader.textBismillah') : '' }}</ion-card-subtitle>
@@ -91,8 +85,6 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                     </ion-card-title>
                 </ion-card-header>
                 <ion-card-content class="ion-padding quran-reader-content-wrapper">
-                    <!-- <ion-grid>
-                        <ion-row> -->
                     <div class="verse-col" :id="`page-${page}`" size="12">
                         <div class="word-wrapper" v-for="verse in verses" :key="verse.id"
                             :id="`line-${verse.verse_number}`" :data-hizb-number="verse.hizb_number"
@@ -116,9 +108,6 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
                                 }}</ion-label>
                         </ion-item-divider>
                     </ion-col>
-                    <!-- </ion-row>
-                    </ion-grid> -->
-
                 </ion-card-content>
             </ion-card>
             <ion-infinite-scroll @ion-infinite="ionInfinite">

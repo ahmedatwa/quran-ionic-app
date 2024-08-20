@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted } from 'vue';
-import { IonContent, IonHeader, IonSegmentButton, IonButton } from '@ionic/vue';
-import { IonToolbar, IonSegment, IonLabel, IonPage, alertController } from '@ionic/vue';
+import { IonContent, IonPage, IonButton } from '@ionic/vue';
 // components
 import TranslationsViewComponent from '@/components/juz/TranslationsViewComponent.vue';
 import ReadingViewComponent from '@/components/juz/ReadingViewComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 import ChapterInfoModalComponent from '@/components/chapter/ChapterInfoModalComponent.vue';
+import SegmentsComponent from '@/components/common/SegmentsComponent.vue';
+
 import { useRoute } from 'vue-router';
 // stores
 import { useJuzStore } from "@/stores/JuzStore"
@@ -16,12 +17,10 @@ import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 // types
 import type { ChapterInfo } from '@/types/chapter';
 // utils
-import { useLocale } from '@/utils/useLocale';
 import { useSettings } from '@/utils/useSettings';
 import { useAlert } from '@/utils/useAlert';
 
 const currentSegment = ref("translations")
-const { getLine } = useLocale()
 const { presentAlert } = useAlert()
 const settings = useSettings()
 const juzStore = useJuzStore()
@@ -105,31 +104,21 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
 
 <template>
     <ion-page :data-juz-id="router.params.juzId" ref="pageRef">
-        <ion-header>
-            <ion-toolbar>
-                <ion-segment :value="currentSegment" @ion-change="handleSegmentChange">
-                    <ion-segment-button value="translations">
-                        <ion-label>{{ getLine('tabs.translations') }}</ion-label>
-                    </ion-segment-button>
-                    <ion-segment-button value="reading">
-                        <ion-label>{{ getLine('tabs.reading') }}</ion-label>
-                    </ion-segment-button>
-                </ion-segment>
-            </ion-toolbar>
-        </ion-header>
+        <segments-component :selected-segment="currentSegment"
+            @update:selected-segment="currentSegment = $event"></segments-component>
         <ion-content>
             <translations-view-component id="translations-juzs" :is-loading="juzStore.isLoading"
                 :is-playing="audioPlayerStore.isPlaying" @update:modal-value="getTranslationAlert"
                 :is-translations-view="currentSegment === 'translations'" @update:play-audio="playAudio"
                 :is-bismillah="selectedChapterBismillah" :styles="styles" :verses="juzStore.juzVersesByChapterMap"
                 :chapter-name="selectedChapterName.nameArabic" :verse-timing="audioPlayerStore.verseTiming"
-                @update:get-verses="getVerses" :pagination="pagination">
+                @update:get-verses="getVerses" :pagination="pagination" :is-audio-loading="audioPlayerStore.isLoading">
             </translations-view-component>
             <reading-view-component id="reading-juzs" :is-reading-view="currentSegment === 'reading'"
                 :is-playing="audioPlayerStore.isPlaying" :verses="juzStore.juzVersesByChapterMap"
                 @update:play-audio="playAudio" :is-loading="juzStore.isLoading" :styles="styles"
                 :verse-timing="audioPlayerStore.verseTiming" :pagination="pagination" @update:get-verses="getVerses"
-                @update:surah-info="getSurahInfo">
+                @update:surah-info="getSurahInfo" :is-audio-loading="audioPlayerStore.isLoading">
             </reading-view-component>
             <div>
                 <ion-button ref="chapterInfoButtonRef" id="juz-chapter-modal" class="ion-hide"></ion-button>
@@ -139,6 +128,5 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
         </ion-content>
         <audio-player-component :model-value="audioModelValue" @update:model-value="audioModelValue = $event">
         </audio-player-component>
-
     </ion-page>
 </template>
