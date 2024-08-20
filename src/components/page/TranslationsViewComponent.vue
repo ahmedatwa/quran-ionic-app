@@ -2,7 +2,7 @@
 import { ref, computed, watch } from "vue"
 import { IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
 import { IonContent, IonNote, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
-import { IonCol, IonRow, IonGrid, IonItem, IonCard } from "@ionic/vue";
+import { IonCol, IonRow, IonGrid, IonItem, IonCard, IonRefresher, IonRefresherContent } from "@ionic/vue";
 import { IonLabel, IonText } from "@ionic/vue";
 import { IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 // icons
@@ -12,13 +12,13 @@ import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
 import { useRoute, useRouter } from "vue-router";
-import { vIntersectionObserver } from "@vueuse/components";
 import { upperCaseFirst } from "@/utils/string"
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 import type { GroupVersesByChapterID, Pagination } from "@/types/page"
+import type { RefresherCustomEvent } from "@ionic/vue"
 // components
 import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
 import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
@@ -42,6 +42,7 @@ const props = defineProps<{
     isLoading: boolean
     isAudioLoading: boolean
     translatedBy?: string;
+    audioExperience: { autoScroll: boolean; tooltip: boolean };
     chapterName?: string
     isBismillah: string
     verses?: GroupVersesByChapterID
@@ -58,17 +59,14 @@ const emit = defineEmits<{
 }>();
 
 
-const onIntersectionObserver = ([{ isIntersecting, target, intersectionRatio }]: IntersectionObserverEntry[]) => {
-    if (isIntersecting && intersectionRatio >= 0.8) {
-        const verseNumber = Number(target.getAttribute("data-verse-number"));
-        intersectingVerseNumber.value = verseNumber
-    }
-}
-
-// For Element Scroll
-watch(intersectingVerseNumber, (newVerseNumber) => {
-    if (newVerseNumber) {
-        scrollToElement(`#verse-col-${newVerseNumber}`, cardRef.value.$el, 300)
+// scrolling based on verseNumber sent by audioStore
+watch(() => props.verseTiming, (t) => {
+    if (t?.verseNumber) {
+        const verseNumber = t.verseNumber
+        if (props.audioExperience.autoScroll && props.isPlaying) {
+            intersectingVerseNumber.value = t.verseNumber
+            scroll(verseNumber)
+        }
     }
 })
 
@@ -90,7 +88,7 @@ const setBookmarked = async (verse: Verse) => {
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     if (props.pagination?.next_page) {
-        emit("update:getVerses", { key: props.id, nextPage: props.pagination.next_page })
+        loadMoreVerses()
         setTimeout(() => ev.target.complete(), 500);
     } else {
         ev.target.complete()
@@ -111,11 +109,32 @@ const routeBackName = computed(() => {
     return upperCaseFirst(getLine("tabs.pages"))
 })
 
+const loadMoreVerses = () => {
+    if (props.pagination?.next_page) {
+        emit("update:getVerses", { key: props.id, nextPage: props.pagination?.next_page })
+    }
+}
+
+const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el, 300)
+
+const handleRefresh = (event: RefresherCustomEvent) => {
+    if (!props.pagination?.next_page) {
+        event.target?.complete();
+    }
+
+    setTimeout(() => {
+        loadMoreVerses()
+        event.target?.complete();
+    }, 500);
+};
 </script>
 <template>
     <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${pageId}`">
         <toolbar-component :route-back-label="routeBackName" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef">
+            <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+                <ion-refresher-content></ion-refresher-content>
+            </ion-refresher>
             <ion-card class="ion-padding card-wrapper" v-for="(verses, chapterId) in verses" :key="chapterId"
                 :id="`card-${chapterId}`" ref="cardRef">
                 <card-header-buttons-component :chapter-id="verses[0].chapter_id"
@@ -132,8 +151,7 @@ const routeBackName = computed(() => {
                 <hr>
                 <ion-item v-for="verse in verses" :key="verse.verse_number" :data-verse-number="verse.verse_number"
                     :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number"
-                    :id="`verse-col-${verse.verse_number}`"
-                    v-intersection-observer="[onIntersectionObserver, { root: cardRef, immediate: false }]">
+                    :id="`verse-col-${verse.verse_number}`">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
                             <ion-col size="11" class="translations-view-col">

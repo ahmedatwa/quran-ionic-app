@@ -11,8 +11,7 @@ import { scrollToElement } from "@/utils/useScrollToElement";
 import type { Verse, MapVersesByPage, VerseWord } from "@/types/verse"
 import type { Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
-import type { InfiniteScrollCustomEvent } from "@ionic/vue"
-import type { RefresherCustomEvent } from "@ionic/vue"
+import type { InfiniteScrollCustomEvent, RefresherCustomEvent } from "@ionic/vue"
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 // components
