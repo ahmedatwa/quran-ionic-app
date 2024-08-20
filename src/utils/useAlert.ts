@@ -9,7 +9,7 @@ type ToastParams = {
 };
 
 type AlertParams = {
-  header: string;
+  header?: string;
   message: string;
   buttons?: string[];
   id?: string;
@@ -30,7 +30,7 @@ export const useAlert = () => {
 
   const presentAlert = async (args: AlertParams) => {
     const alert = await alertController.create({
-      header: properCase(args.header),
+      header: args.header ? properCase(args.header) : '',
       subHeader: args.subHeader,
       message: args.message,
       id: args.id || "alert",

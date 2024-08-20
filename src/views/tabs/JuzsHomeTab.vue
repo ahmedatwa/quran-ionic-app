@@ -22,7 +22,7 @@ const handleSearch = (query: string) => {
 <template>
   <ion-page>
     <header-component :title="getLine('tabs.juzs')" :icon="newspaperOutline" @update:search-value="handleSearch"
-      search></header-component>
+      input-mode="numeric" type="number" search></header-component>
     <ion-content :fullscreen="true">
       <ion-list v-if="!juzStore.juzs.length">
         <ion-item v-for="n in 30" :key="n">
@@ -39,7 +39,7 @@ const handleSearch = (query: string) => {
           </ion-label>
           <div class="metadata-end-wrapper" slot="end">
             <ion-note color="medium">{{ juz.chapters?.length }}</ion-note>
-            <ion-icon color="medium" :icon="isRtl ? chevronBack :chevronForward"></ion-icon>
+            <ion-icon color="medium" :icon="isRtl ? chevronBack : chevronForward"></ion-icon>
           </div>
         </ion-item>
       </ion-list>

@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { IonActionSheet } from '@ionic/vue';
 import { Clipboard } from '@capacitor/clipboard';
+import { useAlert } from '@/utils/useAlert';
 // types
 import type { Verse } from "@/types/verse";
 
+const { presentAlert } = useAlert()
 const props = defineProps<{
     verse: Verse
     triggerProp: string
@@ -54,6 +56,11 @@ const copyText = async (text: string) => {
     await Clipboard.write({
         string: text
     });
+    
+    await presentAlert({
+        header: "Success",
+        message: "Verse Text Copied."
+    })
 }
 
 </script>

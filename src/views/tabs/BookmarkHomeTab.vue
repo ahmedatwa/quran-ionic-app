@@ -49,9 +49,9 @@ const getBookmarkedStorage = () => {
 
 const deleteBookmark = async (key: string) => {
     bookmarks.value = bookmarks.value.filter((b) => b.key !== key)
-    // delete db key
     await bookmarksBD.removeItem(key)
 }
+
 </script>
 
 <template>
