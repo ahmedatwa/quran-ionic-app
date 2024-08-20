@@ -28,7 +28,7 @@ const chapterId = computed(() => Number(params.chapterId))
 
 const props = defineProps<{
     id: string;
-    isReadingView: boolean
+    isReadingView?: boolean
     isPlaying: boolean
     verseTiming?: VerseTimingsProps
     verses?: Verse[]
@@ -104,7 +104,7 @@ const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumbe
 </script>
 
 <template>
-    <div class="ion-page" v-if="isReadingView" :id="`${id}-${chapterId}`">
+    <div class="ion-page" :id="`${id}-${chapterId}`">
         <toolbar-component :is-loading="isLoading" :route-back-label="getLine('tabs.chapters')"></toolbar-component>
         <ion-content ref="contentRef">
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">

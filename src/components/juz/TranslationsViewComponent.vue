@@ -36,7 +36,7 @@ const intersectingVerseNumber = ref<number>()
 
 const props = defineProps<{
     id: string;
-    isTranslationsView: boolean
+    isTranslationsView?: boolean
     isPlaying: boolean
     isLoading: boolean
     isAudioLoading: boolean
@@ -47,6 +47,7 @@ const props = defineProps<{
     verses?: juzVersesByPageMap
     pagination?: Pagination | null
     verseTiming?: VerseTimingsProps
+    activeAudioId?: number
     styles: Record<"fontSize" | "fontFamily" | "fontWeight", string>
 
 }>()
@@ -116,9 +117,13 @@ const handleRefresh = (event: RefresherCustomEvent) => {
         event.target?.complete();
     }, 500);
 };
+
+const isPlaying = (chapterId: number) => {
+    return props.isPlaying && chapterId === props.activeAudioId
+}
 </script>
 <template>
-    <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${juzId}`">
+    <div class="ion-page" :id="`translations-${id}-${juzId}`">
         <toolbar-component :route-back-label="getLine('tabs.juzs')" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true">
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
@@ -127,7 +132,7 @@ const handleRefresh = (event: RefresherCustomEvent) => {
             <ion-card class="ion-padding card-wrapper" ref="cardRef" v-for="(mappedVerses, chapterId) in verses"
                 :key="chapterId" :id="`card-${chapterId}`">
                 <card-header-buttons-component :chapter-id="mappedVerses[0].chapter_id"
-                    :verse-key="mappedVerses[0].verse_key" :is-playing="isPlaying"
+                    :verse-key="mappedVerses[0].verse_key" :is-playing="isPlaying(mappedVerses[0].chapter_id)"
                     @update:play-audio="$emit('update:playAudio', $event)" :is-audio-loading="isAudioLoading"
                     @update:language-modal-value="$emit('update:modalValue', $event)">
                 </card-header-buttons-component>

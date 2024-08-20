@@ -41,7 +41,7 @@ const intersectingVerseNumber = ref(1)
 
 const props = defineProps<{
     id: string;
-    isTranslationsView: boolean
+    isTranslationsView?: boolean
     isPlaying: boolean
     isLoading: boolean
     isAudioLoading: boolean
@@ -146,7 +146,7 @@ const handleRefresh = (event: RefresherCustomEvent) => {
 };
 </script>
 <template>
-    <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${chapterId}`">
+    <div class="ion-page" :id="`translations-${id}-${chapterId}`">
         <toolbar-component :route-back-label="getLine('tabs.chapters')" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef">
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">

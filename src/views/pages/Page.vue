@@ -28,11 +28,7 @@ const settings = useSettings()
 const transaltionStore = useTranslationsStore()
 const { selectedChapterName, selectedChapterBismillah, getchapterInfo } = useChapterStore()
 const audioPlayerStore = useAudioPlayerStore()
-
 const audioModelValue = ref(false)
-const handleSegmentChange = (ev: CustomEvent) => {
-    currentSegment.value = ev.detail.value
-}
 
 const pagination = computed(() => pageStore.selectedPage?.pagination)
 const pageRef = ref()
@@ -125,18 +121,20 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
             @update:selected-segment="currentSegment = $event"></segments-component>
         <ion-content>
             <translations-view-component id="translations-pages" :is-loading="pageStore.isLoading"
-                :is-playing="audioPlayerStore.isPlaying" :is-translations-view="currentSegment === 'translations'"
+                :is-playing="audioPlayerStore.isPlaying" v-if="currentSegment === 'translations'"
                 @update:play-audio="playAudio" :is-bismillah="selectedChapterBismillah" :styles="styles"
                 :verses="groupVersesByChapter" :chapter-name="selectedChapterName.nameArabic"
                 :audio-experience="audioPlayerStore.audioPlayerSetting" @update:modal-value="getTranslationAlert"
                 :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
-                :is-audio-loading="audioPlayerStore.isLoading">
+                :is-audio-loading="audioPlayerStore.isLoading"
+                :active-audio-id="audioPlayerStore.audioFiles?.chapter_id">
             </translations-view-component>
-            <reading-view-component id="reading-pages" :is-reading-view="currentSegment === 'reading'"
-                :is-playing="audioPlayerStore.isPlaying" :verses="groupVersesByChapter" @update:play-audio="playAudio"
-                @update:surah-info="getSurahInfo" :is-loading="pageStore.isLoading" :styles="styles"
+            <reading-view-component id="reading-pages" v-else :is-playing="audioPlayerStore.isPlaying"
+                :verses="groupVersesByChapter" @update:play-audio="playAudio" @update:surah-info="getSurahInfo"
+                :is-loading="pageStore.isLoading" :styles="styles"
                 :audio-experience="audioPlayerStore.audioPlayerSetting" :is-audio-loading="audioPlayerStore.isLoading"
-                :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination">
+                :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
+                :active-audio-id="audioPlayerStore.audioFiles?.chapter_id">
             </reading-view-component>
             <div>
                 <ion-button ref="chapterInfoButtonRef" id="page-chapter-modal" class="ion-hide"></ion-button>
