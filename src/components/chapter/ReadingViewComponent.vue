@@ -1,16 +1,18 @@
 <script lang="ts" setup>
-import { computed } from "vue"
+import { ref, computed, watch } from "vue"
 import { IonCol, IonCard, IonCardContent, IonInfiniteScrollContent } from "@ionic/vue";
-import { IonLabel, IonCardSubtitle, IonCardTitle, IonText } from "@ionic/vue";
+import { IonLabel, IonCardSubtitle, IonCardTitle, IonText, IonRefresher, IonRefresherContent } from "@ionic/vue";
 import { IonContent, IonItemDivider, IonCardHeader, IonInfiniteScroll } from "@ionic/vue";
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { useRoute } from "vue-router";
+import { scrollToElement } from "@/utils/useScrollToElement";
 // Types
 import type { Verse, MapVersesByPage, VerseWord } from "@/types/verse"
 import type { Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
+import type { RefresherCustomEvent } from "@ionic/vue"
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 // components
@@ -20,6 +22,9 @@ import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsCom
 const { params } = useRoute()
 const { getChapterNameByFirstVerse } = useChapterStore()
 const { getLine } = useLocale()
+const intersectingVerseNumber = ref(1)
+const contentRef = ref()
+const cardRef = ref()
 const chapterId = computed(() => Number(params.chapterId))
 
 const props = defineProps<{
@@ -28,6 +33,8 @@ const props = defineProps<{
     isPlaying: boolean
     verseTiming?: VerseTimingsProps
     verses?: Verse[]
+    audioExperience: { autoScroll: boolean; tooltip: boolean };
+    verseCount?: number
     isLoading: boolean
     isAudioLoading: boolean
     pagination?: Pagination | null
@@ -49,6 +56,23 @@ const mapVersesByPage = computed((): MapVersesByPage | undefined => {
     }
 });
 
+// scrolling based on verseNumber sent by audioStore
+watch(() => props.verseTiming, (t) => {
+    if (t?.verseNumber) {
+        const verseNumber = t.verseNumber
+        if (props.audioExperience.autoScroll && props.isPlaying) {
+            intersectingVerseNumber.value = t.verseNumber
+            scroll(verseNumber)
+        }
+    }
+})
+
+const loadMoreVerses = () => {
+    if (props.pagination?.next_page) {
+        emit("update:getVerses", { key: props.id, nextPage: props.pagination?.next_page })
+    }
+}
+
 // Highlight Active Words
 const isWordHighlighted = (word: VerseWord) => {
     if (props.verseTiming) {
@@ -57,22 +81,38 @@ const isWordHighlighted = (word: VerseWord) => {
 };
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
-    if (props.pagination?.next_page) {
-        emit("update:getVerses", { key: props.id, nextPage: props.pagination.next_page })
-        setTimeout(() => ev.target.complete(), 500);
-    } else {
+    if (props.verses?.length === props.verseCount) {
         ev.target.complete()
+    } else {
+        loadMoreVerses()
+        setTimeout(() => ev.target.complete(), 500);
     }
 }
+
+const handleRefresh = (event: RefresherCustomEvent) => {
+    if (props.pagination?.next_page) {
+        setTimeout(() => {
+            loadMoreVerses()
+            event.target?.complete();
+        }, 500);
+    } else {
+        event.target?.complete();
+    }
+};
+
+const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el, 300)
 
 </script>
 
 <template>
     <div class="ion-page" v-if="isReadingView" :id="`${id}-${chapterId}`">
         <toolbar-component :is-loading="isLoading" :route-back-label="getLine('tabs.chapters')"></toolbar-component>
-        <ion-content>
-            <ion-card class="ion-padding" v-for="(verses, page) in mapVersesByPage" :key="page"
-                :id="`row-page-${page}`">
+        <ion-content ref="contentRef">
+            <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+                <ion-refresher-content></ion-refresher-content>
+            </ion-refresher>
+            <ion-card class="ion-padding" v-for="(verses, page) in mapVersesByPage" :key="page" :id="`row-page-${page}`"
+                ref="cardRef">
                 <card-header-buttons-component :chapter-id="verses[0].chapter_id" :is-playing="isPlaying"
                     @update:play-audio="$emit('update:playAudio', $event)" :is-audio-loading="isAudioLoading"
                     @update:surah-info="$emit('update:surahInfo', $event)" chapter-info>

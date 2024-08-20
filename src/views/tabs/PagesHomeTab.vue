@@ -32,7 +32,7 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
 
 <template>
   <ion-page>
-    <header-component :title="getLine('tabs.pages')" :icon="documentOutline"
+    <header-component :title="getLine('tabs.pages')" :icon="documentOutline" input-mode="numeric" type="number"
       @update:search-value=" pageStore.searchValue = $event" search></header-component>
     <ion-content :fullscreen="true">
       <ion-list v-if="!pages?.length">

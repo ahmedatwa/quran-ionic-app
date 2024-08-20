@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { IonHeader, IonToolbar, IonTitle, IonSearchbar } from "@ionic/vue";
-import { IonIcon, IonLabel, IonProgressBar } from "@ionic/vue";
+import { IonIcon, IonLabel, IonProgressBar, } from "@ionic/vue";
 // icons
 import { documentOutline, cogOutline, bookOutline, newspaperOutline } from 'ionicons/icons';
 import { useLocale } from "@/utils/useLocale";
@@ -14,6 +14,8 @@ defineProps<{
     collapse?: "condense" | "fade"
     translucent?: boolean
     searchPlaceholder?: string;
+    inputMode?: "decimal" | "email" | "none" | "numeric" | "search" | "tel" | "text" | "url"
+    type?: "email" | "number" | "password" | "search" | "tel" | "text" | "url"
     icon: typeof documentOutline | typeof bookOutline | typeof newspaperOutline | typeof cogOutline
 }>()
 
@@ -36,8 +38,9 @@ const handleInput = (ev: CustomEvent) => {
             </ion-title>
         </ion-toolbar>
         <ion-toolbar v-if="search">
-            <ion-searchbar @ion-input="handleInput" :animated="true" :placeholder="searchPlaceholder"
-                autocomplete="on" inputmode="text" type="text"></ion-searchbar>
+            <ion-searchbar name="filter" @ion-input="handleInput" :animated="true" :placeholder="searchPlaceholder"
+                autocomplete="on" :inputmode="inputMode ? inputMode : 'text'"
+                :type="type ? type : 'text'"></ion-searchbar>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
         </ion-toolbar>
     </ion-header>

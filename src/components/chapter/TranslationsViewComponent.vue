@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, computed, watch, onMounted, onUnmounted } from "vue"
-import { IonIcon, IonCardHeader, IonItem, IonGrid, IonRow } from "@ionic/vue";
+import { IonIcon, IonCardHeader, IonItem, IonGrid, IonRow, IonRefresher, IonRefresherContent } from "@ionic/vue";
 import { IonContent, IonNote, IonCardTitle, IonCardSubtitle } from "@ionic/vue";
 import { IonLabel, IonText, IonCol, IonCard, IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 import { App } from '@capacitor/app';
@@ -12,11 +12,13 @@ import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
 import { useRoute } from "vue-router";
+import { useAlert } from '@/utils/useAlert';
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { Pagination } from "@/types/chapter";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
+import type { RefresherCustomEvent } from "@ionic/vue"
 
 // components
 import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
@@ -31,6 +33,7 @@ const { getLine } = useLocale()
 const { params } = useRoute()
 const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
 const { getChapterName } = useChapterStore()
+const { presentAlert } = useAlert()
 const contentRef = ref()
 const cardRef = ref()
 const chapterId = computed(() => Number(params.chapterId))
@@ -73,6 +76,10 @@ const setBookmarked = async (verse: Verse) => {
         setStorage(key, value)
     })
 
+    await presentAlert({
+        message: "Verse Text Copied.",
+    })
+
 };
 
 const isWordHighlighted = (word: VerseWord) => {
@@ -86,15 +93,6 @@ const loadMoreVerses = () => {
         emit("update:getVerses", { key: props.id, nextPage: props.pagination?.next_page })
     }
 }
-
-
-watch(() => props.verseTiming, (v) => {
-    if (v) {
-        if (v?.verseNumber === props.lastChapterVerse || v?.verseNumber >= (props.lastChapterVerse - 5)) {
-            loadMoreVerses()
-        }
-    }
-})
 
 onMounted(() => {
     App.addListener('appStateChange', ({ isActive }) => {
@@ -135,11 +133,25 @@ const computedVerses = computed(() => {
             .sort((a, b) => a.verse_number - b.verse_number)
     }
 })
+
+const handleRefresh = (event: RefresherCustomEvent) => {
+    if (!props.pagination?.next_page) {
+        event.target?.complete();
+    }
+
+    setTimeout(() => {
+        loadMoreVerses()
+        event.target?.complete();
+    }, 500);
+};
 </script>
 <template>
     <div class="ion-page" v-show="isTranslationsView" :id="`translations-${id}-${chapterId}`">
         <toolbar-component :route-back-label="getLine('tabs.chapters')" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef">
+            <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+                <ion-refresher-content></ion-refresher-content>
+            </ion-refresher>
             <ion-card class="ion-padding card-wrapper" ref="cardRef">
                 <verse-seach-input-component :verse-count="verseCount"
                     @update:search-value="verseSearchInput = $event"></verse-seach-input-component>
