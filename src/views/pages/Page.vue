@@ -128,14 +128,15 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
                 :is-playing="audioPlayerStore.isPlaying" :is-translations-view="currentSegment === 'translations'"
                 @update:play-audio="playAudio" :is-bismillah="selectedChapterBismillah" :styles="styles"
                 :verses="groupVersesByChapter" :chapter-name="selectedChapterName.nameArabic"
-                @update:modal-value="getTranslationAlert" :verse-timing="audioPlayerStore.verseTiming"
-                @update:get-verses="getVerses" :pagination="pagination" :is-audio-loading="audioPlayerStore.isLoading">
+                :audio-experience="audioPlayerStore.audioPlayerSetting" @update:modal-value="getTranslationAlert"
+                :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
+                :is-audio-loading="audioPlayerStore.isLoading">
             </translations-view-component>
             <reading-view-component id="reading-pages" :is-reading-view="currentSegment === 'reading'"
                 :is-playing="audioPlayerStore.isPlaying" :verses="groupVersesByChapter" @update:play-audio="playAudio"
                 @update:surah-info="getSurahInfo" :is-loading="pageStore.isLoading" :styles="styles"
-                :is-audio-loading="audioPlayerStore.isLoading" :verse-timing="audioPlayerStore.verseTiming"
-                @update:get-verses="getVerses" :pagination="pagination">
+                :audio-experience="audioPlayerStore.audioPlayerSetting" :is-audio-loading="audioPlayerStore.isLoading"
+                :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination">
             </reading-view-component>
             <div>
                 <ion-button ref="chapterInfoButtonRef" id="page-chapter-modal" class="ion-hide"></ion-button>

@@ -112,13 +112,15 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
                 :is-translations-view="currentSegment === 'translations'" @update:play-audio="playAudio"
                 :is-bismillah="selectedChapterBismillah" :styles="styles" :verses="juzStore.juzVersesByChapterMap"
                 :chapter-name="selectedChapterName.nameArabic" :verse-timing="audioPlayerStore.verseTiming"
-                @update:get-verses="getVerses" :pagination="pagination" :is-audio-loading="audioPlayerStore.isLoading">
+                :audio-experience="audioPlayerStore.audioPlayerSetting" @update:get-verses="getVerses"
+                :pagination="pagination" :is-audio-loading="audioPlayerStore.isLoading">
             </translations-view-component>
             <reading-view-component id="reading-juzs" :is-reading-view="currentSegment === 'reading'"
                 :is-playing="audioPlayerStore.isPlaying" :verses="juzStore.juzVersesByChapterMap"
                 @update:play-audio="playAudio" :is-loading="juzStore.isLoading" :styles="styles"
-                :verse-timing="audioPlayerStore.verseTiming" :pagination="pagination" @update:get-verses="getVerses"
-                @update:surah-info="getSurahInfo" :is-audio-loading="audioPlayerStore.isLoading">
+                :audio-experience="audioPlayerStore.audioPlayerSetting" :verse-timing="audioPlayerStore.verseTiming"
+                :pagination="pagination" @update:get-verses="getVerses" @update:surah-info="getSurahInfo"
+                :is-audio-loading="audioPlayerStore.isLoading">
             </reading-view-component>
             <div>
                 <ion-button ref="chapterInfoButtonRef" id="juz-chapter-modal" class="ion-hide"></ion-button>
