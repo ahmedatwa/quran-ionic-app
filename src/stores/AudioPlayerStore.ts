@@ -14,8 +14,10 @@ import { useChapterStore } from "@/stores/ChapterStore";
 import { useStorage } from "@/utils/useStorage";
 import { useBlob } from "@/utils/useBlob";
 import { useAlert } from "@/utils/useAlert";
+import { milliSecondsToSeconds } from "@/utils/datetime";
 
 export const useAudioPlayerStore = defineStore("audio-player-store", () => {
+  const audioEl = ref<HTMLAudioElement>();
   const { getChapterNameByChapterId, getChapter, TOTAL_CHAPTERS } =
     useChapterStore();
   const isVisible = ref(false);
@@ -23,7 +25,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const settingsDB = useStorage("__settingsDB");
   const audioDB = useStorage("__audioDB");
   const { encodeBlobToBase64 } = useBlob();
-  const { presentToast, presentAlert } = useAlert();
+  const { presentToast, presentAlert, presentLoading } = useAlert();
   const audioFiles = ref<AudioFile | null>(null);
   const autoStartPlayer = ref(false);
   const chapterId = ref<number>();
@@ -162,12 +164,12 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
    * @param audioSrc
    * @return void
    */
-  const playNext = async (audioSrc?: string) => {
+  const playNext = async (__ev?: boolean) => {
     if (chapterId.value) {
       chapterId.value =
         chapterId.value >= TOTAL_CHAPTERS ? 1 : chapterId.value + 1;
       // get the audio files
-      await getAudio({ audioID: chapterId.value }, audioSrc);
+      await getAudio({ audioID: chapterId.value });
     }
   };
 
@@ -225,6 +227,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
 
   const downloadAudioFile = async () => {
     isLoading.value = true;
+    await presentLoading("Downloading please wait...");
     if (audioFiles.value) {
       const audioUrl = audioFiles.value.audio_url;
       const key = `${String(audioFiles.value.reciterId)}-${
@@ -254,11 +257,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
         })
         .finally(async () => {
           isLoading.value = false;
-          presentAlert({
-            header: String(selectedReciter.value?.name),
-            subHeader: selectedReciter.value?.style.name,
-            message: chapterName.value + " File has been downloaded!",
-          });
+          await presentLoading("Downloading please wait...", true);
         });
     }
   };
@@ -273,7 +272,49 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     listenerActive.value = false;
   };
 
+  // Start
+  const playAudio = async () => {
+    await audioEl.value?.play();
+    isPlaying.value = true;
+    isPaused.value = false;
+  };
+
+  const pauseAudio = () => {
+    audioEl.value?.pause();
+    isPlaying.value = false;
+    isPaused.value = true;
+  };
+
+  const changeMediaVolume = async (volume: number) => {
+    if (audioEl.value) {
+      mediaVolume.value = volume;
+      audioEl.value.volume = mediaVolume.value / 100;
+    }
+  };
+
+  const handleSelectedReciter = (reciter: Recitations) => {
+    selectedReciter.value = reciter;
+  };
+
+  const playbackSeek = (seekValue: number) => {
+    if (audioEl.value) {
+      progressTimer.value = seekValue;
+      audioEl.value.currentTime = milliSecondsToSeconds(seekValue);
+    }
+  };
+
+  const handlePlay = () => {
+    isPlaying.value ? pauseAudio() : playAudio();
+  };
+
   return {
+    audioEl,
+    playAudio,
+    pauseAudio,
+    changeMediaVolume,
+    handleSelectedReciter,
+    playbackSeek,
+    handlePlay,
     audioFiles,
     isLoading,
     playbackSpeeds,
