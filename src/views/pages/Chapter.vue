@@ -58,16 +58,8 @@ const isPlaying = computed(() => audioPlayerStore.isPlaying
     && audioPlayerStore.chapterId === chapterStore.selectedChapter?.id)
 
 const playAudio = async (event: { audioID: number, verseKey?: string }) => {
-    if (isPlaying.value) {
-        audioPlayerStore.isPaused = true
-        audioPlayerStore.isResumed = false;
-        audioPlayerStore.isPlaying = false;
-        return;
-    }
     if (event.audioID === audioPlayerStore.chapterId) {
-        audioPlayerStore.isResumed = true;
-        audioPlayerStore.isPaused = false
-        audioPlayerStore.isPlaying = true;
+        audioPlayerStore.handlePlay();
         return;
     }
     audioPlayerStore.resetValues()
@@ -129,8 +121,8 @@ const getSurahInfo = async (ev: number) => {
                 @update:get-verses="getVerses" :pagination="pagination" @update:modal-value="getTranslationAlert"
                 :audio-experience="audioPlayerStore.audioPlayerSetting">
             </translations-view-component>
-            <reading-view-component id="reading-chapters" v-else
-                :is-playing="isPlaying" :verses="verses" :is-loading="chapterStore.isLoading.verses" :styles="styles"
+            <reading-view-component id="reading-chapters" v-else :is-playing="isPlaying" :verses="verses"
+                :is-loading="chapterStore.isLoading.verses" :styles="styles"
                 :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses"
                 :is-audio-loading="audioPlayerStore.isLoading" @update:surah-info="getSurahInfo"
                 :pagination="pagination" @update:play-audio="playAudio"

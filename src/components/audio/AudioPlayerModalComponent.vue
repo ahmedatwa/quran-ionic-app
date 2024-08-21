@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from "vue"
 import { IonButtons, IonButton, IonHeader, IonToolbar, IonSkeletonText, IonList } from "@ionic/vue"
-import { IonContent, modalController, IonRow, IonLabel, IonThumbnail, IonItem } from '@ionic/vue';
+import { IonContent, modalController, IonRow, IonLabel, IonThumbnail, IonItem, IonSpinner } from '@ionic/vue';
 import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonText, IonListHeader } from '@ionic/vue';
 import { IonItemOptions, IonItemOption, IonItemSliding, IonModal } from "@ionic/vue";
 // ionicons
 import { playOutline, playBackOutline, playForwardOutline, playCircleOutline } from 'ionicons/icons';
-import { musicalNoteOutline, cloudDownloadOutline, downloadOutline } from 'ionicons/icons';
+import { musicalNoteOutline, downloadOutline } from 'ionicons/icons';
 import { pauseOutline, chevronDownOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
 import { repeatOutline } from 'ionicons/icons';
 // stores
@@ -23,11 +23,13 @@ const modalRef = ref()
 const { chapters, getVerseByVerseKey } = useChapterStore()
 const { getLine, isRtl } = useLocale()
 const isImgLoading = ref(true)
+const downloadedKeys = ref<string[]>([])
 const { storageKeys } = useStorage("__audioDB")
 const dismiss = () => modalController.dismiss(null, 'cancel');
 
 const props = defineProps<{
     isPlaying: boolean
+    isLoading: boolean
     verseTiming?: VerseTimingsProps
     selectedReciter?: Recitations
     audioFiles: AudioFile | null
@@ -66,7 +68,6 @@ const getCurrentVerseData = computed(() => {
     }
 })
 
-const downloadedKeys = ref<string[]>()
 onMounted(async () => {
     const result = await storageKeys()
     if (result) downloadedKeys.value = result
@@ -75,11 +76,15 @@ onMounted(async () => {
 const isDownloadDisabled = (reciterID: string | number, audioID: string | number) => {
     const key = String(reciterID).concat("-").concat(String(audioID))
     if (downloadedKeys.value) {
-        if (downloadedKeys.value.includes(key)) return true
+        return downloadedKeys.value.includes(key)
     }
-    return false
 }
 
+const download = (reciterId: string, chapterId: string) => {
+    const key = reciterId.concat("-").concat(chapterId)
+    downloadedKeys.value?.push(key)
+    emit('update:download', true)
+}
 </script>
 
 <template>
@@ -147,7 +152,8 @@ const isDownloadDisabled = (reciterID: string | number, audioID: string | number
                     </ion-col>
                     <ion-col>
                         <ion-button fill="clear" @click="$emit('update:playAudio', true)">
-                            <ion-icon slot="icon-only" :icon="isPlaying ? pauseOutline : playOutline"
+                            <ion-spinner v-if="isLoading"></ion-spinner>
+                            <ion-icon v-else slot="icon-only" :icon="isPlaying ? pauseOutline : playOutline"
                                 color="primary"></ion-icon>
                         </ion-button>
                     </ion-col>
@@ -166,22 +172,7 @@ const isDownloadDisabled = (reciterID: string | number, audioID: string | number
                             <ion-icon slot="icon-only" :icon="repeatOutline" color="primary"></ion-icon>
                         </ion-button>
                     </ion-col>
-                    <!-- <ion-col>
-                        <ion-button fill="clear" @click="$emit('update:download', true)"
-                            :disabled="isDownloadDisabled(String(audioFiles?.reciterId), String(audioFiles?.chapter_id))">
-                            <ion-icon slot="icon-only" :icon="cloudDownloadOutline" color="danger"></ion-icon>
-                        </ion-button>
-                    </ion-col> -->
                 </ion-row>
-                <!-- <ion-row class="ion-justify-content-center">
-                    <ion-col size="12">
-                        <ion-range aria-label="Volume" :pin="true"
-                            :pin-formatter="pinFormatter" :value="mediaVolume" :min="0" :max="100">
-                            <ion-icon slot="start" :icon="volumeOffOutline"></ion-icon>
-                            <ion-icon slot="end" :icon="volumeHighOutline"></ion-icon>
-                        </ion-range>
-                    </ion-col>
-                </ion-row> -->
                 <ion-row class="ion-justify-content-center ion-margin-vertical">
                     <ion-col size="12">
                         <ion-list-header class="ion-margin-bottom">
@@ -202,12 +193,12 @@ const isDownloadDisabled = (reciterID: string | number, audioID: string | number
                                 <ion-item-options slot="end">
                                     <ion-item-option
                                         :color="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id)) ? 'medium' : 'success'"
-                                        @click="$emit('update:download', true)"
+                                        @click="download(String(audioFiles?.reciterId), String(chapter.id))"
                                         :disabled="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id))">
                                         <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
                                     </ion-item-option>
                                     <ion-item-option color="primary" @click="$emit('update:playChapter', chapter.id)"
-                                        :disabled="audioFiles?.chapter_id === chapter.id">
+                                        :disabled="audioFiles?.chapter_id === chapter.id && isPlaying">
                                         <ion-icon slot="icon-only" :icon="playCircleOutline"></ion-icon>
                                     </ion-item-option>
                                 </ion-item-options>

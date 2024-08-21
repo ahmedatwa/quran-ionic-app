@@ -12,6 +12,7 @@ import { getLangFullLocale } from "@/utils/locale"
 import { useLocale } from "@/utils/useLocale"
 import { useAlert } from "@/utils/useAlert";
 import { makeWordLocation, getVerseNumberFromKey, getChapterIdfromKey } from "@/utils/verse"
+import { useMediaSession } from "@/utils/useMediaSession";
 // types
 import type { VerseTimings, VerseTimingSegments, Recitations } from "@/types/audio"
 // stores
@@ -24,6 +25,7 @@ const metaStore = useMetaStore();
 const audioPlayerRef = ref<HTMLAudioElement>()
 const { getLocale } = useLocale()
 const { presentAlert } = useAlert()
+const { setMediaSession } = useMediaSession(audioPlayerRef)
 
 defineProps<{
     modelValue: boolean
@@ -33,31 +35,9 @@ const emit = defineEmits<{
     "update:modelValue": [value: boolean]
 }>()
 
-
-const playAudio = () => {
-    if (audioPlayerRef.value?.paused) {
-        audioPlayerRef.value.play();
-        audioPlayerStore.isPlaying = true;
-        audioPlayerStore.isPaused = false
-    } else {
-        audioPlayerRef.value?.pause();
-        audioPlayerStore.isPlaying = false;
-        audioPlayerStore.isPaused = true
-    }
-};
-
-watch(() => audioPlayerStore.isPaused, (paused) => {
-    if (paused) {
-        playAudio()
-    }
+watch(audioPlayerRef, (audioEl) => {
+    if (audioEl) audioPlayerStore.audioEl = audioEl
 })
-
-watch(() => audioPlayerStore.isResumed, (resume) => {
-    if (resume) {
-        playAudio()
-    }
-})
-
 
 const onProgress = () => {
     if (
@@ -103,6 +83,7 @@ const playbackEnded = async () => {
             break;
         case "none":
             audioPlayerStore.isPlaying = false;
+            audioPlayerStore.isPaused = true
             audioPlayerStore.listenerActive = false;
             audioPlayerStore.verseTiming = undefined
             cleanupListeners();
@@ -162,14 +143,6 @@ const loadedData = () => {
     }
 };
 
-const playbackSeek = (seekValue: number) => {
-    console.log(seekValue);
-
-    if (audioPlayerRef.value) {
-        audioPlayerStore.progressTimer = seekValue
-        audioPlayerRef.value.currentTime = seekValue / 1000
-    }
-};
 
 const loadMetaData = () => {
     if (audioPlayerStore.chapterName) {
@@ -231,44 +204,19 @@ const loadMetaData = () => {
             },
         ]);
 
-
-        if ("mediaSession" in navigator) {
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: audioPlayerStore.chapterName,
-                artist: audioPlayerStore.selectedReciter.name,
-                album: "Quran",
-                artwork: [
-                    {
-                        src: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
-                        sizes: "96x96",
-                        type: "image/jpg",
-                    },
-                ],
-            });
-
-            navigator.mediaSession.setActionHandler("play", () => {
-                playAudio();
-            });
-            navigator.mediaSession.setActionHandler("pause", () => {
-                playAudio();
-            });
-
-            navigator.mediaSession.setActionHandler("seekto", ({ seekTime }) => {
-                if (seekTime) {
-                    const time = secondsToMilliSeconds(seekTime)
-                    playbackSeek(time);
-                }
-            });
-
-            // Play next
-            navigator.mediaSession.setActionHandler("nexttrack", () => {
-                audioPlayerStore.playNext()
-            });
-            // Play prev
-            navigator.mediaSession.setActionHandler("previoustrack", () => {
-                audioPlayerStore.playPrevious();
-            });
-        }
+        // Media Controls
+        setMediaSession({
+            title: String(audioPlayerStore.chapterName),
+            artist: audioPlayerStore.selectedReciter.name,
+            album: "Quran",
+            artwork: [
+                {
+                    src: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
+                    sizes: "96x96",
+                    type: "image/jpg",
+                },
+            ],
+        })
     }
 
     // controls for android 
@@ -341,23 +289,8 @@ const closePlayer = () => {
     cleanupListeners()
 }
 
-const changeMediaVolume = async (volume: number) => {
-    if (audioPlayerRef.value) {
-        audioPlayerStore.mediaVolume = volume
-        audioPlayerRef.value.volume = audioPlayerStore.mediaVolume / 100
-    }
-}
-
 const playChapterAudio = (audioID: number) => {
     audioPlayerStore.getAudio({ audioID })
-}
-
-const handleSelectedReciter = (reciter: Recitations) => {
-    audioPlayerStore.selectedReciter = reciter
-}
-
-const playNext = (_ev: boolean) => {
-    audioPlayerStore.playNext()
 }
 
 </script>
@@ -378,7 +311,7 @@ const playNext = (_ev: boolean) => {
                     </ion-chip>
                 </div>
                 <ion-buttons slot="end">
-                    <ion-button fill="clear" @click="playAudio" size="small">
+                    <ion-button fill="clear" @click="audioPlayerStore.handlePlay" size="small">
                         <ion-spinner v-if="audioPlayerStore.isLoading"></ion-spinner>
                         <ion-icon slot="icon-only" :icon="audioPlayerStore.isPlaying ? pauseOutline : playOutline"
                             v-else></ion-icon>
@@ -393,20 +326,22 @@ const playNext = (_ev: boolean) => {
                         :type="`audio/${audioPlayerStore.audioFiles?.format}`" @pause="audioPlayerStore.playbackPaused"
                         @ended="playbackEnded" @playing="audioPlayerStore.playbackPlaying"
                         @timeupdate="playbackListener" @canplaythrough="canPlayThrough" @loadeddata="loadedData"
-                        @progress="onProgress" @loadedmetadata="loadMetaData" @seek="playbackSeek">
+                        @progress="onProgress" @loadedmetadata="loadMetaData" @seek="audioPlayerStore.playbackSeek">
                     </audio>
                 </div>
             </ion-toolbar>
             <audio-player-modal-component trigger="audio-modal" :is-playing="audioPlayerStore.isPlaying"
-                :verse-timing="audioPlayerStore.verseTiming" :selected-reciter="audioPlayerStore.selectedReciter"
-                :audio-files="audioPlayerStore.audioFiles" :chapter-name="audioPlayerStore.chapterName"
-                :loop-audio="audioPlayerStore.loopAudio" :media-volume="audioPlayerStore.mediaVolume"
-                :map-recitions="audioPlayerStore.mapRecitions" :progress-timer="audioPlayerStore.progressTimer"
-                @update:change-volume="changeMediaVolume" @update:seek="playbackSeek"
+                :is-loading="audioPlayerStore.isLoading" :verse-timing="audioPlayerStore.verseTiming"
+                :selected-reciter="audioPlayerStore.selectedReciter" :audio-files="audioPlayerStore.audioFiles"
+                :chapter-name="audioPlayerStore.chapterName" :loop-audio="audioPlayerStore.loopAudio"
+                :media-volume="audioPlayerStore.mediaVolume" :map-recitions="audioPlayerStore.mapRecitions"
+                :progress-timer="audioPlayerStore.progressTimer"
+                @update:change-volume="audioPlayerStore.changeMediaVolume" @update:seek="audioPlayerStore.playbackSeek"
                 @update:download="audioPlayerStore.downloadAudioFile" @update:play-chapter="playChapterAudio"
-                @update:play-next="playNext" @update:play-prev="audioPlayerStore.playPrevious()"
-                @update:play-audio="playAudio" @update:loop-audio="audioPlayerStore.loopAudio = $event"
-                @update:selected-reciter="handleSelectedReciter">
+                @update:play-next="audioPlayerStore.playNext" @update:play-prev="audioPlayerStore.playPrevious()"
+                @update:play-audio="audioPlayerStore.handlePlay"
+                @update:loop-audio="audioPlayerStore.loopAudio = $event"
+                @update:selected-reciter="audioPlayerStore.handleSelectedReciter">
             </audio-player-modal-component>
         </ion-footer>
     </Transition>

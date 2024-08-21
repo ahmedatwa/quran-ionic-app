@@ -1,4 +1,8 @@
-import { toastController, alertController } from "@ionic/vue";
+import {
+  toastController,
+  alertController,
+  loadingController,
+} from "@ionic/vue";
 import { properCase } from "@/utils/string";
 
 type ToastParams = {
@@ -30,7 +34,7 @@ export const useAlert = () => {
 
   const presentAlert = async (args: AlertParams) => {
     const alert = await alertController.create({
-      header: args.header ? properCase(args.header) : '',
+      header: args.header ? properCase(args.header) : "",
       subHeader: args.subHeader,
       message: args.message,
       id: args.id || "alert",
@@ -40,5 +44,18 @@ export const useAlert = () => {
     await alert.present();
   };
 
-  return { presentToast, presentAlert };
+  const presentLoading = async (
+    message: string = "Loading please wait...",
+    dismiss?: boolean,
+    duration: number = 0
+  ) => {
+    const loading = await loadingController.create({
+      message,
+      duration,
+    });
+    
+    dismiss ? await loadingController.dismiss() :  await loading.present()
+  };
+
+  return { presentToast, presentAlert, presentLoading };
 };
