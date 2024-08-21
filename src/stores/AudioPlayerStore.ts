@@ -224,6 +224,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   };
 
   const downloadAudioFile = async () => {
+    isLoading.value = true;
     if (audioFiles.value) {
       const audioUrl = audioFiles.value.audio_url;
       const key = `${String(audioFiles.value.reciterId)}-${
@@ -252,7 +253,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
           await presentToast({ message: String(error) });
         })
         .finally(async () => {
-          isDownloadSuccess.value = true;
+          isLoading.value = false;
           presentAlert({
             header: String(selectedReciter.value?.name),
             subHeader: selectedReciter.value?.style.name,
