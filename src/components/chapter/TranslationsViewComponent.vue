@@ -41,6 +41,7 @@ const intersectingVerseNumber = ref(1)
 
 const props = defineProps<{
     id: string;
+    downloadProgress: string | number
     isTranslationsView?: boolean
     isPlaying: boolean
     isLoading: boolean
@@ -127,11 +128,8 @@ watch(() => props.verseTiming, (t) => {
 const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el, 300)
 
 const computedVerses = computed(() => {
-    if (props.verses) {
-        return props.verses
-            .filter((v) => v.verse_number.toString().includes(verseSearchInput.value))
-            .sort((a, b) => a.verse_number - b.verse_number)
-    }
+    return props.verses?.filter((v) => v.verse_number.toString().includes(verseSearchInput.value))
+        .sort((a, b) => a.verse_number - b.verse_number)
 })
 
 const handleRefresh = (event: RefresherCustomEvent) => {
@@ -156,7 +154,8 @@ const handleRefresh = (event: RefresherCustomEvent) => {
                 <verse-seach-input-component :verse-count="verseCount"
                     @update:search-value="verseSearchInput = $event"></verse-seach-input-component>
                 <card-header-buttons-component :chapter-id="chapterId" :is-playing="isPlaying"
-                    @update:play-audio="$emit('update:playAudio', $event)" :is-audio-loading="isAudioLoading"
+                    :download-progress="downloadProgress" @update:play-audio="$emit('update:playAudio', $event)"
+                    :is-audio-loading="isAudioLoading"
                     @update:language-modal-value="$emit('update:modalValue', $event)">
                 </card-header-buttons-component>
                 <ion-card-header class="ion-text-center">

@@ -4,6 +4,7 @@ import { newspaperOutline, documentOutline, bookOutline } from 'ionicons/icons';
 import { cogOutline, bookmarkOutline } from 'ionicons/icons';
 // utils
 import { useLocale } from '@/utils/useLocale';
+import AudioFabComponent from '@/components/audio/AudioFabComponent.vue';
 
 const { getLine } = useLocale()
 
@@ -36,5 +37,6 @@ const { getLine } = useLocale()
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
+    <audio-fab-component />
   </ion-page>
 </template>

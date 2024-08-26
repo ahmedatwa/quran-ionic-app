@@ -40,6 +40,7 @@ export default {
     autoDownload: "تنزيل الصوت تلقائيًا",
     keepAwake: "منع النوم أثناء التشغيل",
     highlightedWordColor: "لون الكلمة",
+     fab: "زر الصوت الرائع"
   },
   bookmark: {
     title: "الإشارات المرجعية",
@@ -71,5 +72,6 @@ export default {
     prevJuz: "الجزء السابق",
     startJuz: "Start of Juz",
     loadingChapterInfo: "جارٍ تحميل معلومات السورة...",
+    textDowloading: "جارٍ التنزيل..."
   },
 };

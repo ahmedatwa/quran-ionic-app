@@ -45,11 +45,13 @@ export const useAlert = () => {
   };
 
   const presentLoading = async (
-    message: string = "Loading please wait...",
     dismiss?: boolean,
-    duration: number = 0
+    message: string = "Loading please wait...",
+    duration: number = 0,
+    id?: "loading-spinner",
   ) => {
     const loading = await loadingController.create({
+      id,
       message,
       duration,
     });

@@ -113,9 +113,9 @@ const getSurahInfo = async (ev: number) => {
         <ion-content>
             <translations-view-component id="translations-chapters" :is-loading="chapterStore.isLoading.verses"
                 :is-playing="isPlaying" v-if="currentSegment === 'translations'"
-                :is-audio-loading="audioPlayerStore.isLoading" @update:play-audio="playAudio"
-                :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles" :verses="verses"
-                :chapter-name="chapterStore.selectedChapterName.nameArabic"
+                :download-progress="audioPlayerStore.downloadProgress" :is-audio-loading="audioPlayerStore.isLoading"
+                @update:play-audio="playAudio" :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles"
+                :verses="verses" :chapter-name="chapterStore.selectedChapterName.nameArabic"
                 :last-chapter-verse="chapterStore.getLastVerseNumberOfChapter"
                 :verse-count="chapterStore.selectedChapter?.versesCount" :verse-timing="audioPlayerStore.verseTiming"
                 @update:get-verses="getVerses" :pagination="pagination" @update:modal-value="getTranslationAlert"

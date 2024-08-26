@@ -8,6 +8,7 @@ import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
 import { useStorage } from '@/utils/useStorage';
 import { useLocale } from "@/utils/useLocale"
+import AudioHtmlElComponent from "@/components/audio/AudioHtmlElComponent.vue";
 
 const metaStore = useMetaStore()
 const audioPlayerStore = useAudioPlayerStore()
@@ -45,6 +46,7 @@ onBeforeMount(async () => {
       dismissOnEnd: true,
       autoScroll: true,
       autoDownload: true,
+      fab: true
     })
   }
   // Styles
@@ -93,5 +95,6 @@ watch(isRtl, (rtl) => {
     <ion-content class="ion-padding" fixed-slot-placement="before">
       <ion-router-outlet></ion-router-outlet>
     </ion-content>
+    <audio-html-el-component />
   </ion-app>
 </template>

@@ -15,6 +15,7 @@ const audioSettings = ref<AudioPlayerSettings>({
   dismissOnEnd: true,
   autoScroll: true,
   autoDownload: true,
+  fab: true,
 });
 
 // Styles
@@ -22,10 +23,10 @@ const styles = ref<Styles>({
   fontSize: "1",
   fontFamily: "noto-Kufi",
   fontWeight: "normal",
-  color: "primary"
+  color: "primary",
 });
 
-const selectedWordColor = ref({ key: "Blue", code: "primary" },);
+const selectedWordColor = ref({ key: "Blue", code: "primary" });
 
 export const useSettings = () => {
   const { getLine, setLocale, supportedLocales } = useLocale();
@@ -37,6 +38,23 @@ export const useSettings = () => {
     { key: "Tertiary", code: "tertiary" },
   ]);
 
+  const fontSizes = ref([
+    { key: 1, value: "Normal" },
+    { key: 2, value: "Medium" },
+    { key: 3, value: "Large" },
+    { key: 4, value: "Extra Large" },
+    { key: 5, value: "Mega" },
+  ]);
+
+  const getSelectedFontSize = computed(() => {
+    const found = fontSizes.value.find(
+      (font) => font.key === styles.value.fontSize
+    );
+    if (found) {
+      return found.value;
+    }
+    return "Normal";
+  });
   // Color Schemes
   const colorSchemes = ref([
     { key: "dark", value: getLine("settings.dark") },
@@ -58,7 +76,7 @@ export const useSettings = () => {
     { key: "bold", value: "Bold" },
     { key: "extra-bold", value: "Extra Bold" },
   ]);
-  
+
   const appVersion = computed(() => import.meta.env.VITE_APP_VERSION);
 
   const appleColorScheme = (ev: CustomEvent) => {
@@ -82,7 +100,7 @@ export const useSettings = () => {
       case "fontSize":
         styles.value.fontSize = ev.detail.value;
         break;
-        case "color":
+      case "color":
         styles.value.color = ev.detail.value;
         break;
       default:
@@ -146,10 +164,12 @@ export const useSettings = () => {
     appVersion,
     audioSettings,
     styles,
+    fontSizes,
     wordColors,
     fontWeights,
     fontFamilyGroup,
     selectedWordColor,
+    getSelectedFontSize,
     updateSelectedReciter,
     updateSelectedTranslations,
     appleColorScheme,
