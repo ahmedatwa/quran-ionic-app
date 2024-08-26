@@ -1,31 +1,19 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onUnmounted, watch } from "vue"
+import { ref, watch } from "vue"
 import { IonToolbar, IonFooter, IonButtons, IonAvatar } from '@ionic/vue';
 import { IonIcon, IonButton, IonSpinner, IonChip, IonText } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline } from 'ionicons/icons';
 
 // components
 import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalComponent.vue';
-// utils
-import { secondsFormatter, milliSecondsToSeconds, secondsToMilliSeconds } from "@/utils/datetime"
-import { getLangFullLocale } from "@/utils/locale"
-import { useLocale } from "@/utils/useLocale"
-import { useAlert } from "@/utils/useAlert";
-import { makeWordLocation, getVerseNumberFromKey, getChapterIdfromKey } from "@/utils/verse"
-import { useMediaSession } from "@/utils/useMediaSession";
 // types
-import type { VerseTimings, VerseTimingSegments, Recitations } from "@/types/audio"
+import type { Recitations } from "@/types/audio"
 // stores
-import { useMetaStore } from "@/stores/MetaStore";
 import { useAudioPlayerStore } from '@/stores/AudioPlayerStore';
 import { truncate } from "@/utils/string";
 
 const audioPlayerStore = useAudioPlayerStore()
-const metaStore = useMetaStore();
 const audioPlayerRef = ref<HTMLAudioElement>()
-const { getLocale } = useLocale()
-const { presentAlert } = useAlert()
-const { setMediaSession } = useMediaSession(audioPlayerRef)
 
 defineProps<{
     modelValue: boolean
@@ -34,10 +22,6 @@ defineProps<{
 const emit = defineEmits<{
     "update:modelValue": [value: boolean]
 }>()
-
-watch(audioPlayerRef, (audioEl) => {
-    if (audioEl) audioPlayerStore.audioEl = audioEl
-})
 
 const onProgress = () => {
     if (
@@ -52,242 +36,87 @@ const onProgress = () => {
     return 0;
 };
 
-const playbackListener = () => {
-    if (audioPlayerRef.value) {
-        if (audioPlayerStore.audioFiles) {
-            audioPlayerStore.listenerActive = true;
-            audioPlayerStore.currentTimestamp = audioPlayerRef.value.currentTime;
-            audioPlayerStore.duration = milliSecondsToSeconds(
-                audioPlayerStore.audioFiles.duration
-            );
-            audioPlayerStore.elapsedTime = secondsFormatter(
-                audioPlayerStore.duration - (audioPlayerStore.currentTimestamp - 1),
-                getLangFullLocale(getLocale.value)
-            );
-            audioPlayerStore.progressTimer = secondsToMilliSeconds(audioPlayerStore.currentTimestamp - 1);
-        }
-    }
-};
 
-const playbackEnded = async () => {
-    switch (audioPlayerStore.loopAudio) {
-        case "once":
-            if (audioPlayerRef.value) {
-                audioPlayerRef.value.currentTime = 0;
-                audioPlayerStore.isPlaying = true;
-                audioPlayerRef.value.play();
-            }
-            break;
-        case "repeat":
-            await audioPlayerStore.playNext();
-            break;
-        case "none":
-            audioPlayerStore.isPlaying = false;
-            audioPlayerStore.isPaused = true
-            audioPlayerStore.listenerActive = false;
-            audioPlayerStore.verseTiming = undefined
-            cleanupListeners();
-            // dismiss on playbavc ends
-            if (audioPlayerStore.audioPlayerSetting.dismissOnEnd) {
-                closePlayer()
-            }
-            break;
-    }
-};
+// const loadMetaData = () => {
+//     if (audioPlayerStore.chapterName) {
+//         metaStore.setPageTitle(audioPlayerStore.chapterName);
+//         metaStore.setMetaData([
+//             { property: "og:audio:title", content: audioPlayerStore.chapterName },
+//             { name: "twitter:title", content: audioPlayerStore.chapterName },
+//             { property: "og:title", content: audioPlayerStore.chapterName },
+//         ]);
+//     }
 
-//Remove listeners after audio play stops
-const cleanupListeners = () => {
-    audioPlayerStore.listenerActive = false;
-    audioPlayerStore.isPlaying = false;
-    audioPlayerRef.value?.removeEventListener("timeupdate", playbackListener);
-    audioPlayerRef.value?.removeEventListener("ended", playbackEnded);
-    audioPlayerRef.value?.removeEventListener("pause", audioPlayerStore.playbackPaused);
-    audioPlayerStore.verseTiming = undefined
-};
+//     if (audioPlayerStore.audioFiles) {
+//         metaStore.setMetaData([
+//             {
+//                 property: "music:song:track",
+//                 content: String(audioPlayerStore.audioFiles.id),
+//             },
+//             {
+//                 property: "og:url",
+//                 content: audioPlayerStore.audioFiles.audio_url as string,
+//             },
+//             {
+//                 property: "og:type",
+//                 content: audioPlayerStore.audioFiles.format as string,
+//             },
+//             {
+//                 property: "og:audio",
+//                 content: audioPlayerStore.audioFiles.audio_url,
+//             },
+//             {
+//                 property: "music:duration",
+//                 content: audioPlayerStore.audioFiles.duration.toString(),
+//             },
+//             {
+//                 property: "og:audio:type",
+//                 content: audioPlayerStore.audioFiles.format as string,
+//             },
+//         ]);
+//     }
 
-const canPlayThrough = () => {
-    if (audioPlayerStore.audioFiles)
-        audioPlayerStore.audioDuration = secondsFormatter(
-            Math.round(audioPlayerStore.audioFiles.duration)
-        );
-    if (audioPlayerRef.value) {
-        audioPlayerRef.value.volume = audioPlayerStore.mediaVolume;
-    }
-};
+//     if (audioPlayerStore.selectedReciter) {
+//         metaStore.setMetaData([
+//             {
+//                 name: "twitter:image",
+//                 content: `/reciters/${audioPlayerStore.selectedReciter.reciter_id
+//                     }.jpg`,
+//             },
+//             {
+//                 property: "music:musician",
+//                 content: audioPlayerStore.selectedReciter.name,
+//             },
+//             {
+//                 property: "og:audio:artist",
+//                 content: audioPlayerStore.selectedReciter.name,
+//             },
+//             {
+//                 property: "og:image",
+//                 content: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
+//             },
+//         ]);
 
-const loadedData = () => {
-    audioPlayerStore.isLoading = true;
-    if (audioPlayerRef.value) {
-        if (audioPlayerRef.value.readyState > 2) {
-            // Verse Play
-            if (audioPlayerStore.selectedVerseKey) {
-                const verseTiming = audioPlayerStore.audioFiles?.verse_timings.find(
-                    (vt) => vt.verse_key === audioPlayerStore.selectedVerseKey
-                );
+//         // Media Controls
+//         setMediaSession({
+//             title: String(audioPlayerStore.chapterName),
+//             artist: audioPlayerStore.selectedReciter.name,
+//             album: "Quran",
+//             artwork: [
+//                 {
+//                     src: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
+//                     sizes: "96x96",
+//                     type: "image/jpg",
+//                 },
+//             ],
+//         })
+//     }
 
-                if (verseTiming) {
-                    if (audioPlayerRef.value) {
-                        audioPlayerRef.value.currentTime = milliSecondsToSeconds(
-                            verseTiming.timestamp_from
-                        );
-                        audioPlayerStore.progressTimer = secondsToMilliSeconds(
-                            verseTiming.timestamp_from / verseTiming.timestamp_to
-                        );
-                    }
-                }
-            }
-            audioPlayerStore.isLoading = false;
-        } else {
-            presentAlert({ message: "Failed to fetch Audio", header: "Error" })
-        }
-    }
-};
+//     // controls for android 
+
+// }
 
 
-const loadMetaData = () => {
-    if (audioPlayerStore.chapterName) {
-        metaStore.setPageTitle(audioPlayerStore.chapterName);
-        metaStore.setMetaData([
-            { property: "og:audio:title", content: audioPlayerStore.chapterName },
-            { name: "twitter:title", content: audioPlayerStore.chapterName },
-            { property: "og:title", content: audioPlayerStore.chapterName },
-        ]);
-    }
-
-    if (audioPlayerStore.audioFiles) {
-        metaStore.setMetaData([
-            {
-                property: "music:song:track",
-                content: String(audioPlayerStore.audioFiles.id),
-            },
-            {
-                property: "og:url",
-                content: audioPlayerStore.audioFiles.audio_url as string,
-            },
-            {
-                property: "og:type",
-                content: audioPlayerStore.audioFiles.format as string,
-            },
-            {
-                property: "og:audio",
-                content: audioPlayerStore.audioFiles.audio_url,
-            },
-            {
-                property: "music:duration",
-                content: audioPlayerStore.audioFiles.duration.toString(),
-            },
-            {
-                property: "og:audio:type",
-                content: audioPlayerStore.audioFiles.format as string,
-            },
-        ]);
-    }
-
-    if (audioPlayerStore.selectedReciter) {
-        metaStore.setMetaData([
-            {
-                name: "twitter:image",
-                content: `/reciters/${audioPlayerStore.selectedReciter.reciter_id
-                    }.jpg`,
-            },
-            {
-                property: "music:musician",
-                content: audioPlayerStore.selectedReciter.name,
-            },
-            {
-                property: "og:audio:artist",
-                content: audioPlayerStore.selectedReciter.name,
-            },
-            {
-                property: "og:image",
-                content: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
-            },
-        ]);
-
-        // Media Controls
-        setMediaSession({
-            title: String(audioPlayerStore.chapterName),
-            artist: audioPlayerStore.selectedReciter.name,
-            album: "Quran",
-            artwork: [
-                {
-                    src: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
-                    sizes: "96x96",
-                    type: "image/jpg",
-                },
-            ],
-        })
-    }
-
-    // controls for android 
-
-
-
-}
-
-const isCurrentTimeInRange = (currentTimeValue: number, timestampFrom: number, timestampTo: number) =>
-    currentTimeValue >= timestampFrom && currentTimeValue < timestampTo;
-
-
-// get verse timing
-const getVerseTiming = computed((): VerseTimings[] | undefined => {
-    if (audioPlayerStore.audioFiles) {
-        return audioPlayerStore.audioFiles.verse_timings.map((vt) => {
-            return {
-                inRange: false,
-                wordLocation: "",
-                wordPosition: 0,
-                verseNumber: 0,
-                ...vt
-            }
-        })
-    }
-})
-
-watchEffect(() => {
-    if (getVerseTiming) {
-        const currentTime = Math.ceil(secondsToMilliSeconds(audioPlayerStore.currentTimestamp))
-        // Find current verse Key 
-        const currentVerseTimingData = getVerseTiming.value?.find((vt) => currentTime >= vt.timestamp_from && currentTime <= vt.timestamp_to)
-        if (currentVerseTimingData) {
-            const isVerseInRange = isCurrentTimeInRange(currentTime, currentVerseTimingData.timestamp_from, currentVerseTimingData?.timestamp_to)
-
-            if (isVerseInRange) {
-                currentVerseTimingData.segments.map((vt: VerseTimingSegments) => {
-
-                    const isSegmentInRange = isCurrentTimeInRange(currentTime, vt[1], vt[2])
-                    if (isSegmentInRange) {
-                        audioPlayerStore.verseTiming = {
-                            chapterId: getChapterIdfromKey(currentVerseTimingData.verse_key),
-                            verseKey: currentVerseTimingData.verse_key,
-                            inRange: isSegmentInRange,
-                            verseNumber: getVerseNumberFromKey(currentVerseTimingData.verse_key),
-                            wordLocation: makeWordLocation(currentVerseTimingData.verse_key, vt[0]),
-                            wordPosition: vt[0],
-                            audioSrc: audioPlayerStore.audioPayLoadSrc
-                        }
-                        return;
-                    }
-                })
-            }
-        }
-    }
-})
-
-onUnmounted(() => {
-    audioPlayerStore.audioFiles = null
-})
-
-const closePlayer = () => {
-    emit('update:modelValue', false)
-    if (audioPlayerRef.value) {
-        audioPlayerRef.value.pause();
-    }
-    audioPlayerStore.chapterId = 0
-    audioPlayerStore.audioFiles = null
-    audioPlayerStore.selectedVerseKey = ""
-    cleanupListeners()
-}
 
 const playChapterAudio = (audioID: number) => {
     audioPlayerStore.getAudio({ audioID })
@@ -320,15 +149,6 @@ const playChapterAudio = (audioID: number) => {
                         <ion-icon slot="icon-only" :icon="playForwardOutline"></ion-icon>
                     </ion-button>
                 </ion-buttons>
-                <div class="d-none">
-                    <audio controls :autoplay="audioPlayerStore.audioPlayerSetting.autoPlay" ref="audioPlayerRef"
-                        :src="audioPlayerStore.audioFiles?.audio_url"
-                        :type="`audio/${audioPlayerStore.audioFiles?.format}`" @pause="audioPlayerStore.playbackPaused"
-                        @ended="playbackEnded" @playing="audioPlayerStore.playbackPlaying"
-                        @timeupdate="playbackListener" @canplaythrough="canPlayThrough" @loadeddata="loadedData"
-                        @progress="onProgress" @loadedmetadata="loadMetaData" @seek="audioPlayerStore.playbackSeek">
-                    </audio>
-                </div>
             </ion-toolbar>
             <audio-player-modal-component trigger="audio-modal" :is-playing="audioPlayerStore.isPlaying"
                 :is-loading="audioPlayerStore.isLoading" :verse-timing="audioPlayerStore.verseTiming"

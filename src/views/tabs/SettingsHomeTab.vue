@@ -4,7 +4,7 @@ import { IonContent, IonItem, IonList, IonListHeader, IonAccordion } from '@ioni
 import { IonToggle, IonPage, IonSelectOption, IonSelect, IonAccordionGroup } from "@ionic/vue"
 import { IonLabel, IonText } from '@ionic/vue';
 // icons
-import { cogOutline, eye, leaf } from 'ionicons/icons';
+import { cogOutline } from 'ionicons/icons';
 // stores
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 import { useTranslationsStore } from "@/stores/TranslationsStore";
@@ -66,10 +66,11 @@ const handleKeepAwake = async () => {
                             <ion-list class="ion-padding">
                                 <ion-item>
                                     <ion-select :label="getLine('settings.fontSize')"
-                                        :placeholder="String(settings.styles.value.fontSize)"
+                                        :placeholder="settings.getSelectedFontSize.value"
                                         @ion-change="settings.applyStyle('fontSize', $event)">
-                                        <ion-select-option :value="n" v-for="n in 10" :key="n">{{ n
-                                            }}</ion-select-option>
+                                        <ion-select-option :value="item.key" v-for="item in settings.fontSizes.value"
+                                            :key="item.key">
+                                            {{ item.value }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
@@ -148,6 +149,11 @@ const handleKeepAwake = async () => {
                                     <ion-toggle @ion-change="settings.handleAudioSetting" value="autoDownload"
                                         :checked="settings.audioSettings.value.autoDownload">
                                         {{ getLine("settings.autoDownload") }}</ion-toggle>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-toggle @ion-change="settings.handleAudioSetting"
+                                        :checked="settings.audioSettings.value.fab">
+                                        {{ getLine("settings.fab") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
                                     <ion-toggle @ion-change="handleKeepAwake" :checked="isAwake">

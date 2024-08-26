@@ -20,7 +20,7 @@ import ModalComponent from "@/components/common/ModalComponent.vue";
 import type { AudioFile, MapRecitions, Recitations, VerseTimingsProps } from "@/types/audio";
 
 const modalRef = ref()
-const { chapters, getVerseByVerseKey } = useChapterStore()
+const chapterStore = useChapterStore()
 const { getLine, isRtl } = useLocale()
 const isImgLoading = ref(true)
 const downloadedKeys = ref<string[]>([])
@@ -28,6 +28,7 @@ const { storageKeys } = useStorage("__audioDB")
 const dismiss = () => modalController.dismiss(null, 'cancel');
 
 const props = defineProps<{
+    trigger: string
     isPlaying: boolean
     isLoading: boolean
     verseTiming?: VerseTimingsProps
@@ -56,7 +57,7 @@ const getCurrentVerseData = computed(() => {
     const timing = props.verseTiming
     if (timing) {
         const verseKey = String(timing.verseKey)
-        const verse = getVerseByVerseKey(verseKey)
+        const verse = chapterStore.getVerseByVerseKey(verseKey)
         if (verse) {
             return {
                 juzNumber: verse.juz_number,
@@ -88,7 +89,7 @@ const download = (reciterId: string, chapterId: string) => {
 </script>
 
 <template>
-    <ion-modal ref="modalRef" trigger="audio-modal">
+    <ion-modal ref="modalRef" :trigger="trigger">
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
@@ -179,8 +180,8 @@ const download = (reciterId: string, chapterId: string) => {
                             <ion-icon :icon="musicalNoteOutline" style="margin-right: 5px;"></ion-icon> {{
                                 getLine('audio.playlist') }}
                         </ion-list-header>
-                        <ion-list style="height: 400px; overflow-y: scroll;" class="ion-padding" :inset="true">
-                            <ion-item-sliding v-for="chapter in chapters" :key="chapter.id">
+                        <ion-list style="height: 400px; overflow-y: scroll;">
+                            <ion-item-sliding v-for="chapter in chapterStore.chapters" :key="chapter.id">
                                 <ion-item :button="true">
                                     <ion-label>
                                         <h3>

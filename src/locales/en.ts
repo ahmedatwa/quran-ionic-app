@@ -41,6 +41,7 @@ export default {
     autoDownload: "Auto Download Audio",
     keepAwake: "Prevent sleep while playing",
     highlightedWordColor: "Highlighted word color",
+    fab: "Audio Fab Button"
   },
   bookmark: {
     title: "Bookmarks",
@@ -72,5 +73,6 @@ export default {
     prevJuz: "Previous Juz",
     startJuz: "Start of Juz",
     loadingChapterInfo: "Loading Surah Information...",
+    textDowloading: "Downloading..."
   },
 };

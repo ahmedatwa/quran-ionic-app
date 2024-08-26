@@ -84,6 +84,7 @@ type AudioPlayerSettings = {
   tooltip?: boolean;
   fullwidth?: boolean;
   autoDownload?: boolean;
+  fab: boolean
 };
 
 export {

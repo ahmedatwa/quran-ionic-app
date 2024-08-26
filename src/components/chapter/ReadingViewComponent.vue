@@ -19,7 +19,7 @@ import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
 
 const { params } = useRoute()
-const { getChapterNameByFirstVerse } = useChapterStore()
+const { getChapterName } = useChapterStore()
 const { getLine } = useLocale()
 const intersectingVerseNumber = ref(1)
 const contentRef = ref()
@@ -99,7 +99,7 @@ const handleRefresh = (event: RefresherCustomEvent) => {
     }
 };
 
-const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el, 300)
+const scroll = (verseNumber: number) => scrollToElement(`#line-${verseNumber}`, cardRef.value.$el, 300)
 
 </script>
 
@@ -110,44 +110,46 @@ const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumbe
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
-            <ion-card class="ion-padding" v-for="(verses, page) in mapVersesByPage" :key="page" :id="`row-page-${page}`"
-                ref="cardRef">
-                <card-header-buttons-component :chapter-id="verses[0].chapter_id" :is-playing="isPlaying"
+            <ion-card class="ion-padding" ref="cardRef">
+                <card-header-buttons-component :chapter-id="Number(params.chapterId)" :is-playing="isPlaying"
                     @update:play-audio="$emit('update:playAudio', $event)" :is-audio-loading="isAudioLoading"
                     @update:surah-info="$emit('update:surahInfo', $event)" chapter-info>
                 </card-header-buttons-component>
                 <ion-card-header class="ion-text-center">
-                    <ion-card-subtitle>{{ getChapterNameByFirstVerse(verses[0])?.bismillahPre ?
+                    <ion-card-subtitle>{{ getChapterName(Number(params.chapterId))?.bismillahPre ?
                         getLine('quranReader.textBismillah') : '' }}</ion-card-subtitle>
                     <ion-card-title>
-                        {{ getChapterNameByFirstVerse(verses[0])?.nameArabic }}
+                        {{ getChapterName(Number(params.chapterId))?.nameArabic }}
                     </ion-card-title>
                 </ion-card-header>
-                <ion-card-content class="ion-padding quran-reader-content-wrapper">
-                    <div class="verse-col" :id="`page-${page}`" size="12">
-                        <div class="word-wrapper" v-for="verse in verses" :key="verse.id"
-                            :id="`line-${verse.verse_number}`" :data-hizb-number="verse.hizb_number"
-                            :data-chapter-id="verse.chapter_id" :data-juz-number="verse.juz_number"
-                            :data-page-number="page" :data-verse-number="verse.verse_number">
-                            <span v-for="word in verse.words" :key="word.id" :data-word-position="word.position"
-                                class="" :data-hizb-number="verse.hizb_number" :data-juz-number="verse.juz_number"
-                                :data-chapter-id="verse.chapter_id" :data-page-number="page">
-                                <ion-text :color="isWordHighlighted(word) ? styles.color : ''" class="word">
-                                    <div v-if="word.char_type_name === 'end'" class="end">
-                                        ({{ word.text_uthmani }})
-                                    </div>
-                                    <h3 :style="styles" v-else>{{ word.text_uthmani }}</h3>
-                                </ion-text>
-                            </span>
+                <div v-for="(verses, page) in mapVersesByPage" :key="page" :id="`row-page-${page}`">
+                    <ion-card-content class="ion-padding quran-reader-content-wrapper">
+                        <div class="verse-col" :id="`page-${page}`" size="12">
+                            <div class="word-wrapper" v-for="verse in verses" :key="verse.id"
+                                :id="`line-wrapper-${verse.verse_number}`" :data-hizb-number="verse.hizb_number"
+                                :data-chapter-id="verse.chapter_id" :data-juz-number="verse.juz_number"
+                                :data-page-number="page" :data-verse-number="verse.verse_number">
+                                <span v-for="word in verse.words" :key="word.id" :data-word-position="word.position"
+                                    :id="`line-${verse.verse_number}`" :data-hizb-number="verse.hizb_number"
+                                    :data-juz-number="verse.juz_number" :data-chapter-id="verse.chapter_id"
+                                    :data-page-number="page">
+                                    <ion-text :color="isWordHighlighted(word) ? styles.color : ''" class="word">
+                                        <div v-if="word.char_type_name === 'end'" class=" end">
+                                            ({{ word.text_uthmani }})
+                                        </div>
+                                        <h3 :style="styles" v-else>{{ word.text_uthmani }}</h3>
+                                    </ion-text>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <ion-col size="12">
-                        <ion-item-divider>
-                            <ion-label class="m-auto">{{ getLine('quranReader.textPage') }} {{ page
-                                }}</ion-label>
-                        </ion-item-divider>
-                    </ion-col>
-                </ion-card-content>
+                        <ion-col size="12">
+                            <ion-item-divider>
+                                <ion-label class="m-auto">{{ getLine('quranReader.textPage') }} {{ page
+                                    }}</ion-label>
+                            </ion-item-divider>
+                        </ion-col>
+                    </ion-card-content>
+                </div>
             </ion-card>
             <ion-infinite-scroll @ion-infinite="ionInfinite">
                 <ion-infinite-scroll-content loading-text="Please wait..."

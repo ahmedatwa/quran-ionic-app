@@ -101,9 +101,14 @@ const isWordHighlighted = (word: VerseWord) => {
 };
 
 const loadMoreVerses = () => {
-    if (props.pagination?.next_page) {
-        emit("update:getVerses", { key: props.id, nextPage: props.pagination?.next_page })
+    if (props.pagination) {
+        if (props.pagination?.total_pages === props.pagination?.next_page) {
+            return;
+        } else {
+            emit("update:getVerses", { key: props.id, nextPage: props.pagination?.next_page })
+        }
     }
+
 }
 const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el, 300)
 
@@ -125,7 +130,8 @@ const isPlaying = (chapterId: number) => {
 <template>
     <div class="ion-page" :id="`translations-${id}-${juzId}`">
         <toolbar-component :route-back-label="getLine('tabs.juzs')" :is-loading="isLoading"></toolbar-component>
-        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true">
+        <ion-content class="quran-translation-content-wapper smooth-scroll-behaviour" :fullscreen="true"
+            :scrollY="true">
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
