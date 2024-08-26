@@ -29,6 +29,7 @@ const chapterId = computed(() => Number(params.chapterId))
 const props = defineProps<{
     id: string;
     isReadingView?: boolean
+    downloadProgress: string | number
     isPlaying: boolean
     verseTiming?: VerseTimingsProps
     verses?: Verse[]
@@ -112,8 +113,9 @@ const scroll = (verseNumber: number) => scrollToElement(`#line-${verseNumber}`, 
             </ion-refresher>
             <ion-card class="ion-padding" ref="cardRef">
                 <card-header-buttons-component :chapter-id="Number(params.chapterId)" :is-playing="isPlaying"
-                    @update:play-audio="$emit('update:playAudio', $event)" :is-audio-loading="isAudioLoading"
-                    @update:surah-info="$emit('update:surahInfo', $event)" chapter-info>
+                    :download-progress="downloadProgress" @update:play-audio="$emit('update:playAudio', $event)"
+                    :is-audio-loading="isAudioLoading" @update:surah-info="$emit('update:surahInfo', $event)"
+                    chapter-info>
                 </card-header-buttons-component>
                 <ion-card-header class="ion-text-center">
                     <ion-card-subtitle>{{ getChapterName(Number(params.chapterId))?.bismillahPre ?

@@ -106,17 +106,18 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
             <translations-view-component id="translations-juzs" :is-loading="juzStore.isLoading"
                 :is-playing="audioPlayerStore.isPlaying" @update:modal-value="getTranslationAlert"
                 v-if="currentSegment === 'translations'" @update:play-audio="playAudio"
-                :is-bismillah="selectedChapterBismillah" :styles="styles" :verses="juzStore.juzVersesByChapterMap"
-                :chapter-name="selectedChapterName.nameArabic" :verse-timing="audioPlayerStore.verseTiming"
-                :audio-experience="audioPlayerStore.audioPlayerSetting" @update:get-verses="getVerses"
-                :pagination="pagination" :is-audio-loading="audioPlayerStore.isLoading"
+                :download-progress="audioPlayerStore.downloadProgress" :is-bismillah="selectedChapterBismillah"
+                :styles="styles" :verses="juzStore.juzVersesByChapterMap" :chapter-name="selectedChapterName.nameArabic"
+                :verse-timing="audioPlayerStore.verseTiming" :audio-experience="audioPlayerStore.audioPlayerSetting"
+                @update:get-verses="getVerses" :pagination="pagination" :is-audio-loading="audioPlayerStore.isLoading"
                 :active-audio-id="audioPlayerStore.audioFiles?.chapter_id">
             </translations-view-component>
             <reading-view-component id="reading-juzs" v-else :is-playing="audioPlayerStore.isPlaying"
                 :verses="juzStore.juzVersesByChapterMap" @update:play-audio="playAudio" :is-loading="juzStore.isLoading"
                 :styles="styles" :audio-experience="audioPlayerStore.audioPlayerSetting"
-                :verse-timing="audioPlayerStore.verseTiming" :pagination="pagination" @update:get-verses="getVerses"
-                @update:surah-info="getSurahInfo" :is-audio-loading="audioPlayerStore.isLoading"
+                :download-progress="audioPlayerStore.downloadProgress" :verse-timing="audioPlayerStore.verseTiming"
+                :pagination="pagination" @update:get-verses="getVerses" @update:surah-info="getSurahInfo"
+                :is-audio-loading="audioPlayerStore.isLoading"
                 :active-audio-id="audioPlayerStore.audioFiles?.chapter_id">
             </reading-view-component>
             <div>
