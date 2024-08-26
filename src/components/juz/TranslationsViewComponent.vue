@@ -37,6 +37,7 @@ const intersectingVerseNumber = ref<number>()
 const props = defineProps<{
     id: string;
     isTranslationsView?: boolean
+    downloadProgress: string | number
     isPlaying: boolean
     isLoading: boolean
     isAudioLoading: boolean
@@ -138,7 +139,8 @@ const isPlaying = (chapterId: number) => {
             <ion-card class="ion-padding card-wrapper" ref="cardRef" v-for="(mappedVerses, chapterId) in verses"
                 :key="chapterId" :id="`card-${chapterId}`">
                 <card-header-buttons-component :chapter-id="mappedVerses[0].chapter_id"
-                    :verse-key="mappedVerses[0].verse_key" :is-playing="isPlaying(mappedVerses[0].chapter_id)"
+                    :download-progress="downloadProgress" :verse-key="mappedVerses[0].verse_key"
+                    :is-playing="isPlaying(mappedVerses[0].chapter_id)"
                     @update:play-audio="$emit('update:playAudio', $event)" :is-audio-loading="isAudioLoading"
                     @update:language-modal-value="$emit('update:modalValue', $event)">
                 </card-header-buttons-component>

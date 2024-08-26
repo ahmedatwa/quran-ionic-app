@@ -30,6 +30,7 @@ const pageId = computed((): number | undefined => Number(route.params.pageId))
 const props = defineProps<{
     id: string;
     isReadingView?: boolean
+    downloadProgress: string | number
     isPlaying: boolean
     verseTiming?: VerseTimingsProps
     verses?: GroupVersesByChapterID
@@ -62,7 +63,7 @@ const isWordHighlighted = (loaction: string, verseKey: string) => {
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     if (props.pagination?.next_page) {
-       loadMoreVerses()
+        loadMoreVerses()
         setTimeout(() => ev.target.complete(), 500);
     } else {
         ev.target.complete()
@@ -123,8 +124,9 @@ const isPlaying = (chapterId: number) => {
             <ion-card class="ion-padding" v-for="(versesMap, page) in verses" :key="page" :id="`row-page-${page}`"
                 ref="cardRef">
                 <card-header-buttons-component :chapter-id="versesMap[0].chapter_id" :verse-key="versesMap[0].verse_key"
-                    :is-playing="isPlaying(versesMap[0].chapter_id)" @update:play-audio="$emit('update:playAudio', $event)"
-                    :is-audio-loading="isAudioLoading" @update:surah-info="$emit('update:surahInfo', $event)"
+                    :is-playing="isPlaying(versesMap[0].chapter_id)"
+                    @update:play-audio="$emit('update:playAudio', $event)" :is-audio-loading="isAudioLoading"
+                    @update:surah-info="$emit('update:surahInfo', $event)" :download-progress="downloadProgress"
                     chapter-info>
                 </card-header-buttons-component>
                 <ion-card-content class="ion-padding quran-reader-content-wrapper">

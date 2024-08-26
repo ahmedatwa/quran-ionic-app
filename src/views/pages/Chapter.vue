@@ -126,6 +126,7 @@ const getSurahInfo = async (ev: number) => {
                 :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses"
                 :is-audio-loading="audioPlayerStore.isLoading" @update:surah-info="getSurahInfo"
                 :pagination="pagination" @update:play-audio="playAudio"
+                :download-progress="audioPlayerStore.downloadProgress"
                 :audio-experience="audioPlayerStore.audioPlayerSetting"
                 :verse-count="chapterStore.selectedChapter?.versesCount">
             </reading-view-component>

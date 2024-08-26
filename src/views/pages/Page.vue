@@ -126,12 +126,13 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
                 :verses="groupVersesByChapter" :chapter-name="selectedChapterName.nameArabic"
                 :audio-experience="audioPlayerStore.audioPlayerSetting" @update:modal-value="getTranslationAlert"
                 :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
-                :is-audio-loading="audioPlayerStore.isLoading"
+                :is-audio-loading="audioPlayerStore.isLoading" :download-progress="audioPlayerStore.downloadProgress"
                 :active-audio-id="audioPlayerStore.audioFiles?.chapter_id">
             </translations-view-component>
             <reading-view-component id="reading-pages" v-else :is-playing="audioPlayerStore.isPlaying"
                 :verses="groupVersesByChapter" @update:play-audio="playAudio" @update:surah-info="getSurahInfo"
                 :is-loading="pageStore.isLoading" :styles="styles"
+                :download-progress="audioPlayerStore.downloadProgress"
                 :audio-experience="audioPlayerStore.audioPlayerSetting" :is-audio-loading="audioPlayerStore.isLoading"
                 :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
                 :active-audio-id="audioPlayerStore.audioFiles?.chapter_id">
