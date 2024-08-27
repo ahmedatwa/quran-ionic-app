@@ -42,7 +42,7 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
       </ion-list>
       <ion-list v-else>
         <ion-item :button="true" :detail="false" v-for="page in pages" :key="page.pageNumber"
-          :router-link="`page/${page.pageNumber}`">
+          :router-link="{ name: 'single.page', params: { pageId: page.pageNumber } }">
           <ion-label>
             <ion-text>{{ getLine('quranReader.textPage') }} {{ localizeNumber(page.pageNumber, getLocale) }}</ion-text>
             <ion-text v-for="(chapter, index) in page.chaptersMap" :key="index" color="medium" class="d-flex">

@@ -35,7 +35,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const settingsDB = useStorage("__settingsDB");
   const audioDB = useStorage("__audioDB");
   const { encodeBlobToBase64 } = useBlob();
-  const { presentToast, presentAlert, presentLoading } = useAlert();
+  const { presentToast, presentAlert } = useAlert();
   const audioFiles = ref<AudioFile | null>(null);
   const autoStartPlayer = ref(false);
   const chapterId = ref<number>();
@@ -71,12 +71,12 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const audioBuffer = ref();
   const currentTimestamp = ref(0);
   const audioPlayerSetting = ref({
-    fullwidth: false,
     autoPlay: true,
-    dismissOnEnd: true,
+    dismissOnEnd: false,
     autoScroll: true,
     tooltip: false,
     fab: true,
+    autoDownload: true,
   });
 
   const chapterName = computed(() => {
@@ -195,6 +195,8 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
 
   onMounted(async () => {
     await getRecitations();
+    const audioStorage = await settingsDB.getStorage("audioSettings");
+    if (audioStorage) audioPlayerSetting.value = audioStorage;
   });
 
   watchEffect(() => {
@@ -464,7 +466,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
         if (audioEl.value) {
           audioEl.value.currentTime = 0;
           isPlaying.value = true;
-          audioEl.value.play();
+          await audioEl.value.play();
         }
         break;
       case "repeat":
@@ -564,6 +566,29 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     }
   });
 
+  const handleAudioSetting = (ev: CustomEvent) => {
+    const audio: { checked: boolean; value: string } = ev.detail;
+    switch (audio.value) {
+      case "autoPlay":
+        audioPlayerSetting.value.autoPlay = audio.checked;
+        break;
+      case "dismissOnEnd":
+        audioPlayerSetting.value.dismissOnEnd = audio.checked;
+        break;
+      case "autoScroll":
+        audioPlayerSetting.value.autoScroll = audio.checked;
+        break;
+      case "autoDownload":
+        audioPlayerSetting.value.autoDownload = audio.checked;
+        break;
+      case "fab":
+        audioPlayerSetting.value.fab = audio.checked;
+        break;
+    }
+
+    settingsDB.setStorage("audioSettings", audioPlayerSetting);
+  };
+
   return {
     audioEl,
     playAudio,
@@ -577,6 +602,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     playbackEnded,
     playbackListener,
     loadMetaData,
+    handleAudioSetting,
     audioFiles,
     isLoading,
     playbackSpeeds,

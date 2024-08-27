@@ -130,29 +130,29 @@ const handleKeepAwake = async () => {
                         <div slot="content">
                             <ion-list class="ion-padding">
                                 <ion-item>
-                                    <ion-toggle @ion-change="settings.handleAudioSetting" value="autoPlay"
-                                        :checked="settings.audioSettings.value.autoPlay">{{
+                                    <ion-toggle @ion-change="audioPlayerStore.handleAudioSetting" value="autoPlay"
+                                        :checked="audioPlayerStore.audioPlayerSetting.autoPlay">{{
                                             getLine("settings.autoPlay")
                                         }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="settings.handleAudioSetting" value="dismissOnEnd"
-                                        :checked="settings.audioSettings.value.dismissOnEnd">
+                                    <ion-toggle @ion-change="audioPlayerStore.handleAudioSetting" value="dismissOnEnd"
+                                        :checked="audioPlayerStore.audioPlayerSetting.dismissOnEnd">
                                         {{ getLine("settings.playerDismiss") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="settings.handleAudioSetting" value="autoScroll"
-                                        :checked="settings.audioSettings.value.autoScroll">
+                                    <ion-toggle @ion-change="audioPlayerStore.handleAudioSetting" value="autoScroll"
+                                        :checked="audioPlayerStore.audioPlayerSetting.autoScroll">
                                         {{ getLine("settings.autoScroll") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="settings.handleAudioSetting" value="autoDownload"
-                                        :checked="settings.audioSettings.value.autoDownload">
+                                    <ion-toggle @ion-change="audioPlayerStore.handleAudioSetting" value="autoDownload"
+                                        :checked="audioPlayerStore.audioPlayerSetting.autoDownload">
                                         {{ getLine("settings.autoDownload") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="settings.handleAudioSetting"
-                                        :checked="settings.audioSettings.value.fab">
+                                    <ion-toggle @ion-change="audioPlayerStore.handleAudioSetting"
+                                        :checked="audioPlayerStore.audioPlayerSetting.fab" value="fab">
                                         {{ getLine("settings.fab") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>

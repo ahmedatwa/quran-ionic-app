@@ -15,7 +15,7 @@ const props = defineProps<{
     verseKey?: string
     chapterInfo?: boolean
     isAudioLoading: boolean
-    downloadProgress: string | number
+    downloadProgress?: string | number
 }>()
 
 defineEmits<{

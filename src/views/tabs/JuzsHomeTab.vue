@@ -31,7 +31,7 @@ const handleSearch = (query: string) => {
       </ion-list>
       <ion-list>
         <ion-item :button="true" :detail="false" v-for="juz in juzStore.juzs" :key="juz.id"
-          :router-link="`juz/${juz.juz_number}`">
+          :router-link="{ name: 'single.juz', params: { juzId: juz.juz_number } }">
           <ion-label>
             <ion-text>{{ getLine('quranReader.textJuz') }} {{ localizeNumber(juz.juz_number, getLocale) }}</ion-text>
             <ion-text v-for="chapter in juz.chapters" :key="chapter.chapterId" color="medium" class="d-flex">
@@ -44,6 +44,7 @@ const handleSearch = (query: string) => {
         </ion-item>
       </ion-list>
     </ion-content>
+   
   </ion-page>
 </template>
 <style scoped>

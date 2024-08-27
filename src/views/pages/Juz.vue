@@ -36,7 +36,7 @@ const chapterInfo = ref<ChapterInfo | null>(null)
 const chapterInfoButtonRef = ref()
 const router = useRoute()
 
-watchEffect(async () => {
+watchEffect(async () => {    
     if (router.params.juzId) {
         juzStore.selectedJuz = null
         const found = juzStore.juzList.find((j) => j.juz_number === Number(router.params.juzId))

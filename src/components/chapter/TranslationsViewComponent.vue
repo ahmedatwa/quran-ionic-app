@@ -41,7 +41,7 @@ const intersectingVerseNumber = ref(1)
 
 const props = defineProps<{
     id: string;
-    downloadProgress: string | number
+    downloadProgress?: string | number
     isTranslationsView?: boolean
     isPlaying: boolean
     isLoading: boolean

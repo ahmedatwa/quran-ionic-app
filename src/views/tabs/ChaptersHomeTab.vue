@@ -33,7 +33,7 @@ const handleSearch = (query: string) => {
       </ion-list>
       <ion-list>
         <ion-item button detail v-for="chapter in chapterStore.chapters" :key="chapter.id"
-          :router-link="`chapter/${chapter.id}`">
+          :router-link="`chapter/${chapter.id}/${chapter.slug}`">
           <ion-label>{{ localizeNumber(chapter.id, getLocale) }}- {{ isRtl ? chapter.nameArabic : chapter.nameSimple }}
           </ion-label>
           <ion-note slot="end">{{ chapter.versesCount }}</ion-note>

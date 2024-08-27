@@ -3,20 +3,12 @@ import { ref, computed, onMounted } from "vue";
 import { useStorage } from "@/utils/useStorage";
 import { useLocale } from "@/utils/useLocale";
 // types
-import type { AudioPlayerSettings, Recitations } from "@/types/audio";
+import type { Recitations } from "@/types/audio";
 import type { Styles } from "@/types/settings";
 import type { Translation } from "@/types/translations";
 import { lowerCase } from "@/utils/string";
 
 const colorScheme = ref("auto");
-// Audio
-const audioSettings = ref<AudioPlayerSettings>({
-  autoPlay: true,
-  dismissOnEnd: true,
-  autoScroll: true,
-  autoDownload: true,
-  fab: true,
-});
 
 // Styles
 const styles = ref<Styles>({
@@ -109,26 +101,6 @@ export const useSettings = () => {
     setStorage("styles", styles);
   };
 
-  const handleAudioSetting = (ev: CustomEvent) => {
-    const audio: { checked: boolean; value: string } = ev.detail;
-    switch (audio.value) {
-      case "autoPlay":
-        audioSettings.value.autoPlay = audio.checked;
-        break;
-      case "dismissOnEnd":
-        audioSettings.value.dismissOnEnd = audio.checked;
-        break;
-      case "autoScroll":
-        audioSettings.value.autoScroll = audio.checked;
-        break;
-      case "autoDownload":
-        audioSettings.value.autoDownload = audio.checked;
-        break;
-    }
-
-    setStorage("audioSettings", audioSettings);
-  };
-
   const updateSelectedLocale = (ev: CustomEvent) => {
     const selected = ev.detail.value;
     const localKeys = supportedLocales.value.map((lo) => lo.key);
@@ -150,9 +122,6 @@ export const useSettings = () => {
     // styles
     const stylesStorage = await getStorage("styles");
     if (stylesStorage) styles.value = stylesStorage;
-    // Audio
-    const audioStorage = await getStorage("audioSettings");
-    if (audioStorage) audioSettings.value = audioStorage;
     // color scheme
     const scheme = await getStorage("colorScheme");
     if (scheme) colorScheme.value = scheme;
@@ -162,7 +131,6 @@ export const useSettings = () => {
     colorScheme,
     colorSchemes,
     appVersion,
-    audioSettings,
     styles,
     fontSizes,
     wordColors,
@@ -174,7 +142,6 @@ export const useSettings = () => {
     updateSelectedTranslations,
     appleColorScheme,
     applyStyle,
-    handleAudioSetting,
     updateSelectedLocale,
   };
 };

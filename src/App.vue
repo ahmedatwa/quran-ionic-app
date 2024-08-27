@@ -43,10 +43,11 @@ onBeforeMount(async () => {
   if (!audioSettings) {
     setStorage("audioSettings", {
       autoPlay: true,
-      dismissOnEnd: true,
+      dismissOnEnd: false,
       autoScroll: true,
+      tooltip: false,
+      fab: true,
       autoDownload: true,
-      fab: true
     })
   }
   // Styles
@@ -93,8 +94,10 @@ watch(isRtl, (rtl) => {
   </teleport>
   <ion-app>
     <ion-content class="ion-padding" fixed-slot-placement="before">
+      <audio-html-el-component />
       <ion-router-outlet></ion-router-outlet>
     </ion-content>
-    <audio-html-el-component />
+   
+
   </ion-app>
 </template>
