@@ -43,7 +43,7 @@ const playChapterAudio = (audioID: number) => {
 
 <template>
     <Transition name="slide-fade">
-        <ion-footer v-if="modelValue" :translucent="true" class="footer ion-no-border">
+        <ion-footer v-if="modelValue" class="footer ion-no-border">
             <ion-toolbar>
                 <div id="audio-modal">
                     <ion-chip :outline="true" class="reciter-chip">

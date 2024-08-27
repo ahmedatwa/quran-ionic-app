@@ -97,7 +97,5 @@ watch(isRtl, (rtl) => {
       <audio-html-el-component />
       <ion-router-outlet></ion-router-outlet>
     </ion-content>
-   
-
   </ion-app>
 </template>

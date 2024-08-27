@@ -1,27 +1,24 @@
 <script setup lang="ts">
-import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
+import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonFooter, IonRouterOutlet } from '@ionic/vue';
 import { newspaperOutline, documentOutline, bookOutline } from 'ionicons/icons';
 import { cogOutline, bookmarkOutline } from 'ionicons/icons';
 // utils
 import { useLocale } from '@/utils/useLocale';
-import { useAudioPlayerStore } from '@/stores/AudioPlayerStore';
 import AudioFabComponent from '@/components/audio/AudioFabComponent.vue';
-import AudioPlayerComponent from '@/components/audio/AudioPlayerComponent.vue';
 
 const { getLine } = useLocale()
-const audioPlayerStore = useAudioPlayerStore()
 
 </script>
 
 <template>
   <ion-page>
     <ion-tabs>
+      <ion-router-outlet></ion-router-outlet>
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="chapters" href="/chapters">
           <ion-icon :icon="bookOutline" />
           <ion-label>{{ getLine('tabs.chapters') }}</ion-label>
         </ion-tab-button>
-        
         <ion-tab-button tab="juzs" href="/juzs">
           <ion-icon :icon="newspaperOutline" />
           <ion-label>{{ getLine('tabs.juzs') }}</ion-label>
@@ -38,9 +35,7 @@ const audioPlayerStore = useAudioPlayerStore()
           <ion-icon :icon="cogOutline" />
           <ion-label>{{ getLine('tabs.settings') }}</ion-label>
         </ion-tab-button>
-        
       </ion-tab-bar>
-      <ion-router-outlet></ion-router-outlet>
     </ion-tabs>
     <audio-fab-component />
   </ion-page>
