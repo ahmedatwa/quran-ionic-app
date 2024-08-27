@@ -45,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/page/:pageId",
-    name: "page",
+    name: "single.page",
     component: () => import("@/views/pages/Page.vue"),
     props: true,
     children: [
@@ -58,13 +58,13 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/juz/:juzId",
-    name: "juz",
+    name: "single.juz",
     component: () => import("@/views/pages/Juz.vue"),
     props: true,
   },
   {
-    path: "/chapter/:chapterId",
-    name: "chapter",
+    path: "/chapter/:chapterId/:slug",
+    name: "single.chapter",
     component: () => import("@/views/pages/Chapter.vue"),
     props: true,
   },

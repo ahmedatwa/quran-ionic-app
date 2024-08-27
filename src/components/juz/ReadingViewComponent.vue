@@ -30,7 +30,7 @@ const juzId = computed(() => Number(params.juzId))
 const props = defineProps<{
     id: string;
     isReadingView?: boolean
-    downloadProgress: string | number
+    downloadProgress?: string | number
     isPlaying: boolean
     verseTiming?: VerseTimingsProps
     verses?: juzVersesByPageMap

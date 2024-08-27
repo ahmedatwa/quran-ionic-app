@@ -13,7 +13,6 @@ import { useAudioPlayerStore } from '@/stores/AudioPlayerStore';
 import { truncate } from "@/utils/string";
 
 const audioPlayerStore = useAudioPlayerStore()
-const audioPlayerRef = ref<HTMLAudioElement>()
 
 defineProps<{
     modelValue: boolean
@@ -23,100 +22,18 @@ const emit = defineEmits<{
     "update:modelValue": [value: boolean]
 }>()
 
-const onProgress = () => {
-    if (
-        audioPlayerRef.value?.buffered &&
-        audioPlayerRef.value.buffered.length
-    ) {
-        const lastIndex = audioPlayerRef.value.buffered.length - 1;
-        return audioPlayerRef.value.buffered.end(lastIndex);
-        // audioBuffer.value = timestamp *100
-    }
-
-    return 0;
-};
-
-
-// const loadMetaData = () => {
-//     if (audioPlayerStore.chapterName) {
-//         metaStore.setPageTitle(audioPlayerStore.chapterName);
-//         metaStore.setMetaData([
-//             { property: "og:audio:title", content: audioPlayerStore.chapterName },
-//             { name: "twitter:title", content: audioPlayerStore.chapterName },
-//             { property: "og:title", content: audioPlayerStore.chapterName },
-//         ]);
+// const onProgress = () => {
+//     if (
+//         audioPlayerRef.value?.buffered &&
+//         audioPlayerRef.value.buffered.length
+//     ) {
+//         const lastIndex = audioPlayerRef.value.buffered.length - 1;
+//         return audioPlayerRef.value.buffered.end(lastIndex);
+//         // audioBuffer.value = timestamp *100
 //     }
 
-//     if (audioPlayerStore.audioFiles) {
-//         metaStore.setMetaData([
-//             {
-//                 property: "music:song:track",
-//                 content: String(audioPlayerStore.audioFiles.id),
-//             },
-//             {
-//                 property: "og:url",
-//                 content: audioPlayerStore.audioFiles.audio_url as string,
-//             },
-//             {
-//                 property: "og:type",
-//                 content: audioPlayerStore.audioFiles.format as string,
-//             },
-//             {
-//                 property: "og:audio",
-//                 content: audioPlayerStore.audioFiles.audio_url,
-//             },
-//             {
-//                 property: "music:duration",
-//                 content: audioPlayerStore.audioFiles.duration.toString(),
-//             },
-//             {
-//                 property: "og:audio:type",
-//                 content: audioPlayerStore.audioFiles.format as string,
-//             },
-//         ]);
-//     }
-
-//     if (audioPlayerStore.selectedReciter) {
-//         metaStore.setMetaData([
-//             {
-//                 name: "twitter:image",
-//                 content: `/reciters/${audioPlayerStore.selectedReciter.reciter_id
-//                     }.jpg`,
-//             },
-//             {
-//                 property: "music:musician",
-//                 content: audioPlayerStore.selectedReciter.name,
-//             },
-//             {
-//                 property: "og:audio:artist",
-//                 content: audioPlayerStore.selectedReciter.name,
-//             },
-//             {
-//                 property: "og:image",
-//                 content: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
-//             },
-//         ]);
-
-//         // Media Controls
-//         setMediaSession({
-//             title: String(audioPlayerStore.chapterName),
-//             artist: audioPlayerStore.selectedReciter.name,
-//             album: "Quran",
-//             artwork: [
-//                 {
-//                     src: `/reciters/${audioPlayerStore.selectedReciter.reciter_id}.jpg`,
-//                     sizes: "96x96",
-//                     type: "image/jpg",
-//                 },
-//             ],
-//         })
-//     }
-
-//     // controls for android 
-
-// }
-
-
+//     return 0;
+// };
 
 const playChapterAudio = (audioID: number) => {
     audioPlayerStore.getAudio({ audioID })
