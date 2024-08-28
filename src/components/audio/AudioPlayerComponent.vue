@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { ref, watch } from "vue"
 import { IonToolbar, IonFooter, IonButtons, IonAvatar } from '@ionic/vue';
 import { IonIcon, IonButton, IonSpinner, IonChip, IonText } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline } from 'ionicons/icons';
@@ -22,22 +21,6 @@ const emit = defineEmits<{
     "update:modelValue": [value: boolean]
 }>()
 
-// const onProgress = () => {
-//     if (
-//         audioPlayerRef.value?.buffered &&
-//         audioPlayerRef.value.buffered.length
-//     ) {
-//         const lastIndex = audioPlayerRef.value.buffered.length - 1;
-//         return audioPlayerRef.value.buffered.end(lastIndex);
-//         // audioBuffer.value = timestamp *100
-//     }
-
-//     return 0;
-// };
-
-const playChapterAudio = (audioID: number) => {
-    audioPlayerStore.getAudio({ audioID })
-}
 
 </script>
 
@@ -74,9 +57,9 @@ const playChapterAudio = (audioID: number) => {
                 :media-volume="audioPlayerStore.mediaVolume" :map-recitions="audioPlayerStore.mapRecitions"
                 :progress-timer="audioPlayerStore.progressTimer"
                 @update:change-volume="audioPlayerStore.changeMediaVolume" @update:seek="audioPlayerStore.playbackSeek"
-                @update:download="audioPlayerStore.downloadAudioFile" @update:play-chapter="playChapterAudio"
-                @update:play-next="audioPlayerStore.playNext" @update:play-prev="audioPlayerStore.playPrevious()"
-                @update:play-audio="audioPlayerStore.handlePlay"
+                @update:download="audioPlayerStore.downloadAudioFile"
+                @update:play-chapter="audioPlayerStore.playChapterAudio" @update:play-next="audioPlayerStore.playNext"
+                @update:play-prev="audioPlayerStore.playPrevious()" @update:play-audio="audioPlayerStore.handlePlay"
                 @update:loop-audio="audioPlayerStore.loopAudio = $event"
                 @update:selected-reciter="audioPlayerStore.handleSelectedReciter">
             </audio-player-modal-component>

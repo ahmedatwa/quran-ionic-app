@@ -64,7 +64,6 @@ const playAudio = async (event: { audioID: number, verseKey?: string }) => {
     }
     audioPlayerStore.resetValues()
     await audioPlayerStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
-    audioPlayerStore.isVisible = true
 }
 
 const getVerses = async (ev: { key: string, nextPage: number }) => {

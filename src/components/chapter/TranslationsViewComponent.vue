@@ -9,7 +9,7 @@ import { App } from '@capacitor/app';
 import { ellipsisVerticalOutline } from "ionicons/icons";
 // utils
 import { useLocale } from "@/utils/useLocale";
-import { scrollToElement } from "@/utils/useScrollToElement";
+import { scrollToElement, scrollIfNeeded } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
 import { useRoute } from "vue-router";
 import { useAlert } from '@/utils/useAlert';
@@ -125,7 +125,10 @@ watch(() => props.verseTiming, (t) => {
     }
 })
 
-const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el, 300)
+const scroll = (verseNumber: number) => {
+    const verseEl = document.querySelector(`#verse-col-${verseNumber}`) as HTMLDivElement
+    if (verseEl) scrollToElement(verseEl, contentRef.value.$el)
+}
 
 const computedVerses = computed(() => {
     return props.verses?.filter((v) => v.verse_number.toString().includes(verseSearchInput.value))
@@ -146,11 +149,12 @@ const handleRefresh = (event: RefresherCustomEvent) => {
 <template>
     <div class="ion-page" :id="`translations-${id}-${chapterId}`">
         <toolbar-component :route-back-label="getLine('tabs.chapters')" :is-loading="isLoading"></toolbar-component>
-        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef">
+        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef"
+            style="position: relative">
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
-            <ion-card class="ion-padding card-wrapper" ref="cardRef">
+            <ion-card class="ion-padding card-wrapper" ref="cardRef" style="position: relative;">
                 <verse-seach-input-component :verse-count="verseCount"
                     @update:search-value="verseSearchInput = $event"></verse-seach-input-component>
                 <card-header-buttons-component :chapter-id="chapterId" :is-playing="isPlaying"
