@@ -1,11 +1,14 @@
 export const scrollToElement = async (
-  elID: string,
+  elID: string | HTMLDivElement,
   root?: HTMLElement,
   timeout?: number,
   overLayHeight?: number,
   options: ScrollIntoViewOptions = SMOOTH_SCROLL_TO_CENTER
 ) => {
-  const el = document.querySelector(elID) as HTMLDivElement;
+  const el =
+    typeof elID === "string"
+      ? (document.querySelector(elID) as HTMLDivElement)
+      : elID;
   const parent = root ? root : undefined;
   if (el && !isInViewport(el, parent)) {
     await delay(timeout || 100);
@@ -57,13 +60,28 @@ export const getElOffset = (el: HTMLElement | string) => {
     typeof el === "string" ? (document.querySelector(el) as HTMLElement) : el;
   let top = 0,
     left = 0;
-   // offsetParent = 0;
+  // offsetParent = 0;
   while (element !== null) {
     top += element.offsetTop;
     left += element.offsetLeft;
-   // offsetParent = element.offsetParent;
+    // offsetParent = element.offsetParent;
   }
   return { top, left };
+};
+
+export const scrollIfNeeded = (
+  element: HTMLDivElement,
+  container: HTMLDivElement
+) => {
+  if (element.offsetTop < container.scrollTop) {
+    container.scrollTop = element.offsetTop;
+  } else {
+    const offsetBottom = element.offsetTop + element.offsetHeight;
+    const scrollBottom = container.scrollTop + container.offsetHeight;
+    if (offsetBottom > scrollBottom) {
+      container.scrollTop = offsetBottom - container.offsetHeight;
+    }
+  }
 };
 
 const delay = (length: number): Promise<void> => {

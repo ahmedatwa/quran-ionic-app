@@ -93,6 +93,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     // if (payload.audioID === chapterId.value) return;
 
     isLoading.value = true;
+    isVisible.value = true
     chapterId.value = payload.audioID;
     selectedVerseKey.value = payload.verseKey;
     audioPayLoadSrc.value = payload.audioSrc ? payload.audioSrc : audioSrc;
@@ -589,6 +590,10 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     settingsDB.setStorage("audioSettings", audioPlayerSetting);
   };
 
+  const playChapterAudio = async (audioID: number) => {
+    await getAudio({ audioID })
+}
+
   return {
     audioEl,
     playAudio,
@@ -603,6 +608,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     playbackListener,
     loadMetaData,
     handleAudioSetting,
+    playChapterAudio,
     audioFiles,
     isLoading,
     playbackSpeeds,
