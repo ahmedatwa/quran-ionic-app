@@ -62,7 +62,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   const elapsedTime = ref("00:00");
   const audioDuration = ref("");
   const duration = ref(0);
-  const mediaVolume = ref(1);
+  const mediaVolume = ref(100);
   const isPlaying = ref(false);
   const isMuted = ref(false);
   const isPaused = ref(false);
@@ -330,7 +330,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
         Math.round(audioFiles.value.duration)
       );
     if (audioEl.value) {
-      audioEl.value.volume = mediaVolume.value;
+      audioEl.value.volume = mediaVolume.value / 100;
     }
   };
 

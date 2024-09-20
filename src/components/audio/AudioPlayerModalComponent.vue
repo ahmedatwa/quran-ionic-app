@@ -5,7 +5,8 @@ import { IonContent, modalController, IonRow, IonLabel, IonThumbnail, IonItem, I
 import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonText, IonListHeader } from '@ionic/vue';
 import { IonItemOptions, IonItemOption, IonItemSliding, IonModal } from "@ionic/vue";
 // ionicons
-import { playOutline, playBackOutline, playForwardOutline, playCircleOutline } from 'ionicons/icons';
+import { playOutline, playBackOutline, playForwardOutline } from 'ionicons/icons';
+import { playCircleOutline, volumeLowOutline, volumeHighOutline } from 'ionicons/icons';
 import { musicalNoteOutline, downloadOutline } from 'ionicons/icons';
 import { pauseOutline, chevronDownOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
 import { repeatOutline } from 'ionicons/icons';
@@ -85,6 +86,11 @@ const download = (reciterId: string, chapterId: string) => {
     const key = reciterId.concat("-").concat(chapterId)
     downloadedKeys.value?.push(key)
     emit('update:download', true)
+}
+
+const changeMediaVolume = (ev: CustomEvent) => {
+    const vol = ev.detail.value
+    emit('update:changeVolume', vol)
 }
 </script>
 
@@ -172,6 +178,13 @@ const download = (reciterId: string, chapterId: string) => {
                             @click="$emit('update:loopAudio', 'none')">
                             <ion-icon slot="icon-only" :icon="repeatOutline" color="primary"></ion-icon>
                         </ion-button>
+                    </ion-col>
+                    <ion-col size="12">
+                        <ion-range label-placement="start" :pin="true" :value="mediaVolume"
+                            @ion-input="changeMediaVolume">
+                            <ion-icon slot="start" :icon="volumeLowOutline"></ion-icon>
+                            <ion-icon slot="end" :icon="volumeHighOutline"></ion-icon>
+                        </ion-range>
                     </ion-col>
                 </ion-row>
                 <ion-row class="ion-justify-content-center ion-margin-vertical">
