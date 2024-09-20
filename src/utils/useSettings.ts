@@ -15,7 +15,10 @@ const styles = ref<Styles>({
   fontSize: "1",
   fontFamily: "noto-Kufi",
   fontWeight: "normal",
-  color: "primary",
+  wordColor: {
+    code: "primary",
+    key: "Blue",
+  },
 });
 
 const selectedWordColor = ref({ key: "Blue", code: "primary" });
@@ -82,23 +85,31 @@ export const useSettings = () => {
   };
 
   const applyStyle = (key: string, ev: CustomEvent) => {
-    switch (key) {
-      case "fontWeight":
-        styles.value.fontWeight = lowerCase(ev.detail.value);
-        break;
-      case "fontFamily":
-        styles.value.fontFamily = ev.detail.value;
-        break;
-      case "fontSize":
-        styles.value.fontSize = ev.detail.value;
-        break;
-      case "color":
-        styles.value.color = ev.detail.value;
-        break;
-      default:
-        break;
+    if (key) {
+      switch (key) {
+        case "fontWeight":
+          styles.value.fontWeight = lowerCase(ev.detail.value);
+          break;
+        case "fontFamily":
+          styles.value.fontFamily = ev.detail.value;
+          break;
+        case "fontSize":
+          styles.value.fontSize = ev.detail.value;
+          break;
+        case "wordcolor":
+          styles.value.wordColor = ev.detail.value;
+          break;
+        default:
+          break;
+      }
+
+      setStorage("styles", {
+        fontWeight: styles.value.fontWeight,
+        fontFamily: styles.value.fontFamily,
+        fontSize: styles.value.fontSize,
+        wordColor: JSON.stringify(styles.value.wordColor),
+      });
     }
-    setStorage("styles", styles);
   };
 
   const updateSelectedLocale = (ev: CustomEvent) => {
@@ -121,7 +132,12 @@ export const useSettings = () => {
   onMounted(async () => {
     // styles
     const stylesStorage = await getStorage("styles");
-    if (stylesStorage) styles.value = stylesStorage;
+    if (stylesStorage) {
+      styles.value = {
+        ...stylesStorage,
+        wordColor: JSON.parse(stylesStorage.wordColor),
+      };
+    }
     // color scheme
     const scheme = await getStorage("colorScheme");
     if (scheme) colorScheme.value = scheme;

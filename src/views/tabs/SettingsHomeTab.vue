@@ -4,7 +4,7 @@ import { IonContent, IonItem, IonList, IonListHeader, IonAccordion } from '@ioni
 import { IonToggle, IonPage, IonSelectOption, IonSelect, IonAccordionGroup } from "@ionic/vue"
 import { IonLabel, IonText } from '@ionic/vue';
 // icons
-import { cogOutline } from 'ionicons/icons';
+import { caretDownSharp, cogOutline } from 'ionicons/icons';
 // stores
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 import { useTranslationsStore } from "@/stores/TranslationsStore";
@@ -65,25 +65,28 @@ const handleKeepAwake = async () => {
                         <div slot="content">
                             <ion-list class="ion-padding">
                                 <ion-item>
-                                    <ion-select :label="getLine('settings.fontSize')"
+                                    <ion-select :label="getLine('settings.fontSize')" class="always-flip"
+                                        :toggle-icon="caretDownSharp" interface="popover"
                                         :placeholder="settings.getSelectedFontSize.value"
                                         @ion-change="settings.applyStyle('fontSize', $event)">
-                                        <ion-select-option :value="item.key" v-for="item in settings.fontSizes.value"
-                                            :key="item.key">
+                                        <ion-select-option v-for="item in settings.fontSizes.value" :key="item.key"
+                                            :value="item.key">
                                             {{ item.value }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-select :label="getLine('settings.fontFamily')"
+                                    <ion-select :label="getLine('settings.fontFamily')" class="always-flip"
+                                        :toggle-icon="caretDownSharp" interface="popover"
                                         :placeholder="properCase(settings.styles.value.fontFamily)"
                                         @ion-change="settings.applyStyle('fontFamily', $event)">
-                                        <ion-select-option :value="n" v-for="n in settings.fontFamilyGroup.value"
-                                            :key="n.key">{{ n.value }}</ion-select-option>
+                                        <ion-select-option v-for="n in settings.fontFamilyGroup.value" :key="n.key"
+                                            :value="n.key">{{ n.value }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
                                     <ion-select :placeholder="properCase(settings.styles.value.fontWeight)"
-                                        :label="getLine('settings.boldText')"
+                                        :label="getLine('settings.boldText')" class="always-flip"
+                                        :toggle-icon="caretDownSharp" interface="popover"
                                         @ion-change="settings.applyStyle('fontWeight', $event)">
                                         <ion-select-option v-for="weight in settings.fontWeights.value"
                                             :key="weight.key" :value="weight.key">
@@ -91,11 +94,12 @@ const handleKeepAwake = async () => {
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-select :placeholder="settings.styles.value.color"
-                                        :label="getLine('settings.highlightedWordColor')"
-                                        @ion-change="settings.applyStyle('color', $event)">
+                                    <ion-select :placeholder="settings.styles.value.wordColor.key"
+                                        :label="getLine('settings.highlightedWordColor')" class="always-flip"
+                                        :toggle-icon="caretDownSharp" interface="popover"
+                                        @ion-change="settings.applyStyle('wordcolor', $event)">
                                         <ion-select-option v-for="item in settings.wordColors.value" :key="item.code"
-                                            :value="item.code">{{ item.key }}
+                                            :value="item">{{ item.key }}
                                         </ion-select-option>
                                     </ion-select>
                                 </ion-item>
