@@ -5,10 +5,13 @@ export const scrollToElement = async (
   overLayHeight?: number,
   options: ScrollIntoViewOptions = SMOOTH_SCROLL_TO_CENTER
 ) => {
+
+  
   const el =
     typeof elID === "string"
       ? (document.querySelector(elID) as HTMLDivElement)
       : elID;
+     
   const parent = root ? root : undefined;
   if (el && !isInViewport(el, parent)) {
     await delay(timeout || 100);
@@ -17,6 +20,7 @@ export const scrollToElement = async (
         !el.classList.contains(`scroll-margin-top:${overLayHeight || 300}px`)
       ) {
         el.classList.add(`scroll-margin-top:${overLayHeight}px`);
+        el.classList.add(`scroll-margin-bottom:${overLayHeight}px`);
       }
     }
     el.scrollIntoView(options);
