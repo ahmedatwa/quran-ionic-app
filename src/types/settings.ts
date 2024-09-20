@@ -2,7 +2,10 @@ interface Styles {
   fontSize: number | string;
   fontFamily: string;
   fontWeight: string;
-  color: string
+  wordColor: {
+    code: string,
+    key: string
+  }
 }
 
 type FontFamilyGroup = string[];

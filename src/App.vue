@@ -57,7 +57,10 @@ onBeforeMount(async () => {
       fontSize: "1",
       fontFamily: "noto-kufi",
       fontWeight: "normal",
-      color: "primary"
+      wordColor: {
+        code: "primary",
+        key: "Blue"
+      }
     })
   }
   // Locale
