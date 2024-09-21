@@ -13,7 +13,7 @@ const emit = defineEmits<{
     "update:searchValue": [value: string]
 }>()
 
-const handleVerseSearch = (val: string) => {
+const handleVerseSearch = (val: string | number) => {
     emit('update:searchValue', String(val))
 }
 

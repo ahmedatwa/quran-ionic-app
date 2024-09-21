@@ -57,10 +57,10 @@ onBeforeMount(async () => {
       fontSize: "1",
       fontFamily: "noto-kufi",
       fontWeight: "normal",
-      wordColor: {
+      wordColor: JSON.stringify({
         code: "primary",
         key: "Blue"
-      }
+      })
     })
   }
   // Locale
