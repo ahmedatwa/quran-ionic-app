@@ -38,7 +38,7 @@ const props = defineProps<{
     isLoading: boolean
     isAudioLoading: boolean
     pagination?: Pagination | null
-    styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "color", string>
+    styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
 }>()
 
 const emit = defineEmits<{
@@ -135,7 +135,7 @@ const scroll = (verseNumber: number) => scrollToElement(`#line-${verseNumber}`, 
                                     :id="`line-${verse.verse_number}`" :data-hizb-number="verse.hizb_number"
                                     :data-juz-number="verse.juz_number" :data-chapter-id="verse.chapter_id"
                                     :data-page-number="page">
-                                    <ion-text :color="isWordHighlighted(word) ? styles.color : ''" class="word">
+                                    <ion-text :color="isWordHighlighted(word) ? styles.colorCode : ''" class="word">
                                         <div v-if="word.char_type_name === 'end'" class=" end">
                                             ({{ word.text_uthmani }})
                                         </div>

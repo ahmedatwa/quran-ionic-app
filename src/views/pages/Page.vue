@@ -74,7 +74,7 @@ const styles = computed(() => {
         fontFamily: `var(--font-family-${settings.styles.value.fontFamily})`,
         fontSize: `var(--font-size-${settings.styles.value.fontSize})`,
         fontWeight: `var(--font-weight-${settings.styles.value.fontWeight})`,
-        color: settings.styles.value.color
+        colorCode: settings.styles.value.wordColor.code
     }
 })
 

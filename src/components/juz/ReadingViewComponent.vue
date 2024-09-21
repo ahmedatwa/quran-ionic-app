@@ -39,7 +39,7 @@ const props = defineProps<{
     isAudioLoading: boolean
     pagination?: Pagination | null
     activeAudioId?: number
-    styles: Record<"fontSize" | "fontFamily" | "fontWeight", string>
+    styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
 }>()
 
 const emit = defineEmits<{
@@ -137,7 +137,7 @@ const isPlaying = (chapterId: number) => {
                                         class="flex" :data-hizb-number="v.hizb_number" :data-juz-number="v.juz_number"
                                         :data-chapter-id="v.chapter_id" :data-page-number="page">
                                         <ion-text :color="isWordHighlighted(word.location, word.verse_key)
-                                            ? 'text-blue'
+                                            ? styles.colorCode 
                                             : ''" class="word">
                                             <div v-if="word.char_type_name === 'end'" class="end">({{ word.text_uthmani
                                                 }})

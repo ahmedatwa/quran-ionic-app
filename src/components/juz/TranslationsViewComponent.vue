@@ -49,7 +49,7 @@ const props = defineProps<{
     pagination?: Pagination | null
     verseTiming?: VerseTimingsProps
     activeAudioId?: number
-    styles: Record<"fontSize" | "fontFamily" | "fontWeight", string>
+    styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
 
 }>()
 
@@ -158,7 +158,7 @@ const isPlaying = (chapterId: number) => {
                         <ion-row class="ion-align-items-start">
                             <ion-col size="11" class="translations-view-col" :id="`verse-col-${verse.verse_number}`">
                                 <ion-label v-for="word in verse.words" :key="word.id">
-                                    <ion-text :color="isWordHighlighted(word) ? 'primary' : ''">
+                                    <ion-text :color="isWordHighlighted(word) ? styles.colorCode  : ''">
                                         <span v-if="word.char_type_name === 'end'" class="end">
                                             ({{ word.text_uthmani }})</span>
                                         <h3 :style="styles" v-else>{{ word.text_uthmani }}</h3>
