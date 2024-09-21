@@ -16,6 +16,7 @@ import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
 import { useSettings } from '@/utils/useSettings';
 import { useAlert } from '@/utils/useAlert';
+import { makeVerseKey } from '@/utils/verse';
 // types
 import type { ChapterInfo } from '@/types/chapter';
 
@@ -36,13 +37,14 @@ const verses = computed(() => {
 })
 
 
-const router = useRoute()
-const { chapterId } = router.params
+const { params } = useRoute()
+const chapterId = computed(() => Number(params.chapterId))
+const chapterSlug = computed(() => params.slug)
 
 watchEffect(async () => {
     if (chapterId) {
         chapterStore.selectedChapter = null
-        const found = chapterStore.chaptersList.find((c) => c.id === Number(chapterId) || c.slug === chapterId)
+        const found = chapterStore.chaptersList.find((c) => c.id === Number(chapterId) || c.slug === chapterSlug.value)
         if (found) {
             if (!found.verses?.length) {
                 await chapterStore.getVerses(found.id, true)
@@ -102,6 +104,11 @@ const getSurahInfo = async (ev: number) => {
     chapterInfoModalRef.value.$el.click()
 }
 
+const getVerseByKey = async (verseNumber: number) => {
+    console.log(makeVerseKey(chapterId.value, verseNumber));
+    
+    await chapterStore.getVerseByKey(chapterId.value, makeVerseKey(chapterId.value, verseNumber) )
+}
 </script>
 
 
@@ -111,17 +118,17 @@ const getSurahInfo = async (ev: number) => {
             @update:selected-segment="currentSegment = $event"></segments-component>
         <ion-content>
             <translations-view-component id="translations-chapters" :is-loading="chapterStore.isLoading.verses"
-                :is-playing="isPlaying" v-if="currentSegment === 'translations'"
+                :is-playing="isPlaying" v-if="currentSegment === 'translations'" :chapter-id="chapterId"
                 :download-progress="audioPlayerStore.downloadProgress" :is-audio-loading="audioPlayerStore.isLoading"
                 @update:play-audio="playAudio" :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles"
                 :verses="verses" :chapter-name="chapterStore.selectedChapterName.nameArabic"
                 :last-chapter-verse="chapterStore.getLastVerseNumberOfChapter"
                 :verse-count="chapterStore.selectedChapter?.versesCount" :verse-timing="audioPlayerStore.verseTiming"
                 @update:get-verses="getVerses" :pagination="pagination" @update:modal-value="getTranslationAlert"
-                :audio-experience="audioPlayerStore.audioPlayerSetting">
+                :audio-experience="audioPlayerStore.audioPlayerSetting" @update:get-verse-by-key="getVerseByKey">
             </translations-view-component>
             <reading-view-component id="reading-chapters" v-else :is-playing="isPlaying" :verses="verses"
-                :is-loading="chapterStore.isLoading.verses" :styles="styles"
+                :is-loading="chapterStore.isLoading.verses" :styles="styles" :chapter-id="chapterId"
                 :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses"
                 :is-audio-loading="audioPlayerStore.isLoading" @update:surah-info="getSurahInfo"
                 :pagination="pagination" @update:play-audio="playAudio"

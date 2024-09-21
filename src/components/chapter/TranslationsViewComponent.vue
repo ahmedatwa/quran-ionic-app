@@ -11,7 +11,6 @@ import { ellipsisVerticalOutline } from "ionicons/icons";
 import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
-import { useRoute } from "vue-router";
 import { useAlert } from '@/utils/useAlert';
 // types
 import type { Verse, VerseWord } from "@/types/verse";
@@ -30,17 +29,16 @@ import { useChapterStore } from "@/stores/ChapterStore";
 
 const verseSearchInput = ref("")
 const { getLine } = useLocale()
-const { params } = useRoute()
 const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
 const { getChapterName } = useChapterStore()
 const { presentAlert } = useAlert()
 const contentRef = ref()
 const cardRef = ref()
-const chapterId = computed(() => Number(params.chapterId))
 const intersectingVerseNumber = ref(1)
 
 const props = defineProps<{
     id: string;
+    chapterId: number
     downloadProgress?: string | number
     isTranslationsView?: boolean
     isPlaying: boolean
@@ -59,6 +57,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
     "update:getVerses": [value: { key: string, nextPage: number }];
+    "update:getVerseByKey": [value: number]
     "update:playAudio": [value: PlayAudioEmit];
     "update:modalValue": [value: boolean]
 }>();
@@ -128,14 +127,21 @@ watch(() => props.verseTiming, (t) => {
 const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
 
 const computedVerses = computed(() => {
-    return props.verses?.filter((v) => v.verse_number.toString().includes(verseSearchInput.value))
-        .sort((a, b) => a.verse_number - b.verse_number)
+    return props.verses?.filter(({ verse_number }) =>
+        verse_number.toString().includes(verseSearchInput.value)
+    ).sort((a, b) => a.verse_number - b.verse_number)
+
 })
 
-const handleRefresh = (event: RefresherCustomEvent) => {
-    if (!props.pagination?.next_page) {
-        event.target?.complete();
+// handle if verse number isn't found in array
+watch(verseSearchInput, (newVerseInput) => {
+    if (newVerseInput) {
+        const found = props.verses?.find(({ verse_number }) => verse_number === Number(newVerseInput))
+        if (!found) emit("update:getVerseByKey", Number(newVerseInput))
     }
+})
+const handleRefresh = (event: RefresherCustomEvent) => {
+    if (!props.pagination?.next_page) event.target?.complete();
 
     setTimeout(() => {
         loadMoreVerses()
