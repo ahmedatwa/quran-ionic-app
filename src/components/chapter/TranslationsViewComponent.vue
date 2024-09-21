@@ -9,7 +9,7 @@ import { App } from '@capacitor/app';
 import { ellipsisVerticalOutline } from "ionicons/icons";
 // utils
 import { useLocale } from "@/utils/useLocale";
-import { scrollToElement, scrollIfNeeded } from "@/utils/useScrollToElement";
+import { scrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
 import { useRoute } from "vue-router";
 import { useAlert } from '@/utils/useAlert';
@@ -52,7 +52,7 @@ const props = defineProps<{
     audioExperience: { autoScroll: boolean; tooltip: boolean };
     pagination?: Pagination | null
     verseTiming?: VerseTimingsProps
-    styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "color", string>
+    styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
     lastChapterVerse: number
     verseCount?: number
 }>()
@@ -170,7 +170,7 @@ const handleRefresh = (event: RefresherCustomEvent) => {
                         <ion-row class="ion-align-items-start">
                             <ion-col size="11" class="translations-view-col" :id="`verse-col-${verse.verse_number}`">
                                 <ion-label v-for="word in verse.words" :key="word.id">
-                                    <ion-text :color="isWordHighlighted(word) ? styles.color : ''"
+                                    <ion-text :color="isWordHighlighted(word) ? styles.colorCode : ''"
                                         :id="`word-${verse.verse_number}`">
                                         <span v-if="word.char_type_name === 'end'" class="end">
                                             ({{ word.text_uthmani }})</span>
