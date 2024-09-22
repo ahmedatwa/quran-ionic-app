@@ -104,9 +104,7 @@ const getSurahInfo = async (ev: number) => {
     chapterInfoModalRef.value.$el.click()
 }
 
-const getVerseByKey = async (verseNumber: number) => {
-    console.log(makeVerseKey(chapterId.value, verseNumber));
-    
+const getVerseByKey = async (verseNumber: number) => {    
     await chapterStore.getVerseByKey(chapterId.value, makeVerseKey(chapterId.value, verseNumber) )
 }
 </script>

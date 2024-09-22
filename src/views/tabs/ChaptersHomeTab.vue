@@ -1,9 +1,10 @@
 <script setup lang="ts">
 // ionic
-import { IonPage, IonContent, IonSkeletonText } from '@ionic/vue';
+import { IonPage, IonContent, IonSkeletonText, IonSpinner } from '@ionic/vue';
 import { IonNote, IonItem, IonList, IonLabel } from '@ionic/vue';
 // stores
 import { useChapterStore } from '@/stores/ChapterStore';
+import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
 // utils
 import { localizeNumber } from '@/utils/number';
 import { useLocale } from '@/utils/useLocale';
@@ -13,17 +14,20 @@ import { bookOutline } from "ionicons/icons";
 
 const { getLocale, getLine, isRtl } = useLocale()
 const chapterStore = useChapterStore()
+const audioPlayerStore = useAudioPlayerStore()
 
 const handleSearch = (query: string) => {
   chapterStore.searchValue = query
 }
 
+const isPlaying = (chapterId: number) => {
+  return audioPlayerStore.isPlaying && chapterId === audioPlayerStore.chapterId
+}
 </script>
 
 <template>
   <ion-page>
-    <header-component :title="getLine('tabs.chapters')" :icon="bookOutline"
-      @update:search-value="handleSearch" search>
+    <header-component :title="getLine('tabs.chapters')" :icon="bookOutline" @update:search-value="handleSearch" search>
     </header-component>
     <ion-content :fullscreen="true">
       <ion-list v-if="!chapterStore.chapters?.length">
@@ -36,6 +40,7 @@ const handleSearch = (query: string) => {
           :router-link="`chapter/${chapter.id}/${chapter.slug}`">
           <ion-label>{{ localizeNumber(chapter.id, getLocale) }}- {{ isRtl ? chapter.nameArabic : chapter.nameSimple }}
           </ion-label>
+          <ion-spinner name="dots" color="danger" v-if="isPlaying(chapter.id)"></ion-spinner>
           <ion-note slot="end">{{ chapter.versesCount }}</ion-note>
         </ion-item>
       </ion-list>
