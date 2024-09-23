@@ -45,7 +45,7 @@ const downloadStatus = computed(() => {
             </span>
             <span v-else class="d-inherit">
                 <ion-icon color="primary" :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
-                <ion-label>{{ getLine('quranReader.buttonPlay') }}</ion-label>
+                <ion-label>{{ isPlaying ? getLine('quranReader.buttonPause') : getLine('quranReader.buttonPlay') }}</ion-label>
             </span>
         </ion-chip>
         <ion-button v-if="chapterInfo" fill="clear" @click="$emit('update:surahInfo', chapterId)">

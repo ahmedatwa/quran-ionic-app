@@ -64,6 +64,7 @@ export default {
     buttonFilter: "تصفية الترجمات",
     buttonChapterInfo: "معلومات سورة",
     buttonPlay: "تشغيل الصوت",
+    buttonPause: "إيقاف الصوت",
     textSurahInfo: "معلومات سورة",
     nextPage: "الصفحة التالية",
     prevPage: "الصفحة السابقة",

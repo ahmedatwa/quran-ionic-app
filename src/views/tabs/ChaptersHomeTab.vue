@@ -10,7 +10,7 @@ import { localizeNumber } from '@/utils/number';
 import { useLocale } from '@/utils/useLocale';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
-import { bookOutline } from "ionicons/icons";
+import { bookOutline, volumeMediumOutline } from "ionicons/icons";
 
 const { getLocale, getLine, isRtl } = useLocale()
 const chapterStore = useChapterStore()
@@ -38,7 +38,7 @@ const isPlaying = (chapterId: number) => {
       <ion-list>
         <ion-item button detail v-for="chapter in chapterStore.chapters" :key="chapter.id"
           :router-link="`chapter/${chapter.id}/${chapter.slug}`">
-          <ion-spinner name="dots" color="danger" v-if="isPlaying(chapter.id)" class="ml-1"></ion-spinner>
+          <ion-icon :icon="volumeMediumOutline" color="danger" v-if="isPlaying(chapter.id)" class="ml-1"></ion-icon>
           <ion-label>{{ localizeNumber(chapter.id, getLocale) }}- {{ isRtl ? chapter.nameArabic : chapter.nameSimple }}
           </ion-label>
           <ion-note slot="end">{{ chapter.versesCount }}</ion-note>
