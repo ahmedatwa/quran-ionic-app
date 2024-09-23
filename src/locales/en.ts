@@ -65,6 +65,7 @@ export default {
     buttonFilter: "Filter Translations",
     buttonChapterInfo: "Chapter Info",
     buttonPlay: "Play Audio",
+    buttonPause: "Pause Audio",
     textSurahInfo: "Surah Info",
     nextPage: "Next Page",
     prevPage: "Previous Page",
