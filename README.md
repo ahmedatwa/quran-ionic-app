@@ -22,15 +22,15 @@ Set up your project using your preferred package manager. Use the corresponding 
 
 ## ✨ Features
 
-- chapters Translations/Reading View 
+- Chapter Verses Translations/Reading View 
 - Juzs Translations/Reading View 
 - Pages Translations/Reading View 
-- loop Audio for chapters
-- Verses Translations
-- play single Aya from chapter
-- bookmark verses for quick access
-- search verses
-- native ios/android/web theme
+- Loop Audio for chapters
+- Play single Aya from chapter
+- Bookmark verses for quick access
+- Search verses
+- Native ios/android/web theme
+- Multiple reciters
 
 
 ### Building for Production
