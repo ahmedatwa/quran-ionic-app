@@ -33,7 +33,9 @@ Set up your project using your preferred package manager. Use the corresponding 
 To build your project for production, use:
 
 ```bash
-npm run build
+1- ionic build
+2- npx cap add ios
+3- open ios/App/App.xcworkspace
 ```
 
 ## 📑 License
