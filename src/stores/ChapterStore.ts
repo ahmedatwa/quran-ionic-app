@@ -340,7 +340,6 @@ export const useChapterStore = defineStore("chapter-store", () => {
     const chaptersDB: { data: string; length: number } = await getStorage(id);
   
     if (chaptersDB) {
-      console.log(JSON.parse(chaptersDB.data));
       const parsedData = JSON.parse(chaptersDB.data) 
       chapter.verses = parsedData.verses;
       chapter.pagination = parsedData.pagination;
