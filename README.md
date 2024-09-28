@@ -25,7 +25,12 @@ Set up your project using your preferred package manager. Use the corresponding 
 - chapters Translations/Reading View 
 - Juzs Translations/Reading View 
 - Pages Translations/Reading View 
-- loop Audio for chapters 
+- loop Audio for chapters
+- Verses Translations
+- play single Aya from chapter
+- bookmark verses for quick access
+- search verses
+- native ios/android/web theme
 
 
 ### Building for Production
