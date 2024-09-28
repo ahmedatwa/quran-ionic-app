@@ -10,9 +10,9 @@ import { useStorage } from '@/utils/useStorage';
 import { useLocale } from "@/utils/useLocale"
 import AudioHtmlElComponent from "@/components/audio/AudioHtmlElComponent.vue";
 
+const translationsStore = useTranslationsStore()
 const metaStore = useMetaStore()
 const audioPlayerStore = useAudioPlayerStore()
-const translationsStore = useTranslationsStore()
 const { setLocale, isRtl } = useLocale()
 const { getStorage, setStorage } = useStorage("__settingsDB")
 
@@ -21,8 +21,11 @@ onBeforeMount(async () => {
   const translation = await getStorage("translation")
   if (translation) {
     translationsStore.selectedTranslation = JSON.parse(translation)
+  } else {
+    translationsStore.selectedTranslation = translationsStore.translationsList.find((t) => t.id === translationsStore.defaultTranslationID)
+    setStorage('translation', JSON.stringify(translationsStore.selectedTranslation))
   }
-  
+
   const colorScheme = await getStorage("colorScheme")
   if (colorScheme) {
     switch (colorScheme) {

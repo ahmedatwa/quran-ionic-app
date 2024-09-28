@@ -2,12 +2,15 @@ import { defineStore } from "pinia";
 import { ref, computed, onBeforeMount } from "vue";
 // types
 import { Translation, TranslationReduceMap } from "@/types/translations";
+import { useAlert } from "@/utils/useAlert";
 
 export const useTranslationsStore = defineStore("translations-store", () => {
   const isLoading = ref(false);
   const translationsList = ref<Translation[]>([]);
   const selectedTranslation = ref<Translation>();
   const selectedTranslationId = computed(() => selectedTranslation.value?.id);
+  const defaultTranslationID = ref(131)
+  const { presentToast } = useAlert();
 
   const getAllTranslations = (): Promise<Translation[]> => {
     return new Promise((resolve, reject) => {
@@ -27,8 +30,8 @@ export const useTranslationsStore = defineStore("translations-store", () => {
       .then((response) => {
         response.forEach((res) => translationsList.value?.push({ ...res }));
       })
-      .catch((error) => {
-        throw error;
+      .catch(async (error) => {
+        await presentToast({ message: String(error) });
       })
       .finally(() => {
         isLoading.value = false;
@@ -68,6 +71,7 @@ export const useTranslationsStore = defineStore("translations-store", () => {
     translationsList,
     selectedTranslation,
     selectedTranslationId,
+    defaultTranslationID,
     groupTranslationsByLanguage,
     getTranslations,
   };
