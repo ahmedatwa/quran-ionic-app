@@ -35,7 +35,7 @@
     "ionicons": "^7.0.0",
     "localforage-cordovasqlitedriver": "^1.8.0",
     "pinia": "^2.2.0",
-    "vue": "3.5.8",
+    "vue": "3.5.10",
     "vue-router": "4.4.5"
   },
   "devDependencies": {
@@ -44,14 +44,14 @@
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/test-utils": "^2.3.0",
-    "cypress": "13.14.2",
+    "cypress": "13.15.0",
     "eslint": "8.57.1",
     "eslint-plugin-vue": "9.28.0",
     "jsdom": "^22.1.0",
-    "sass": "1.79.3",
-    "terser": "5.33.0",
+    "sass": "1.79.4",
+    "terser": "5.34.1",
     "typescript": "5.6.2",
-    "vite": "5.4.7",
+    "vite": "5.4.8",
     "vitest": "^0.34.6",
     "vue-tsc": "2.1.6"
   },
