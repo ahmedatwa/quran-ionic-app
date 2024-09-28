@@ -1,4 +1,4 @@
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onBeforeMount } from "vue";
 // utils
 import { useStorage } from "@/utils/useStorage";
 import { useLocale } from "@/utils/useLocale";
@@ -129,7 +129,11 @@ export const useSettings = () => {
     setStorage("translation", JSON.stringify(translation));
   };
 
-  onMounted(async () => {
+  const getSelectedTranslationDB = computed(
+    async () => await getStorage("translation")
+  );
+
+  onBeforeMount(async () => {
     // styles
     const stylesStorage = await getStorage("styles");
     if (stylesStorage) {
@@ -141,6 +145,7 @@ export const useSettings = () => {
     // color scheme
     const scheme = await getStorage("colorScheme");
     if (scheme) colorScheme.value = scheme;
+
   });
 
   return {
@@ -154,6 +159,7 @@ export const useSettings = () => {
     fontFamilyGroup,
     selectedWordColor,
     getSelectedFontSize,
+    getSelectedTranslationDB,
     updateSelectedReciter,
     updateSelectedTranslations,
     appleColorScheme,

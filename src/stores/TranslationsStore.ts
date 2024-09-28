@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, computed, onBeforeMount, watch, onMounted, watchEffect } from "vue";
+import { ref, computed, onBeforeMount } from "vue";
 // types
 import { Translation, TranslationReduceMap } from "@/types/translations";
 
@@ -7,6 +7,7 @@ export const useTranslationsStore = defineStore("translations-store", () => {
   const isLoading = ref(false);
   const translationsList = ref<Translation[]>([]);
   const selectedTranslation = ref<Translation>();
+  const selectedTranslationId = computed(() => selectedTranslation.value?.id);
 
   const getAllTranslations = (): Promise<Translation[]> => {
     return new Promise((resolve, reject) => {
@@ -51,12 +52,6 @@ export const useTranslationsStore = defineStore("translations-store", () => {
     await getTranslations();
   });
 
-  watchEffect(() => {
-    if (!selectedTranslation.value) {
-      const result = translationsList.value.find((t) => t.id === 131);
-      if (result) selectedTranslation.value = result;
-    }
-  });
   const groupTranslationsByLanguage = computed(() => {
     if (translationsList.value) {
       return translationsList.value.reduce((o: any, i) => {
@@ -72,6 +67,7 @@ export const useTranslationsStore = defineStore("translations-store", () => {
     isLoading,
     translationsList,
     selectedTranslation,
+    selectedTranslationId,
     groupTranslationsByLanguage,
     getTranslations,
   };

@@ -12,10 +12,8 @@ import { useRoute } from 'vue-router';
 // stores
 import { useChapterStore } from "@/stores/ChapterStore"
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
-import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
 import { useSettings } from '@/utils/useSettings';
-import { useAlert } from '@/utils/useAlert';
 import { makeVerseKey } from '@/utils/verse';
 // types
 import type { ChapterInfo } from '@/types/chapter';
@@ -23,8 +21,6 @@ import type { ChapterInfo } from '@/types/chapter';
 const currentSegment = ref("translations")
 const chapterStore = useChapterStore()
 const audioPlayerStore = useAudioPlayerStore()
-const { presentAlert } = useAlert()
-const transaltionStore = useTranslationsStore()
 const pageRef = ref()
 const pageRefEl = ref()
 const settings = useSettings()
@@ -85,16 +81,6 @@ const styles = computed(() => {
     }
 })
 
-const getTranslationAlert = async () => {
-    if (transaltionStore.selectedTranslation) {
-        await presentAlert({
-            header: transaltionStore.selectedTranslation?.language_name,
-            message: transaltionStore.selectedTranslation.author_name,
-            id: "translation-alert",
-        })
-    }
-}
-
 onMounted(() => pageRefEl.value = pageRef.value.$el)
 
 const getSurahInfo = async (ev: number) => {
@@ -104,8 +90,8 @@ const getSurahInfo = async (ev: number) => {
     chapterInfoModalRef.value.$el.click()
 }
 
-const getVerseByKey = async (verseNumber: number) => {    
-    await chapterStore.getVerseByKey(chapterId.value, makeVerseKey(chapterId.value, verseNumber) )
+const getVerseByKey = async (verseNumber: number) => {
+    await chapterStore.getVerseByKey(chapterId.value, makeVerseKey(chapterId.value, verseNumber))
 }
 </script>
 
@@ -122,7 +108,7 @@ const getVerseByKey = async (verseNumber: number) => {
                 :verses="verses" :chapter-name="chapterStore.selectedChapterName.nameArabic"
                 :last-chapter-verse="chapterStore.getLastVerseNumberOfChapter"
                 :verse-count="chapterStore.selectedChapter?.versesCount" :verse-timing="audioPlayerStore.verseTiming"
-                @update:get-verses="getVerses" :pagination="pagination" @update:modal-value="getTranslationAlert"
+                @update:get-verses="getVerses" :pagination="pagination"
                 :audio-experience="audioPlayerStore.audioPlayerSetting" @update:get-verse-by-key="getVerseByKey">
             </translations-view-component>
             <reading-view-component id="reading-chapters" v-else :is-playing="isPlaying" :verses="verses"

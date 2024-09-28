@@ -17,6 +17,12 @@ const { setLocale, isRtl } = useLocale()
 const { getStorage, setStorage } = useStorage("__settingsDB")
 
 onBeforeMount(async () => {
+  // Translations
+  const translation = await getStorage("translation")
+  if (translation) {
+    translationsStore.selectedTranslation = JSON.parse(translation)
+  }
+  
   const colorScheme = await getStorage("colorScheme")
   if (colorScheme) {
     switch (colorScheme) {
@@ -71,11 +77,7 @@ onBeforeMount(async () => {
   } else {
     setLocale(localeStorage.key, localeStorage.rtl)
   }
-  // Translations
-  const translation = await getStorage("translation")
-  if (translation) {
-    translationsStore.selectedTranslation = JSON.parse(translation)
-  }
+
   // Reciter
   const reciter = await getStorage("reciter")
   if (reciter) {

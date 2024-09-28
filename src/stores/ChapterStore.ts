@@ -16,7 +16,7 @@ import { useStorage } from "@/utils/useStorage";
 import { useAlert } from "@/utils/useAlert";
 
 export const useChapterStore = defineStore("chapter-store", () => {
-  const { selectedTranslation } = useTranslationsStore();
+  const translationsStore = useTranslationsStore();
   const { getStorage, setStorage } = useStorage("__chaptersDB");
   const TOTAL_CHAPTERS = ref(114);
   const { getLine } = useLocale();
@@ -35,13 +35,6 @@ export const useChapterStore = defineStore("chapter-store", () => {
     return 1;
   });
 
-  const selectedTranslationId = computed(() => {
-    if (selectedTranslation?.id) {
-      return String(selectedTranslation.id);
-    }
-    return "131";
-  });
-
   const selectedChapterPagination = computed(() => {
     if (selectedChapter.value) {
       return selectedChapter.value.pagination;
@@ -49,7 +42,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
   });
 
   const chapterInfo = ref<ChapterInfo | null>(null);
-  const perPage = ref(10);
+  const perPage = ref(15);
 
   const chapters = computed((): Chapter[] | undefined => {
     if (chaptersList.value) {
@@ -150,14 +143,22 @@ export const useChapterStore = defineStore("chapter-store", () => {
     if (chapter) {
       const check = await isDBStorageData(id, chapter);
       if (check) {
+        console.log(check);
+        
         isLoading.value.verses = false;
         return;
       }
     }
-
+    
     await instance
       .get(
-        getVersesUrl("by_chapter", id, selectedTranslationId.value, page, limit)
+        getVersesUrl(
+          "by_chapter",
+          id,
+          Number(translationsStore.selectedTranslationId),
+          page,
+          limit
+        )
       )
       .then((response) => {
         if (chapter) {
@@ -184,7 +185,11 @@ export const useChapterStore = defineStore("chapter-store", () => {
       .finally(() => {
         isLoading.value.verses = false;
         // save chapter in DB
-        setStorage(String(selectedChapter.value?.id), {
+        const id =
+          selectedChapter.value?.id +
+          "-" +
+          translationsStore.selectedTranslationId;
+        setStorage(id, {
           data: JSON.stringify(selectedChapter.value),
           length: selectedChapter.value?.verses?.length,
         });
@@ -196,7 +201,13 @@ export const useChapterStore = defineStore("chapter-store", () => {
     isLoading.value.verses = true;
     isLoading.value.length = 1;
     await instance
-      .get(getVersesUrl("by_key", verseKey, selectedTranslationId.value))
+      .get(
+        getVersesUrl(
+          "by_key",
+          verseKey,
+          Number(translationsStore.selectedTranslationId)
+        )
+      )
       .then((response) => {
         const chapter = chaptersList.value.find((s) => s.id === id);
         if (chapter) {
@@ -228,7 +239,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
 
   // Add New Translations
   watch(
-    () => selectedTranslationId.value,
+    () => translationsStore.selectedTranslationId,
     async (resources) => {
       if (resources) {
         if (selectedChapter.value) {
@@ -327,31 +338,35 @@ export const useChapterStore = defineStore("chapter-store", () => {
   };
 
   const isDBStorageData = async (chapterId: number, chapter: Chapter) => {
-    const chaptersDB: { data: string; length: number } = await getStorage(
-      String(chapterId)
-    );
+    const id = chapterId + "-" + translationsStore.selectedTranslationId;    
+    const chaptersDB: { data: string; length: number } = await getStorage(id);
+  
     if (chaptersDB) {
-      // first fetch check onmounted
-
+      console.log(JSON.parse(chaptersDB.data));
+      const parsedData = JSON.parse(chaptersDB.data) 
+      chapter.verses = parsedData.verses;
+      chapter.pagination = parsedData.pagination;
+      selectedChapter.value = chapter;
+      return true;
       // versecount === length
-      if (chapter.verses?.length === 0) {
-        chapter.verses = JSON.parse(chaptersDB.data).verses;
-        chapter.pagination = JSON.parse(chaptersDB.data).pagination;
-        selectedChapter.value = chapter;
-        return true;
-      } else if (chapter.verses?.length) {
-        if (chaptersDB.length > chapter.verses.length) {
-          chapter.verses = JSON.parse(chaptersDB.data).verses;
-          chapter.pagination = JSON.parse(chaptersDB.data).pagination;
-          selectedChapter.value = chapter;
-          return true;
-        }
-      } else if (chaptersDB.length === chapter.versesCount) {
-        chapter.verses = JSON.parse(chaptersDB.data).verses;
-        chapter.pagination = JSON.parse(chaptersDB.data).pagination;
-        selectedChapter.value = chapter;
-        return true;
-      }
+      // if (chapter.verses?.length === 0) {
+      //   chapter.verses = JSON.parse(chaptersDB.data).verses;
+      //   chapter.pagination = JSON.parse(chaptersDB.data).pagination;
+      //   selectedChapter.value = chapter;
+      //   return true;
+      // } else if (chapter.verses?.length) {
+      //   if (chaptersDB.length > chapter.verses.length) {
+      //     chapter.verses = JSON.parse(chaptersDB.data).verses;
+      //     chapter.pagination = JSON.parse(chaptersDB.data).pagination;
+      //     selectedChapter.value = chapter;
+      //     return true;
+      //   }
+      // } else if (chaptersDB.length === chapter.versesCount) {
+      //   chapter.verses = JSON.parse(chaptersDB.data).verses;
+      //   chapter.pagination = JSON.parse(chaptersDB.data).pagination;
+      //   selectedChapter.value = chapter;
+      //   return true;
+      // }
     }
 
     return false;

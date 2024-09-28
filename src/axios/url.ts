@@ -34,7 +34,7 @@ const urlFields = `&words=true&translation_fields=${verseTranslationFields.join(
 export const getVersesUrl = (
   key: string,
   id: number | string,
-  translations: string,
+  translations: string | number,
   page?: number,
   limit?: number
 ) => {
