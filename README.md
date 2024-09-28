@@ -7,8 +7,8 @@ Quran Mac/IOS App is a Sadaqah Jariyah. I hope to make it easy for everyone to r
 
 ## ❗️ Important Links
 
-- 🚗 [Original Vue Web](https://github.com/ahmedatwa/Nobel-Quran--vue3)
-- 📄 [Electron App Mac](https://github.com/ahmedatwa/Quran-electron--vue3)
+- 🚗 [Original Vue Web App](https://github.com/ahmedatwa/Nobel-Quran--vue3)
+- 📄 [Electron Mac App](https://github.com/ahmedatwa/Quran-electron--vue3)
 - 🔗 [Quran Foundation API Docs](https://api-docs.quran.com/docs/category/quran.com-api)
 
 
