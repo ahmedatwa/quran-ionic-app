@@ -142,9 +142,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
     // Check for DB Storage to avoid the api call
     if (chapter) {
       const check = await isDBStorageData(id, chapter);
-      if (check) {
-        console.log(check);
-        
+      if (check) {        
         isLoading.value.verses = false;
         return;
       }
