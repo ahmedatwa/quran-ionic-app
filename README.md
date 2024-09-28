@@ -3,7 +3,7 @@
 Quran Mac/IOS App is a Sadaqah Jariyah. I hope to make it easy for everyone to read, study, and learn The Noble Quran. The Noble Quran has many names including Al-Quran Al-Kareem, Al-Ketab, Al-Furqan, Al-Maw'itha, Al-Thikr, and Al-Noor.
 
 -**The App has been built using Quran Foundation API**
--**Supported by the power of Vite & Vue3 & typescript**
+-**Supported by the power of Vite & [Vue3](https://vuejs.org) & typescript & [Ionic](https://ionicframework.com/docs/vue/your-first-app/deploying-mobile) & [capacitorjs](https://capacitorjs.com/docs/ios)**
 
 ## ❗️ Important Links
 
