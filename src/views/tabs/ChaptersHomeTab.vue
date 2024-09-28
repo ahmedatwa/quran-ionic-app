@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // ionic
 import { IonPage, IonContent, IonSkeletonText } from '@ionic/vue';
-import { IonNote, IonItem, IonList, IonLabel } from '@ionic/vue';
+import { IonNote, IonItem, IonList, IonLabel, IonIcon } from '@ionic/vue';
 // stores
 import { useChapterStore } from '@/stores/ChapterStore';
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
