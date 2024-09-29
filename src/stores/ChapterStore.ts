@@ -340,30 +340,25 @@ export const useChapterStore = defineStore("chapter-store", () => {
     const chaptersDB: { data: string; length: number } = await getStorage(id);
   
     if (chaptersDB) {
-      const parsedData = JSON.parse(chaptersDB.data) 
-      chapter.verses = parsedData.verses;
-      chapter.pagination = parsedData.pagination;
-      selectedChapter.value = chapter;
-      return true;
-      // versecount === length
-      // if (chapter.verses?.length === 0) {
-      //   chapter.verses = JSON.parse(chaptersDB.data).verses;
-      //   chapter.pagination = JSON.parse(chaptersDB.data).pagination;
-      //   selectedChapter.value = chapter;
-      //   return true;
-      // } else if (chapter.verses?.length) {
-      //   if (chaptersDB.length > chapter.verses.length) {
-      //     chapter.verses = JSON.parse(chaptersDB.data).verses;
-      //     chapter.pagination = JSON.parse(chaptersDB.data).pagination;
-      //     selectedChapter.value = chapter;
-      //     return true;
-      //   }
-      // } else if (chaptersDB.length === chapter.versesCount) {
-      //   chapter.verses = JSON.parse(chaptersDB.data).verses;
-      //   chapter.pagination = JSON.parse(chaptersDB.data).pagination;
-      //   selectedChapter.value = chapter;
-      //   return true;
-      // }
+      //versecount === length
+      if (chapter.verses?.length === 0) {
+        chapter.verses = JSON.parse(chaptersDB.data).verses;
+        chapter.pagination = JSON.parse(chaptersDB.data).pagination;
+        selectedChapter.value = chapter;
+        return true;
+      } else if (chapter.verses?.length) {
+        if (chaptersDB.length > chapter.verses.length) {
+          chapter.verses = JSON.parse(chaptersDB.data).verses;
+          chapter.pagination = JSON.parse(chaptersDB.data).pagination;
+          selectedChapter.value = chapter;
+          return true;
+        }
+      } else if (chaptersDB.length === chapter.versesCount) {
+        chapter.verses = JSON.parse(chaptersDB.data).verses;
+        chapter.pagination = JSON.parse(chaptersDB.data).pagination;
+        selectedChapter.value = chapter;
+        return true;
+      }
     }
 
     return false;
