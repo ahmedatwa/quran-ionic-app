@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // ionic
 import { IonPage, IonContent, IonSkeletonText } from '@ionic/vue';
-import { IonNote, IonItem, IonList, IonLabel, IonIcon } from '@ionic/vue';
+import { IonNote, IonItem, IonList, IonLabel, IonSpinner } from '@ionic/vue';
 // stores
 import { useChapterStore } from '@/stores/ChapterStore';
 import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
@@ -10,7 +10,7 @@ import { localizeNumber } from '@/utils/number';
 import { useLocale } from '@/utils/useLocale';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
-import { bookOutline, ellipsisHorizontalOutline } from "ionicons/icons";
+import { bookOutline } from "ionicons/icons";
 
 const { getLocale, getLine, isRtl } = useLocale()
 const chapterStore = useChapterStore()
@@ -38,7 +38,7 @@ const isPlaying = (chapterId: number) => {
       <ion-list>
         <ion-item button detail v-for="chapter in chapterStore.chapters" :key="chapter.id"
           :router-link="`chapter/${chapter.id}/${chapter.slug}`">
-          <ion-icon :icon="ellipsisHorizontalOutline" color="danger" v-if="isPlaying(chapter.id)" class="ml-1"></ion-icon>
+          <ion-spinner name="dots" color="danger" class="ml-1" v-if="isPlaying(chapter.id)"></ion-spinner>
           <ion-label>{{ localizeNumber(chapter.id, getLocale) }}- {{ isRtl ? chapter.nameArabic : chapter.nameSimple }}
           </ion-label>
           <ion-note slot="end">{{ chapter.versesCount }}</ion-note>

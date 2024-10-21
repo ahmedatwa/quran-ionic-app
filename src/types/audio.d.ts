@@ -84,8 +84,10 @@ type AudioPlayerSettings = {
   tooltip?: boolean;
   fullwidth?: boolean;
   autoDownload?: boolean;
-  fab: boolean
+  fab: boolean;
 };
+
+type AudioExperience = { autoScroll: boolean; tooltip: boolean } | null;
 
 export {
   VerseTimings,
@@ -98,4 +100,5 @@ export {
   BottomSheetProps,
   VerseTimingSegments,
   AudioPlayerSettings,
+  AudioExperience,
 };

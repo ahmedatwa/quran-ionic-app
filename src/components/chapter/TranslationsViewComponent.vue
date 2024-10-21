@@ -12,10 +12,12 @@ import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
 import { useAlert } from '@/utils/useAlert';
+// test////
+import { useScrollTo } from "@/utils/useScrollTo"
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { Pagination } from "@/types/chapter";
-import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
+import type { PlayAudioEmit, VerseTimingsProps, AudioExperience } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 import type { RefresherCustomEvent } from "@ionic/vue"
 
@@ -35,6 +37,9 @@ const { presentAlert } = useAlert()
 const contentRef = ref()
 const cardRef = ref()
 const intersectingVerseNumber = ref(1)
+// test
+const { scrollTo } = useScrollTo()
+
 
 const props = defineProps<{
     id: string;
@@ -47,7 +52,7 @@ const props = defineProps<{
     chapterName?: string
     isBismillah: string
     verses?: Verse[]
-    audioExperience: { autoScroll: boolean; tooltip: boolean };
+    audioExperience: AudioExperience;
     pagination?: Pagination | null
     verseTiming?: VerseTimingsProps
     styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
@@ -117,14 +122,19 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
 watch(() => props.verseTiming, (t) => {
     if (t?.verseNumber) {
         const verseNumber = t.verseNumber
-        if (props.audioExperience.autoScroll && props.isPlaying) {
-            intersectingVerseNumber.value = t.verseNumber
-            scroll(verseNumber)
+        if (props.audioExperience) {
+            if (props.audioExperience.autoScroll && props.isPlaying) {
+                intersectingVerseNumber.value = t.verseNumber
+                scroll(verseNumber)
+            }
         }
     }
 })
 
-const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
+const scroll = (verseNumber: number) => {
+    scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
+    //scrollTo(`#verse-col-${verseNumber}`, contentRef.value.$el)
+}
 
 const computedVerses = computed(() => {
     return props.verses?.filter(({ verse_number }) =>
@@ -148,6 +158,10 @@ const handleRefresh = (event: RefresherCustomEvent) => {
         event.target?.complete();
     }, 500);
 };
+
+const playAudio = (ev: PlayAudioEmit) => {
+    emit('update:playAudio', ev)
+}
 </script>
 <template>
     <div class="ion-page" :id="`translations-${id}-${chapterId}`">
@@ -161,7 +175,7 @@ const handleRefresh = (event: RefresherCustomEvent) => {
                 <verse-seach-input-component :verse-count="verseCount"
                     @update:search-value="verseSearchInput = $event"></verse-seach-input-component>
                 <card-header-buttons-component :chapter-id="chapterId" :is-playing="isPlaying"
-                    :download-progress="downloadProgress" @update:play-audio="$emit('update:playAudio', $event)"
+                    :download-progress="downloadProgress" @update:play-audio="playAudio"
                     :is-audio-loading="isAudioLoading"
                     @update:language-modal-value="$emit('update:modalValue', $event)">
                 </card-header-buttons-component>

@@ -142,7 +142,6 @@ export const getChapterIdfromKey = (key: string) => {
   return Number(key.split(COLON_SPLITTER)[0]);
 };
 
-
 export const verseFields = [
   "id",
   "chapter_id",
@@ -202,3 +201,11 @@ export const verseTranslationFields = [
   "rub_number",
   "page_number",
 ];
+
+export const getVerseWordFields = () => {
+  return verseWordFields.join(",");
+};
+
+export const getVerseTranslationFields = () => {
+  return verseTranslationFields.join(",");
+};

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, onMounted, computed, watchEffect, h } from "vue";
+import { ref, onBeforeMount, onMounted, computed, watchEffect } from "vue";
 //axios
 import { instance } from "@/axios";
 import { audioRecitersUrl, recitationsUrl } from "@/axios/url";
@@ -18,6 +18,8 @@ import { useBlob } from "@/utils/useBlob";
 import { useAlert } from "@/utils/useAlert";
 import { getLangFullLocale } from "@/utils/locale";
 import { useLocale } from "@/utils/useLocale";
+import { getAllRecitations } from "@/utils/reciter";
+
 import { secondsFormatter, secondsToMilliSeconds } from "@/utils/datetime";
 import { milliSecondsToSeconds } from "@/utils/datetime";
 import { makeWordLocation, getVerseNumberFromKey } from "@/utils/verse";
@@ -93,7 +95,7 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     // if (payload.audioID === chapterId.value) return;
 
     isLoading.value = true;
-    isVisible.value = true
+    isVisible.value = true;
     chapterId.value = payload.audioID;
     selectedVerseKey.value = payload.verseKey;
     audioPayLoadSrc.value = payload.audioSrc ? payload.audioSrc : audioSrc;
@@ -153,11 +155,8 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   };
 
   const getRecitations = async () => {
-    // https://api.qurancdn.com/api/qdc/audio/reciters?locale=en
-    await instance
-      .get(recitationsUrl)
-      .then((response) => {
-        recitations.value = response.data.reciters;
+    await getAllRecitations().then((response) => {
+        recitations.value = response;
       })
       .catch(async (error) => {
         await presentToast({ message: String(error) });
@@ -194,10 +193,18 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
     }
   };
 
-  onMounted(async () => {
-    await getRecitations();
+  onBeforeMount(async () => {
+    if (!recitations.value.length) await getRecitations();
     const audioStorage = await settingsDB.getStorage("audioSettings");
     if (audioStorage) audioPlayerSetting.value = audioStorage;
+  });
+
+  onMounted(() => {
+    if (!selectedReciter.value) {
+      selectedReciter.value = recitations.value.find(({ id }) => id === 7);
+      if (selectedReciter.value)
+        settingsDB.setStorage("reciter", JSON.stringify(selectedReciter.value));
+    }
   });
 
   watchEffect(() => {
@@ -591,8 +598,8 @@ export const useAudioPlayerStore = defineStore("audio-player-store", () => {
   };
 
   const playChapterAudio = async (audioID: number) => {
-    await getAudio({ audioID })
-}
+    await getAudio({ audioID });
+  };
 
   return {
     audioEl,

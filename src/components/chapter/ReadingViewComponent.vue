@@ -10,7 +10,7 @@ import { scrollToElement } from "@/utils/useScrollToElement";
 // Types
 import type { Verse, MapVersesByPage, VerseWord } from "@/types/verse"
 import type { Pagination } from "@/types/page";
-import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
+import type { PlayAudioEmit, VerseTimingsProps, AudioExperience } from "@/types/audio";
 import type { InfiniteScrollCustomEvent, RefresherCustomEvent } from "@ionic/vue"
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
@@ -33,7 +33,7 @@ const props = defineProps<{
     isPlaying: boolean
     verseTiming?: VerseTimingsProps
     verses?: Verse[]
-    audioExperience: { autoScroll: boolean; tooltip: boolean };
+    audioExperience: AudioExperience;
     verseCount?: number
     isLoading: boolean
     isAudioLoading: boolean
@@ -60,9 +60,11 @@ const mapVersesByPage = computed((): MapVersesByPage | undefined => {
 watch(() => props.verseTiming, (t) => {
     if (t?.verseNumber) {
         const verseNumber = t.verseNumber
-        if (props.audioExperience.autoScroll && props.isPlaying) {
-            intersectingVerseNumber.value = t.verseNumber
-            scroll(verseNumber)
+        if (props.audioExperience) {
+            if (props.audioExperience.autoScroll && props.isPlaying) {
+                intersectingVerseNumber.value = t.verseNumber
+                scroll(verseNumber)
+            }
         }
     }
 })
