@@ -4,7 +4,7 @@ import { IonPage, IonContent, IonSkeletonText } from '@ionic/vue';
 import { IonNote, IonItem, IonList, IonLabel, IonSpinner } from '@ionic/vue';
 // stores
 import { useChapterStore } from '@/stores/ChapterStore';
-import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
+import { useAudioStore } from "@/stores/AudioStore";
 // utils
 import { localizeNumber } from '@/utils/number';
 import { useLocale } from '@/utils/useLocale';
@@ -14,14 +14,14 @@ import { bookOutline } from "ionicons/icons";
 
 const { getLocale, getLine, isRtl } = useLocale()
 const chapterStore = useChapterStore()
-const audioPlayerStore = useAudioPlayerStore()
+const audioStore = useAudioStore()
 
 const handleSearch = (query: string) => {
   chapterStore.searchValue = query
 }
 
 const isPlaying = (chapterId: number) => {
-  return audioPlayerStore.isPlaying && chapterId === audioPlayerStore.chapterId
+  return audioStore.isPlaying && chapterId === audioStore.chapterId
 }
 </script>
 

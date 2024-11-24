@@ -3,24 +3,17 @@ import { onBeforeMount } from 'vue';
 import { IonApp, IonRouterOutlet, IonContent } from '@ionic/vue';
 // stores
 import { useMetaStore } from '@/stores/MetaStore';
-//import { useAudioPlayerStore } from '@/stores/AudioPlayerStore';
-//import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
-//import { useStorage } from '@/utils/useStorage';
-import { useLocale } from "@/utils/useLocale"
 import AudioHtmlElComponent from "@/components/audio/AudioHtmlElComponent.vue";
 import { useStartup } from "@/startup/startup"
-//const translationsStore = useTranslationsStore()
+import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
+
 const metaStore = useMetaStore()
-//const audioPlayerStore = useAudioPlayerStore()
-//const { getStorage, setStorage } = useStorage("__settingsDB")
 const { runStartup } = useStartup()
 
 onBeforeMount(async () => {
   await runStartup()
 })
-
-
 
 </script>
 

@@ -6,7 +6,8 @@ import { IonLabel, IonText } from '@ionic/vue';
 // icons
 import { caretDownSharp, cogOutline } from 'ionicons/icons';
 // stores
-import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
+import { useAudioStore } from "@/stores/AudioStore";
+import { useRecitionsStore } from '@/stores/RecitionsStore';
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 // utils
 import { useLocale } from '@/utils/useLocale';
@@ -23,7 +24,8 @@ import type { Recitations } from '@/types/audio';
 import type { Translation } from '@/types/translations';
 
 
-const audioPlayerStore = useAudioPlayerStore()
+const audioStore = useAudioStore()
+const recitationsStore = useRecitionsStore()
 const { getLine, getLocaleValue, supportedLocales, getLocale } = useLocale()
 const translationStore = useTranslationsStore()
 const appVersion = computed(() => import.meta.env.VITE_APP_VERSION)
@@ -34,7 +36,7 @@ const keepAwake = useKeepAwake()
 const isAwake = ref(false)
 
 const handleSelectedReciter = (reciter: Recitations) => {
-    audioPlayerStore.selectedReciter = reciter
+    recitationsStore.selectedReciter = reciter
     settings.updateSelectedReciter(reciter)
 }
 
@@ -109,11 +111,11 @@ const handleKeepAwake = async () => {
                 </ion-accordion-group>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.reciters") }}</ion-list-header>
                 <ion-item button :detail="true" id="reciters-modal">
-                    <ion-label>{{ audioPlayerStore.selectedReciter?.name }}</ion-label>
+                    <ion-label>{{ recitationsStore.selectedReciter?.name }}</ion-label>
                 </ion-item>
                 <!-- reciters Modal -->
                 <modal-component :title="getLine('settings.reciters')" trigger="reciters-modal"
-                    :data="audioPlayerStore.mapRecitions" :selected="audioPlayerStore.selectedReciter"
+                    :data="recitationsStore.mapRecitions" :selected="recitationsStore.selectedReciter"
                     @update:selected-recition="handleSelectedReciter">
                 </modal-component>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.translations") }}</ion-list-header>
@@ -134,29 +136,29 @@ const handleKeepAwake = async () => {
                         <div slot="content">
                             <ion-list class="ion-padding">
                                 <ion-item>
-                                    <ion-toggle @ion-change="audioPlayerStore.handleAudioSetting" value="autoPlay"
-                                        :checked="audioPlayerStore.audioPlayerSetting.autoPlay">{{
+                                    <ion-toggle @ion-change="audioStore.handleAudioSetting" value="autoPlay"
+                                        :checked="audioStore.audioPlayerSetting.autoPlay">{{
                                             getLine("settings.autoPlay")
                                         }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="audioPlayerStore.handleAudioSetting" value="dismissOnEnd"
-                                        :checked="audioPlayerStore.audioPlayerSetting.dismissOnEnd">
+                                    <ion-toggle @ion-change="audioStore.handleAudioSetting" value="dismissOnEnd"
+                                        :checked="audioStore.audioPlayerSetting.dismissOnEnd">
                                         {{ getLine("settings.playerDismiss") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="audioPlayerStore.handleAudioSetting" value="autoScroll"
-                                        :checked="audioPlayerStore.audioPlayerSetting.autoScroll">
+                                    <ion-toggle @ion-change="audioStore.handleAudioSetting" value="autoScroll"
+                                        :checked="audioStore.audioPlayerSetting.autoScroll">
                                         {{ getLine("settings.autoScroll") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="audioPlayerStore.handleAudioSetting" value="autoDownload"
-                                        :checked="audioPlayerStore.audioPlayerSetting.autoDownload">
+                                    <ion-toggle @ion-change="audioStore.handleAudioSetting" value="autoDownload"
+                                        :checked="audioStore.audioPlayerSetting.autoDownload">
                                         {{ getLine("settings.autoDownload") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="audioPlayerStore.handleAudioSetting"
-                                        :checked="audioPlayerStore.audioPlayerSetting.fab" value="fab">
+                                    <ion-toggle @ion-change="audioStore.handleAudioSetting"
+                                        :checked="audioStore.audioPlayerSetting.fab" value="fab">
                                         {{ getLine("settings.fab") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>

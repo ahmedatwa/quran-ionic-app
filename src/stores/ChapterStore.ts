@@ -107,7 +107,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
    */
   const getChapter = (chapterId: number | string) => {
     if (chaptersList.value) {
-      return chaptersList.value.find((chapter) => chapter.id === chapterId);
+      return chaptersList.value.find((chapter) => chapter.id === Number(chapterId));
     }
   };
 
@@ -142,12 +142,12 @@ export const useChapterStore = defineStore("chapter-store", () => {
     // Check for DB Storage to avoid the api call
     if (chapter) {
       const check = await isDBStorageData(id, chapter);
-      if (check) {        
+      if (check) {
         isLoading.value.verses = false;
         return;
       }
     }
-    
+
     await instance
       .get(
         getVersesUrl(
@@ -327,18 +327,25 @@ export const useChapterStore = defineStore("chapter-store", () => {
     }
   };
 
-  const getVerseByVerseKey = (verseKey: string) => {
-    const split = verseKey.split(":");
-    const chapter = getChapter(Number(split[0]));
+  const getVerseByVerseKey = (verseKey: string | number) => {
+    const split =
+      typeof verseKey === "number"
+        ? verseKey.toString().split(":")
+        : verseKey.split(":");
+        
+        
+    const chapter = getChapter(split[0]);
+    console.log(chapter);
+    
     if (chapter) {
-      return chapter.verses?.find((v) => v.verse_number === Number(split[1]));
+      return chapter.verses?.find((v) => v.verse_number === parseInt(split[1]));
     }
   };
 
   const isDBStorageData = async (chapterId: number, chapter: Chapter) => {
-    const id = chapterId + "-" + translationsStore.selectedTranslationId;    
+    const id = chapterId + "-" + translationsStore.selectedTranslationId;
     const chaptersDB: { data: string; length: number } = await getStorage(id);
-  
+
     if (chaptersDB) {
       //versecount === length
       if (chapter.verses?.length === 0) {

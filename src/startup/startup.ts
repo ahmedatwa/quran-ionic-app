@@ -1,14 +1,14 @@
 // stores
 import { useTranslationsStore } from "@/stores/TranslationsStore";
-import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
+import { useRecitionsStore } from "@/stores/RecitionsStore";
 // utils
 import { useStorage } from "@/utils/useStorage";
 import { useLocale } from "@/utils/useLocale";
-import { getReciterById } from "@/utils/reciter";
 
 export const useStartup = () => {
   const translationsStore = useTranslationsStore();
-  const audioPlayerStore = useAudioPlayerStore();
+  const recitionsStore = useRecitionsStore();
+
   const { setLocale } = useLocale();
   const { getStorage, setStorage } = useStorage("__settingsDB");
 
@@ -102,12 +102,12 @@ export const useStartup = () => {
   const setReciter = async () => {
     const reciter = await getStorage("reciter");
     if (reciter) {
-      audioPlayerStore.selectedReciter = JSON.parse(reciter);
+      recitionsStore.selectedReciter = JSON.parse(reciter);
     } else {
-      const reciter = await getReciterById(7);
+      const reciter = await recitionsStore.getReciterById(7);
       if (reciter) {
-        audioPlayerStore.selectedReciter = reciter;
-        setStorage("reciter", JSON.stringify(audioPlayerStore.selectedReciter));
+        recitionsStore.selectedReciter = reciter;
+        setStorage("reciter", JSON.stringify(recitionsStore.selectedReciter));
       }
     }
   };

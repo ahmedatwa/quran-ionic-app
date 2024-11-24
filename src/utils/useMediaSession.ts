@@ -1,6 +1,6 @@
 import { computed, ref, Ref, toValue, watchEffect } from "vue";
 // stores
-import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
+import { useAudioStore } from "@/stores/AudioStore";
 // utils
 import { secondsToMilliSeconds } from "@/utils//datetime";
 import { milliSecondsToSeconds } from "@/utils//datetime";
@@ -17,7 +17,7 @@ interface MediaMetadata {
 }
 
 export const useMediaSession = (audioEl: Ref<HTMLAudioElement | undefined>) => {
-  const audioPlayerStore = useAudioPlayerStore();
+  const audioStore = useAudioStore();
   const dataSession = ref<MediaMetadata | null>(null);
   const mediaMetadata = computed(() => dataSession.value);
 
@@ -26,7 +26,7 @@ export const useMediaSession = (audioEl: Ref<HTMLAudioElement | undefined>) => {
   };
 
   watchEffect(() => {
-    if (audioPlayerStore.audioFiles) {
+    if (audioStore.audioFiles) {
       const el = toValue(audioEl);
       const mediaMetadataValue = toValue(mediaMetadata);
 
@@ -56,17 +56,17 @@ export const useMediaSession = (audioEl: Ref<HTMLAudioElement | undefined>) => {
         };
 
         const handleNextTrack = async () => {
-          await audioPlayerStore.playNext();
+          await audioStore.playNext();
         };
 
         const handlePrevTrack = async () => {
-          await audioPlayerStore.playPrevious();
+          await audioStore.playPrevious();
         };
 
         const playbackSeek = (seekValue: number) => {
           if (el) {
             try {
-              audioPlayerStore.progressTimer = seekValue;
+              audioStore.progressTimer = seekValue;
               el.currentTime = milliSecondsToSeconds(seekValue);
             } catch (error) {
               throw error;
@@ -84,16 +84,16 @@ export const useMediaSession = (audioEl: Ref<HTMLAudioElement | undefined>) => {
         const handlePlay = async () => {
           await audioEl.value?.play();
           if (audioEl.value?.played) {
-            audioPlayerStore.isPlaying = true;
-            audioPlayerStore.isPaused = false;
+            audioStore.isPlaying = true;
+            audioStore.isPaused = false;
           }
         };
 
         const handlePause = async () => {
           audioEl.value?.pause();
           if (audioEl.value?.paused) {
-            audioPlayerStore.isPlaying = false;
-            audioPlayerStore.isPaused = true;
+            audioStore.isPlaying = false;
+            audioStore.isPaused = true;
           }
         };
 

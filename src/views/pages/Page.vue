@@ -11,7 +11,7 @@ import SegmentsComponent from '@/components/common/SegmentsComponent.vue';
 import { useRoute } from 'vue-router';
 // stores
 import { usePageStore } from "@/stores/PageStore"
-import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
+import { useAudioStore } from "@/stores/AudioStore";
 import { useTranslationsStore } from '@/stores/TranslationsStore';
 import { useChapterStore } from '@/stores/ChapterStore';
 // utils
@@ -27,7 +27,7 @@ const { presentAlert } = useAlert()
 const settings = useSettings()
 const transaltionStore = useTranslationsStore()
 const { selectedChapterName, selectedChapterBismillah, getchapterInfo } = useChapterStore()
-const audioPlayerStore = useAudioPlayerStore()
+const audioStore = useAudioStore()
 const audioModelValue = ref(false)
 
 const pagination = computed(() => pageStore.selectedPage?.pagination)
@@ -56,8 +56,8 @@ watchEffect(async () => {
 
 const playAudio = async (event: { audioID: number, verseKey?: string }) => {
     audioModelValue.value = true
-    audioPlayerStore.resetValues()
-    await audioPlayerStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
+    audioStore.resetValues()
+    await audioStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
 }
 
 const getVerses = async (ev: { key: string, nextPage: number }) => {
@@ -121,21 +121,21 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
             @update:selected-segment="currentSegment = $event"></segments-component>
         <ion-content>
             <translations-view-component id="translations-pages" :is-loading="pageStore.isLoading"
-                :is-playing="audioPlayerStore.isPlaying" v-if="currentSegment === 'translations'"
+                :is-playing="audioStore.isPlaying" v-if="currentSegment === 'translations'"
                 @update:play-audio="playAudio" :is-bismillah="selectedChapterBismillah" :styles="styles"
                 :verses="groupVersesByChapter" :chapter-name="selectedChapterName.nameArabic"
-                :audio-experience="audioPlayerStore.audioPlayerSetting" @update:modal-value="getTranslationAlert"
-                :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
-                :is-audio-loading="audioPlayerStore.isLoading" :download-progress="audioPlayerStore.downloadProgress"
-                :active-audio-id="audioPlayerStore.audioFiles?.chapter_id">
+                :audio-experience="audioStore.audioPlayerSetting" @update:modal-value="getTranslationAlert"
+                :verse-timing="audioStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
+                :is-audio-loading="audioStore.isLoading" :download-progress="audioStore.downloadProgress"
+                :active-audio-id="audioStore.audioFiles?.chapter_id">
             </translations-view-component>
-            <reading-view-component id="reading-pages" v-else :is-playing="audioPlayerStore.isPlaying"
+            <reading-view-component id="reading-pages" v-else :is-playing="audioStore.isPlaying"
                 :verses="groupVersesByChapter" @update:play-audio="playAudio" @update:surah-info="getSurahInfo"
                 :is-loading="pageStore.isLoading" :styles="styles"
-                :download-progress="audioPlayerStore.downloadProgress"
-                :audio-experience="audioPlayerStore.audioPlayerSetting" :is-audio-loading="audioPlayerStore.isLoading"
-                :verse-timing="audioPlayerStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
-                :active-audio-id="audioPlayerStore.audioFiles?.chapter_id">
+                :download-progress="audioStore.downloadProgress"
+                :audio-experience="audioStore.audioPlayerSetting" :is-audio-loading="audioStore.isLoading"
+                :verse-timing="audioStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
+                :active-audio-id="audioStore.audioFiles?.chapter_id">
             </reading-view-component>
             <div>
                 <ion-button ref="chapterInfoButtonRef" id="page-chapter-modal" class="ion-hide"></ion-button>

@@ -11,8 +11,7 @@ import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 import { useRoute } from 'vue-router';
 // stores
 import { useChapterStore } from "@/stores/ChapterStore"
-//import { useAudioPlayerStore } from "@/stores/AudioPlayerStore";
-import { useHowlerPlayerStore } from '@/stores/HowlerPlayerStore';
+import { useAudioStore } from "@/stores/AudioStore";
 // utils
 import { useSettings } from '@/utils/useSettings';
 import { makeVerseKey } from '@/utils/verse';
@@ -22,8 +21,7 @@ import type { ChapterInfo } from '@/types/chapter';
 
 const currentSegment = ref("translations")
 const chapterStore = useChapterStore()
-//const audioPlayerStore = useAudioPlayerStore()
-const howlerStore = useHowlerPlayerStore()
+const audioStore = useAudioStore()
 const pageRef = ref()
 const pageRefEl = ref()
 const settings = useSettings()
@@ -55,17 +53,16 @@ watchEffect(async () => {
     }
 })
 
-const isPlaying = computed(() => howlerStore.isPlaying
-    && howlerStore.chapterId === chapterStore.selectedChapter?.id)
+const isPlaying = computed(() => audioStore.isPlaying
+    && audioStore.chapterId === chapterStore.selectedChapter?.id)
 
 const playAudio = async (event: { audioID: number, verseKey?: string }) => {
-    await howlerStore.getAudio(event)
-    // if (event.audioID === audioPlayerStore.chapterId) {
-    //     audioPlayerStore.handlePlay();
-    //     return;
-    // }
-    // audioPlayerStore.resetValues()
-    // await audioPlayerStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
+    if (event.audioID === audioStore.chapterId) {
+        audioStore.handlePlay();
+        return;
+    }
+    audioStore.resetValues()
+    await audioStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
 }
 
 const getVerses = async (ev: { key: string, nextPage: number }) => {
@@ -107,21 +104,19 @@ const getVerseByKey = async (verseNumber: number) => {
         <ion-content>
             <translations-view-component id="translations-chapters" :is-loading="chapterStore.isLoading.verses"
                 :is-playing="isPlaying" v-if="currentSegment === 'translations'" :chapter-id="chapterId"
-                :download-progress="undefined" :is-audio-loading="false"
-                @update:play-audio="playAudio" :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles"
-                :verses="verses" :chapter-name="chapterStore.selectedChapterName.nameArabic"
+                :download-progress="undefined" :is-audio-loading="false" @update:play-audio="playAudio"
+                :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles" :verses="verses"
+                :chapter-name="chapterStore.selectedChapterName.nameArabic"
                 :last-chapter-verse="chapterStore.getLastVerseNumberOfChapter"
                 :verse-count="chapterStore.selectedChapter?.versesCount" :verse-timing="undefined"
-                @update:get-verses="getVerses" :pagination="pagination"
-                :audio-experience="null" @update:get-verse-by-key="getVerseByKey">
+                @update:get-verses="getVerses" :pagination="pagination" :audio-experience="null"
+                @update:get-verse-by-key="getVerseByKey">
             </translations-view-component>
             <reading-view-component id="reading-chapters" v-else :is-playing="isPlaying" :verses="verses"
                 :is-loading="chapterStore.isLoading.verses" :styles="styles" :chapter-id="chapterId"
-                :verse-timing="undefined" @update:get-verses="getVerses"
-                :is-audio-loading="false" @update:surah-info="getSurahInfo"
-                :pagination="pagination" @update:play-audio="playAudio"
-                :download-progress="undefined"
-                :audio-experience="null"
+                :verse-timing="undefined" @update:get-verses="getVerses" :is-audio-loading="false"
+                @update:surah-info="getSurahInfo" :pagination="pagination" @update:play-audio="playAudio"
+                :download-progress="undefined" :audio-experience="null"
                 :verse-count="chapterStore.selectedChapter?.versesCount">
             </reading-view-component>
             <div>
@@ -132,8 +127,8 @@ const getVerseByKey = async (verseNumber: number) => {
             </div>
         </ion-content>
         <div class="footer">
-            <audio-player-component :model-value="howlerStore.isPlayerVisible"
-                @update:model-value="howlerStore.isPlayerVisible = $event">
+            <audio-player-component :model-value="audioStore.isVisible"
+                @update:model-value="audioStore.isVisible = $event">
             </audio-player-component>
         </div>
     </ion-page>

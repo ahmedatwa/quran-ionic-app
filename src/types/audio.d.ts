@@ -27,7 +27,7 @@ interface VerseTimings {
 
 type VerseTimingsProps = {
   chapterId: number;
-  verseKey: String;
+  verseKey: string;
   verseNumber: number;
   inRange?: boolean;
   wordLocation: string;

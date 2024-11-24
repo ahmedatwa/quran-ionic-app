@@ -1,7 +1,7 @@
 {
   "name": "quran-vue-ionic-a0twa",
   "private": true,
-  "version": "1.2.4",
+  "version": "2,4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -47,7 +47,6 @@
     "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/test-utils": "^2.3.0",
     "cypress": "13.15.0",
-    "eslint": "8.57.1",
     "eslint-plugin-vue": "9.28.0",
     "jsdom": "^22.1.0",
     "sass": "1.79.4",
