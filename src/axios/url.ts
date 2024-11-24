@@ -1,8 +1,5 @@
-import {
-  verseWordFields,
-  verseFields,
-  verseTranslationFields,
-} from "@/utils/verse";
+import { verseFields, getVerseWordFields } from "@/utils/verse";
+import { getVerseTranslationFields } from "@/utils/verse";
 
 // Audio
 const audioUrl = import.meta.env.VITE_API_QDC_URL + "/audio/reciters/";
@@ -16,7 +13,6 @@ export const audioRecitersUrl = (
 };
 
 export const recitationsUrl = audioUrl;
-
 export const AVATAR_PLACEHOLDER_API = "https://ui-avatars.com/api/";
 
 export const makeChapterInfoUrl = (id: number, locale: string = "en") => {
@@ -27,9 +23,9 @@ export const makeTranslationsUrl = (locale: string = "en") => {
   return "/resources/translations?language=" + locale;
 };
 // Verses
-const urlFields = `&words=true&translation_fields=${verseTranslationFields.join(
+const urlFields = `&words=true&translation_fields=${getVerseTranslationFields()}&fields=${verseFields.join(
   ","
-)}&fields=${verseFields.join(",")}&word_fields=${verseWordFields.join(",")}`;
+)}&word_fields=${getVerseWordFields()}`;
 
 export const getVersesUrl = (
   key: string,

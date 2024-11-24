@@ -2,15 +2,19 @@ import { defineStore } from "pinia";
 import { ref, computed, onBeforeMount } from "vue";
 // types
 import { Translation, TranslationReduceMap } from "@/types/translations";
+// utils
 import { useAlert } from "@/utils/useAlert";
+import { useStorage } from '@/utils/useStorage';
+
 
 export const useTranslationsStore = defineStore("translations-store", () => {
   const isLoading = ref(false);
   const translationsList = ref<Translation[]>([]);
   const selectedTranslation = ref<Translation>();
   const selectedTranslationId = computed(() => selectedTranslation.value?.id);
-  const defaultTranslationID = ref(131)
+  const defaultTranslationID = ref(131);
   const { presentToast } = useAlert();
+  const { getStorage, setStorage } = useStorage("__settingsDB")
 
   const getAllTranslations = (): Promise<Translation[]> => {
     return new Promise((resolve, reject) => {

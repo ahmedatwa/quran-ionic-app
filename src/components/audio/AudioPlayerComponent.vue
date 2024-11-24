@@ -1,26 +1,61 @@
 <script lang="ts" setup>
+import { computed } from "vue"
 import { IonToolbar, IonFooter, IonButtons, IonAvatar } from '@ionic/vue';
 import { IonIcon, IonButton, IonSpinner, IonChip, IonText } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline } from 'ionicons/icons';
-
 // components
 import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalComponent.vue';
 // types
 import type { Recitations } from "@/types/audio"
 // stores
-import { useAudioPlayerStore } from '@/stores/AudioPlayerStore';
+import { useRecitionsStore } from '@/stores/RecitionsStore';
+import { useAudioStore } from '@/stores/AudioStore';
+import { useChapterStore } from "@/stores/ChapterStore";
+// utils
 import { truncate } from "@/utils/string";
 
-const audioPlayerStore = useAudioPlayerStore()
+const recitationsStore = useRecitionsStore()
+const audioStore = useAudioStore()
+const chapterStore = useChapterStore()
 
 defineProps<{
     modelValue: boolean
 }>()
 
-const emit = defineEmits<{
+defineEmits<{
     "update:modelValue": [value: boolean]
 }>()
 
+const isPlaying = computed((): boolean => {
+    return audioStore.isPlaying && audioStore.chapterId === audioStore.chapterId ? true : false
+})
+
+const getCurrentVerseData = computed(() => {
+    if (audioStore.verseTiming) {
+        const verseKey = audioStore.verseTiming.verseKey
+        const verse = chapterStore.getVerseByVerseKey(verseKey)
+        if (verse) {
+            return  {
+                juzNumber: verse.juz_number,
+                hizbNumber: verse.hizb_number,
+                pageNumber: verse.page_number,
+                surah: audioStore.verseTiming.chapterId,
+                ayah: audioStore.verseTiming.verseNumber,
+            }
+
+        } else {
+            return {
+                surah: audioStore.verseTiming.chapterId,
+                ayah: audioStore.verseTiming.verseNumber,
+                juzNumber: null,
+                hizbNumber: null,
+                pageNumber: null,
+            }
+        }
+
+    }
+    
+})
 
 </script>
 
@@ -31,37 +66,36 @@ const emit = defineEmits<{
                 <div id="audio-modal">
                     <ion-chip :outline="true" class="reciter-chip">
                         <ion-avatar>
-                            <img :alt="audioPlayerStore.selectedReciter?.name" class="img"
-                                :src="`/reciters/${audioPlayerStore.selectedReciter?.reciter_id}.jpg`" />
+                            <img :alt="recitationsStore.selectedReciter?.name" class="img"
+                                :src="`/reciters/${recitationsStore.selectedReciter?.reciter_id}.jpg`" />
                         </ion-avatar>
-                        <ion-text>{{ truncate(String(audioPlayerStore.selectedReciter?.name), 25) }}
-                            <p style="margin: 1px;">{{ audioPlayerStore.chapterName }} </p>
+                        <ion-text>{{ truncate(String(recitationsStore.selectedReciter?.name), 25) }}
+                            <p style="margin: 1px;">{{ audioStore.chapterName }} </p>
                         </ion-text>
                     </ion-chip>
                 </div>
                 <ion-buttons slot="end">
-                    <ion-button fill="clear" @click="audioPlayerStore.handlePlay" size="small">
-                        <ion-spinner v-if="audioPlayerStore.isLoading"></ion-spinner>
-                        <ion-icon slot="icon-only" :icon="audioPlayerStore.isPlaying ? pauseOutline : playOutline"
+                    <ion-button fill="clear" @click="audioStore.handlePlay" size="small">
+                        <ion-spinner v-if="audioStore.isLoading"></ion-spinner>
+                        <ion-icon slot="icon-only" :icon="audioStore.isPlaying ? pauseOutline : playOutline"
                             v-else></ion-icon>
                     </ion-button>
-                    <ion-button fill="clear" @click="audioPlayerStore.playNext" size="small">
+                    <ion-button fill="clear" @click="audioStore.playNext" size="small">
                         <ion-icon slot="icon-only" :icon="playForwardOutline"></ion-icon>
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
-            <audio-player-modal-component trigger="audio-modal" :is-playing="audioPlayerStore.isPlaying"
-                :is-loading="audioPlayerStore.isLoading" :verse-timing="audioPlayerStore.verseTiming"
-                :selected-reciter="audioPlayerStore.selectedReciter" :audio-files="audioPlayerStore.audioFiles"
-                :chapter-name="audioPlayerStore.chapterName" :loop-audio="audioPlayerStore.loopAudio"
-                :media-volume="audioPlayerStore.mediaVolume" :map-recitions="audioPlayerStore.mapRecitions"
-                :progress-timer="audioPlayerStore.progressTimer"
-                @update:change-volume="audioPlayerStore.changeMediaVolume" @update:seek="audioPlayerStore.playbackSeek"
-                @update:download="audioPlayerStore.downloadAudioFile"
-                @update:play-chapter="audioPlayerStore.playChapterAudio" @update:play-next="audioPlayerStore.playNext"
-                @update:play-prev="audioPlayerStore.playPrevious()" @update:play-audio="audioPlayerStore.handlePlay"
-                @update:loop-audio="audioPlayerStore.loopAudio = $event"
-                @update:selected-reciter="audioPlayerStore.handleSelectedReciter">
+            <audio-player-modal-component trigger="audio-modal" :is-playing="isPlaying"
+                :is-loading="audioStore.isLoading" :verse-data="getCurrentVerseData" :chapters="chapterStore.chapters"
+                :selected-reciter="recitationsStore.selectedReciter" :audio-files="audioStore.audioFiles"
+                :chapter-name="audioStore.chapterName" :loop-audio="audioStore.loopAudio"
+                :media-volume="audioStore.mediaVolume" :map-recitions="recitationsStore.mapRecitions"
+                :progress-timer="audioStore.progressTimer" @update:change-volume="audioStore.changeMediaVolume"
+                @update:seek="audioStore.playbackSeek" @update:download="audioStore.downloadAudioFile"
+                @update:play-chapter="audioStore.playChapterAudio" @update:play-next="audioStore.playNext"
+                @update:play-prev="audioStore.playPrevious()" @update:play-audio="audioStore.handlePlay"
+                @update:loop-audio="audioStore.loopAudio = $event"
+                @update:selected-reciter="recitationsStore.handleSelectedReciter">
             </audio-player-modal-component>
         </ion-footer>
     </Transition>

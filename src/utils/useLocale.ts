@@ -1,4 +1,4 @@
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { setStorage, getStorage } from "@/utils/storage";
 import locales from "@/locales";
 
@@ -59,6 +59,10 @@ export const useLocale = () => {
       }
     }
   });
+  
+  watch(isRtl, (rtl) => {
+    rtl ? document.documentElement.dir = "rtl" : document.documentElement.dir = "ltr"
+  })
   
   return {
     getLine,

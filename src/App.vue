@@ -1,95 +1,18 @@
 <script setup lang="ts">
-import { onBeforeMount, watch } from 'vue';
+import { onBeforeMount } from 'vue';
 import { IonApp, IonRouterOutlet, IonContent } from '@ionic/vue';
 // stores
 import { useMetaStore } from '@/stores/MetaStore';
-import { useAudioPlayerStore } from '@/stores/AudioPlayerStore';
-import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
-import { useStorage } from '@/utils/useStorage';
-import { useLocale } from "@/utils/useLocale"
 import AudioHtmlElComponent from "@/components/audio/AudioHtmlElComponent.vue";
+import { useStartup } from "@/startup/startup"
+import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 
-const translationsStore = useTranslationsStore()
 const metaStore = useMetaStore()
-const audioPlayerStore = useAudioPlayerStore()
-const { setLocale, isRtl } = useLocale()
-const { getStorage, setStorage } = useStorage("__settingsDB")
+const { runStartup } = useStartup()
 
 onBeforeMount(async () => {
-  // Translations
-  const translation = await getStorage("translation")
-  if (translation) {
-    translationsStore.selectedTranslation = JSON.parse(translation)
-  } else {
-    translationsStore.selectedTranslation = translationsStore.translationsList.find((t) => t.id === translationsStore.defaultTranslationID)
-    setStorage('translation', JSON.stringify(translationsStore.selectedTranslation))
-  }
-
-  const colorScheme = await getStorage("colorScheme")
-  if (colorScheme) {
-    switch (colorScheme) {
-      case "auto":
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-        document.documentElement.classList.toggle('ion-palette-dark', prefersDark.matches);
-        break;
-      case "dark":
-        window.matchMedia(`(prefers-color-scheme: dark)`);
-        document.documentElement.classList.toggle('ion-palette-dark', true);
-        break;
-      case "light":
-        window.matchMedia(`(prefers-color-scheme: light)`);
-        document.documentElement.classList.toggle('ion-palette-dark', false);
-        break;
-      default:
-        break;
-    }
-  } else {
-    setStorage("colorScheme", "auto")
-  }
-  // Audio Setting
-  const audioSettings = await getStorage("audioSettings")
-  if (!audioSettings) {
-    setStorage("audioSettings", {
-      autoPlay: true,
-      dismissOnEnd: false,
-      autoScroll: true,
-      tooltip: false,
-      fab: true,
-      autoDownload: true,
-    })
-  }
-  // Styles
-  const stylesSettings = await getStorage("styles")
-  if (!stylesSettings) {
-    setStorage("styles", {
-      fontSize: "1",
-      fontFamily: "noto-kufi",
-      fontWeight: "normal",
-      wordColor: JSON.stringify({
-        code: "primary",
-        key: "Blue"
-      })
-    })
-  }
-  // Locale
-  const localeStorage = await getStorage("locale")
-  if (!localeStorage) {
-    setLocale("en", false)
-    setStorage("locale", { key: "en", rtl: false })
-  } else {
-    setLocale(localeStorage.key, localeStorage.rtl)
-  }
-
-  // Reciter
-  const reciter = await getStorage("reciter")
-  if (reciter) {
-    audioPlayerStore.selectedReciter = JSON.parse(reciter)
-  }
-})
-
-watch(isRtl, (rtl) => {
-  rtl ? document.documentElement.dir = "rtl" : document.documentElement.dir = "ltr"
+  await runStartup()
 })
 
 </script>
