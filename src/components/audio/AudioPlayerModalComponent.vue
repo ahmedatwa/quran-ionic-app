@@ -246,7 +246,7 @@ const isPlayable = (chapterId: number) => {
                                         <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
                                     </ion-item-option>
                                     <ion-item-option @click="$emit('update:playChapter', chapter.id)"
-                                        isPlayable(chapter.id)>
+                                        :disabled="isPlayable(chapter.id)">
                                         <ion-icon slot="icon-only" :icon="playCircleOutline"></ion-icon>
                                     </ion-item-option>
                                 </ion-item-options>
