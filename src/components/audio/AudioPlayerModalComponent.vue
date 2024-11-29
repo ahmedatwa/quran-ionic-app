@@ -45,7 +45,7 @@ const props = defineProps<{
     mediaVolume: number
     loopAudio: string
     mapRecitions?: MapRecitions
-    recentlyPlayed: Chapter[]
+    recentlyPlayed?: Chapter[]
 }>()
 
 const emit = defineEmits<{
