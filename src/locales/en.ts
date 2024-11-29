@@ -81,6 +81,8 @@ export default {
     prevJuz: "Previous Juz",
     startJuz: "Start of Juz",
     loadingChapterInfo: "Loading Surah Information...",
-    textDowloading: "Downloading..."
+    textDowloading: "Downloading...",
+    verseBookmarked: "Success: Verse has been bookmarked.",
+    verseAlreadyBookmarked: "Warning: Verse is already bookmarked."
   },
 };

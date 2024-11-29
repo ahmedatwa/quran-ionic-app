@@ -12,6 +12,8 @@ import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
 import { useRoute } from "vue-router";
+import { useAlert } from '@/utils/useAlert';
+
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
@@ -33,6 +35,8 @@ const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
 const { params } = useRoute()
 const juzId = computed(() => Number(params.juzId))
 const intersectingVerseNumber = ref<number>()
+const { presentAlert } = useAlert()
+
 
 const props = defineProps<{
     id: string;
@@ -60,19 +64,33 @@ const emit = defineEmits<{
 }>();
 
 const setBookmarked = async (verse: Verse) => {
-    bookmarkedItems.value.push({
-        key: `/page/${verse.page_number}`,
-        value: {
-            pageNumber: verse.page_number,
-            verseNumber: verse.verse_number,
-            verseText: verse.text_uthmani,
-            chapterName: getChapterName(verse.chapter_id)?.nameSimple
-        }
-    })
-    bookmarkedItems.value.forEach(({ key, value }) => {
-        setStorage(key, value)
-    })
+    const v = bookmarkedItems.value.find(({ key }) => {
+        const vNumber = key.split("-").pop()
+        return Number(vNumber) === verse.verse_number
 
+    })
+    if (!v) {
+        bookmarkedItems.value.push({
+            key: `/page/${verse.page_number}-${verse.verse_number}`,
+            value: {
+                pageNumber: verse.page_number,
+                verseNumber: verse.verse_number,
+                verseText: verse.text_uthmani,
+                chapterName: getChapterName(verse.chapter_id)?.nameSimple
+            }
+        })
+        bookmarkedItems.value.forEach(({ key, value }) => {
+            setStorage(key, value)
+        })
+
+        await presentAlert({
+            message: getLine("quranReader.verseBookmarked"),
+        })
+    } else {
+        await presentAlert({
+            message: getLine("quranReader.verseAlreadyBookmarked"),
+        })
+    }
 };
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
@@ -158,7 +176,7 @@ const isPlaying = (chapterId: number) => {
                         <ion-row class="ion-align-items-start">
                             <ion-col size="11" class="translations-view-col" :id="`verse-col-${verse.verse_number}`">
                                 <ion-label v-for="word in verse.words" :key="word.id">
-                                    <ion-text :color="isWordHighlighted(word) ? styles.colorCode  : ''">
+                                    <ion-text :color="isWordHighlighted(word) ? styles.colorCode : ''">
                                         <span v-if="word.char_type_name === 'end'" class="end">
                                             ({{ word.text_uthmani }})</span>
                                         <h3 :style="styles" v-else>{{ word.text_uthmani }}</h3>
