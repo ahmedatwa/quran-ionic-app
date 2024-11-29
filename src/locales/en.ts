@@ -54,6 +54,13 @@ export default {
     audioChapters: "Chapters Audio",
     selectReciter: "Select Reciter",
     playlist: "Playlist",
+    allChapters: "All Chapters",
+    hizb: "Hizb {0}",
+    page: "Page {0}",
+    juz: "Juz {0}",
+    surah: "Surah {0}",
+    ayah: "Ayah {0}",
+    recentlyPlayed: "Recently Played"
   },
   quranReader: {
     textPage: "Page",

@@ -33,7 +33,7 @@ export const useLocale = () => {
     setStorage("locale", { key: str, rtl: direction });
   };
 
-  const getLine = (key: string, replacement?: string[]): string => {
+  const getLine = (key: string, replacement?: string[] | number[]): string => {
     const result = key.split(".").reduce((o: string | object, i: string) => {
       if (typeof o === "object") {
         return o[i as keyof typeof o];

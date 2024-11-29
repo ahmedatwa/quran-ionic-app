@@ -4,7 +4,7 @@ import { getVerseTranslationFields } from "@/utils/verse";
 // Audio
 const audioUrl = import.meta.env.VITE_API_QDC_URL + "/audio/reciters/";
 export const audioRecitersUrl = (
-  reciterID: number,
+  reciterID: number = 6,
   audioID: number
 ): string => {
   return (

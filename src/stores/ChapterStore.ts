@@ -334,9 +334,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
         : verseKey.split(":");
         
         
-    const chapter = getChapter(split[0]);
-    console.log(chapter);
-    
+    const chapter = getChapter(split[0]);    
     if (chapter) {
       return chapter.verses?.find((v) => v.verse_number === parseInt(split[1]));
     }

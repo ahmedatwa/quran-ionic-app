@@ -78,6 +78,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     fab: true,
     autoDownload: true,
   });
+  const recentlyPlayed = ref<number[]>([]);
 
   const chapterName = computed(() => {
     if (chapterId.value) {
@@ -149,6 +150,12 @@ export const useAudioStore = defineStore("audio-store", () => {
           if (audioSettings.autoDownload) {
             await downloadAudioFile();
           }
+          // Store recelty played
+          recentlyPlayed.value.push(payload.audioID);
+          await settingsDB.setStorage(
+            "recently-played",
+            JSON.stringify(recentlyPlayed.value)
+          );
         });
     }
   };
@@ -189,6 +196,10 @@ export const useAudioStore = defineStore("audio-store", () => {
   onBeforeMount(async () => {
     const audioStorage = await settingsDB.getStorage("audioSettings");
     if (audioStorage) audioPlayerSetting.value = audioStorage;
+    const recent = await settingsDB.getStorage("recently-played");
+    if (recent) {
+      recentlyPlayed.value = JSON.parse(recent);
+    }
   });
 
   // Start Audio Test
@@ -242,6 +253,41 @@ export const useAudioStore = defineStore("audio-store", () => {
     }
   };
 
+  const attemptFileSave = async (chapterId: number) => {
+    await instance
+      .get(audioRecitersUrl(recitionsStore.selectedReciter?.id, chapterId))
+      .then((response) => {
+        if (response.data) {
+          const file: AudioFile = response.data.audio_files[0];
+          saveFile(chapterId, file.audio_url, String(file.format));
+        }
+      })
+      .catch(async (error) => {
+        await presentToast({ message: String(error) });
+      });
+  };
+
+  const saveFile = (chapterId: number, url: string, format: string = "audio/mp3") => {
+    instance
+      .get(url, { responseType: "blob" })
+      .then((response) => {
+        const blob = new Blob([response.data], { type: `audio/${format}` });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        const chapterName = chapterStore.getChapterName(chapterId)
+        if(chapterName) {
+          link.download = chapterName?.nameSimple;
+        } else {
+          link.download = String(chapterId)
+        }
+        
+        link.click();
+        URL.revokeObjectURL(link.href);
+      })
+      .catch(async (error) => {
+        await presentToast({ message: String(error) });
+      });
+  };
   const resetValues = () => {
     verseTiming.value = undefined;
     selectedVerseKey.value = "";
@@ -555,18 +601,6 @@ export const useAudioStore = defineStore("audio-store", () => {
 
   return {
     audioEl,
-    playAudio,
-    pauseAudio,
-    changeMediaVolume,
-    playbackSeek,
-    handlePlay,
-    loadedData,
-    canPlayThrough,
-    playbackEnded,
-    playbackListener,
-    loadMetaData,
-    handleAudioSetting,
-    playChapterAudio,
     audioFiles,
     isLoading,
     playbackSpeeds,
@@ -593,6 +627,21 @@ export const useAudioStore = defineStore("audio-store", () => {
     isPaused,
     downloadProgress,
     isVisible,
+    recentlyPlayed,
+    attemptFileSave,
+    saveFile,
+    playAudio,
+    pauseAudio,
+    changeMediaVolume,
+    playbackSeek,
+    handlePlay,
+    loadedData,
+    canPlayThrough,
+    playbackEnded,
+    playbackListener,
+    loadMetaData,
+    handleAudioSetting,
+    playChapterAudio,
     resetValues,
     playbackPlaying,
     playbackPaused,
