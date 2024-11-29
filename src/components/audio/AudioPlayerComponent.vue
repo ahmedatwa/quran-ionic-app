@@ -5,14 +5,15 @@ import { IonIcon, IonButton, IonSpinner, IonChip, IonText } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline } from 'ionicons/icons';
 // components
 import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalComponent.vue';
-// types
-import type { Recitations } from "@/types/audio"
 // stores
 import { useRecitionsStore } from '@/stores/RecitionsStore';
 import { useAudioStore } from '@/stores/AudioStore';
 import { useChapterStore } from "@/stores/ChapterStore";
 // utils
 import { truncate } from "@/utils/string";
+// types
+import type { Recitations } from "@/types/audio"
+import type { Chapter } from "@/types/chapter";
 
 const recitationsStore = useRecitionsStore()
 const audioStore = useAudioStore()
@@ -35,7 +36,7 @@ const getCurrentVerseData = computed(() => {
         const verseKey = audioStore.verseTiming.verseKey
         const verse = chapterStore.getVerseByVerseKey(verseKey)
         if (verse) {
-            return  {
+            return {
                 juzNumber: verse.juz_number,
                 hizbNumber: verse.hizb_number,
                 pageNumber: verse.page_number,
@@ -52,10 +53,20 @@ const getCurrentVerseData = computed(() => {
                 pageNumber: null,
             }
         }
-
     }
-    
 })
+
+const getRecentlyPlayed = computed(() => {
+    const chapters: Chapter[] = []
+    if(audioStore.recentlyPlayed) {
+        audioStore.recentlyPlayed.forEach((chapterId) => {
+            const chapter = chapterStore.chapters?.find((c) => c.id === chapterId)
+            if(chapter) chapters.push({...chapter})
+        })
+    }
+    return chapters
+})
+
 
 </script>
 
@@ -94,7 +105,7 @@ const getCurrentVerseData = computed(() => {
                 @update:seek="audioStore.playbackSeek" @update:download="audioStore.downloadAudioFile"
                 @update:play-chapter="audioStore.playChapterAudio" @update:play-next="audioStore.playNext"
                 @update:play-prev="audioStore.playPrevious()" @update:play-audio="audioStore.handlePlay"
-                @update:loop-audio="audioStore.loopAudio = $event"
+                @update:loop-audio="audioStore.loopAudio = $event" :recently-played="getRecentlyPlayed"
                 @update:selected-reciter="recitationsStore.handleSelectedReciter">
             </audio-player-modal-component>
         </ion-footer>

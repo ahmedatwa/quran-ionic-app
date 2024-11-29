@@ -4,7 +4,7 @@ import { IonInput } from '@ionic/vue';
 import { closeCircleOutline } from "ionicons/icons";
 
 const input = ref()
-
+const inputError = ref("")
 const props = defineProps<{
     verseCount?: number
 }>()
@@ -18,7 +18,7 @@ const handleVerseSearch = (val: string | number) => {
 }
 
 const validateInput = (val: string | number) => {
-    return Number(val) < Number(props.verseCount) + 1
+    return Number(val) <= Number(props.verseCount)
 }
 
 const validate = (ev: CustomEvent) => {
@@ -27,13 +27,21 @@ const validate = (ev: CustomEvent) => {
     input.value.$el.classList.remove('ion-invalid');
 
     if (validateInput(value)) {
+
+
         input.value.$el.classList.add('ion-valid')
         handleVerseSearch(value)
     } else {
+        inputError.value = "Invalid Verse Number"
         input.value.$el.classList.add('ion-invalid');
+
     }
 
 }
+
+const customFormatter = (__inputLength: number, maxLength: number) => {
+    return `${maxLength} verses`;
+};
 
 const markTouched = () => {
     input.value.$el.classList.add('ion-touched');
@@ -41,7 +49,8 @@ const markTouched = () => {
 
 </script>
 <template>
-    <ion-input ref="input" error-text="Invalid Verse Number" @ion-blur="markTouched" :animated="true"
-        placeholder="Verse Number" @ion-input="validate" autocomplete="on" inputmode="numeric" type="number"
-        :min="1" :clear-input="true" :clear-input-icon="closeCircleOutline"></ion-input>
+    <ion-input ref="input" :error-text="inputError" @ion-blur="markTouched" :animated="true"
+        :placeholder="`Verse Number`" @ion-input="validate" autocomplete="on" inputmode="numeric" type="number" :min="1"
+        :maxlength="verseCount" :clear-input="true" :clear-input-icon="closeCircleOutline" :counter="true"
+        :counter-formatter="customFormatter"></ion-input>
 </template>

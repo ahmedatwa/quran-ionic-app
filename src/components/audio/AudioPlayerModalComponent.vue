@@ -5,7 +5,7 @@ import { IonContent, modalController, IonRow, IonLabel, IonThumbnail, IonItem, I
 import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonText, IonListHeader } from '@ionic/vue';
 import { IonItemOptions, IonItemOption, IonItemSliding, IonModal } from "@ionic/vue";
 // ionicons
-import { playOutline, playBackOutline, playForwardOutline } from 'ionicons/icons';
+import { playOutline, playBackOutline, playForwardOutline, leafOutline } from 'ionicons/icons';
 import { playCircleOutline, volumeLowOutline, volumeHighOutline } from 'ionicons/icons';
 import { musicalNoteOutline, downloadOutline } from 'ionicons/icons';
 import { pauseOutline, chevronDownOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
@@ -45,6 +45,7 @@ const props = defineProps<{
     mediaVolume: number
     loopAudio: string
     mapRecitions?: MapRecitions
+    recentlyPlayed: Chapter[]
 }>()
 
 const emit = defineEmits<{
@@ -81,6 +82,11 @@ const changeMediaVolume = (ev: CustomEvent) => {
     const vol = ev.detail.value
     emit('update:changeVolume', vol)
 }
+
+const isPlayable = (chapterId: number) => {
+    return props.audioFiles?.chapter_id === chapterId
+}
+
 </script>
 
 <template>
@@ -116,11 +122,14 @@ const changeMediaVolume = (ev: CustomEvent) => {
                                 <h4>{{ selectedReciter?.name }}</h4>
                             </ion-text>
                             <ion-text v-if="verseData">
-                                <p>{{ verseData?.hizbNumber ? `Hizb: ${verseData?.hizbNumber} | ` : '' }} 
-                                    {{ verseData?.pageNumber ? `Page: ${verseData?.juzNumber} | ` : '' }}
-                                    {{ verseData?.juzNumber ? `Juz: ${verseData?.juzNumber} | ` : '' }}
-                                    {{ verseData.surah ? `Surah: ${verseData.surah} | ` : '' }}
-                                    {{ verseData.ayah ? `Ayah: ${verseData.ayah}` : '' }}</p>
+                                <ion-text>
+                                    {{ verseData?.hizbNumber ? getLine('audio.hizb', [verseData?.hizbNumber]) : '' }}
+                                    {{ verseData?.pageNumber ? getLine('audio.page', [verseData?.pageNumber]) : '' }}
+                                    {{ verseData?.juzNumber ? getLine('audio.juz', [verseData?.juzNumber]) : '' }}
+                                    <br />
+                                    {{ verseData.surah ? getLine('audio.surah', [verseData.surah]) : '' }}
+                                    {{ verseData.ayah ? getLine('audio.ayah', [verseData.ayah]) : '' }}
+                                </ion-text>
                             </ion-text>
                         </ion-text>
                     </ion-col>
@@ -178,13 +187,47 @@ const changeMediaVolume = (ev: CustomEvent) => {
                         </ion-range>
                     </ion-col>
                 </ion-row>
+                <!-- recentlyPlayed -->
+                <ion-row class="ion-justify-content-center ion-margin-vertical">
+                    <ion-col size="12">
+                        <ion-list-header class="ion-margin-bottom">
+                            <ion-icon :icon="leafOutline" style="margin-right: 5px;"></ion-icon> {{
+                                getLine('audio.recentlyPlayed') }}
+                        </ion-list-header>
+                        <ion-list style="height: auto; overflow-y: scroll;">
+                            <ion-item-sliding v-for="chapter in recentlyPlayed" :key="chapter.id">
+                                <ion-item :button="true">
+                                    <ion-label>
+                                        <h3>
+                                            <span v-if="isRtl">{{ chapter.nameArabic }}</span>
+                                            <span v-else>{{ chapter.nameSimple }}</span>
+                                        </h3>
+
+                                    </ion-label>
+                                </ion-item>
+                                <ion-item-options slot="end">
+                                    <ion-item-option
+                                        :color="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id)) ? 'medium' : 'warning'"
+                                        @click="download(String(audioFiles?.reciterId), String(chapter.id))"
+                                        :disabled="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id))">
+                                        <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
+                                    </ion-item-option>
+                                    <ion-item-option :disabled="isPlayable(chapter.id)"
+                                        @click="$emit('update:playChapter', chapter.id)">
+                                        <ion-icon slot="icon-only" :icon="playCircleOutline"></ion-icon>
+                                    </ion-item-option>
+                                </ion-item-options>
+                            </ion-item-sliding>
+                        </ion-list>
+                    </ion-col>
+                </ion-row>
                 <ion-row class="ion-justify-content-center ion-margin-vertical">
                     <ion-col size="12">
                         <ion-list-header class="ion-margin-bottom">
                             <ion-icon :icon="musicalNoteOutline" style="margin-right: 5px;"></ion-icon> {{
-                                getLine('audio.playlist') }}
+                                getLine('audio.allChapters') }}
                         </ion-list-header>
-                        <ion-list style="height: 400px; overflow-y: scroll;">
+                        <ion-list style="height: auto; overflow-y: scroll;">
                             <ion-item-sliding v-for="chapter in chapters" :key="chapter.id">
                                 <ion-item :button="true">
                                     <ion-label>
@@ -192,18 +235,18 @@ const changeMediaVolume = (ev: CustomEvent) => {
                                             <span v-if="isRtl">{{ chapter.nameArabic }}</span>
                                             <span v-else>{{ chapter.nameSimple }}</span>
                                         </h3>
-                                        <p>{{ selectedReciter?.name }}</p>
+
                                     </ion-label>
                                 </ion-item>
                                 <ion-item-options slot="end">
                                     <ion-item-option
-                                        :color="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id)) ? 'medium' : 'success'"
+                                        :color="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id)) ? 'medium' : 'warning'"
                                         @click="download(String(audioFiles?.reciterId), String(chapter.id))"
                                         :disabled="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id))">
                                         <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
                                     </ion-item-option>
-                                    <ion-item-option :color="isPlaying ? 'secondary' : 'primary'"
-                                        @click="$emit('update:playChapter', chapter.id)" :disabled="isPlaying">
+                                    <ion-item-option @click="$emit('update:playChapter', chapter.id)"
+                                        isPlayable(chapter.id)>
                                         <ion-icon slot="icon-only" :icon="playCircleOutline"></ion-icon>
                                     </ion-item-option>
                                 </ion-item-options>
