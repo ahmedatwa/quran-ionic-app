@@ -36,12 +36,14 @@ const pageRefEl = ref()
 const chapterInfo = ref<ChapterInfo | null>(null)
 const chapterInfoButtonRef = ref()
 const router = useRoute()
-const { pageId } = router.params
+const pageParam = computed(() => router.params.pageId.toString().split("-"))
+const pageId = computed(() => Number(pageParam.value[0]))
+const vNumber = computed(() => Number(pageParam.value[1]))
 
 watchEffect(async () => {
-    if (pageId) {
+    if (pageId.value) {
         pageStore.selectedPage = null
-        const found = pageStore.pagesList.find((p) => p.pageNumber === Number(pageId))
+        const found = pageStore.pagesList.find((p) => p.pageNumber === pageId.value)
         if (found) {
             if (!found.verses?.length) {
                 await pageStore.getVerses(found.pageNumber, true)
@@ -116,23 +118,22 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
 
 
 <template>
-    <ion-page :data-page-id="pageId" ref="pageRef">
+    <ion-page :data-page-id="router.params.pageId" ref="pageRef">
         <segments-component :selected-segment="currentSegment"
             @update:selected-segment="currentSegment = $event"></segments-component>
         <ion-content>
-            <translations-view-component id="translations-pages" :is-loading="pageStore.isLoading"
+            <translations-view-component :id="`translations-pages-${router.params.pageId}`" :is-loading="pageStore.isLoading"
                 :is-playing="audioStore.isPlaying" v-if="currentSegment === 'translations'"
                 @update:play-audio="playAudio" :is-bismillah="selectedChapterBismillah" :styles="styles"
                 :verses="groupVersesByChapter" :chapter-name="selectedChapterName.nameArabic"
                 :audio-experience="audioStore.audioPlayerSetting" @update:modal-value="getTranslationAlert"
                 :verse-timing="audioStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
                 :is-audio-loading="audioStore.isLoading" :download-progress="audioStore.downloadProgress"
-                :active-audio-id="audioStore.audioFiles?.chapter_id">
+                :active-audio-id="audioStore.audioFiles?.chapter_id" :bookmarked-verse="vNumber">
             </translations-view-component>
             <reading-view-component id="reading-pages" v-else :is-playing="audioStore.isPlaying"
                 :verses="groupVersesByChapter" @update:play-audio="playAudio" @update:surah-info="getSurahInfo"
-                :is-loading="pageStore.isLoading" :styles="styles"
-                :download-progress="audioStore.downloadProgress"
+                :is-loading="pageStore.isLoading" :styles="styles" :download-progress="audioStore.downloadProgress"
                 :audio-experience="audioStore.audioPlayerSetting" :is-audio-loading="audioStore.isLoading"
                 :verse-timing="audioStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
                 :active-audio-id="audioStore.audioFiles?.chapter_id">

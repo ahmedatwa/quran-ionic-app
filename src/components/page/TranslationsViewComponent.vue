@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, watch } from "vue"
+import { ref, computed, watch, onMounted, watchEffect, nextTick } from "vue"
 import { IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
 import { IonContent, IonNote, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
 import { IonCol, IonRow, IonGrid, IonItem, IonCard, IonRefresher, IonRefresherContent } from "@ionic/vue";
@@ -11,7 +11,7 @@ import { arrowBackOutline, arrowForwardOutline, ellipsisVerticalOutline } from "
 import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { upperCaseFirst } from "@/utils/string"
 import { useAlert } from '@/utils/useAlert';
 // types
@@ -30,10 +30,8 @@ import { useChapterStore } from "@/stores/ChapterStore";
 const { getLine } = useLocale()
 const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
 const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
-const { params } = useRoute()
 const router = useRouter()
 const cardRef = ref()
-const pageId = computed((): number | undefined => Number(params.pageId))
 const intersectingVerseNumber = ref<number>()
 const { presentAlert } = useAlert()
 
@@ -53,7 +51,13 @@ const props = defineProps<{
     verseTiming?: VerseTimingsProps
     activeAudioId?: number
     styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
+    bookmarkedVerse?: number
 }>()
+
+const pageId = computed(() => {
+    return Number(props.id.split("-")[2])
+})
+
 
 const emit = defineEmits<{
     "update:getVerses": [value: { key: string, nextPage: number }];
@@ -148,9 +152,30 @@ const handleRefresh = (event: RefresherCustomEvent) => {
 const isPlaying = (chapterId: number) => {
     return props.isPlaying && chapterId === props.activeAudioId
 }
+
+// Scroll to verse if visible
+// and coming from bookmark route
+// watchEffect(() => {
+//     if (props.verses) {
+
+
+
+//         nextTick(() => {
+//             if (props.bookmarkedVerse) {
+//                 const el = scroll(props.bookmarkedVerse)
+//                 console.log(el);
+//             }
+//             // if (el)
+//             //     el.scrollIntoView(false)
+//         })
+//     }
+
+// })
+
+
 </script>
 <template>
-    <div class="ion-page" :id="`translations-${id}-${pageId}`">
+    <div class="ion-page" :id="`translations-page-${id}`">
         <toolbar-component :route-back-label="routeBackName" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef">
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
