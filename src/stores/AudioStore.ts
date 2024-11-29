@@ -253,13 +253,15 @@ export const useAudioStore = defineStore("audio-store", () => {
     }
   };
 
-  const attemptFileSave = async (chapterId: number) => {
+  const attemptFileSave = async (chapterId: number | string) => {
     await instance
-      .get(audioRecitersUrl(recitionsStore.selectedReciter?.id, chapterId))
+      .get(
+        audioRecitersUrl(recitionsStore.selectedReciter?.id, Number(chapterId))
+      )
       .then((response) => {
         if (response.data) {
           const file: AudioFile = response.data.audio_files[0];
-          saveFile(chapterId, file.audio_url, String(file.format));
+          saveFile(Number(chapterId), file.audio_url, String(file.format));
         }
       })
       .catch(async (error) => {
@@ -267,20 +269,24 @@ export const useAudioStore = defineStore("audio-store", () => {
       });
   };
 
-  const saveFile = (chapterId: number, url: string, format: string = "audio/mp3") => {
+  const saveFile = (
+    chapterId: number,
+    url: string,
+    format: string = "audio/mp3"
+  ) => {
     instance
       .get(url, { responseType: "blob" })
       .then((response) => {
         const blob = new Blob([response.data], { type: `audio/${format}` });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        const chapterName = chapterStore.getChapterName(chapterId)
-        if(chapterName) {
+        const chapterName = chapterStore.getChapterName(chapterId);
+        if (chapterName) {
           link.download = chapterName?.nameSimple;
         } else {
-          link.download = String(chapterId)
+          link.download = String(chapterId);
         }
-        
+
         link.click();
         URL.revokeObjectURL(link.href);
       })

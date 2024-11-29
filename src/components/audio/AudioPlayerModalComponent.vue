@@ -53,7 +53,7 @@ const emit = defineEmits<{
     "update:playChapter": [value: number]
     "update:changeVolume": [value: number]
     "update:seek": [value: number]
-    "update:download": [value: boolean]
+    "update:download": [value: string | number]
     "update:selectedReciter": [value: Recitations]
     "update:playNext": [value: boolean]
     "update:playPrev": [value: boolean]
@@ -65,17 +65,8 @@ onMounted(async () => {
     if (result) downloadedKeys.value = result
 })
 
-const isDownloadDisabled = (reciterID: string | number, audioID: string | number) => {
-    const key = String(reciterID).concat("-").concat(String(audioID))
-    if (downloadedKeys.value) {
-        return downloadedKeys.value.includes(key)
-    }
-}
-
-const download = (reciterId: string, chapterId: string) => {
-    const key = reciterId.concat("-").concat(chapterId)
-    downloadedKeys.value?.push(key)
-    emit('update:download', true)
+const download = (chapterId: number) => {
+    emit('update:download', chapterId)
 }
 
 const changeMediaVolume = (ev: CustomEvent) => {
@@ -206,10 +197,7 @@ const isPlayable = (chapterId: number) => {
                                     </ion-label>
                                 </ion-item>
                                 <ion-item-options slot="end">
-                                    <ion-item-option
-                                        :color="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id)) ? 'medium' : 'warning'"
-                                        @click="download(String(audioFiles?.reciterId), String(chapter.id))"
-                                        :disabled="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id))">
+                                    <ion-item-option @click="download(chapter.id)" color="warning">
                                         <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
                                     </ion-item-option>
                                     <ion-item-option :disabled="isPlayable(chapter.id)"
@@ -239,10 +227,7 @@ const isPlayable = (chapterId: number) => {
                                     </ion-label>
                                 </ion-item>
                                 <ion-item-options slot="end">
-                                    <ion-item-option
-                                        :color="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id)) ? 'medium' : 'warning'"
-                                        @click="download(String(audioFiles?.reciterId), String(chapter.id))"
-                                        :disabled="isDownloadDisabled(String(audioFiles?.reciterId), String(chapter.id))">
+                                    <ion-item-option color="warning" @click="download(chapter.id)">
                                         <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
                                     </ion-item-option>
                                     <ion-item-option @click="$emit('update:playChapter', chapter.id)"
