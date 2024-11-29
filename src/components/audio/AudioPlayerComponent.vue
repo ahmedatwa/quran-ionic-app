@@ -27,10 +27,6 @@ defineEmits<{
     "update:modelValue": [value: boolean]
 }>()
 
-const isPlaying = computed((): boolean => {
-    return audioStore.isPlaying && audioStore.chapterId === audioStore.chapterId ? true : false
-})
-
 const getCurrentVerseData = computed(() => {
     if (audioStore.verseTiming) {
         const verseKey = audioStore.verseTiming.verseKey
@@ -58,15 +54,18 @@ const getCurrentVerseData = computed(() => {
 
 const getRecentlyPlayed = computed(() => {
     const chapters: Chapter[] = []
-    if(audioStore.recentlyPlayed) {
+    if (audioStore.recentlyPlayed) {
         audioStore.recentlyPlayed.forEach((chapterId) => {
             const chapter = chapterStore.chapters?.find((c) => c.id === chapterId)
-            if(chapter) chapters.push({...chapter})
+            if (chapter) chapters.push({ ...chapter })
         })
     }
     return chapters
 })
 
+const isPlaying = (chapterId: number) => {
+    return audioStore.isPlaying && chapterId === audioStore.chapterId
+}
 
 </script>
 

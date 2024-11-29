@@ -28,7 +28,7 @@ const dismiss = () => modalController.dismiss(null, 'cancel');
 
 const props = defineProps<{
     trigger: string
-    isPlaying: boolean
+    isPlaying: (chapterId: number) => boolean
     isLoading: boolean
     verseData?: {
         juzNumber: number | null;
@@ -77,6 +77,7 @@ const changeMediaVolume = (ev: CustomEvent) => {
 const isPlayable = (chapterId: number) => {
     return props.audioFiles?.chapter_id === chapterId
 }
+
 
 </script>
 
@@ -188,6 +189,8 @@ const isPlayable = (chapterId: number) => {
                         <ion-list style="height: auto; overflow-y: scroll;">
                             <ion-item-sliding v-for="chapter in recentlyPlayed" :key="chapter.id">
                                 <ion-item :button="true">
+                                    <ion-spinner name="dots" color="danger" class="ml-1"
+                                        v-if="isPlaying(chapter.id)"></ion-spinner>
                                     <ion-label>
                                         <h3>
                                             <span v-if="isRtl">{{ chapter.nameArabic }}</span>
@@ -218,12 +221,13 @@ const isPlayable = (chapterId: number) => {
                         <ion-list style="height: auto; overflow-y: scroll;">
                             <ion-item-sliding v-for="chapter in chapters" :key="chapter.id">
                                 <ion-item :button="true">
+                                    <ion-spinner name="dots" color="danger" class="ml-1"
+                                        v-if="isPlaying(chapter.id)"></ion-spinner>
                                     <ion-label>
                                         <h3>
                                             <span v-if="isRtl">{{ chapter.nameArabic }}</span>
                                             <span v-else>{{ chapter.nameSimple }}</span>
                                         </h3>
-
                                     </ion-label>
                                 </ion-item>
                                 <ion-item-options slot="end">

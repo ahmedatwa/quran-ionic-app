@@ -16,11 +16,14 @@ const playChapterAudio = (audioID: number) => {
     audioStore.getAudio({ audioID })
 }
 
-const isvisible = computed(() => audioStore.audioPlayerSetting.fab && audioStore.audioFiles)
+const isVisible = computed(() => audioStore.audioPlayerSetting.fab && audioStore.audioFiles)
 
+const isPlaying = () => {
+    return audioStore.isPlaying && audioStore.audioFiles?.id === audioStore.chapterId
+}
 </script>
 <template>
-    <div v-if="isvisible">
+    <div v-if="isVisible">
         <ion-fab horizontal="end" vertical="center">
             <ion-fab-button size="small" color="secondary">
                 <ion-avatar>
@@ -45,7 +48,7 @@ const isvisible = computed(() => audioStore.audioPlayerSetting.fab && audioStore
                 </ion-fab-button>
             </ion-fab-list>
         </ion-fab>
-        <audio-player-modal-component trigger="audio-modal-fab" :is-playing="audioStore.isPlaying"
+        <audio-player-modal-component trigger="audio-modal-fab" :is-playing="isPlaying"
             :is-loading="audioStore.isLoading" :verse-timing="audioStore.verseTiming"
             :selected-reciter="recitionsStore.selectedReciter" :audio-files="audioStore.audioFiles"
             :chapter-name="audioStore.chapterName" :loop-audio="audioStore.loopAudio"
