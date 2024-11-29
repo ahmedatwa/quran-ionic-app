@@ -104,19 +104,20 @@ const getVerseByKey = async (verseNumber: number) => {
         <ion-content>
             <translations-view-component id="translations-chapters" :is-loading="chapterStore.isLoading.verses"
                 :is-playing="isPlaying" v-if="currentSegment === 'translations'" :chapter-id="chapterId"
-                :download-progress="undefined" :is-audio-loading="false" @update:play-audio="playAudio"
-                :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles" :verses="verses"
-                :chapter-name="chapterStore.selectedChapterName.nameArabic"
+                :download-progress="audioStore.downloadProgress" :is-audio-loading="audioStore.isLoading"
+                @update:play-audio="playAudio" :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles"
+                :verses="verses" :chapter-name="chapterStore.selectedChapterName.nameArabic"
                 :last-chapter-verse="chapterStore.getLastVerseNumberOfChapter"
-                :verse-count="chapterStore.selectedChapter?.versesCount" :verse-timing="undefined"
-                @update:get-verses="getVerses" :pagination="pagination" :audio-experience="null"
-                @update:get-verse-by-key="getVerseByKey">
+                :verse-count="chapterStore.selectedChapter?.versesCount" :verse-timing="audioStore.verseTiming"
+                @update:get-verses="getVerses" :pagination="pagination"
+                :audio-experience="audioStore.audioPlayerSetting" @update:get-verse-by-key="getVerseByKey">
             </translations-view-component>
             <reading-view-component id="reading-chapters" v-else :is-playing="isPlaying" :verses="verses"
                 :is-loading="chapterStore.isLoading.verses" :styles="styles" :chapter-id="chapterId"
-                :verse-timing="undefined" @update:get-verses="getVerses" :is-audio-loading="false"
-                @update:surah-info="getSurahInfo" :pagination="pagination" @update:play-audio="playAudio"
-                :download-progress="undefined" :audio-experience="null"
+                :verse-timing="audioStore.verseTiming" @update:get-verses="getVerses"
+                :is-audio-loading="audioStore.isLoading" @update:surah-info="getSurahInfo" :pagination="pagination"
+                @update:play-audio="playAudio" :download-progress="audioStore.downloadProgress"
+                :audio-experience="audioStore.audioPlayerSetting"
                 :verse-count="chapterStore.selectedChapter?.versesCount">
             </reading-view-component>
             <div>
