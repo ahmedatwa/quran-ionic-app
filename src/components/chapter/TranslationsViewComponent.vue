@@ -68,23 +68,33 @@ const emit = defineEmits<{
 }>();
 
 const setBookmarked = async (verse: Verse) => {
-    bookmarkedItems.value.push({
-        key: `/page/${verse.page_number}`,
-        value: {
-            pageNumber: verse.page_number,
-            verseNumber: verse.verse_number,
-            verseText: verse.text_uthmani,
-            chapterName: getChapterName(verse.chapter_id)?.nameSimple
-        }
-    })
-    bookmarkedItems.value.forEach(({ key, value }) => {
-        setStorage(key, value)
-    })
+    const v = bookmarkedItems.value.find(({ key }) => {
+        const vNumber = key.split("-").pop()
+        return Number(vNumber) === verse.verse_number
 
-    await presentAlert({
-        message: "Verse Text Copied.",
     })
+    if (!v) {
+        bookmarkedItems.value.push({
+            key: `/page/${verse.page_number}-${verse.verse_number}`,
+            value: {
+                pageNumber: verse.page_number,
+                verseNumber: verse.verse_number,
+                verseText: verse.text_uthmani,
+                chapterName: getChapterName(verse.chapter_id)?.nameSimple
+            }
+        })
+        bookmarkedItems.value.forEach(({ key, value }) => {
+            setStorage(key, value)
+        })
 
+        await presentAlert({
+            message: getLine("quranReader.verseBookmarked"),
+        })
+    } else {
+        await presentAlert({
+            message: getLine("quranReader.verseAlreadyBookmarked"),
+        })
+    }
 };
 
 const isWordHighlighted = (word: VerseWord) => {

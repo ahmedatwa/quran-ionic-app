@@ -11,7 +11,6 @@ import { useLocale } from '@/utils/useLocale';
 import { useStorage, BookmarkedItems } from "@/utils/useStorage";
 import { truncate } from "@/utils/string";
 
-
 const { getLine } = useLocale()
 const bookmarks = ref<BookmarkedItems[]>([])
 const bookmarksBD = useStorage("__bookmarksDB")
