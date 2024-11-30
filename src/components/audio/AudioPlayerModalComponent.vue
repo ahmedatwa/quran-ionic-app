@@ -152,7 +152,8 @@ const isPlayable = (chapterId: number) => {
                     <ion-col>
                         <ion-button fill="clear" @click="$emit('update:playAudio', true)">
                             <ion-spinner v-if="isLoading"></ion-spinner>
-                            <ion-icon v-else slot="icon-only" :icon="isPlaying ? pauseOutline : playOutline"
+                            <ion-icon v-else slot="icon-only"
+                                :icon="isPlaying(Number(audioFiles?.chapter_id)) ? pauseOutline : playOutline"
                                 color="primary"></ion-icon>
                         </ion-button>
                     </ion-col>
