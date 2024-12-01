@@ -9,6 +9,8 @@ import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalCompon
 import { useRecitionsStore } from '@/stores/RecitionsStore';
 import { useAudioStore } from '@/stores/AudioStore';
 import { useChapterStore } from "@/stores/ChapterStore";
+import { useJuzStore } from "@/stores/JuzStore";
+
 // utils
 import { truncate } from "@/utils/string";
 // types
@@ -18,6 +20,7 @@ import type { Chapter } from "@/types/chapter";
 const recitationsStore = useRecitionsStore()
 const audioStore = useAudioStore()
 const chapterStore = useChapterStore()
+const juzStore = useJuzStore()
 
 defineProps<{
     modelValue: boolean
@@ -53,19 +56,15 @@ const getCurrentVerseData = computed(() => {
 })
 
 const getRecentlyPlayed = computed(() => {
-    const chapters: Chapter[] = []
+    const cs: Chapter[] = []
     if (audioStore.recentlyPlayed) {
         audioStore.recentlyPlayed.forEach((chapterId) => {
             const chapter = chapterStore.chapters?.find((c) => c.id === chapterId)
-            if (chapter) chapters.push({ ...chapter })
+            if (chapter) cs.push({ ...chapter })
         })
     }
-    return chapters
+    return cs
 })
-
-const isPlaying = (chapterId: number) => {
-    return audioStore.isPlaying && chapterId === audioStore.chapterId
-}
 
 </script>
 
@@ -95,17 +94,17 @@ const isPlaying = (chapterId: number) => {
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
-            <audio-player-modal-component trigger="audio-modal" :is-playing="isPlaying"
-                :is-loading="audioStore.isLoading" :verse-data="getCurrentVerseData" :chapters="chapterStore.chapters"
-                :selected-reciter="recitationsStore.selectedReciter" :audio-files="audioStore.audioFiles"
-                :chapter-name="audioStore.chapterName" :loop-audio="audioStore.loopAudio"
-                :media-volume="audioStore.mediaVolume" :map-recitions="recitationsStore.mapRecitions"
-                :progress-timer="audioStore.progressTimer" @update:change-volume="audioStore.changeMediaVolume"
-                @update:seek="audioStore.playbackSeek" @update:download="audioStore.attemptFileSave($event)"
-                @update:play-chapter="audioStore.playChapterAudio" @update:play-next="audioStore.playNext"
-                @update:play-prev="audioStore.playPrevious()" @update:play-audio="audioStore.handlePlay"
-                @update:loop-audio="audioStore.loopAudio = $event" :recently-played="getRecentlyPlayed"
-                @update:selected-reciter="recitationsStore.handleSelectedReciter">
+            <audio-player-modal-component trigger="audio-modal" :is-playing="audioStore.isPlaying"
+                :active-audio-id="audioStore.chapterId" :is-loading="audioStore.isLoading" :verse-data="getCurrentVerseData"
+                :juzs="juzStore.juzs" :selected-reciter="recitationsStore.selectedReciter"
+                :audio-files="audioStore.audioFiles" :chapter-name="audioStore.chapterName"
+                :loop-audio="audioStore.loopAudio" :media-volume="audioStore.mediaVolume"
+                :map-recitions="recitationsStore.mapRecitions" :progress-timer="audioStore.progressTimer"
+                @update:change-volume="audioStore.changeMediaVolume" @update:seek="audioStore.playbackSeek"
+                @update:download="audioStore.attemptFileSave($event)" @update:play-chapter="audioStore.playChapterAudio"
+                @update:play-next="audioStore.playNext" @update:play-prev="audioStore.playPrevious()"
+                @update:play-audio="audioStore.handlePlay" @update:loop-audio="audioStore.loopAudio = $event"
+                :recently-played="getRecentlyPlayed" @update:selected-reciter="recitationsStore.handleSelectedReciter">
             </audio-player-modal-component>
         </ion-footer>
     </Transition>

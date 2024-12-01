@@ -14,6 +14,7 @@ import { useStorage } from "@/utils/useStorage";
 import { useAlert } from '@/utils/useAlert';
 // test////
 import { useScrollTo } from "@/utils/useScrollTo"
+
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { Pagination } from "@/types/chapter";
@@ -38,7 +39,7 @@ const contentRef = ref()
 const cardRef = ref()
 const intersectingVerseNumber = ref(1)
 // test
-const { scrollTo } = useScrollTo()
+const { scrollTo, scrollToTop } = useScrollTo()
 
 
 const props = defineProps<{
@@ -142,8 +143,8 @@ watch(() => props.verseTiming, (t) => {
 })
 
 const scroll = (verseNumber: number) => {
-    scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
-    //scrollTo(`#verse-col-${verseNumber}`, contentRef.value.$el)
+    // scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
+    scrollTo(`#verse-col-${verseNumber}`, contentRef.value.$el)
 }
 
 const computedVerses = computed(() => {

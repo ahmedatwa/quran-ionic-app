@@ -15,6 +15,7 @@ export const scrollToElement = async (
   const parent = root ? root : undefined;
   if (el && !isInViewport(el, parent)) {
     await delay(timeout || 100);
+     
     if (overLayHeight) {
       if (
         !el.classList.contains(`scroll-margin-top:${overLayHeight || 300}px`)
