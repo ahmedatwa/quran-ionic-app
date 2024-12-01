@@ -1,26 +1,27 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from "vue"
-import { IonButtons, IonButton, IonHeader, IonToolbar, IonSkeletonText, IonList } from "@ionic/vue"
-import { IonContent, modalController, IonRow, IonLabel, IonThumbnail, IonItem, IonSpinner } from '@ionic/vue';
-import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonText, IonListHeader } from '@ionic/vue';
-import { IonItemOptions, IonItemOption, IonItemSliding, IonModal } from "@ionic/vue";
+import { onMounted, ref } from "vue"
+import { IonButtons, IonButton, IonHeader, IonToolbar, IonSkeletonText } from "@ionic/vue"
+import { IonContent, modalController, IonRow, IonThumbnail, IonSpinner } from '@ionic/vue';
+import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonText } from '@ionic/vue';
+import { IonModal } from "@ionic/vue";
 // ionicons
-import { playOutline, playBackOutline, playForwardOutline, leafOutline } from 'ionicons/icons';
-import { playCircleOutline, volumeLowOutline, volumeHighOutline } from 'ionicons/icons';
-import { musicalNoteOutline, downloadOutline } from 'ionicons/icons';
+import { playOutline, playBackOutline, playForwardOutline, repeatOutline } from 'ionicons/icons';
+import { volumeLowOutline, volumeHighOutline } from 'ionicons/icons';
 import { pauseOutline, chevronDownOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
-import { repeatOutline } from 'ionicons/icons';
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { useStorage } from "@/utils/useStorage";
 // components
 import ModalComponent from "@/components/common/ModalComponent.vue";
+import AudioModalAllChapters from "@/components/audio/parts/AudioModalAllChapters.vue";
+import AudioModalRecentPlay from "@/components/audio/parts/AudioModalRecentPlay.vue";
 // types
 import type { AudioFile, MapRecitions, Recitations } from "@/types/audio";
 import type { Chapter } from "@/types/chapter";
+import type { Juz } from "@/types/juz";
 
 const modalRef = ref()
-const { getLine, isRtl } = useLocale()
+const { getLine } = useLocale()
 const isImgLoading = ref(true)
 const downloadedKeys = ref<string[]>([])
 const { storageKeys } = useStorage("__audioDB")
@@ -28,7 +29,8 @@ const dismiss = () => modalController.dismiss(null, 'cancel');
 
 const props = defineProps<{
     trigger: string
-    isPlaying: (chapterId: number) => boolean
+    isPlaying: boolean
+    activeAudioId?: number
     isLoading: boolean
     verseData?: {
         juzNumber: number | null;
@@ -45,7 +47,8 @@ const props = defineProps<{
     mediaVolume: number
     loopAudio: string
     mapRecitions?: MapRecitions
-    recentlyPlayed?: Chapter[]
+    recentlyPlayed?: Chapter[],
+    juzs?: Juz[]
 }>()
 
 const emit = defineEmits<{
@@ -65,20 +68,14 @@ onMounted(async () => {
     if (result) downloadedKeys.value = result
 })
 
-const download = (chapterId: number) => {
-    emit('update:download', chapterId)
-}
-
 const changeMediaVolume = (ev: CustomEvent) => {
     const vol = ev.detail.value
     emit('update:changeVolume', vol)
 }
 
-const isPlayable = (chapterId: number) => {
-    return props.audioFiles?.chapter_id === chapterId
+const isAudioPlaying = (chapterId: number) => {
+    return props.isPlaying && (chapterId === props.activeAudioId)
 }
-
-
 </script>
 
 <template>
@@ -153,7 +150,7 @@ const isPlayable = (chapterId: number) => {
                         <ion-button fill="clear" @click="$emit('update:playAudio', true)">
                             <ion-spinner v-if="isLoading"></ion-spinner>
                             <ion-icon v-else slot="icon-only"
-                                :icon="isPlaying(Number(audioFiles?.chapter_id)) ? pauseOutline : playOutline"
+                                :icon="isAudioPlaying(Number(audioFiles?.chapter_id)) ? pauseOutline : playOutline"
                                 color="primary"></ion-icon>
                         </ion-button>
                     </ion-col>
@@ -181,69 +178,12 @@ const isPlayable = (chapterId: number) => {
                     </ion-col>
                 </ion-row>
                 <!-- recentlyPlayed -->
-                <ion-row class="ion-justify-content-center ion-margin-vertical">
-                    <ion-col size="12">
-                        <ion-list-header class="ion-margin-bottom">
-                            <ion-icon :icon="leafOutline" style="margin-right: 5px;"></ion-icon> {{
-                                getLine('audio.recentlyPlayed') }}
-                        </ion-list-header>
-                        <ion-list style="height: auto; overflow-y: scroll;">
-                            <ion-item-sliding v-for="chapter in recentlyPlayed" :key="chapter.id">
-                                <ion-item :button="true">
-                                    <ion-spinner name="dots" color="danger" class="ml-1"
-                                        v-if="isPlaying(chapter.id)"></ion-spinner>
-                                    <ion-label>
-                                        <h3>
-                                            <span v-if="isRtl">{{ chapter.nameArabic }}</span>
-                                            <span v-else>{{ chapter.nameSimple }}</span>
-                                        </h3>
-
-                                    </ion-label>
-                                </ion-item>
-                                <ion-item-options slot="end">
-                                    <ion-item-option @click="download(chapter.id)" color="warning">
-                                        <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
-                                    </ion-item-option>
-                                    <ion-item-option :disabled="isPlayable(chapter.id)"
-                                        @click="$emit('update:playChapter', chapter.id)">
-                                        <ion-icon slot="icon-only" :icon="playCircleOutline"></ion-icon>
-                                    </ion-item-option>
-                                </ion-item-options>
-                            </ion-item-sliding>
-                        </ion-list>
-                    </ion-col>
-                </ion-row>
-                <ion-row class="ion-justify-content-center ion-margin-vertical">
-                    <ion-col size="12">
-                        <ion-list-header class="ion-margin-bottom">
-                            <ion-icon :icon="musicalNoteOutline" style="margin-right: 5px;"></ion-icon> {{
-                                getLine('audio.allChapters') }}
-                        </ion-list-header>
-                        <ion-list style="height: auto; overflow-y: scroll;">
-                            <ion-item-sliding v-for="chapter in chapters" :key="chapter.id">
-                                <ion-item :button="true">
-                                    <ion-spinner name="dots" color="danger" class="ml-1"
-                                        v-if="isPlaying(chapter.id)"></ion-spinner>
-                                    <ion-label>
-                                        <h3>
-                                            <span v-if="isRtl">{{ chapter.nameArabic }}</span>
-                                            <span v-else>{{ chapter.nameSimple }}</span>
-                                        </h3>
-                                    </ion-label>
-                                </ion-item>
-                                <ion-item-options slot="end">
-                                    <ion-item-option color="warning" @click="download(chapter.id)">
-                                        <ion-icon slot="icon-only" :icon="downloadOutline"></ion-icon>
-                                    </ion-item-option>
-                                    <ion-item-option @click="$emit('update:playChapter', chapter.id)"
-                                        :disabled="isPlayable(chapter.id)">
-                                        <ion-icon slot="icon-only" :icon="playCircleOutline"></ion-icon>
-                                    </ion-item-option>
-                                </ion-item-options>
-                            </ion-item-sliding>
-                        </ion-list>
-                    </ion-col>
-                </ion-row>
+                <audio-modal-recent-play :is-playing="isPlaying" :audio-id="activeAudioId"
+                    :recently-played="recentlyPlayed" :chapter-id="audioFiles?.chapter_id"></audio-modal-recent-play>
+                <!-- All -->
+                <audio-modal-all-chapters :juzs="juzs" :chapter-id="audioFiles?.chapter_id"
+                    @update:download="$emit('update:download', $event)"
+                    @update:play-chapter="$emit('update:playChapter', $event)"></audio-modal-all-chapters>
             </ion-grid>
         </ion-content>
     </ion-modal>

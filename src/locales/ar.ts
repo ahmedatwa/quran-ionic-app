@@ -53,6 +53,13 @@ export default {
     audioChapters: "Surah Audio",
     selectReciter: "اختر القارئ",
     playlist: "قائمة التشغيل",
+    allChapters: "All Chapters",
+    hizb: "حزب {0}",
+    page: "صفحة {0}",
+    juz: "Juz {0}",
+    surah: "سورة {0}",
+    ayah: "آية {0}",
+    recentlyPlayed: "لعبت مؤخرًا"
   },
   quranReader: {
     textPage: "صفحة",
@@ -73,6 +80,8 @@ export default {
     prevJuz: "الجزء السابق",
     startJuz: "Start of Juz",
     loadingChapterInfo: "جارٍ تحميل معلومات السورة...",
-    textDowloading: "جارٍ التنزيل..."
+    textDowloading: "جارٍ التنزيل...",
+    verseBookmarked: "تم وضع إشارة مرجعية على الآية.",
+    verseAlreadyBookmarked: "تحذير: تم وضع إشارة مرجعية على الآية بالفعل."
   },
 };

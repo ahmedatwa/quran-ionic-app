@@ -18,9 +18,9 @@ const playChapterAudio = (audioID: number) => {
 
 const isVisible = computed(() => audioStore.audioPlayerSetting.fab && audioStore.audioFiles)
 
-const isPlaying = () => {
+const isPlaying = computed(() => {
     return audioStore.isPlaying && audioStore.audioFiles?.id === audioStore.chapterId
-}
+})
 </script>
 <template>
     <div v-if="isVisible">
