@@ -46,3 +46,7 @@ To build your project for production, use:
 
 ## 📑 License
 [MIT](http://opensource.org/licenses/MIT)
+
+## App Limitations
+- Android
+    1- No Music controls as no compatable capacitor plugin
