@@ -49,4 +49,5 @@ To build your project for production, use:
 
 ## App Limitations
 - Android
+```bash
     1- No Music controls as no compatable capacitor plugin
