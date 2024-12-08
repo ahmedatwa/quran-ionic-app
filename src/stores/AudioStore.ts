@@ -8,6 +8,7 @@ import type { AudioFile, AudioPlayerSettings } from "@/types/audio";
 import type { PlayAudioEmit } from "@/types/audio";
 import type { VerseTimingsProps } from "@/types/audio";
 import type { VerseTimings, VerseTimingSegments } from "@/types/audio";
+import type { Chapter } from "@/types/chapter";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 import { useMetaStore } from "@/stores/MetaStore";
@@ -605,6 +606,17 @@ export const useAudioStore = defineStore("audio-store", () => {
     await getAudio({ audioID });
   };
 
+  const getRecentlyPlayed = computed(() => {
+    let cs: Chapter[] = []
+    if (recentlyPlayed.value) {
+        recentlyPlayed.value.forEach((chapterId) => {
+            const chapter = chapterStore.chapters?.find((c) => c.id === chapterId)
+            if (chapter) cs.push({ ...chapter })
+        })
+    }
+    return cs
+})
+
   return {
     audioEl,
     audioFiles,
@@ -634,6 +646,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     downloadProgress,
     isVisible,
     recentlyPlayed,
+    getRecentlyPlayed,
     attemptFileSave,
     saveFile,
     playAudio,

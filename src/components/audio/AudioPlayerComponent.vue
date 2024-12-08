@@ -15,7 +15,6 @@ import { useJuzStore } from "@/stores/JuzStore";
 import { truncate } from "@/utils/string";
 // types
 import type { Recitations } from "@/types/audio"
-import type { Chapter } from "@/types/chapter";
 
 const recitationsStore = useRecitionsStore()
 const audioStore = useAudioStore()
@@ -53,17 +52,6 @@ const getCurrentVerseData = computed(() => {
             }
         }
     }
-})
-
-const getRecentlyPlayed = computed(() => {
-    const cs: Chapter[] = []
-    if (audioStore.recentlyPlayed) {
-        audioStore.recentlyPlayed.forEach((chapterId) => {
-            const chapter = chapterStore.chapters?.find((c) => c.id === chapterId)
-            if (chapter) cs.push({ ...chapter })
-        })
-    }
-    return cs
 })
 
 </script>
@@ -104,7 +92,7 @@ const getRecentlyPlayed = computed(() => {
                 @update:download="audioStore.attemptFileSave($event)" @update:play-chapter="audioStore.playChapterAudio"
                 @update:play-next="audioStore.playNext" @update:play-prev="audioStore.playPrevious()"
                 @update:play-audio="audioStore.handlePlay" @update:loop-audio="audioStore.loopAudio = $event"
-                :recently-played="getRecentlyPlayed" @update:selected-reciter="recitationsStore.handleSelectedReciter">
+                :recently-played="audioStore.getRecentlyPlayed" @update:selected-reciter="recitationsStore.handleSelectedReciter">
             </audio-player-modal-component>
         </ion-footer>
     </Transition>
