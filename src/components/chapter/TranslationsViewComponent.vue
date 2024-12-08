@@ -143,8 +143,8 @@ watch(() => props.verseTiming, (t) => {
 })
 
 const scroll = (verseNumber: number) => {
-    // scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
-    scrollTo(`#verse-col-${verseNumber}`, contentRef.value.$el)
+     scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
+   // scrollTo(`#verse-col-${verseNumber}`, contentRef.value.$el)
 }
 
 const computedVerses = computed(() => {
