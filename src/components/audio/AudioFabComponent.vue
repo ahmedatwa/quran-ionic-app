@@ -8,9 +8,11 @@ import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalCompon
 // stores
 import { useAudioStore } from "@/stores/AudioStore";
 import { useRecitionsStore } from '@/stores/RecitionsStore';
+import { useJuzStore } from "@/stores/JuzStore";
 
 const audioStore = useAudioStore()
 const recitionsStore = useRecitionsStore()
+const juzStore = useJuzStore()
 
 const playChapterAudio = (audioID: number) => {
     audioStore.getAudio({ audioID })
@@ -57,8 +59,8 @@ const isPlaying = computed(() => {
             @update:seek="audioStore.playbackSeek" @update:download="audioStore.downloadAudioFile"
             @update:play-chapter="playChapterAudio" @update:play-next="audioStore.playNext"
             @update:play-prev="audioStore.playPrevious()" @update:play-audio="audioStore.handlePlay"
-            @update:loop-audio="audioStore.loopAudio = $event"
-            @update:selected-reciter="recitionsStore.handleSelectedReciter">
+            @update:loop-audio="audioStore.loopAudio = $event"  :recently-played="audioStore.getRecentlyPlayed"
+            @update:selected-reciter="recitionsStore.handleSelectedReciter" :juzs="juzStore.juzs">
         </audio-player-modal-component>
     </div>
 </template>
