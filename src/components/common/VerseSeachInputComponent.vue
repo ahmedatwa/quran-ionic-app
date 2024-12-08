@@ -18,7 +18,7 @@ const handleVerseSearch = (val: string | number) => {
 }
 
 const validateInput = (val: string | number) => {
-    return Number(val) <= Number(props.verseCount)
+    return Number(val) > Number(props.verseCount)
 }
 
 const validate = (ev: CustomEvent) => {
@@ -27,14 +27,11 @@ const validate = (ev: CustomEvent) => {
     input.value.$el.classList.remove('ion-invalid');
 
     if (validateInput(value)) {
-
-
-        input.value.$el.classList.add('ion-valid')
-        handleVerseSearch(value)
-    } else {
         inputError.value = "Invalid Verse Number"
         input.value.$el.classList.add('ion-invalid');
-
+    } else {
+        input.value.$el.classList.add('ion-valid')
+        handleVerseSearch(value)
     }
 
 }
