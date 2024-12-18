@@ -1,29 +1,26 @@
 export const scrollToElement = async (
   elID: string | HTMLDivElement,
-  root?: HTMLElement,
-  timeout?: number,
-  overLayHeight?: number,
+  root: ".ion-page",
+  timeout?: 100,
+  overLayHeight?: 300,
   options: ScrollIntoViewOptions = SMOOTH_SCROLL_TO_CENTER
 ) => {
-
-  
   const el =
     typeof elID === "string"
       ? (document.querySelector(elID) as HTMLDivElement)
       : elID;
-     
-  const parent = root ? root : undefined;
+
+  const parent =
+    typeof root === "string"
+      ? (document.querySelector(root) as HTMLElement)
+      : root;
   if (el && !isInViewport(el, parent)) {
-    await delay(timeout || 100);
-     
-    if (overLayHeight) {
-      if (
-        !el.classList.contains(`scroll-margin-top:${overLayHeight || 300}px`)
-      ) {
-        el.classList.add(`scroll-margin-top:${overLayHeight}px`);
-        el.classList.add(`scroll-margin-bottom:${overLayHeight}px`);
-      }
+    await delay(timeout ? timeout : 100);
+
+    if (!el.classList.contains(`scroll-margin-bottom:${overLayHeight}px`)) {
+      el.classList.add(`scroll-margin-bottom:${overLayHeight}px`);
     }
+
     el.scrollIntoView(options);
   } else {
     return;

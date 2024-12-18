@@ -39,7 +39,7 @@ const contentRef = ref()
 const cardRef = ref()
 const intersectingVerseNumber = ref(1)
 // test
-const { scrollTo, scrollToTop } = useScrollTo()
+const { scrollTo, scrollToTop, sc } = useScrollTo()
 
 
 const props = defineProps<{
@@ -143,8 +143,8 @@ watch(() => props.verseTiming, (t) => {
 })
 
 const scroll = (verseNumber: number) => {
-     scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
-   // scrollTo(`#verse-col-${verseNumber}`, contentRef.value.$el)
+    scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
+    //sc(`#verse-col-${verseNumber}`)
 }
 
 const computedVerses = computed(() => {
@@ -196,10 +196,10 @@ const playAudio = (ev: PlayAudioEmit) => {
                 </ion-card-header>
                 <ion-item v-for="verse in computedVerses" :key="verse.verse_number"
                     :data-verse-number="verse.verse_number" :data-hizb-number="verse.hizb_number"
-                    :data-juz-number="verse.juz_number">
+                    :data-juz-number="verse.juz_number" :id="`verse-col-${verse.verse_number}`">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
-                            <ion-col size="11" class="translations-view-col" :id="`verse-col-${verse.verse_number}`">
+                            <ion-col size="11" class="translations-view-col" >
                                 <ion-label v-for="word in verse.words" :key="word.id">
                                     <ion-text :color="isWordHighlighted(word) ? styles.colorCode : ''"
                                         :id="`word-${verse.verse_number}`">
