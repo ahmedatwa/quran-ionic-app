@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted, watchEffect, nextTick } from "vue"
+import { ref, computed, watch } from "vue"
 import { IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
 import { IonContent, IonNote, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
 import { IonCol, IonRow, IonGrid, IonItem, IonCard, IonRefresher, IonRefresherContent } from "@ionic/vue";
@@ -136,7 +136,7 @@ const loadMoreVerses = () => {
     }
 }
 
-const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el, 300)
+const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el)
 
 const handleRefresh = (event: RefresherCustomEvent) => {
     if (!props.pagination?.next_page) {
@@ -153,24 +153,6 @@ const isPlaying = (chapterId: number) => {
     return props.isPlaying && chapterId === props.activeAudioId
 }
 
-// Scroll to verse if visible
-// and coming from bookmark route
-// watchEffect(() => {
-//     if (props.verses) {
-
-
-
-//         nextTick(() => {
-//             if (props.bookmarkedVerse) {
-//                 const el = scroll(props.bookmarkedVerse)
-//                 console.log(el);
-//             }
-//             // if (el)
-//             //     el.scrollIntoView(false)
-//         })
-//     }
-
-// })
 
 
 </script>

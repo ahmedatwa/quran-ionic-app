@@ -5,6 +5,7 @@ import { useRecitionsStore } from "@/stores/RecitionsStore";
 // utils
 import { useStorage } from "@/utils/useStorage";
 import { useLocale } from "@/utils/useLocale";
+// capacitor plugins
 import { Device } from "@capacitor/device";
 
 export const useStartup = () => {
