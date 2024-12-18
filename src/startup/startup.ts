@@ -1,9 +1,11 @@
+import { shallowRef } from "vue";
 // stores
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 import { useRecitionsStore } from "@/stores/RecitionsStore";
 // utils
 import { useStorage } from "@/utils/useStorage";
 import { useLocale } from "@/utils/useLocale";
+import { Device } from "@capacitor/device";
 
 export const useStartup = () => {
   const translationsStore = useTranslationsStore();
@@ -11,6 +13,7 @@ export const useStartup = () => {
 
   const { setLocale } = useLocale();
   const { getStorage, setStorage } = useStorage("__settingsDB");
+  const deviceLocale = shallowRef("");
 
   const setTranslation = async () => {
     const translation = await getStorage("translation");
@@ -92,8 +95,8 @@ export const useStartup = () => {
   const setDefaultLocale = async () => {
     const localeStorage = await getStorage("locale");
     if (!localeStorage) {
-      setLocale("en", false);
-      setStorage("locale", { key: "en", rtl: false });
+      setLocale(deviceLocale.value, false);
+      setStorage("locale", { key: deviceLocale.value, rtl: false });
     } else {
       setLocale(localeStorage.key, localeStorage.rtl);
     }
@@ -112,9 +115,15 @@ export const useStartup = () => {
     }
   };
 
+  const logDeviceLocaleInfo = async () => {
+    const info = await Device.getLanguageCode();
+    if (info) deviceLocale.value = info.value;
+  };
+
   const runStartup = async () => {
     try {
       await Promise.all([
+        logDeviceLocaleInfo(),
         setTranslation(),
         setScheme(),
         setAudioPlayerSettings(),
@@ -126,6 +135,7 @@ export const useStartup = () => {
       throw error;
     }
   };
+
   return {
     setTranslation,
     setScheme,

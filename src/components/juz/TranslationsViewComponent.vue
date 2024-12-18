@@ -129,7 +129,7 @@ const loadMoreVerses = () => {
     }
 
 }
-const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el, 300)
+const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el)
 
 const handleRefresh = (event: RefresherCustomEvent) => {
     if (!props.pagination?.next_page) {
@@ -171,10 +171,10 @@ const isPlaying = (chapterId: number) => {
                 <hr>
                 <ion-item v-for="verse in mappedVerses" :key="verse.verse_number"
                     :data-verse-number="verse.verse_number" :data-hizb-number="verse.hizb_number"
-                    :data-juz-number="verse.juz_number">
+                    :data-juz-number="verse.juz_number" :id="`verse-col-${verse.verse_number}`">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
-                            <ion-col size="11" class="translations-view-col" :id="`verse-col-${verse.verse_number}`">
+                            <ion-col size="11" class="translations-view-col">
                                 <ion-label v-for="word in verse.words" :key="word.id">
                                     <ion-text :color="isWordHighlighted(word) ? styles.colorCode : ''">
                                         <span v-if="word.char_type_name === 'end'" class="end">

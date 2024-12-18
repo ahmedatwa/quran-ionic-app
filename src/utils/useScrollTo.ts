@@ -29,5 +29,19 @@ export const useScrollTo = () => {
     }
   };
 
-  return { scrollToTop, scrollTo };
+  const sc = (id: string) => {
+    const el = document.querySelector(id);
+    let pos = el?.getBoundingClientRect();
+
+    //  scroll to 32px above el
+    if (pos) {
+      console.log(pos);
+      window.focus();
+      setTimeout(function () {
+        window.scrollTo(pos?.left, pos?.top + window.scrollY - 20);
+      }, 200);
+    }
+  };
+
+  return { scrollToTop, scrollTo, sc };
 };

@@ -6,7 +6,6 @@ import { useMetaStore } from '@/stores/MetaStore';
 // utils
 import AudioHtmlElComponent from "@/components/audio/AudioHtmlElComponent.vue";
 import { useStartup } from "@/startup/startup"
-import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 
 const metaStore = useMetaStore()
 const { runStartup } = useStartup()
