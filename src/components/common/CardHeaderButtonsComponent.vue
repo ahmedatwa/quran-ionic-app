@@ -17,6 +17,7 @@ import type { PlayAudioEmit } from '@/types/audio';
 const { getLine } = useLocale()
 const translationStore = useTranslationsStore()
 const settings = useSettings()
+const alertButtons = [getLine("buttons.ok"), getLine("buttons.cancel")];
 
 const props = defineProps<{
     isPlaying: boolean
@@ -58,13 +59,13 @@ const translations = computed(() => {
 })
 
 const getSelectedTranslation = (ev: CustomEvent) => {
-    const transaltion: Translation = ev.detail.data.values    
-    translationStore.selectedTranslation = toValue(transaltion)
-    settings.updateSelectedTranslations(toValue(transaltion))
+    if (ev.detail.data) {
+        const transaltion: Translation = ev.detail.data.values
+        translationStore.selectedTranslation = toValue(transaltion)
+        settings.updateSelectedTranslations(toValue(transaltion))
+    }
 }
 
-const alertButtons = ['Change'];
-const alertInputs = translations
 </script>
 
 
@@ -89,7 +90,7 @@ const alertInputs = translations
         </ion-button>
         <!-- Alert Transaltion -->
         <ion-alert trigger="present-alert" :header="translationAlertHeader" :buttons="alertButtons"
-            :inputs="alertInputs" :message="translationStore.selectedTranslation?.author_name"
+            :inputs="translations" :message="translationStore.selectedTranslation?.author_name"
             @did-dismiss="getSelectedTranslation($event)"></ion-alert>
     </div>
 </template>
