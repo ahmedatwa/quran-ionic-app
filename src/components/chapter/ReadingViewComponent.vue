@@ -102,7 +102,7 @@ const handleRefresh = (event: RefresherCustomEvent) => {
     }
 };
 
-const scroll = (verseNumber: number) => scrollToElement(`#line-${verseNumber}`, cardRef.value.$el, 300)
+const scroll = (verseNumber: number) => scrollToElement(`#line-${verseNumber}`, cardRef.value.$el)
 
 </script>
 

@@ -40,7 +40,7 @@ export default {
     autoDownload: "تنزيل الصوت تلقائيًا",
     keepAwake: "منع النوم أثناء التشغيل",
     highlightedWordColor: "لون الكلمة",
-     fab: "زر الصوت الرائع"
+    fab: "زر الصوت الرائع",
   },
   bookmark: {
     title: "الإشارات المرجعية",
@@ -59,7 +59,7 @@ export default {
     juz: "Juz {0}",
     surah: "سورة {0}",
     ayah: "آية {0}",
-    recentlyPlayed: "لعبت مؤخرًا"
+    recentlyPlayed: "لعبت مؤخرًا",
   },
   quranReader: {
     textPage: "صفحة",
@@ -82,6 +82,13 @@ export default {
     loadingChapterInfo: "جارٍ تحميل معلومات السورة...",
     textDowloading: "جارٍ التنزيل...",
     verseBookmarked: "تم وضع إشارة مرجعية على الآية.",
-    verseAlreadyBookmarked: "تحذير: تم وضع إشارة مرجعية على الآية بالفعل."
+    verseAlreadyBookmarked: "تحذير: تم وضع إشارة مرجعية على الآية بالفعل.",
+  },
+  buttons: {
+    ok: "نعم",
+    cancel: "إلغاء",
+    close: "غلق",
+    dismiss: "رفض",
+    confirm: "تأكيد",
   },
 };

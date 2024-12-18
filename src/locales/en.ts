@@ -85,4 +85,11 @@ export default {
     verseBookmarked: "Success: Verse has been bookmarked.",
     verseAlreadyBookmarked: "Warning: Verse is already bookmarked."
   },
+  buttons: {
+    ok: "Ok", 
+    cancel: "Cancel", 
+    close: "Close", 
+    dismiss: "Dismiss", 
+    confirm: "Confirm"
+  }
 };
