@@ -106,7 +106,7 @@ const handleRefresh = (event: RefresherCustomEvent) => {
     }
 };
 
-const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el, 300)
+const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el)
 
 const isPlaying = (chapterId: number) => {
     return props.isPlaying && chapterId === props.activeAudioId
