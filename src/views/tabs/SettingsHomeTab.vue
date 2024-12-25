@@ -16,6 +16,7 @@ import { getLangFullLocale } from '@/utils/locale';
 import { useSettings } from '@/utils/useSettings';
 import { properCase } from '@/utils/string';
 import { useKeepAwake } from '@/utils/useKeepAwake';
+import { useAlert } from '@/utils/useAlert';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
 import ModalComponent from '@/components/common/ModalComponent.vue';
@@ -34,6 +35,7 @@ const pageRef = ref(null)
 const settings = useSettings()
 const keepAwake = useKeepAwake()
 const isAwake = ref(false)
+const { presentAlert } = useAlert()
 
 const handleSelectedReciter = (reciter: Recitations) => {
     recitationsStore.selectedReciter = reciter
@@ -50,6 +52,22 @@ const handleKeepAwake = async () => {
     isAwake.value = await keepAwake.isKeptAwake()
 }
 
+const presentCacheAlert = async () => {
+    await presentAlert({
+        header: "Note",
+        message: getLine('settings.cacheNote'),
+        buttons: [{
+            text: getLine('buttons.cancel'),
+        }, {
+            text: getLine('buttons.clear'),
+            role: getLine('buttons.clear'),
+            handler: () => {
+                audioStore.clearAudioStoragecache()
+            }
+        }],
+        id: "clear-cache-alert"
+    })
+}
 </script>
 
 <template>
@@ -201,8 +219,8 @@ const handleKeepAwake = async () => {
                             <ion-list class="ion-padding">
                                 <ion-item>
                                     <ion-select :aria-label="getLine('settings.darkMode')"
-                                        :label="getLine('settings.theme')" interface="popover"
-                                        :placeholder="properCase(colorScheme)" @ion-change="settings.appleColorScheme">
+                                        :label="getLine('settings.theme')" :placeholder="properCase(colorScheme)"
+                                        @ion-change="settings.appleColorScheme">
                                         <ion-select-option v-for="item in settings.colorSchemes.value" :key="item.key"
                                             :value="item.key">{{ item.value }}</ion-select-option>
                                     </ion-select>
@@ -210,6 +228,10 @@ const handleKeepAwake = async () => {
                                 <ion-item>
                                     <ion-label>{{ getLine('settings.version') }}</ion-label>
                                     <ion-text>{{ appVersion }}</ion-text>
+                                </ion-item>
+                                <ion-item :button="true" @click="presentCacheAlert">
+                                    <ion-label>{{ getLine('settings.cache') }}</ion-label>
+                                    <ion-text></ion-text>
                                 </ion-item>
                             </ion-list>
                         </div>

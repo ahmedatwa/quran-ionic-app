@@ -36,11 +36,12 @@ export default {
     dark: "مظلم",
     auto: "آلي",
     autoScroll: "التمرير التلقائي",
-    cache: "Cache",
+    cache: "مسح ذاكرة التخزين المؤقت",
     autoDownload: "تنزيل الصوت تلقائيًا",
     keepAwake: "منع النوم أثناء التشغيل",
     highlightedWordColor: "لون الكلمة",
     fab: "زر الصوت الرائع",
+    cacheNote: "سيؤدي مسح ذاكرة التخزين المؤقت إلى إزالة ملفات ذاكرة التخزين المؤقت الصوتية فقط، دون إزالة أي إعدادات شخصية",
   },
   bookmark: {
     title: "الإشارات المرجعية",
@@ -90,5 +91,6 @@ export default {
     close: "غلق",
     dismiss: "رفض",
     confirm: "تأكيد",
+    clear: "مسح",
   },
 };

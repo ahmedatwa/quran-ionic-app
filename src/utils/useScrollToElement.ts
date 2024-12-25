@@ -1,24 +1,25 @@
 export const scrollToElement = async (
-  elID: string | HTMLDivElement,
+  elID: string,
   root: ".ion-page",
   timeout?: 100,
-  overLayHeight?: 300,
   options: ScrollIntoViewOptions = SMOOTH_SCROLL_TO_CENTER
 ) => {
-  const el =
-    typeof elID === "string"
-      ? (document.querySelector(elID) as HTMLDivElement)
-      : elID;
+  const el = document.querySelector(elID) as HTMLDivElement;
 
   const parent =
     typeof root === "string"
       ? (document.querySelector(root) as HTMLElement)
       : root;
+
+  const scrollMargin = getMainScrollElRect(elID);
+  console.log(scrollIfNeeded);
+
   if (el && !isInViewport(el, parent)) {
     await delay(timeout ? timeout : 100);
 
-    if (!el.classList.contains(`scroll-margin-bottom:${overLayHeight}px`)) {
-      el.classList.add(`scroll-margin-bottom:${overLayHeight}px`);
+    if (!el.classList.contains(`scroll-margin-bottom:${scrollMargin}px`)) {
+      el.classList.add(`scroll-margin-bottom:${scrollMargin}px`);
+      el.classList.add(`scroll-margin-top:20px`);
     }
 
     el.scrollIntoView(options);
@@ -84,6 +85,12 @@ export const scrollIfNeeded = (
       container.scrollTop = offsetBottom - container.offsetHeight;
     }
   }
+};
+
+const getMainScrollElRect = (elID: string): string => {
+  const el = document.querySelector(`#main- ${elID}`) as HTMLDivElement;
+  const elRect = el.getBoundingClientRect();
+  return elRect ? elRect.height.toString() : "250";
 };
 
 const delay = (length: number): Promise<void> => {
