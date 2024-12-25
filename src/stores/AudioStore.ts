@@ -579,7 +579,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     }
   });
 
-  const handleAudioSetting = (ev: CustomEvent) => {
+  const handleAudioSetting = async (ev: CustomEvent) => {
     const audio: { checked: boolean; value: string } = ev.detail;
     switch (audio.value) {
       case "autoPlay":
@@ -599,7 +599,7 @@ export const useAudioStore = defineStore("audio-store", () => {
         break;
     }
 
-    settingsDB.setStorage("audioSettings", audioPlayerSetting);
+    await settingsDB.setStorage("audioSettings", audioPlayerSetting);
   };
 
   const playChapterAudio = async (audioID: number) => {
@@ -607,15 +607,20 @@ export const useAudioStore = defineStore("audio-store", () => {
   };
 
   const getRecentlyPlayed = computed(() => {
-    let cs: Chapter[] = []
+    let cs: Chapter[] = [];
     if (recentlyPlayed.value) {
-        recentlyPlayed.value.forEach((chapterId) => {
-            const chapter = chapterStore.chapters?.find((c) => c.id === chapterId)
-            if (chapter) cs.push({ ...chapter })
-        })
+      recentlyPlayed.value.forEach((chapterId) => {
+        const chapter = chapterStore.chapters?.find((c) => c.id === chapterId);
+        if (chapter) cs.push({ ...chapter });
+      });
     }
-    return cs
-})
+    return cs;
+  });
+
+  const clearAudioStoragecache = async () => {
+    await audioDB.clearStorage();
+  };
+
 
   return {
     audioEl,
@@ -668,5 +673,6 @@ export const useAudioStore = defineStore("audio-store", () => {
     playNext,
     playPrevious,
     downloadAudioFile,
+    clearAudioStoragecache,
   };
 });

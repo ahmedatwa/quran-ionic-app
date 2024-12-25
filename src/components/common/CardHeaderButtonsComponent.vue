@@ -89,7 +89,7 @@ const getSelectedTranslation = (ev: CustomEvent) => {
             <ion-icon :icon="languageOutline" slot="icon-only"></ion-icon>
         </ion-button>
         <!-- Alert Transaltion -->
-        <ion-alert trigger="present-alert" :header="translationAlertHeader" :buttons="alertButtons"
+        <ion-alert v-if="!chapterInfo" trigger="present-alert" :header="translationAlertHeader" :buttons="alertButtons"
             :inputs="translations" :message="translationStore.selectedTranslation?.author_name"
             @did-dismiss="getSelectedTranslation($event)"></ion-alert>
     </div>

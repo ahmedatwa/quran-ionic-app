@@ -37,11 +37,12 @@ export default {
     dark: "Dark",
     auto: "Auto",
     autoScroll: "Auto Scroll",
-    cache: "Cache",
+    cache: "Clear cache",
     autoDownload: "Auto Download Audio",
     keepAwake: "Prevent sleep while playing",
     highlightedWordColor: "Highlighted word color",
-    fab: "Audio Fab Button"
+    fab: "Audio Fab Button",
+    cacheNote: "Clearing cache will only remove audio cache files, without removing any personal settings",
   },
   bookmark: {
     title: "Bookmarks",
@@ -90,6 +91,7 @@ export default {
     cancel: "Cancel", 
     close: "Close", 
     dismiss: "Dismiss", 
-    confirm: "Confirm"
+    confirm: "Confirm",
+    clear: "Clear",
   }
 };

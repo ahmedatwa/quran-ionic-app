@@ -49,7 +49,7 @@ export const useStorage = (key: string) => {
     await storage.value?.clear();
   };
 
-  const storageLength = async () => {
+  const storageLength = async (): Promise<number | undefined> => {
     const len = await storage.value?.length();
     if (len) return len;
   };
@@ -68,6 +68,13 @@ export const useStorage = (key: string) => {
     if (!storage.value.driver)
       await storage.value.defineDriver(CordovaSQLiteDriver);
   });
+
+  const formatByteSize = (bytes: number) => {
+    if (bytes < 1024) return bytes + " bytes";
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(3) + " KiB";
+    else if (bytes < 1073741824) return (bytes / 1048576).toFixed(3) + " MiB";
+    else return (bytes / 1073741824).toFixed(3) + " GiB";
+  };
 
   return {
     storage,

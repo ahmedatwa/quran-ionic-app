@@ -15,7 +15,13 @@ type ToastParams = {
 type AlertParams = {
   header?: string;
   message: string;
-  buttons?: string[];
+  buttons?:
+    | string[]
+    | {
+        text: string;
+        role?: string;
+        handler?: () => void;
+      }[];
   id?: string;
   subHeader?: string;
 };
@@ -48,15 +54,15 @@ export const useAlert = () => {
     dismiss?: boolean,
     message: string = "Loading please wait...",
     duration: number = 0,
-    id?: "loading-spinner",
+    id?: "loading-spinner"
   ) => {
     const loading = await loadingController.create({
       id,
       message,
       duration,
     });
-    
-    dismiss ? await loadingController.dismiss() :  await loading.present()
+
+    dismiss ? await loadingController.dismiss() : await loading.present();
   };
 
   return { presentToast, presentAlert, presentLoading };

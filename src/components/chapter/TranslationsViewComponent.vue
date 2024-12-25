@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed, watch, onMounted, onUnmounted } from "vue"
-import { IonIcon, IonCardHeader, IonItem, IonGrid, IonRow, IonRefresher, IonRefresherContent } from "@ionic/vue";
-import { IonContent, IonNote, IonCardTitle, IonCardSubtitle } from "@ionic/vue";
+import { IonIcon, IonCardHeader, IonItem, IonGrid, IonRow, IonRefresher } from "@ionic/vue";
+import { IonContent, IonNote, IonCardTitle, IonCardSubtitle, IonRefresherContent } from "@ionic/vue";
 import { IonLabel, IonText, IonCol, IonCard, IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 import { App } from '@capacitor/app';
 
@@ -143,7 +143,7 @@ watch(() => props.verseTiming, (t) => {
 })
 
 const scroll = (verseNumber: number) => {
-    scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
+    scrollToElement(`#verse-item-${verseNumber}`, contentRef.value.$el)
     //sc(`#verse-col-${verseNumber}`)
 }
 
@@ -199,7 +199,7 @@ const playAudio = (ev: PlayAudioEmit) => {
                     :data-juz-number="verse.juz_number" :id="`verse-col-${verse.verse_number}`">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
-                            <ion-col size="11" class="translations-view-col" >
+                            <ion-col size="11" class="translations-view-col" :id="`main-verse-col-${verse.verse_number}`">
                                 <ion-label v-for="word in verse.words" :key="word.id">
                                     <ion-text :color="isWordHighlighted(word) ? styles.colorCode : ''"
                                         :id="`word-${verse.verse_number}`">
