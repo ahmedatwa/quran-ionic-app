@@ -12,7 +12,7 @@ export const scrollToElement = async (
       : root;
 
   const scrollMargin = getMainScrollElRect(elID);
-  console.log(scrollIfNeeded);
+   
 
   if (el && !isInViewport(el, parent)) {
     await delay(timeout ? timeout : 100);
@@ -87,8 +87,9 @@ export const scrollIfNeeded = (
   }
 };
 
-const getMainScrollElRect = (elID: string): string => {
-  const el = document.querySelector(`#main- ${elID}`) as HTMLDivElement;
+const getMainScrollElRect = (elID: string): string => {  
+  const div = elID.replace("#", "#main-");
+  const el = document.querySelector(div) as HTMLDivElement;
   const elRect = el.getBoundingClientRect();
   return elRect ? elRect.height.toString() : "250";
 };

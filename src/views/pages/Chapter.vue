@@ -58,7 +58,7 @@ const isPlaying = computed(() => audioStore.isPlaying
 
 const playAudio = async (event: { audioID: number, verseKey?: string }) => {
     if (event.audioID === audioStore.chapterId) {
-        audioStore.handlePlay();
+        await audioStore.handlePlay(event);
         return;
     }
     audioStore.resetValues()
