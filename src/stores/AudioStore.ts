@@ -332,8 +332,13 @@ export const useAudioStore = defineStore("audio-store", () => {
     }
   };
 
-  const handlePlay = () => {
-    isPlaying.value ? pauseAudio() : playAudio();
+  const handlePlay = async (ev: { audioID: number; verseKey?: string }) => {
+    if (ev.verseKey) {
+      selectedVerseKey.value = ev.verseKey;
+      loadedData()
+    } else {
+      isPlaying.value ? pauseAudio() : playAudio();
+    }
   };
 
   const canPlayThrough = () => {
@@ -620,7 +625,6 @@ export const useAudioStore = defineStore("audio-store", () => {
   const clearAudioStoragecache = async () => {
     await audioDB.clearStorage();
   };
-
 
   return {
     audioEl,
