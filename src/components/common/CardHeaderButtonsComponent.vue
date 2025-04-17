@@ -17,7 +17,7 @@ import type { PlayAudioEmit } from '@/types/audio';
 const { getLine } = useLocale()
 const translationStore = useTranslationsStore()
 const settings = useSettings()
-const alertButtons = [getLine("buttons.ok"), getLine("buttons.cancel")];
+const alertButtons = [getLine("buttons.cancel"), getLine("buttons.ok")];
 
 const props = defineProps<{
     isPlaying: boolean
@@ -43,19 +43,19 @@ const downloadStatus = computed(() => {
 })
 
 const translationAlertHeader = computed(() => {
-    if (translationStore.selectedTranslation?.language_name) {
-        return upperCase(translationStore.selectedTranslation.language_name)
+    if (translationStore.selectedTranslation) {
+        return upperCase(translationStore.selectedTranslation.language_name) + ": " + translationStore.selectedTranslation?.author_name
     }
 })
 
 const translations = computed(() => {
     return translationStore.translationsList.map((tr) => {
         return {
-            label: tr.author_name + '-' + tr.language_name,
+            label: tr.language_name.toUpperCase() + ' - ' + tr.author_name,
             type: 'radio',
             value: tr
         }
-    })
+    }).sort((a, b) => a.label.localeCompare(b.label))
 })
 
 const getSelectedTranslation = (ev: CustomEvent) => {
@@ -79,7 +79,7 @@ const getSelectedTranslation = (ev: CustomEvent) => {
             <span v-else class="d-inherit">
                 <ion-icon color="primary" :icon="isPlaying ? pauseOutline : playOutline"></ion-icon>
                 <ion-label>{{ isPlaying ? getLine('quranReader.buttonPause') : getLine('quranReader.buttonPlay')
-                    }}</ion-label>
+                }}</ion-label>
             </span>
         </ion-chip>
         <ion-button v-if="chapterInfo" fill="clear" @click="$emit('update:surahInfo', chapterId)">
@@ -90,8 +90,7 @@ const getSelectedTranslation = (ev: CustomEvent) => {
         </ion-button>
         <!-- Alert Transaltion -->
         <ion-alert v-if="!chapterInfo" trigger="present-alert" :header="translationAlertHeader" :buttons="alertButtons"
-            :inputs="translations" :message="translationStore.selectedTranslation?.author_name"
-            @did-dismiss="getSelectedTranslation($event)"></ion-alert>
+            :inputs="translations" @did-dismiss="getSelectedTranslation($event)"></ion-alert>
     </div>
 </template>
 <style>
