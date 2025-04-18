@@ -32,7 +32,7 @@ const isAudioPlaying = (chapterId: number) => {
 
 </script>
 <template>
-    <ion-row class="ion-justify-content-center ion-margin-vertical" v-if="recentlyPlayed">
+    <ion-row class="ion-justify-content-center ion-margin-vertical" v-if="recentlyPlayed" style="height: 300px; overflow-y: scroll;">
         <ion-col size="12">
             <ion-list-header class="ion-margin-bottom">
                 <ion-icon :icon="leafOutline" style="margin-right: 5px;"></ion-icon> {{
