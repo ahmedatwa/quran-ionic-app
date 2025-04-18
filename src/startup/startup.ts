@@ -74,6 +74,7 @@ export const useStartup = () => {
         tooltip: false,
         fab: true,
         autoDownload: true,
+        volume: 100
       });
     }
   };

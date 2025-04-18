@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from "vue"
 import { IonToolbar, IonFooter, IonButtons, IonAvatar } from '@ionic/vue';
-import { IonIcon, IonButton, IonSpinner, IonChip, IonText } from '@ionic/vue';
+import { IonIcon, IonButton, IonSpinner, IonChip, IonText, IonProgressBar } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline } from 'ionicons/icons';
 // components
 import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalComponent.vue';
@@ -59,7 +59,10 @@ const getCurrentVerseData = computed(() => {
 <template>
     <Transition name="slide-fade">
         <ion-footer v-if="modelValue" class="footer ion-no-border">
+            <ion-progress-bar :value="(audioStore.currentTimestamp - audioStore.duration) / 100"></ion-progress-bar>
+
             <ion-toolbar>
+
                 <div id="audio-modal">
                     <ion-chip :outline="true" class="reciter-chip">
                         <ion-avatar>
