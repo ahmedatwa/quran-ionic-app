@@ -37,11 +37,6 @@ const keepAwake = useKeepAwake()
 const isAwake = ref(false)
 const { presentAlert } = useAlert()
 
-const handleSelectedReciter = (reciter: Recitations) => {
-    recitationsStore.selectedReciter = reciter
-    settings.updateSelectedReciter(reciter)
-}
-
 const handleSelectedTranslation = (transaltion: Translation) => {
     translationStore.selectedTranslation = transaltion
     settings.updateSelectedTranslations(transaltion)
@@ -134,7 +129,7 @@ const presentCacheAlert = async () => {
                 <!-- reciters Modal -->
                 <modal-component :title="getLine('settings.reciters')" trigger="reciters-modal"
                     :data="recitationsStore.mapRecitions" :selected="recitationsStore.selectedReciter"
-                    @update:selected-recition="handleSelectedReciter">
+                    @update:selected-recition="recitationsStore.handleSelectedReciter">
                 </modal-component>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.translations") }}</ion-list-header>
                 <ion-item button :detail="true" id="translations-modal">
