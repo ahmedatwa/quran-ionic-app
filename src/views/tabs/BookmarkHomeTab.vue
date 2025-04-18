@@ -25,7 +25,9 @@ onBeforeMount(async () => {
 watchEffect(() => {
     if (bookmarksBD.bookmarkedItems.value) {
         bookmarksBD.bookmarkedItems.value.forEach((item) => {
-            bookmarks.value?.push(item)
+            if (!bookmarks.value.includes(item)) {
+                bookmarks.value?.push(item)
+            }
         })
     }
 })
