@@ -199,6 +199,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     const audioStorage = await settingsDB.getStorage("audioSettings");
     if (audioStorage) {
       audioPlayerSetting.value = audioStorage;
+      
       mediaVolume.value = audioPlayerSetting.value.volume;
     }
     const recent = await settingsDB.getStorage("recently-played");
