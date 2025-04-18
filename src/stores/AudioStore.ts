@@ -81,6 +81,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     fab: true,
     autoDownload: true,
     volume: 100,
+    loopAudio: "none",
   });
   const recentlyPlayed = ref<number[]>([]);
   const router = useRouter();
@@ -187,6 +188,7 @@ export const useAudioStore = defineStore("audio-store", () => {
       );
       if (selectedChapter) {
         chapterStore.selectedChapter = selectedChapter;
+        // route to chapter for data to be fetched
         router.replace(`/chapter/${selectedChapter.id}/${selectedChapter.slug}`);
       }
     }
@@ -208,7 +210,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     const audioStorage = await settingsDB.getStorage("audioSettings");
     if (audioStorage) {
       audioPlayerSetting.value = audioStorage;
-
+      loopAudio.value =  audioPlayerSetting.value.loopAudio
       mediaVolume.value = audioPlayerSetting.value.volume;
     }
     const recent = await settingsDB.getStorage("recently-played");
@@ -350,8 +352,8 @@ export const useAudioStore = defineStore("audio-store", () => {
     }
   };
 
-  const handlePlay = async (ev: { audioID: number; verseKey?: string }) => {
-    if (ev.verseKey) {
+  const handlePlay = async (ev: { audioID: number; verseKey?: string } | boolean) => {
+    if (typeof ev === "object") {
       selectedVerseKey.value = ev.verseKey;
       loadedData();
     } else {
@@ -625,6 +627,14 @@ export const useAudioStore = defineStore("audio-store", () => {
     await settingsDB.setStorage("audioSettings", audioPlayerSetting);
   };
 
+  const setLoopAudio = async (event: string) => {
+    if(event) {
+      loopAudio.value = event
+      audioPlayerSetting.value.autoPlay
+      await settingsDB.setStorage("audioSettings", {...audioPlayerSetting.value, loop: event});
+    }
+  }
+
   const playChapterAudio = async (audioID: number) => {
     await getAudio({ audioID });
   };
@@ -674,6 +684,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     isVisible,
     recentlyPlayed,
     getRecentlyPlayed,
+    setLoopAudio,
     attemptFileSave,
     saveFile,
     playAudio,

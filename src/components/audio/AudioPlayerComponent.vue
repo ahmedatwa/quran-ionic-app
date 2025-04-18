@@ -94,7 +94,7 @@ const getCurrentVerseData = computed(() => {
                 @update:change-volume="audioStore.changeMediaVolume" @update:seek="audioStore.playbackSeek"
                 @update:download="audioStore.attemptFileSave($event)" @update:play-chapter="audioStore.playChapterAudio"
                 @update:play-next="audioStore.playNext" @update:play-prev="audioStore.playPrevious()"
-                @update:play-audio="audioStore.handlePlay" @update:loop-audio="audioStore.loopAudio = $event"
+                @update:play-audio="audioStore.handlePlay" @update:loop-audio="audioStore.setLoopAudio($event)"
                 :recently-played="audioStore.getRecentlyPlayed" @update:selected-reciter="recitationsStore.handleSelectedReciter">
             </audio-player-modal-component>
         </ion-footer>
