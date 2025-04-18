@@ -34,7 +34,7 @@ const isPlaying = computed(() => {
                 </ion-avatar>
             </ion-fab-button>
             <ion-fab-list side="top">
-                <ion-fab-button @click="audioStore.handlePlay()" color="primary">
+                <ion-fab-button @click="audioStore.handlePlay(true)" color="primary">
                     <ion-icon :icon="audioStore.isPlaying ? pauseCircleOutline : playCircleOutline"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-button id="audio-modal-fab" color="warning">

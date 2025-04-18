@@ -59,7 +59,7 @@ const getCurrentVerseData = computed(() => {
 <template>
     <Transition name="slide-fade">
         <ion-footer v-if="modelValue" class="footer ion-no-border">
-            <ion-progress-bar :value="(audioStore.currentTimestamp - audioStore.duration) / 100"></ion-progress-bar>
+            <!-- <ion-progress-bar :value="(audioStore.currentTimestamp - audioStore.duration) / 100"></ion-progress-bar> -->
 
             <ion-toolbar>
 
