@@ -78,6 +78,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     tooltip: false,
     fab: true,
     autoDownload: true,
+    volume: 100
   });
   const recentlyPlayed = ref<number[]>([]);
 
@@ -196,7 +197,10 @@ export const useAudioStore = defineStore("audio-store", () => {
 
   onBeforeMount(async () => {
     const audioStorage = await settingsDB.getStorage("audioSettings");
-    if (audioStorage) audioPlayerSetting.value = audioStorage;
+    if (audioStorage) {
+      audioPlayerSetting.value = audioStorage;
+      mediaVolume.value = audioPlayerSetting.value.volume;
+    }
     const recent = await settingsDB.getStorage("recently-played");
     if (recent) {
       recentlyPlayed.value = JSON.parse(recent);
@@ -322,6 +326,8 @@ export const useAudioStore = defineStore("audio-store", () => {
     if (audioEl.value) {
       mediaVolume.value = volume;
       audioEl.value.volume = mediaVolume.value / 100;
+     await settingsDB.setStorage("audioSettings", {...audioPlayerSetting.value, volume: volume});
+
     }
   };
 
