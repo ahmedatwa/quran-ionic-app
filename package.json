@@ -1,7 +1,7 @@
 {
   "name": "quran-vue-ionic-a0twa",
   "private": true,
-  "version": "2.4",
+  "version": "2.4.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -32,10 +32,11 @@
     "@ionic/vue-router": "8.3.1",
     "@vueuse/components": "^10.11.0",
     "@vueuse/core": "^10.11.0",
-    "axios": "1.7.7",
+    "axios": ">=1.8.2",
     "ionicons": "^7.0.0",
     "localforage-cordovasqlitedriver": "^1.8.0",
-    "pinia": "^2.2.0",
+    "npm-check-updates": "^17.1.18",
+    "pinia": "^3.0.2",
     "vue": "3.5.10",
     "vue-router": "4.4.5"
   },
@@ -51,7 +52,7 @@
     "sass": "1.79.4",
     "terser": "5.34.1",
     "typescript": "5.6.2",
-    "vite": "5.4.8",
+    "vite": "^5.4.18",
     "vitest": "^0.34.6",
     "vue-tsc": "2.1.6"
   },
