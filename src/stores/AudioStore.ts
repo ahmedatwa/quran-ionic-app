@@ -19,12 +19,14 @@ import { useBlob } from "@/utils/useBlob";
 import { useAlert } from "@/utils/useAlert";
 import { getLangFullLocale } from "@/utils/locale";
 import { useLocale } from "@/utils/useLocale";
-
 import { secondsFormatter, secondsToMilliSeconds } from "@/utils/datetime";
 import { milliSecondsToSeconds } from "@/utils/datetime";
 import { makeWordLocation, getVerseNumberFromKey } from "@/utils/verse";
 import { getChapterIdfromKey } from "@/utils/verse";
 import { useMediaSession } from "@/utils/useMediaSession";
+
+// router
+import { useRouter } from "vue-router";
 
 export const useAudioStore = defineStore("audio-store", () => {
   const audioEl = ref<HTMLAudioElement>();
@@ -81,6 +83,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     volume: 100,
   });
   const recentlyPlayed = ref<number[]>([]);
+  const router = useRouter();
 
   const chapterName = computed(() => {
     if (chapterId.value) {
@@ -182,7 +185,10 @@ export const useAudioStore = defineStore("audio-store", () => {
       const selectedChapter = chapterStore.chapters?.find(
         (c) => c.id === chapterId.value
       );
-      if (selectedChapter) chapterStore.selectedChapter = selectedChapter;
+      if (selectedChapter) {
+        chapterStore.selectedChapter = selectedChapter;
+        router.replace(`/chapter/${selectedChapter.id}/${selectedChapter.slug}`);
+      }
     }
   };
 
