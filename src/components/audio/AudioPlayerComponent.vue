@@ -75,7 +75,7 @@ const getCurrentVerseData = computed(() => {
                     </ion-chip>
                 </div>
                 <ion-buttons slot="end">
-                    <ion-button fill="clear" @click="audioStore.handlePlay" size="small">
+                    <ion-button fill="clear" @click="audioStore.handlePlay(true)" size="small">
                         <ion-spinner v-if="audioStore.isLoading"></ion-spinner>
                         <ion-icon slot="icon-only" :icon="audioStore.isPlaying ? pauseOutline : playOutline"
                             v-else></ion-icon>
