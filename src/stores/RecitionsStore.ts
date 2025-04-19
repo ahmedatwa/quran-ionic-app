@@ -92,6 +92,7 @@ export const useRecitionsStore = defineStore("recitions-store", () => {
           pause: true,
         });
       }
+      settingsDB.setStorage("reciter", JSON.stringify(selectedReciter.value));
     }
   };
 
