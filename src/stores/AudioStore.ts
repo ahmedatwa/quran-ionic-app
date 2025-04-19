@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, onBeforeMount, computed, watchEffect } from "vue";
+
 //axios
 import { instance } from "@/axios";
 import { audioRecitersUrl } from "@/axios/url";
@@ -39,7 +40,7 @@ export const useAudioStore = defineStore("audio-store", () => {
   const settingsDB = useStorage("__settingsDB");
   const audioDB = useStorage("__audioDB");
   const { encodeBlobToBase64 } = useBlob();
-  const { presentToast, presentAlert } = useAlert();
+  const { presentToast, presentAlert, presentLoading } = useAlert();
   const audioFiles = ref<AudioFile | null>(null);
   const autoStartPlayer = ref(false);
   const chapterId = ref<number>();
@@ -182,6 +183,7 @@ export const useAudioStore = defineStore("audio-store", () => {
           : chapterId.value + 1;
       // get the audio files
       await getAudio({ audioID: chapterId.value });
+      await presentLoading();
       // store selected chapter into chapterStore
       const selectedChapter = chapterStore.chapters?.find(
         (c) => c.id === chapterId.value
@@ -190,6 +192,7 @@ export const useAudioStore = defineStore("audio-store", () => {
         chapterStore.selectedChapter = selectedChapter;
         // route to chapter for data to be fetched
         router.replace(`/chapter/${selectedChapter.id}/${selectedChapter.slug}`);
+        await presentLoading(true);
       }
     }
   };
