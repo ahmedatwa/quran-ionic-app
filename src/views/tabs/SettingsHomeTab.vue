@@ -80,8 +80,7 @@ const presentCacheAlert = async () => {
                         <div slot="content">
                             <ion-list class="ion-padding">
                                 <ion-item>
-                                    <ion-select :label="getLine('settings.fontSize')" class="always-flip"
-                                        :toggle-icon="caretDownSharp" interface="popover"
+                                    <ion-select :label="getLine('settings.fontSize')"
                                         :placeholder="settings.getSelectedFontSize.value"
                                         @ion-change="settings.applyStyle('fontSize', $event)">
                                         <ion-select-option v-for="item in settings.fontSizes.value" :key="item.key"
@@ -90,8 +89,7 @@ const presentCacheAlert = async () => {
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-select :label="getLine('settings.fontFamily')" class="always-flip"
-                                        :toggle-icon="caretDownSharp" interface="popover"
+                                    <ion-select :label="getLine('settings.fontFamily')"
                                         :placeholder="properCase(settings.styles.value.fontFamily)"
                                         @ion-change="settings.applyStyle('fontFamily', $event)">
                                         <ion-select-option v-for="n in settings.fontFamilyGroup.value" :key="n.key"
@@ -100,8 +98,7 @@ const presentCacheAlert = async () => {
                                 </ion-item>
                                 <ion-item>
                                     <ion-select :placeholder="properCase(settings.styles.value.fontWeight)"
-                                        :label="getLine('settings.boldText')" class="always-flip"
-                                        :toggle-icon="caretDownSharp" interface="popover"
+                                        :label="getLine('settings.boldText')"
                                         @ion-change="settings.applyStyle('fontWeight', $event)">
                                         <ion-select-option v-for="weight in settings.fontWeights.value"
                                             :key="weight.key" :value="weight.key">
@@ -110,8 +107,7 @@ const presentCacheAlert = async () => {
                                 </ion-item>
                                 <ion-item>
                                     <ion-select :placeholder="settings.styles.value.wordColor.key"
-                                        :label="getLine('settings.highlightedWordColor')" class="always-flip"
-                                        :toggle-icon="caretDownSharp" interface="popover"
+                                        :label="getLine('settings.highlightedWordColor')"
                                         @ion-change="settings.applyStyle('wordcolor', $event)">
                                         <ion-select-option v-for="item in settings.wordColors.value" :key="item.code"
                                             :value="item">{{ item.key }}
