@@ -56,9 +56,9 @@ watchEffect(async () => {
 const isPlaying = computed(() => audioStore.isPlaying
     && audioStore.chapterId === chapterStore.selectedChapter?.id)
 
-const playAudio = async (event: { audioID: number, verseKey?: string }) => {
+const playAudio = async (event: { audioID: number, verseKey?: string }) => {    
     if (event.audioID === audioStore.chapterId) {
-        await audioStore.handlePlay(event);
+        await audioStore.handlePlay(true);
         return;
     }
     audioStore.resetValues()

@@ -51,10 +51,13 @@ watchEffect(async () => {
     }
 })
 
-const playAudio = async (event: { audioID: number, verseKey?: string }) => {
+const playAudio = async (event: { audioID: number, verseKey?: string }) => {    
+    if (event.audioID === audioStore.chapterId) {
+        await audioStore.handlePlay(true);
+        return;
+    }
     audioStore.resetValues()
     await audioStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
-    audioModelValue.value = true
 }
 
 const getVerses = async (ev: { key: string, nextPage: number }) => {
