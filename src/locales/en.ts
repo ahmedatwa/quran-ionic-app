@@ -39,7 +39,7 @@ export default {
     autoScroll: "Auto Scroll",
     cache: "Clear cache",
     autoDownload: "Auto Download Audio",
-    keepAwake: "Prevent sleep while playing",
+    keepAwake: "Always On Display",
     highlightedWordColor: "Highlighted word color",
     fab: "Audio Fab Button",
     cacheNote: "Clearing cache will only remove audio cache files, without removing any personal settings",
