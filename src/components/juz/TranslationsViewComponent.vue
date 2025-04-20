@@ -29,6 +29,7 @@ import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsCom
 import { useChapterStore } from "@/stores/ChapterStore";
 
 const cardRef = ref()
+const contentRef = ref()
 const { getLine } = useLocale()
 const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
 const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
@@ -150,7 +151,7 @@ const isPlaying = (chapterId: number) => {
     <div class="ion-page" :id="`translations-${id}-${juzId}`">
         <toolbar-component :route-back-label="getLine('tabs.juzs')" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper smooth-scroll-behaviour" :fullscreen="true"
-            :scrollY="true">
+            :scrollY="true" ref="contentRef" style="position: relative">
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
