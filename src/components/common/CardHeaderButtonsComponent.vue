@@ -51,7 +51,7 @@ const translationAlertHeader = computed(() => {
 const translations = computed(() => {
     return translationStore.translationsList.map((tr) => {
         return {
-            label: tr.language_name.toUpperCase() + ' - ' + tr.author_name,
+            label: tr.language_name + ' - ' + tr.author_name,
             type: 'radio',
             value: tr
         }
