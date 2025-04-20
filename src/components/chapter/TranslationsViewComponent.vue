@@ -12,8 +12,6 @@ import { useLocale } from "@/utils/useLocale";
 import { scrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
 import { useAlert } from '@/utils/useAlert';
-// test////
-import { useScrollTo } from "@/utils/useScrollTo"
 
 // types
 import type { Verse, VerseWord } from "@/types/verse";
@@ -38,8 +36,6 @@ const { presentAlert } = useAlert()
 const contentRef = ref()
 const cardRef = ref()
 const intersectingVerseNumber = ref(1)
-// test
-const { scrollTo, scrollToTop, sc } = useScrollTo()
 
 
 const props = defineProps<{
@@ -115,7 +111,7 @@ onMounted(() => {
         if (isActive) {
             scroll(intersectingVerseNumber.value)
         }
-    });
+    });    
 })
 
 onUnmounted(() => App.removeAllListeners())

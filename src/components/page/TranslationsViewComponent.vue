@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, watch } from "vue"
+import { ref, computed, watch, onMounted } from "vue"
 import { IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
 import { IonContent, IonNote, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
 import { IonCol, IonRow, IonGrid, IonItem, IonCard, IonRefresher, IonRefresherContent } from "@ionic/vue";
@@ -26,14 +26,18 @@ import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
+// route
+import { useRoute } from "vue-router";
 
 const { getLine } = useLocale()
 const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
 const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
 const router = useRouter()
 const cardRef = ref()
+const contentRef = ref()
 const intersectingVerseNumber = ref<number>()
 const { presentAlert } = useAlert()
+const route = useRoute()
 
 const props = defineProps<{
     id: string;
@@ -123,7 +127,7 @@ const isWordHighlighted = (word: VerseWord) => {
     }
 };
 
-const routeBackName = computed(() => {
+const routeBackName = computed(() => {    
     if (router.options.history.state.back) {
         return upperCaseFirst(router.options.history.state.back.toString().substring(1))
     }
@@ -136,8 +140,9 @@ const loadMoreVerses = () => {
     }
 }
 
-const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el)
-
+const scroll = (verseNumber: number) => {
+    scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
+}
 const handleRefresh = (event: RefresherCustomEvent) => {
     if (!props.pagination?.next_page) {
         event.target?.complete();
@@ -153,13 +158,29 @@ const isPlaying = (chapterId: number) => {
     return props.isPlaying && chapterId === props.activeAudioId
 }
 
+onMounted(() => {
+    // snap to verse if presented in route params
+    const params = route.params
+    if(params.pageId) {
+        if(params.pageId.includes("-")) {
+            const parts = params.pageId.toString().split('-')
+            const verseNumber = parts[1]
+            if(verseNumber) {
+                 setTimeout(() => {
+                    scroll(Number(verseNumber))
+                 }, 200);
+            }
+        }
+    }
 
+})
 
 </script>
 <template>
     <div class="ion-page" :id="`translations-page-${id}`">
         <toolbar-component :route-back-label="routeBackName" :is-loading="isLoading"></toolbar-component>
-        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef">
+        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef"
+            style="position: relative">
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
@@ -182,7 +203,7 @@ const isPlaying = (chapterId: number) => {
                     :id="`verse-col-${verse.verse_number}`">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
-                            <ion-col size="11" class="translations-view-col">
+                            <ion-col size="11" class="translations-view-col" :id="`main-verse-col-${verse.verse_number}`">
                                 <ion-label v-for="word in verse.words" :key="word.id" class="word">
                                     <ion-text :color="isWordHighlighted(word) ? styles.colorCode : ''">
                                         <h3 v-if="word.char_type_name === 'end'" class="end">

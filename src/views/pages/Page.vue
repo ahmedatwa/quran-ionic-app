@@ -36,7 +36,7 @@ const pageRefEl = ref()
 const chapterInfo = ref<ChapterInfo | null>(null)
 const chapterInfoButtonRef = ref()
 const router = useRoute()
-const pageParam = computed(() => router.params.pageId.toString().split("-"))
+const pageParam = computed(() => router.params.pageId ? router.params.pageId.toString().split("-"): '')
 const pageId = computed(() => Number(pageParam.value[0]))
 const vNumber = computed(() => Number(pageParam.value[1]))
 
@@ -54,7 +54,6 @@ watchEffect(async () => {
         }
     }
 })
-
 
 const playAudio = async (event: { audioID: number, verseKey?: string }) => {    
     if (event.audioID === audioStore.chapterId) {
