@@ -6,7 +6,7 @@ import { informationCircleOutline, downloadOutline } from 'ionicons/icons';
 // stores
 import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
-import { upperCase } from '@/utils/string';
+import { upperCaseFirst } from '@/utils/string';
 import { useLocale } from '@/utils/useLocale';
 import { useSettings } from '@/utils/useSettings';
 // types
@@ -44,14 +44,14 @@ const downloadStatus = computed(() => {
 
 const translationAlertHeader = computed(() => {
     if (translationStore.selectedTranslation) {
-        return upperCase(translationStore.selectedTranslation.language_name) + ": " + translationStore.selectedTranslation?.author_name
+        return upperCaseFirst(translationStore.selectedTranslation.language_name) + ": " + translationStore.selectedTranslation?.author_name
     }
 })
 
 const translations = computed(() => {
     return translationStore.translationsList.map((tr) => {
         return {
-            label: tr.language_name + ' - ' + tr.author_name,
+            label: upperCaseFirst(tr.language_name) + ' - ' + tr.author_name,
             type: 'radio',
             value: tr
         }
