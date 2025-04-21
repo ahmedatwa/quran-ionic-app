@@ -175,7 +175,7 @@ const isPlaying = (chapterId: number) => {
                     :data-juz-number="verse.juz_number" :id="`verse-col-${verse.verse_number}`">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
-                            <ion-col size="11" class="translations-view-col">
+                            <ion-col size="11" class="translations-view-col" :id="`main-verse-col-${verse.verse_number}`">
                                 <ion-label v-for="word in verse.words" :key="word.id">
                                     <ion-text :color="isWordHighlighted(word) ? styles.colorCode : ''">
                                         <span v-if="word.char_type_name === 'end'" class="end">
