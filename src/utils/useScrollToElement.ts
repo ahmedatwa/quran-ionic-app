@@ -89,7 +89,7 @@ export const scrollIfNeeded = (
 
 const getMainScrollElRect = (elID: string): string => {  
   const div = elID.replace("#", "#main-");
-  const el = document.querySelector(div) as HTMLDivElement;
+  const el = document.querySelector(div) as HTMLDivElement;  
   const elRect = el.getBoundingClientRect();
   return elRect ? elRect.height.toString() : "250";
 };
