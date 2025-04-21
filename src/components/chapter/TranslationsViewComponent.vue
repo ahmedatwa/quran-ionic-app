@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted, onUnmounted } from "vue"
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue"
 import { IonIcon, IonCardHeader, IonItem, IonGrid, IonRow, IonRefresher } from "@ionic/vue";
 import { IonContent, IonNote, IonCardTitle, IonCardSubtitle, IonRefresherContent } from "@ionic/vue";
 import { IonLabel, IonText, IonCol, IonCard, IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
@@ -106,12 +106,27 @@ const loadMoreVerses = () => {
     }
 }
 
+/**
+ * check if app was in background with server calls 
+ * disabled, check for the verse if not found 
+ * get it else scroll
+ */
 onMounted(() => {
     App.addListener('appStateChange', ({ isActive }) => {
         if (isActive) {
-            scroll(intersectingVerseNumber.value)
+            const currentVerseFound = props.verses.find(({ verse_number }) => verse_number === intersectingVerseNumber.value);
+            nextTick(() => {
+                scroll(intersectingVerseNumber.value)
+            })
+            if (!currentVerseFound) {
+                emit("update:getVerseByKey", intersectingVerseNumber.value)
+            } else {
+                setTimeout(() => {
+                    scroll(intersectingVerseNumber.value)
+                }, 300);
+            }
         }
-    });    
+    });
 })
 
 onUnmounted(() => App.removeAllListeners())
@@ -194,7 +209,8 @@ const playAudio = (ev: PlayAudioEmit) => {
                     :data-juz-number="verse.juz_number" :id="`verse-col-${verse.verse_number}`">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
-                            <ion-col size="11" class="translations-view-col" :id="`main-verse-col-${verse.verse_number}`">
+                            <ion-col size="11" class="translations-view-col"
+                                :id="`main-verse-col-${verse.verse_number}`">
                                 <ion-label v-for="word in verse.words" :key="word.id">
                                     <ion-text :color="isWordHighlighted(word) ? styles.colorCode : ''"
                                         :id="`word-${verse.verse_number}`">
