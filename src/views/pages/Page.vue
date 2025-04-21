@@ -146,7 +146,10 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
                     :page-el="pageRefEl"></chapter-info-modal-component>
             </div>
         </ion-content>
-        <audio-player-component :model-value="audioModelValue" @update:model-value="audioModelValue = $event">
-        </audio-player-component>
+        <div class="footer">
+            <audio-player-component :model-value="audioStore.isVisible"
+                @update:model-value="audioStore.isVisible = $event">
+            </audio-player-component>
+        </div>
     </ion-page>
 </template>
