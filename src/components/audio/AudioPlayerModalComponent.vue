@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue"
 import { IonButtons, IonButton, IonHeader, IonToolbar, IonSkeletonText } from "@ionic/vue"
 import { IonContent, modalController, IonRow, IonThumbnail, IonSpinner } from '@ionic/vue';
-import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonText } from '@ionic/vue';
+import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonText, isPlatform } from '@ionic/vue';
 import { IonModal } from "@ionic/vue";
 // ionicons
 import { playOutline, playBackOutline, playForwardOutline, repeatOutline } from 'ionicons/icons';
@@ -75,6 +75,13 @@ const changeMediaVolume = (ev: CustomEvent) => {
 
 const isAudioPlaying = (chapterId: number) => {
     return props.isPlaying && (chapterId === props.activeAudioId)
+}
+
+const isVolumeVisible = () => {
+    if (isPlatform('ios') || isPlatform('android')) {
+        return true;
+    }
+    return false;
 }
 </script>
 
@@ -169,7 +176,7 @@ const isAudioPlaying = (chapterId: number) => {
                             <ion-icon slot="icon-only" :icon="repeatOutline" color="primary"></ion-icon>
                         </ion-button>
                     </ion-col>
-                    <ion-col size="12">
+                    <ion-col size="12" v-if="isVolumeVisible">
                         <ion-range label-placement="start" :pin="true" :value="mediaVolume"
                             @ion-input="changeMediaVolume">
                             <ion-icon slot="start" :icon="volumeLowOutline"></ion-icon>
