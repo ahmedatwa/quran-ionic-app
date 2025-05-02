@@ -8,7 +8,7 @@ import { IonContent, IonItemDivider, IonInfiniteScroll } from "@ionic/vue";
 import { useLocale } from "@/utils/useLocale";
 import { useRoute, useRouter } from "vue-router";
 import { upperCaseFirst } from "@/utils/string"
-import { scrollToElement } from "@/utils/useScrollToElement";
+import { useScrollToElement } from "@/utils/useScrollToElement";
 // Types
 import type { GroupVersesByChapterID, Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
@@ -25,6 +25,7 @@ const { getLine } = useLocale()
 const intersectingVerseNumber = ref(1)
 const contentRef = ref()
 const cardRef = ref()
+const { scrollToElement } = useScrollToElement()
 const pageId = computed((): number | undefined => Number(route.params.pageId))
 
 const props = defineProps<{
