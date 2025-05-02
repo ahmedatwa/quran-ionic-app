@@ -78,10 +78,10 @@ const isAudioPlaying = (chapterId: number) => {
 }
 
 const isVolumeVisible = () => {
-    if (isPlatform('ios') || isPlatform('android')) {
-        return true;
+    if (isPlatform('mobileweb') || isPlatform('desktop')) {
+        return false;
     }
-    return false;
+    return true;
 }
 </script>
 
@@ -176,7 +176,7 @@ const isVolumeVisible = () => {
                             <ion-icon slot="icon-only" :icon="repeatOutline" color="primary"></ion-icon>
                         </ion-button>
                     </ion-col>
-                    <ion-col size="12" v-if="isVolumeVisible">
+                    <ion-col size="12" v-if="isVolumeVisible()">
                         <ion-range label-placement="start" :pin="true" :value="mediaVolume"
                             @ion-input="changeMediaVolume">
                             <ion-icon slot="start" :icon="volumeLowOutline"></ion-icon>

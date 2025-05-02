@@ -6,7 +6,7 @@ import { IonContent, IonItemDivider, IonCardHeader, IonInfiniteScroll } from "@i
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { useRoute } from "vue-router";
-import { scrollToElement } from "@/utils/useScrollToElement";
+import { useScrollToElement } from "@/utils/useScrollToElement";
 // Types
 import type { Verse, MapVersesByPage, VerseWord } from "@/types/verse"
 import type { Pagination } from "@/types/page";
@@ -25,6 +25,7 @@ const intersectingVerseNumber = ref(1)
 const contentRef = ref()
 const cardRef = ref()
 const chapterId = computed(() => Number(params.chapterId))
+const { scrollToElement } = useScrollToElement()
 
 const props = defineProps<{
     id: string;
@@ -149,7 +150,7 @@ const scroll = (verseNumber: number) => scrollToElement(`#line-${verseNumber}`, 
                         <ion-col size="12">
                             <ion-item-divider>
                                 <ion-label class="m-auto">{{ getLine('quranReader.textPage') }} {{ page
-                                    }}</ion-label>
+                                }}</ion-label>
                             </ion-item-divider>
                         </ion-col>
                     </ion-card-content>

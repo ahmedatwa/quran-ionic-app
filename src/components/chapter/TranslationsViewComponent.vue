@@ -9,7 +9,7 @@ import { App } from '@capacitor/app';
 import { ellipsisVerticalOutline } from "ionicons/icons";
 // utils
 import { useLocale } from "@/utils/useLocale";
-import { scrollToElement } from "@/utils/useScrollToElement";
+import { useScrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
 import { useAlert } from '@/utils/useAlert';
 
@@ -36,7 +36,7 @@ const { presentAlert } = useAlert()
 const contentRef = ref()
 const cardRef = ref()
 const intersectingVerseNumber = ref(1)
-
+const { scrollToElement } = useScrollToElement()
 
 const props = defineProps<{
     id: string;
@@ -114,12 +114,16 @@ const loadMoreVerses = () => {
 onMounted(() => {
     App.addListener('appStateChange', ({ isActive }) => {
         if (isActive) {
-            const currentVerseFound = props.verses.find(({ verse_number }) => verse_number === intersectingVerseNumber.value);
-            nextTick(() => {
-                scroll(intersectingVerseNumber.value)
-            })
+            const currentVerseFound = props.verses?.find(({ verse_number }) => verse_number === intersectingVerseNumber.value);
             if (!currentVerseFound) {
                 emit("update:getVerseByKey", intersectingVerseNumber.value)
+                nextTick(() => {
+                    console.log(currentVerseFound);
+
+                    setTimeout(() => {
+                        scroll(intersectingVerseNumber.value)
+                    }, 300);
+                })
             } else {
                 setTimeout(() => {
                     scroll(intersectingVerseNumber.value)

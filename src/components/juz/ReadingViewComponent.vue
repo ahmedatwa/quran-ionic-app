@@ -7,7 +7,7 @@ import { IonContent, IonCardHeader, IonInfiniteScroll } from "@ionic/vue";
 // utils
 import { useLocale } from "@/utils/useLocale";
 import { useRoute } from "vue-router";
-import { scrollToElement } from "@/utils/useScrollToElement";
+import { useScrollToElement } from "@/utils/useScrollToElement";
 // Types
 import type { juzVersesByPageMap } from "@/types/juz";
 import type { Pagination } from "@/types/page";
@@ -26,6 +26,7 @@ const { getLine } = useLocale()
 const intersectingVerseNumber = ref(1)
 const contentRef = ref()
 const cardRef = ref()
+const { scrollToElement } = useScrollToElement()
 const juzId = computed(() => Number(params.juzId))
 const props = defineProps<{
     id: string;
