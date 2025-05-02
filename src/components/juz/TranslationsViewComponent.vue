@@ -9,7 +9,7 @@ import { IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 import { ellipsisVerticalOutline } from "ionicons/icons";
 // utils
 import { useLocale } from "@/utils/useLocale";
-import { scrollToElement } from "@/utils/useScrollToElement";
+import { useScrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
 import { useRoute } from "vue-router";
 import { useAlert } from '@/utils/useAlert';
@@ -37,6 +37,7 @@ const { params } = useRoute()
 const juzId = computed(() => Number(params.juzId))
 const intersectingVerseNumber = ref<number>()
 const { presentAlert } = useAlert()
+const { scrollToElement } = useScrollToElement()
 
 
 const props = defineProps<{
