@@ -113,7 +113,7 @@ const getVerseByKey = async (verseNumber: number) => {
             </translations-view-component>
             <reading-view-component id="reading-chapters" v-else :is-playing="isPlaying" :verses="verses"
                 :is-loading="chapterStore.isLoading.verses" :styles="styles" :chapter-id="chapterId"
-                :verse-timing="audioStore.verseTiming" @update:get-verses="getVerses"
+                :verse-timing="audioStore.verseTiming" @update:get-verses="loadMoreVerses"
                 :is-audio-loading="audioStore.isLoading" @update:surah-info="getSurahInfo" :pagination="pagination"
                 @update:play-audio="playAudio" :download-progress="audioStore.downloadProgress"
                 :audio-experience="audioStore.audioPlayerSetting"
