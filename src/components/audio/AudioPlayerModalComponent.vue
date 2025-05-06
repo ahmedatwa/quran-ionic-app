@@ -83,6 +83,9 @@ const isVolumeVisible = () => {
     }
     return true;
 }
+
+    // test
+   console.log(isVolumeVisible())
 </script>
 
 <template>
