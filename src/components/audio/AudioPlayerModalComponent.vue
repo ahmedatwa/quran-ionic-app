@@ -85,7 +85,7 @@ const isVolumeVisible = () => {
 }
 
     // test
-  
+  console.log(isPlatform('mobileweb'))
 </script>
 
 <template>
