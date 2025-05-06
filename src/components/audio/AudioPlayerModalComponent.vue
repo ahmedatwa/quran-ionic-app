@@ -78,14 +78,14 @@ const isAudioPlaying = (chapterId: number) => {
 }
 
 const isVolumeVisible = () => {
-    if (isPlatform('mobileweb') || isPlatform('desktop')) {
+    if (isPlatform('mobileweb')) {
         return false;
     }
     return true;
 }
 
     // test
-   console.log(isVolumeVisible())
+   console.log(isPlatform('mobileweb'))
 </script>
 
 <template>
