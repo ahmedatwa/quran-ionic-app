@@ -1,26 +1,9 @@
-import { shallowRef } from "vue";
 // utils
 import { verseFields, getVerseWordFields } from "@/utils/verse";
 import { getVerseTranslationFields } from "@/utils/verse";
 // axios
 import { instance } from "@/axios";
 import { Buffer } from "buffer";
-
-// Pre-Production (Test)
-// Client ID: 9c31dce5-0110-46ca-8ebc-c8c628ab4a66
-// Client Secret: AWECrjWza6qpxzFCzQ5Vp0N~fi
-// End-Point: https://prelive-oauth2.quran.foundation
-
-// ⚠️ Limited data, but all features enabled for testing.
-
-// Production (Live)
-// Client ID: afc65e8a-e27e-43a6-b794-96205ff984ab
-// Client Secret: w-PfiDK1uNrVphckpX2UdI-dWG
-// End-Point: https://oauth2.quran.foundation
-
-const clientID = shallowRef("9c31dce5-0110-46ca-8ebc-c8c628ab4a66");
-const clientSecret = shallowRef("AWECrjWza6qpxzFCzQ5Vp0N~fi");
-const endPoint = shallowRef("https://prelive-oauth2.quran.foundation");
 
 // Audio
 const audioUrl = import.meta.env.VITE_API_QDC_URL + "/audio/reciters/";
@@ -61,14 +44,15 @@ export const getVersesUrl = (
 };
 
 export const getAccessToken = async () => {
-  const auth = Buffer.from(`${clientID.value}:${clientSecret.value}`).toString(
+  const auth = Buffer.from(`${import.meta.env.VITE_API_CLIENT_ID}:${import.meta.env.VITE_API_CLIENT_SECRET}`).toString(
     "base64"
   );
 
+  
   try {
     const response = await instance({
       method: "post",
-      url: endPoint.value,
+      url: import.meta.env.VITE_API_CLIENT_END_POINT,
       headers: {
         Authorization: `Basic ${auth}`,
         "Content-Type": "application/x-www-form-urlencoded",
