@@ -1,9 +1,6 @@
 // utils
 import { verseFields, getVerseWordFields } from "@/utils/verse";
 import { getVerseTranslationFields } from "@/utils/verse";
-// axios
-import { instance } from "@/axios";
-import { Buffer } from "buffer";
 
 // Audio
 const audioUrl = import.meta.env.VITE_API_QDC_URL + "/audio/reciters/";
@@ -43,26 +40,4 @@ export const getVersesUrl = (
   return `/verses/${key}/${id}?translations=${translations}&${urlFields}${currentPage}${currentLimit}`;
 };
 
-export const getAccessToken = async () => {
-  const auth = Buffer.from(`${import.meta.env.VITE_API_CLIENT_ID}:${import.meta.env.VITE_API_CLIENT_SECRET}`).toString(
-    "base64"
-  );
 
-
-  try {
-    const response = await instance({
-      method: "post",
-      url: import.meta.env.VITE_API_CLIENT_END_POINT,
-      headers: {
-        Authorization: `Basic ${auth}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      data: "grant_type=client_credentials&scope=content",
-    });
-
-    return response.data.access_token
-    
-  } catch (error) {
-    console.error("Error getting access token:", error);
-  }
-};

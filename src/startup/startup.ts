@@ -8,7 +8,10 @@ import { useLocale } from "@/composables/useLocale";
 // capacitor plugins
 import { Device } from "@capacitor/device";
 // axios
-import { getAccessToken } from "@/axios/url";
+// axios
+import { instance } from "@/axios";
+import { Buffer } from "buffer";
+
 
 export const useStartup = () => {
   const translationsStore = useTranslationsStore();
@@ -151,6 +154,31 @@ export const useStartup = () => {
       
     })
   )
+
+  
+  const getAccessToken = async () => {
+  const auth = Buffer.from(`${import.meta.env.VITE_API_CLIENT_ID}:${import.meta.env.VITE_API_CLIENT_SECRET}`).toString(
+    "base64"
+  );
+
+
+  try {
+    const response = await instance({
+      method: "post",
+      url: import.meta.env.VITE_API_CLIENT_END_POINT,
+      headers: {
+        Authorization: `Basic ${auth}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      data: "grant_type=client_credentials&scope=content",
+    });
+
+    return response.data.access_token
+    
+  } catch (error) {
+    console.error("Error getting access token:", error);
+  }
+};
 
   return {
     setTranslation,

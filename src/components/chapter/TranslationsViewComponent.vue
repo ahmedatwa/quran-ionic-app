@@ -4,7 +4,6 @@ import { IonIcon, IonCardHeader, IonItem, IonGrid, IonRow, IonRefresher } from "
 import { IonContent, IonNote, IonCardTitle, IonCardSubtitle, IonRefresherContent } from "@ionic/vue";
 import { IonLabel, IonText, IonCol, IonCard, IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 import { App } from '@capacitor/app';
-
 // icons
 import { ellipsisVerticalOutline } from "ionicons/icons";
 // composables
