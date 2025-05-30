@@ -1,4 +1,4 @@
-import { shallowRef } from "vue";
+import { onMounted, shallowRef } from "vue";
 // stores
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 import { useRecitionsStore } from "@/stores/RecitionsStore";
@@ -11,7 +11,6 @@ import { Device } from "@capacitor/device";
 import { getAccessToken } from "@/axios/url";
 
 export const useStartup = () => {
-  
   const translationsStore = useTranslationsStore();
   const recitionsStore = useRecitionsStore();
 
@@ -139,9 +138,13 @@ export const useStartup = () => {
         setReciter(),
       ]);
     } catch (error) {
-      throw error;
+      console.warn(error);
     }
   };
+
+  onMounted(() =>
+    import.meta.env.DEV ? console.info("startup-script loaded 👽") : ""
+  );
 
   return {
     setTranslation,
