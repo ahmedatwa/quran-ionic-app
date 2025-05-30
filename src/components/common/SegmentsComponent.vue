@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { IonHeader, IonSegment, IonSegmentButton } from '@ionic/vue';
 import { IonLabel, IonToolbar } from '@ionic/vue';
-import { useLocale } from '@/utils/useLocale';
+// composables
+import { useLocale } from '@/composables/useLocale';
 
 const { getLine } = useLocale()
 

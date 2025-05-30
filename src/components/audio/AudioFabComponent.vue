@@ -9,10 +9,13 @@ import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalCompon
 import { useAudioStore } from "@/stores/AudioStore";
 import { useRecitionsStore } from '@/stores/RecitionsStore';
 import { useJuzStore } from "@/stores/JuzStore";
+// composables
+import { useVerseTiming } from '@/composables/useVerseTiming';
 
 const audioStore = useAudioStore()
 const recitionsStore = useRecitionsStore()
 const juzStore = useJuzStore()
+const { verseTiming } = useVerseTiming()
 
 const playChapterAudio = (audioID: number) => {
     audioStore.getAudio({ audioID })
@@ -51,7 +54,7 @@ const isPlaying = computed(() => {
             </ion-fab-list>
         </ion-fab>
         <audio-player-modal-component trigger="audio-modal-fab" :is-playing="isPlaying"
-            :is-loading="audioStore.isLoading" :verse-timing="audioStore.verseTiming"
+            :is-loading="audioStore.isLoading" :verse-timing="verseTiming"
             :selected-reciter="recitionsStore.selectedReciter" :audio-files="audioStore.audioFiles"
             :chapter-name="audioStore.chapterName" :loop-audio="audioStore.loopAudio"
             :media-volume="audioStore.mediaVolume" :map-recitions="recitionsStore.mapRecitions"

@@ -5,9 +5,9 @@ import { AVATAR_PLACEHOLDER_API } from "@/axios/url";
 // types
 import type { AudioFile } from "@/types/audio";
 import type { MapRecitions, Recitations } from "@/types/audio";
-// utils
-import { useStorage } from "@/utils/useStorage";
-import { useAlert } from "@/utils/useAlert";
+// composables
+import { useStorage } from "@/composables/useStorage";
+import { useAlert } from "@/composables/useAlert";
 // Stores
 import { useAudioStore } from "@/stores/AudioStore";
 

@@ -3,8 +3,9 @@ import { computed } from "vue"
 import { IonPage, IonItem, IonList, IonContent, IonSkeletonText } from '@ionic/vue';
 import { IonText, IonLabel, IonNote, IonIcon } from '@ionic/vue';
 import { IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent } from '@ionic/vue';
+// composables
+import { useLocale } from '@/composables/useLocale';
 // utils
-import { useLocale } from '@/utils/useLocale';
 import { DEFAULT_NUMBER_OF_PAGES } from "@/utils/pages"
 import { localizeNumber } from '@/utils/number';
 // stores

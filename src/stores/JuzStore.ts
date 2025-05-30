@@ -12,8 +12,9 @@ import type { Verse } from "@/types/verse";
 // utils
 import { _range } from "@/utils/number";
 import { AllJuzsToChapters } from "@/utils/juz";
-import { useStorage } from "@/utils/useStorage";
-import { useAlert } from "@/utils/useAlert";
+// composables
+import { useStorage } from "@/composables/useStorage";
+import { useAlert } from "@/composables/useAlert";
 
 export const useJuzStore = defineStore("juz-store", () => {
   const { selectedTranslation } = useTranslationsStore();

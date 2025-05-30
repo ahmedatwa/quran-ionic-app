@@ -14,9 +14,9 @@ import { usePageStore } from "@/stores/PageStore"
 import { useAudioStore } from "@/stores/AudioStore";
 import { useTranslationsStore } from '@/stores/TranslationsStore';
 import { useChapterStore } from '@/stores/ChapterStore';
-// utils
-import { useSettings } from '@/utils/useSettings';
-import { useAlert } from '@/utils/useAlert';
+// composables
+import { useSettings } from '@/composables/useSettings';
+import { useAlert } from '@/composables/useAlert';
 // types
 import type { GroupVersesByChapterID } from "@/types/page"
 import type { ChapterInfo } from '@/types/chapter';
@@ -36,7 +36,7 @@ const pageRefEl = ref()
 const chapterInfo = ref<ChapterInfo | null>(null)
 const chapterInfoButtonRef = ref()
 const router = useRoute()
-const pageParam = computed(() => router.params.pageId ? router.params.pageId.toString().split("-"): '')
+const pageParam = computed(() => router.params.pageId ? router.params.pageId.toString().split("-") : '')
 const pageId = computed(() => Number(pageParam.value[0]))
 const vNumber = computed(() => Number(pageParam.value[1]))
 
@@ -55,7 +55,7 @@ watchEffect(async () => {
     }
 })
 
-const playAudio = async (event: { audioID: number, verseKey?: string }) => {    
+const playAudio = async (event: { audioID: number, verseKey?: string }) => {
     if (event.audioID === audioStore.chapterId) {
         await audioStore.handlePlay(true);
         return;
@@ -124,12 +124,12 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
         <segments-component :selected-segment="currentSegment"
             @update:selected-segment="currentSegment = $event"></segments-component>
         <ion-content>
-            <translations-view-component :id="`translations-pages-${router.params.pageId}`" :is-loading="pageStore.isLoading"
-                :is-playing="audioStore.isPlaying" v-if="currentSegment === 'translations'"
-                @update:play-audio="playAudio" :is-bismillah="selectedChapterBismillah" :styles="styles"
-                :verses="groupVersesByChapter" :chapter-name="selectedChapterName.nameArabic"
-                :audio-experience="audioStore.audioPlayerSetting" @update:modal-value="getTranslationAlert"
-                :verse-timing="audioStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
+            <translations-view-component :id="`translations-pages-${router.params.pageId}`"
+                :is-loading="pageStore.isLoading" :is-playing="audioStore.isPlaying"
+                v-if="currentSegment === 'translations'" @update:play-audio="playAudio"
+                :is-bismillah="selectedChapterBismillah" :styles="styles" :verses="groupVersesByChapter"
+                :chapter-name="selectedChapterName.nameArabic" :audio-experience="audioStore.audioPlayerSetting"
+                @update:modal-value="getTranslationAlert" @update:get-verses="getVerses" :pagination="pagination"
                 :is-audio-loading="audioStore.isLoading" :download-progress="audioStore.downloadProgress"
                 :active-audio-id="audioStore.audioFiles?.chapter_id" :bookmarked-verse="vNumber">
             </translations-view-component>
@@ -137,7 +137,7 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
                 :verses="groupVersesByChapter" @update:play-audio="playAudio" @update:surah-info="getSurahInfo"
                 :is-loading="pageStore.isLoading" :styles="styles" :download-progress="audioStore.downloadProgress"
                 :audio-experience="audioStore.audioPlayerSetting" :is-audio-loading="audioStore.isLoading"
-                :verse-timing="audioStore.verseTiming" @update:get-verses="getVerses" :pagination="pagination"
+                @update:get-verses="getVerses" :pagination="pagination"
                 :active-audio-id="audioStore.audioFiles?.chapter_id">
             </reading-view-component>
             <div>

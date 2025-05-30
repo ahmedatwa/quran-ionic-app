@@ -2,8 +2,10 @@
 import { IonHeader, IonToolbar, IonTitle, IonSearchbar } from "@ionic/vue";
 import { IonIcon, IonLabel, IonProgressBar, } from "@ionic/vue";
 // icons
-import { documentOutline, cogOutline, bookOutline, newspaperOutline } from 'ionicons/icons';
-import { useLocale } from "@/utils/useLocale";
+import { documentOutline, cogOutline } from 'ionicons/icons';
+import { bookOutline, newspaperOutline } from 'ionicons/icons';
+// composables
+import { useLocale } from "@/composables/useLocale";
 
 const { isRtl } = useLocale()
 

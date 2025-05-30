@@ -12,8 +12,9 @@ import { useRoute } from 'vue-router';
 // stores
 import { useChapterStore } from "@/stores/ChapterStore"
 import { useAudioStore } from "@/stores/AudioStore";
+// composables
+import { useSettings } from '@/composables/useSettings';
 // utils
-import { useSettings } from '@/utils/useSettings';
 import { makeVerseKey } from '@/utils/verse';
 // types
 import type { ChapterInfo } from '@/types/chapter';

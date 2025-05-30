@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, onBeforeMount, computed, watchEffect } from "vue";
+import { ref, onBeforeMount, computed } from "vue";
 
 //axios
 import { instance } from "@/axios";
@@ -7,25 +7,21 @@ import { audioRecitersUrl } from "@/axios/url";
 // types
 import type { AudioFile, AudioPlayerSettings } from "@/types/audio";
 import type { PlayAudioEmit } from "@/types/audio";
-import type { VerseTimingsProps } from "@/types/audio";
-import type { VerseTimings, VerseTimingSegments } from "@/types/audio";
 import type { Chapter } from "@/types/chapter";
 // stores
 import { useMetaStore } from "@/stores/MetaStore";
 import { useRecitionsStore } from "@/stores/RecitionsStore";
 import { useChapterStore } from "@/stores/ChapterStore";
 // utils
-import { useStorage } from "@/utils/useStorage";
-import { useAlert } from "@/utils/useAlert";
 import { getLangFullLocale } from "@/utils/locale";
-import { useLocale } from "@/utils/useLocale";
 import { secondsFormatter, secondsToMilliSeconds } from "@/utils/datetime";
 import { milliSecondsToSeconds } from "@/utils/datetime";
-import { makeWordLocation, getVerseNumberFromKey } from "@/utils/verse";
-import { getChapterIdfromKey } from "@/utils/verse";
-import { useMediaSession } from "@/utils/useMediaSession";
-import { useVerseTiming } from "@/utils/useVerseTiming";
-import { useAudioFile } from "@/utils/useAudioFile";
+// composables
+import { useMediaSession } from "@/composables/useMediaSession";
+import { useAudioFile } from "@/composables/useAudioFile";
+import { useStorage } from "@/composables/useStorage";
+import { useAlert } from "@/composables/useAlert";
+import { useLocale } from "@/composables/useLocale";
 
 // router
 import { useRouter } from "vue-router";
@@ -86,12 +82,10 @@ export const useAudioStore = defineStore("audio-store", () => {
   });
   const recentlyPlayed = ref<number[]>([]);
   const router = useRouter();
-  const { downloadAudioFile, downloadFileProgress } = useAudioFile(
-    audioFiles,
-    recitionsStore.selectedReciter?.id
-  );
-  //const { verseTiming } = useVerseTiming(audioFiles);
 
+  const { downloadAudioFile, downloadFileProgress } = useAudioFile();
+
+  
   const chapterName = computed(() => {
     if (chapterId.value) {
       const chapter = chapterStore.getChapterNameByChapterId(chapterId.value);

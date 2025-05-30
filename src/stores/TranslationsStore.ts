@@ -2,9 +2,9 @@ import { defineStore } from "pinia";
 import { ref, computed, onBeforeMount } from "vue";
 // types
 import { Translation, TranslationReduceMap } from "@/types/translations";
-// utils
-import { useAlert } from "@/utils/useAlert";
-import { useStorage } from '@/utils/useStorage';
+// composables
+import { useAlert } from "@/composables/useAlert";
+import { useStorage } from '@/composables/useStorage';
 
 
 export const useTranslationsStore = defineStore("translations-store", () => {

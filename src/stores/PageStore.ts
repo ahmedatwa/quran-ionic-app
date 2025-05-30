@@ -9,8 +9,9 @@ import { getVersesUrl } from "@/axios/url";
 // utils
 import { _range } from "@/utils/number";
 import { getAllPagesToChapters } from "@/utils/pages";
-import { useStorage } from "@/utils/useStorage";
-import { useAlert } from "@/utils/useAlert";
+// composables
+import { useStorage } from "@/composables/useStorage";
+import { useAlert } from "@/composables/useAlert";
 // types
 import type { Page } from "@/types/page";
 import type { Verse } from "@/types/verse";

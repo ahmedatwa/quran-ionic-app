@@ -6,7 +6,9 @@ import { IonNote, IonItem, IonList, IonLabel, IonSpinner } from '@ionic/vue';
 import { useAudioStore } from "@/stores/AudioStore";
 // utils
 import { localizeNumber } from '@/utils/number';
-import { useLocale } from '@/utils/useLocale';
+// composables
+import { useLocale } from '@/composables/useLocale';
+// stores
 import { useChapterStore } from '@/stores/ChapterStore';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';

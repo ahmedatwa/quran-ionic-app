@@ -1,23 +1,27 @@
 // fetch.js
-import { ref, watchEffect, toValue, Ref, onMounted } from "vue";
+import { ref, toValue } from "vue";
+// axios
 import { instance } from "@/axios";
 import { audioRecitersUrl } from "@/axios/url";
-import type { AudioFile } from "@/types/audio";
-import { useAlert } from "@/utils/useAlert";
-import { useStorage } from "@/utils/useStorage";
-import { useBlob } from "@/utils/useBlob";
+// composables
+import { useAlert } from "@/composables/useAlert";
+import { useStorage } from "@/composables/useStorage";
+import { useBlob } from "@/composables/useBlob";
 // Stores
 import { useChapterStore } from "@/stores/ChapterStore";
+import { useAudioStore } from "@/stores/AudioStore";
+import { useRecitionsStore } from "@/stores/RecitionsStore";
+// types
+import type { AudioFile } from "@/types/audio";
 
-export const useAudioFile = (
-  audioFiles: Ref<AudioFile | null>,
-  selectedReciterId?: number
-) => {
+export const useAudioFile = () => {
+  const { audioFiles } = useAudioStore();
+  const { selectedReciter } = useRecitionsStore();
   const { presentToast } = useAlert();
   const { getChapterName } = useChapterStore();
   const { encodeBlobToBase64 } = useBlob();
-  const isAudiFileLoading = ref(false);
-  const reciterId = toValue(selectedReciterId);
+  const isAudioFileLoading = ref(false);
+  const reciterId = toValue(selectedReciter?.id);
   const downloadFileProgress = ref();
   const audioDB = useStorage("__audioDB");
 
@@ -61,11 +65,11 @@ export const useAudioFile = (
   };
 
   const downloadAudioFile = async () => {
-    isAudiFileLoading.value = true;
-    if (audioFiles.value) {
-      const audioUrl = audioFiles.value.audio_url;
-      const key = `${String(audioFiles.value.reciterId)}-${
-        audioFiles.value.chapter_id
+    if (audioFiles) {
+      isAudioFileLoading.value = true;
+      const audioUrl = audioFiles.audio_url;
+      const key = `${String(audioFiles.reciterId)}-${
+        audioFiles.chapter_id
       }`;
       await instance
         .get(audioUrl, {
@@ -81,13 +85,13 @@ export const useAudioFile = (
             response.data
           )) as string;
           audioDB.setStorage(key, {
-            reciterId: String(audioFiles.value?.reciterId),
-            id: audioFiles.value?.id,
-            chapter_id: audioFiles.value?.chapter_id,
-            file_size: audioFiles.value?.file_size,
-            format: audioFiles.value?.format,
-            duration: audioFiles.value?.duration,
-            verse_timings: JSON.stringify(audioFiles.value?.verse_timings),
+            reciterId: String(audioFiles?.reciterId),
+            id: audioFiles?.id,
+            chapter_id: audioFiles?.chapter_id,
+            file_size: audioFiles?.file_size,
+            format: audioFiles?.format,
+            duration: audioFiles?.duration,
+            verse_timings: JSON.stringify(audioFiles?.verse_timings),
             audio_url: base64Data,
           });
         })
@@ -95,10 +99,18 @@ export const useAudioFile = (
           await presentToast({ message: String(error) });
         })
         .finally(async () => {
-          isAudiFileLoading.value = false;
+          isAudioFileLoading.value = false;
         });
+    } else {
+      throw "Error! File Not Found.";
     }
   };
 
-  return { attemptFileSave, saveFile, downloadAudioFile, downloadFileProgress };
+  return {
+    attemptFileSave,
+    saveFile,
+    downloadAudioFile,
+    downloadFileProgress,
+    isAudioFileLoading,
+  };
 };

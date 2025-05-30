@@ -5,10 +5,11 @@ import { IonGrid, IonRow, IonCol, IonCard, IonCardContent } from "@ionic/vue";
 import { IonLabel, IonInfiniteScrollContent, IonRefresher, IonRefresherContent } from "@ionic/vue";
 import { IonContent, IonItemDivider, IonInfiniteScroll } from "@ionic/vue";
 // utils
-import { useLocale } from "@/utils/useLocale";
 import { useRoute, useRouter } from "vue-router";
 import { upperCaseFirst } from "@/utils/string"
-import { useScrollToElement } from "@/utils/useScrollToElement";
+// composables
+import { useLocale } from "@/composables/useLocale";
+import { useScrollToElement } from "@/composables/useScrollToElement";
 // Types
 import type { GroupVersesByChapterID, Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";

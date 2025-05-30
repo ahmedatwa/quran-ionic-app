@@ -1,17 +1,18 @@
-import { ref, computed, onBeforeMount } from "vue";
-// utils
-import { useStorage } from "@/utils/useStorage";
-import { useLocale } from "@/utils/useLocale";
+import { shallowRef, computed, onBeforeMount } from "vue";
+// composables
+import { useStorage } from "@/composables/useStorage";
+import { useLocale } from "@/composables/useLocale";
 // types
 import type { Recitations } from "@/types/audio";
 import type { Styles } from "@/types/settings";
 import type { Translation } from "@/types/translations";
+// utils
 import { lowerCase } from "@/utils/string";
 
-const colorScheme = ref("auto");
+const colorScheme = shallowRef("auto");
 
 // Styles
-const styles = ref<Styles>({
+const styles = shallowRef<Styles>({
   fontSize: "1",
   fontFamily: "noto-Kufi",
   fontWeight: "normal",
@@ -21,19 +22,19 @@ const styles = ref<Styles>({
   },
 });
 
-const selectedWordColor = ref({ key: "Blue", code: "primary" });
+const selectedWordColor = shallowRef({ key: "Blue", code: "primary" });
 
 export const useSettings = () => {
   const { getLine, setLocale, supportedLocales } = useLocale();
   const { getStorage, setStorage } = useStorage("__settingsDB");
-  const wordColors = ref([
+  const wordColors = shallowRef([
     { key: "Blue", code: "primary" },
     { key: "Green", code: "success" },
     { key: "Red", code: "danger" },
     { key: "Tertiary", code: "tertiary" },
   ]);
 
-  const fontSizes = ref([
+  const fontSizes = shallowRef([
     { key: 1, value: "Normal" },
     { key: 2, value: "Medium" },
     { key: 3, value: "Large" },
@@ -51,20 +52,20 @@ export const useSettings = () => {
     return "Normal";
   });
   // Color Schemes
-  const colorSchemes = ref([
+  const colorSchemes = shallowRef([
     { key: "dark", value: getLine("settings.dark") },
     { key: "light", value: getLine("settings.light") },
     { key: "auto", value: getLine("settings.auto") },
   ]);
 
-  const fontFamilyGroup = ref([
+  const fontFamilyGroup = shallowRef([
     { key: "amiri", value: "Amiri" },
     { key: "noto-kufi", value: "Noto-Kufi" },
     { key: "hafs-nastaleeq", value: "Hafs-Nastaleeq" },
     { key: "uthman-taha-naskh", value: "Uthman-Taha-Naskh" },
   ]);
 
-  const fontWeights = ref([
+  const fontWeights = shallowRef([
     { key: "normal", value: "Normal" },
     { key: "medium", value: "Medium" },
     { key: "semibold", value: "Semi Bold" },
@@ -145,7 +146,6 @@ export const useSettings = () => {
     // color scheme
     const scheme = await getStorage("colorScheme");
     if (scheme) colorScheme.value = scheme;
-
   });
 
   return {

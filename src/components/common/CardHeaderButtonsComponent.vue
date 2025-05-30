@@ -7,8 +7,9 @@ import { informationCircleOutline, downloadOutline } from 'ionicons/icons';
 import { useTranslationsStore } from '@/stores/TranslationsStore';
 // utils
 import { upperCaseFirst } from '@/utils/string';
-import { useLocale } from '@/utils/useLocale';
-import { useSettings } from '@/utils/useSettings';
+// composables
+import { useLocale } from '@/composables/useLocale';
+import { useSettings } from '@/composables/useSettings';
 // types
 import type { Translation } from '@/types/translations';
 import type { PlayAudioEmit } from '@/types/audio';

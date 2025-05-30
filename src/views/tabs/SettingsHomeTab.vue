@@ -4,19 +4,20 @@ import { IonContent, IonItem, IonList, IonListHeader, IonAccordion } from '@ioni
 import { IonToggle, IonPage, IonSelectOption, IonSelect, IonAccordionGroup } from "@ionic/vue"
 import { IonLabel, IonText } from '@ionic/vue';
 // icons
-import { caretDownSharp, cogOutline } from 'ionicons/icons';
+import { cogOutline } from 'ionicons/icons';
 // stores
 import { useAudioStore } from "@/stores/AudioStore";
 import { useRecitionsStore } from '@/stores/RecitionsStore';
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 // utils
-import { useLocale } from '@/utils/useLocale';
 import { _range } from '@/utils/number';
 import { getLangFullLocale } from '@/utils/locale';
-import { useSettings } from '@/utils/useSettings';
 import { properCase } from '@/utils/string';
-import { useKeepAwake } from '@/utils/useKeepAwake';
-import { useAlert } from '@/utils/useAlert';
+// composables
+import { useSettings } from '@/composables/useSettings';
+import { useLocale } from '@/composables/useLocale';
+import { useKeepAwake } from '@/composables/useKeepAwake';
+import { useAlert } from '@/composables/useAlert';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
 import ModalComponent from '@/components/common/ModalComponent.vue';

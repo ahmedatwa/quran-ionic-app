@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { IonActionSheet } from '@ionic/vue';
 import { Clipboard } from '@capacitor/clipboard';
-import { useAlert } from '@/utils/useAlert';
+// composables
+import { useAlert } from '@/composables/useAlert';
 // types
 import type { Verse } from "@/types/verse";
 

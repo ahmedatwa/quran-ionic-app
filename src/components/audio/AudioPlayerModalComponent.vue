@@ -8,9 +8,9 @@ import { IonModal } from "@ionic/vue";
 import { playOutline, playBackOutline, playForwardOutline, repeatOutline } from 'ionicons/icons';
 import { volumeLowOutline, volumeHighOutline } from 'ionicons/icons';
 import { pauseOutline, chevronDownOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
-// utils
-import { useLocale } from "@/utils/useLocale";
-import { useStorage } from "@/utils/useStorage";
+// composables
+import { useLocale } from "@/composables/useLocale";
+import { useStorage } from "@/composables/useStorage";
 // components
 import ModalComponent from "@/components/common/ModalComponent.vue";
 import AudioModalAllChapters from "@/components/audio/parts/AudioModalAllChapters.vue";

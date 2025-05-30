@@ -2,9 +2,9 @@ import { shallowRef } from "vue";
 // stores
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 import { useRecitionsStore } from "@/stores/RecitionsStore";
-// utils
-import { useStorage } from "@/utils/useStorage";
-import { useLocale } from "@/utils/useLocale";
+// composables
+import { useStorage } from "@/composables/useStorage";
+import { useLocale } from "@/composables/useLocale";
 // capacitor plugins
 import { Device } from "@capacitor/device";
 // axios

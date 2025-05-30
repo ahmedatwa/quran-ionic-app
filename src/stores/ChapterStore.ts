@@ -10,10 +10,10 @@ import { getVersesUrl, makeChapterInfoUrl } from "@/axios/url";
 import type { Chapter, ChapterInfo } from "@/types/chapter";
 import type { Loading } from "@/types/chapter";
 import type { Verse } from "@/types/verse";
-// utils
-import { useStorage } from "@/utils/useStorage";
-import { useAlert } from "@/utils/useAlert";
-import { useLocale } from "@/utils/useLocale";
+// composables
+import { useStorage } from "@/composables/useStorage";
+import { useAlert } from "@/composables/useAlert";
+import { useLocale } from "@/composables/useLocale";
 
 export const useChapterStore = defineStore("chapter-store", () => {
   const translationsStore = useTranslationsStore();

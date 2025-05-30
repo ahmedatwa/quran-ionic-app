@@ -7,18 +7,19 @@ import { App } from '@capacitor/app';
 
 // icons
 import { ellipsisVerticalOutline } from "ionicons/icons";
-// utils
-import { useLocale } from "@/utils/useLocale";
-import { useScrollToElement } from "@/utils/useScrollToElement";
-import { useStorage } from "@/utils/useStorage";
-import { useAlert } from '@/utils/useAlert';
+// composables
+import { useLocale } from "@/composables/useLocale";
+import { useStorage } from "@/composables/useStorage";
+import { useAlert } from '@/composables/useAlert';
+import { useScrollToElement } from "@/composables/useScrollToElement";
+import { useVerseTiming } from '@/composables/useVerseTiming';
+// stores
 import { useChapterStore } from "@/stores/ChapterStore";
-import { useVerseTiming } from '@/utils/useVerseTiming';
 
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { Pagination } from "@/types/chapter";
-import type { PlayAudioEmit, VerseTimingsProps, AudioExperience } from "@/types/audio";
+import type { PlayAudioEmit, AudioExperience } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 import type { RefresherCustomEvent } from "@ionic/vue"
 

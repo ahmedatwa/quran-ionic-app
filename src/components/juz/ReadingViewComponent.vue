@@ -4,10 +4,12 @@ import { IonInfiniteScrollContent, IonText } from "@ionic/vue";
 import { IonGrid, IonRow, IonCol, IonCard, IonCardContent } from "@ionic/vue";
 import { IonLabel, IonCardSubtitle, IonCardTitle, IonItem, IonRefresher, IonRefresherContent } from "@ionic/vue";
 import { IonContent, IonCardHeader, IonInfiniteScroll } from "@ionic/vue";
-// utils
-import { useLocale } from "@/utils/useLocale";
+
+// router
 import { useRoute } from "vue-router";
-import { useScrollToElement } from "@/utils/useScrollToElement";
+// composables
+import { useLocale } from "@/composables/useLocale";
+import { useScrollToElement } from "@/composables/useScrollToElement";
 // Types
 import type { juzVersesByPageMap } from "@/types/juz";
 import type { Pagination } from "@/types/page";

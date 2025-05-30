@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonFooter, IonRouterOutlet } from '@ionic/vue';
+import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
 import { newspaperOutline, documentOutline, bookOutline } from 'ionicons/icons';
 import { cogOutline, bookmarkOutline } from 'ionicons/icons';
-// utils
-import { useLocale } from '@/utils/useLocale';
+// composables
+import { useLocale } from '@/composables/useLocale';
+// components
 import AudioFabComponent from '@/components/audio/AudioFabComponent.vue';
 
 const { getLine } = useLocale()

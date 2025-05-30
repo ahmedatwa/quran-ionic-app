@@ -7,12 +7,13 @@ import { IonLabel, IonText } from "@ionic/vue";
 import { IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 // icons
 import { ellipsisVerticalOutline } from "ionicons/icons";
-// utils
-import { useLocale } from "@/utils/useLocale";
-import { useScrollToElement } from "@/utils/useScrollToElement";
-import { useStorage } from "@/utils/useStorage";
+// composables
+import { useLocale } from "@/composables/useLocale";
+import { useScrollToElement } from "@/composables/useScrollToElement";
+import { useStorage } from "@/composables/useStorage";
+import { useAlert } from '@/composables/useAlert';
+// router
 import { useRoute } from "vue-router";
-import { useAlert } from '@/utils/useAlert';
 
 // types
 import type { Verse, VerseWord } from "@/types/verse";

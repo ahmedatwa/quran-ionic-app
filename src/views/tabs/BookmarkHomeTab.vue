@@ -7,9 +7,10 @@ import { bookmarkOutline, bookmarksOutline, trashOutline } from 'ionicons/icons'
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
 // utils
-import { useLocale } from '@/utils/useLocale';
-import { useStorage, BookmarkedItems } from "@/utils/useStorage";
 import { truncate } from "@/utils/string";
+// composables
+import { useLocale } from '@/composables/useLocale';
+import { useStorage, BookmarkedItems } from "@/composables/useStorage";
 
 const { getLine } = useLocale()
 const bookmarks = ref<BookmarkedItems[]>([])

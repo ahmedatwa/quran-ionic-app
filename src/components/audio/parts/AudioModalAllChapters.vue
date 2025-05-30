@@ -4,8 +4,8 @@ import { IonItem, IonLabel, IonList, IonItemSliding, IonItemOption, IonItemOptio
 import { musicalNote, downloadOutline, playCircleOutline } from 'ionicons/icons';
 // types
 import type { Juz } from '@/types/juz';
-// utils
-import { useLocale } from "@/utils/useLocale";
+// composables
+import { useLocale } from "@/composables/useLocale";
 
 const { getLine, isRtl } = useLocale()
 

@@ -10,7 +10,8 @@ import type { Recitations, MapRecitions } from "@/types/audio";
 import type { Translation, TranslationReduceMap } from "@/types/translations";
 // utils
 import { upperCase } from "@/utils/string";
-import { useStorage } from "@/utils/useStorage";
+// composables
+import { useStorage } from "@/composables/useStorage";
 
 const modal = ref()
 const { getStorage } = useStorage("__settingsDB")

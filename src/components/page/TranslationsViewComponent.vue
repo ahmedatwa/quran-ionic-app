@@ -8,12 +8,13 @@ import { IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 // icons
 import { arrowBackOutline, arrowForwardOutline, ellipsisVerticalOutline } from "ionicons/icons";
 // utils
-import { useLocale } from "@/utils/useLocale";
-import { useScrollToElement } from "@/utils/useScrollToElement";
-import { useStorage } from "@/utils/useStorage";
+import { useLocale } from "@/composables/useLocale";
+import { useScrollToElement } from "@/composables/useScrollToElement";
+import { useStorage } from "@/composables/useStorage";
+import { useAlert } from '@/composables/useAlert';
+// router
 import { useRouter } from "vue-router";
 import { upperCaseFirst } from "@/utils/string"
-import { useAlert } from '@/utils/useAlert';
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";

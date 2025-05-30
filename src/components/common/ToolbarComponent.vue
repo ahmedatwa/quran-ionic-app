@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { ref } from "vue"
 import { IonToolbar, IonButton, IonButtons, IonIcon } from "@ionic/vue";
 import { IonLabel, IonProgressBar,  } from "@ionic/vue";
 import { chevronBackOutline, chevronForwardOutline } from "ionicons/icons";
-import { useLocale } from "@/utils/useLocale"
+// composables
+import { useLocale } from "@/composables/useLocale"
+// router
 import { useRouter } from "vue-router"
 
 const { isRtl } = useLocale()

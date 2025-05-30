@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { IonPage, IonSkeletonText, IonText, IonIcon } from '@ionic/vue';
 import { IonLabel, IonNote, IonContent, IonList, IonItem } from '@ionic/vue';
+// composables
+import { useLocale } from '@/composables/useLocale';
 // utils
-import { useLocale } from '@/utils/useLocale';
 import { localizeNumber } from '@/utils/number';
 // stores
 import { useJuzStore } from '@/stores/JuzStore';

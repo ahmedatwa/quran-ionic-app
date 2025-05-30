@@ -13,6 +13,10 @@ import { useJuzStore } from "@/stores/JuzStore";
 
 // utils
 import { truncate } from "@/utils/string";
+// composables
+import { useVerseTiming } from '@/composables/useVerseTiming';
+import { useAudioFile } from "@/composables/useAudioFile";
+
 // types
 import type { Recitations } from "@/types/audio"
 
@@ -20,6 +24,8 @@ const recitationsStore = useRecitionsStore()
 const audioStore = useAudioStore()
 const chapterStore = useChapterStore()
 const juzStore = useJuzStore()
+const { verseTiming } = useVerseTiming()
+const { attemptFileSave } = useAudioFile()
 
 defineProps<{
     modelValue: boolean
@@ -30,22 +36,22 @@ defineEmits<{
 }>()
 
 const getCurrentVerseData = computed(() => {
-    if (audioStore.verseTiming) {
-        const verseKey = audioStore.verseTiming.verseKey
+    if (verseTiming.value) {
+        const verseKey = verseTiming.value.verseKey
         const verse = chapterStore.getVerseByVerseKey(verseKey)
         if (verse) {
             return {
                 juzNumber: verse.juz_number,
                 hizbNumber: verse.hizb_number,
                 pageNumber: verse.page_number,
-                surah: audioStore.verseTiming.chapterId,
-                ayah: audioStore.verseTiming.verseNumber,
+                surah: verseTiming.value.chapterId,
+                ayah: verseTiming.value.verseNumber,
             }
 
         } else {
             return {
-                surah: audioStore.verseTiming.chapterId,
-                ayah: audioStore.verseTiming.verseNumber,
+                surah: verseTiming.value.chapterId,
+                ayah: verseTiming.value.verseNumber,
                 juzNumber: null,
                 hizbNumber: null,
                 pageNumber: null,
@@ -89,7 +95,7 @@ const getCurrentVerseData = computed(() => {
                 :chapter-name="audioStore.chapterName" :loop-audio="audioStore.loopAudio"
                 :media-volume="audioStore.mediaVolume" :map-recitions="recitationsStore.mapRecitions"
                 :progress-timer="audioStore.progressTimer" @update:change-volume="audioStore.changeMediaVolume"
-                @update:seek="audioStore.playbackSeek" @update:download="audioStore.attemptFileSave($event)"
+                @update:seek="audioStore.playbackSeek" @update:download="attemptFileSave($event)"
                 @update:play-chapter="audioStore.playChapterAudio" @update:play-next="audioStore.playNext"
                 @update:play-prev="audioStore.playPrevious()" @update:play-audio="audioStore.handlePlay"
                 @update:loop-audio="audioStore.setLoopAudio($event)" :recently-played="audioStore.getRecentlyPlayed"

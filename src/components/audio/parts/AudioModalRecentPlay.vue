@@ -4,8 +4,8 @@ import { IonItem, IonLabel, IonList, IonItemSliding, IonItemOption } from '@ioni
 import { leafOutline, playCircleOutline, downloadOutline } from 'ionicons/icons';
 // types
 import type { Chapter } from '@/types/chapter';
-// utils
-import { useLocale } from "@/utils/useLocale";
+// composables
+import { useLocale } from "@/composables/useLocale";
 
 const { getLine, isRtl } = useLocale()
 
