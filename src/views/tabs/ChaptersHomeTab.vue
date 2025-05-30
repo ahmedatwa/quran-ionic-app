@@ -3,18 +3,18 @@
 import { IonPage, IonContent, IonSkeletonText } from '@ionic/vue';
 import { IonNote, IonItem, IonList, IonLabel, IonSpinner } from '@ionic/vue';
 // stores
-import { useChapterStore } from '@/stores/ChapterStore';
 import { useAudioStore } from "@/stores/AudioStore";
 // utils
 import { localizeNumber } from '@/utils/number';
 import { useLocale } from '@/utils/useLocale';
+import { useChapterStore } from '@/stores/ChapterStore';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
 import { bookOutline } from "ionicons/icons";
 
 const { getLocale, getLine, isRtl } = useLocale()
-const chapterStore = useChapterStore()
 const audioStore = useAudioStore()
+const chapterStore = useChapterStore()
 
 const handleSearch = (query: string) => {
   chapterStore.searchValue = query
@@ -37,7 +37,7 @@ const isPlaying = (chapterId: number) => {
       </ion-list>
       <ion-list>
         <ion-item button detail v-for="chapter in chapterStore.chapters" :key="chapter.id"
-          :router-link="`chapter/${chapter.id}/${chapter.slug}`">
+          :router-link="`chapter/${chapter.slug}/${chapter.id}/1`">
           <ion-spinner name="dots" color="danger" class="ml-1" v-if="isPlaying(chapter.id)"></ion-spinner>
           <ion-label>{{ localizeNumber(chapter.id, getLocale) }}- {{ isRtl ? chapter.nameArabic : chapter.nameSimple }}
           </ion-label>

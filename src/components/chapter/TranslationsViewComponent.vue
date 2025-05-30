@@ -12,6 +12,8 @@ import { useLocale } from "@/utils/useLocale";
 import { useScrollToElement } from "@/utils/useScrollToElement";
 import { useStorage } from "@/utils/useStorage";
 import { useAlert } from '@/utils/useAlert';
+import { useChapterStore } from "@/stores/ChapterStore";
+import { useVerseTiming } from '@/utils/useVerseTiming';
 
 // types
 import type { Verse, VerseWord } from "@/types/verse";
@@ -26,7 +28,6 @@ import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 import VerseSeachInputComponent from "@/components/common/VerseSeachInputComponent.vue";
 import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
 // stores
-import { useChapterStore } from "@/stores/ChapterStore";
 
 const verseSearchInput = ref("")
 const { getLine } = useLocale()
@@ -37,12 +38,12 @@ const contentRef = ref()
 const cardRef = ref()
 const intersectingVerseNumber = ref(1)
 const { scrollToElement } = useScrollToElement()
+const { verseTiming } = useVerseTiming()
 
 const props = defineProps<{
     id: string;
     chapterId: number
     downloadProgress?: string | number
-    isTranslationsView?: boolean
     isPlaying: boolean
     isLoading: boolean
     isAudioLoading: boolean
@@ -51,7 +52,6 @@ const props = defineProps<{
     verses?: Verse[]
     audioExperience: AudioExperience;
     pagination?: Pagination | null
-    verseTiming?: VerseTimingsProps
     styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
     lastChapterVerse: number
     verseCount?: number
@@ -95,8 +95,8 @@ const setBookmarked = async (verse: Verse) => {
 };
 
 const isWordHighlighted = (word: VerseWord) => {
-    if (props.verseTiming) {
-        return props.verseTiming.wordLocation === word.location
+    if (verseTiming.value) {
+        return verseTiming.value.wordLocation === word.location
     }
 };
 
@@ -145,7 +145,9 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
 }
 
 // scrolling based on verseNumber sent by audioStore
-watch(() => props.verseTiming, (t) => {
+watch(() => verseTiming.value, (t) => {
+
+
     if (t?.verseNumber) {
         const verseNumber = t.verseNumber
         if (props.audioExperience) {
@@ -157,8 +159,8 @@ watch(() => props.verseTiming, (t) => {
     }
 })
 
-const scroll = (verseNumber: number) => {
-    scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
+const scroll = async (verseNumber: number) => {
+    await scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
 }
 
 const computedVerses = computed(() => {
@@ -196,7 +198,8 @@ const playAudio = (ev: PlayAudioEmit) => {
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
-            <ion-card class="ion-padding card-wrapper" ref="cardRef" style="position: relative;">
+            <ion-card class="ion-padding card-wrapper" ref="cardRef" style="position: relative;"
+                id=" chapter-translation-view-card">
                 <verse-seach-input-component :verse-count="verseCount"
                     @update:search-value="verseSearchInput = $event"></verse-seach-input-component>
                 <card-header-buttons-component :chapter-id="chapterId" :is-playing="isPlaying"

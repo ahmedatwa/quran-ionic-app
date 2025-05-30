@@ -11,15 +11,15 @@ import type { Chapter, ChapterInfo } from "@/types/chapter";
 import type { Loading } from "@/types/chapter";
 import type { Verse } from "@/types/verse";
 // utils
-import { useLocale } from "@/utils/useLocale";
 import { useStorage } from "@/utils/useStorage";
 import { useAlert } from "@/utils/useAlert";
+import { useLocale } from "@/utils/useLocale";
 
 export const useChapterStore = defineStore("chapter-store", () => {
   const translationsStore = useTranslationsStore();
-  const { getStorage, setStorage } = useStorage("__chaptersDB");
-  const TOTAL_CHAPTERS = ref(114);
   const { getLine } = useLocale();
+
+  const { getStorage, setStorage } = useStorage("__chaptersDB");
   const { presentToast } = useAlert();
 
   const isLoading = ref<Loading>({ chapters: false, verses: false });
@@ -28,6 +28,10 @@ export const useChapterStore = defineStore("chapter-store", () => {
   const currentSort = ref("id");
   const searchValue = ref("");
   const selectedChapter = ref<Chapter | null>(null);
+  const chapterInfo = ref<ChapterInfo | null>(null);
+  const perPage = ref(15);
+  const TOTAL_CHAPTERS = ref(114);
+
   const selectedChapterId = computed(() => {
     if (selectedChapter.value) {
       return selectedChapter.value.id;
@@ -40,9 +44,6 @@ export const useChapterStore = defineStore("chapter-store", () => {
       return selectedChapter.value.pagination;
     }
   });
-
-  const chapterInfo = ref<ChapterInfo | null>(null);
-  const perPage = ref(15);
 
   const chapters = computed((): Chapter[] | undefined => {
     if (chaptersList.value) {
@@ -100,14 +101,16 @@ export const useChapterStore = defineStore("chapter-store", () => {
       });
   };
 
-  /**
-   *
-   * @param chapterId
-   * @returns
-   */
+  // /**
+  //  *
+  //  * @param chapterId
+  //  * @returns
+  //  */
   const getChapter = (chapterId: number | string) => {
     if (chaptersList.value) {
-      return chaptersList.value.find((chapter) => chapter.id === Number(chapterId));
+      return chaptersList.value.find(
+        (chapter) => chapter.id === Number(chapterId)
+      );
     }
   };
 
@@ -332,9 +335,8 @@ export const useChapterStore = defineStore("chapter-store", () => {
       typeof verseKey === "number"
         ? verseKey.toString().split(":")
         : verseKey.split(":");
-        
-        
-    const chapter = getChapter(split[0]);    
+
+    const chapter = getChapter(split[0]);
     if (chapter) {
       return chapter.verses?.find((v) => v.verse_number === parseInt(split[1]));
     }
@@ -386,9 +388,9 @@ export const useChapterStore = defineStore("chapter-store", () => {
     getLastVerseNumberOfChapter,
     getFirstVerseHeaderData,
     selectedChapterVerses,
-    TOTAL_CHAPTERS,
     selectedChapterPagination,
     selectedChapterBismillah,
+    TOTAL_CHAPTERS,
     getChapterNameByFirstVerse,
     getVerseByVerseKey,
     getChapterName,

@@ -15,24 +15,24 @@ import { useAudioStore } from "@/stores/AudioStore";
 // utils
 import { useSettings } from '@/utils/useSettings';
 import { makeVerseKey } from '@/utils/verse';
-
 // types
 import type { ChapterInfo } from '@/types/chapter';
 
 const currentSegment = ref("translations")
 const chapterStore = useChapterStore()
 const audioStore = useAudioStore()
+
 const pageRef = ref()
 const pageRefEl = ref()
 const settings = useSettings()
 const chapterInfoModalRef = ref()
 const pagination = computed(() => chapterStore.selectedChapter?.pagination)
 const chapterInfo = ref<ChapterInfo | null>(null)
+
 const verses = computed(() => {
     return chapterStore.selectedChapterVerses?.sort(
         (a, b) => a.verse_number - b.verse_number)
 })
-
 
 const { params } = useRoute()
 const chapterId = computed(() => Number(params.chapterId))
@@ -41,7 +41,7 @@ const chapterSlug = computed(() => params.slug)
 watchEffect(async () => {
     if (chapterId.value) {
         chapterStore.selectedChapter = null
-        const found = chapterStore.chaptersList.find((c) => c.id === chapterId.value || c.slug === chapterSlug.value)
+        const found = chapterStore.chapters?.find((c) => c.id === chapterId.value || c.slug === chapterSlug.value)
         if (found) {
             if (!found.verses?.length) {
                 await chapterStore.getVerses(found.id, true)
@@ -91,7 +91,7 @@ const getSurahInfo = async (ev: number) => {
     chapterInfoModalRef.value.$el.click()
 }
 
-const getVerseByKey = async (verseNumber: number) => {
+const verseByKey = async (verseNumber: number) => {
     await chapterStore.getVerseByKey(chapterId.value, makeVerseKey(chapterId.value, verseNumber))
 }
 </script>
@@ -107,16 +107,15 @@ const getVerseByKey = async (verseNumber: number) => {
                 :download-progress="audioStore.downloadProgress" :is-audio-loading="audioStore.isLoading"
                 @update:play-audio="playAudio" :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles"
                 :last-chapter-verse="chapterStore.getLastVerseNumberOfChapter"
-                :verse-count="chapterStore.selectedChapter?.versesCount" :verse-timing="audioStore.verseTiming"
-                @update:get-verses="loadMoreVerses" :pagination="pagination" :verses="verses"
-                :audio-experience="audioStore.audioPlayerSetting" @update:get-verse-by-key="getVerseByKey">
+                :verse-count="chapterStore.selectedChapter?.versesCount" @update:get-verses="loadMoreVerses"
+                :pagination="pagination" :verses="verses" :chapter-name="chapterStore.selectedChapterName.nameArabic"
+                :audio-experience="audioStore.audioPlayerSetting" @update:get-verse-by-key="verseByKey">
             </translations-view-component>
             <reading-view-component id="reading-chapters" v-else :is-playing="isPlaying" :verses="verses"
                 :is-loading="chapterStore.isLoading.verses" :styles="styles" :chapter-id="chapterId"
-                :verse-timing="audioStore.verseTiming" @update:get-verses="loadMoreVerses"
-                :is-audio-loading="audioStore.isLoading" @update:surah-info="getSurahInfo" :pagination="pagination"
-                @update:play-audio="playAudio" :download-progress="audioStore.downloadProgress"
-                :audio-experience="audioStore.audioPlayerSetting"
+                @update:get-verses="loadMoreVerses" :is-audio-loading="audioStore.isLoading"
+                @update:surah-info="getSurahInfo" :pagination="pagination" @update:play-audio="playAudio"
+                :download-progress="audioStore.downloadProgress" :audio-experience="audioStore.audioPlayerSetting"
                 :verse-count="chapterStore.selectedChapter?.versesCount">
             </reading-view-component>
             <div>

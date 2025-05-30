@@ -7,8 +7,11 @@ import { useStorage } from "@/utils/useStorage";
 import { useLocale } from "@/utils/useLocale";
 // capacitor plugins
 import { Device } from "@capacitor/device";
+// axios
+import { getAccessToken } from "@/axios/url";
 
 export const useStartup = () => {
+  
   const translationsStore = useTranslationsStore();
   const recitionsStore = useRecitionsStore();
 
@@ -126,6 +129,7 @@ export const useStartup = () => {
   const runStartup = async () => {
     try {
       await Promise.all([
+        getAccessToken(),
         logDeviceLocaleInfo(),
         setTranslation(),
         setScheme(),

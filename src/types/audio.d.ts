@@ -33,6 +33,7 @@ type VerseTimingsProps = {
   wordLocation: string;
   wordPosition: string | number;
   audioSrc?: string;
+  pageNumber?: number;
 };
 
 interface Recitations {

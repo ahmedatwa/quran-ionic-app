@@ -36,6 +36,7 @@ const router = useRouter()
 const cardRef = ref()
 const contentRef = ref()
 const intersectingVerseNumber = ref<number>()
+const intersectingPageNumber = ref<number>()
 const { presentAlert } = useAlert()
 const route = useRoute()
 const { scrollToElement } = useScrollToElement()
@@ -77,6 +78,7 @@ watch(() => props.verseTiming, (t) => {
         const verseNumber = t.verseNumber
         if (props.audioExperience.autoScroll && props.isPlaying) {
             intersectingVerseNumber.value = t.verseNumber
+           // intersectingPageNumber.value = t.p
             scroll(verseNumber)
         }
     }

@@ -11,12 +11,11 @@ import type { VerseTimingsProps } from "@/types/audio";
 import type { VerseTimings, VerseTimingSegments } from "@/types/audio";
 import type { Chapter } from "@/types/chapter";
 // stores
-import { useChapterStore } from "@/stores/ChapterStore";
 import { useMetaStore } from "@/stores/MetaStore";
 import { useRecitionsStore } from "@/stores/RecitionsStore";
+import { useChapterStore } from "@/stores/ChapterStore";
 // utils
 import { useStorage } from "@/utils/useStorage";
-import { useBlob } from "@/utils/useBlob";
 import { useAlert } from "@/utils/useAlert";
 import { getLangFullLocale } from "@/utils/locale";
 import { useLocale } from "@/utils/useLocale";
@@ -25,6 +24,8 @@ import { milliSecondsToSeconds } from "@/utils/datetime";
 import { makeWordLocation, getVerseNumberFromKey } from "@/utils/verse";
 import { getChapterIdfromKey } from "@/utils/verse";
 import { useMediaSession } from "@/utils/useMediaSession";
+import { useVerseTiming } from "@/utils/useVerseTiming";
+import { useAudioFile } from "@/utils/useAudioFile";
 
 // router
 import { useRouter } from "vue-router";
@@ -39,7 +40,6 @@ export const useAudioStore = defineStore("audio-store", () => {
   const isLoading = ref(false);
   const settingsDB = useStorage("__settingsDB");
   const audioDB = useStorage("__audioDB");
-  const { encodeBlobToBase64 } = useBlob();
   const { presentToast, presentAlert, presentLoading } = useAlert();
   const audioFiles = ref<AudioFile | null>(null);
   const autoStartPlayer = ref(false);
@@ -47,7 +47,7 @@ export const useAudioStore = defineStore("audio-store", () => {
   const audioPayLoadSrc = ref<string | undefined>("");
   const selectedVerseKey = ref<string | undefined>("");
   const { getLocale } = useLocale();
-  const downloadProgress = ref();
+  const downloadProgress = computed(() => downloadFileProgress.value);
   const playbackSpeeds = ref([
     "0.25",
     "0.5",
@@ -59,7 +59,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     "2",
   ]);
 
-  const verseTiming = ref<VerseTimingsProps>();
+  //const verseTiming = ref<VerseTimingsProps>();
   const playbackRate = ref("Normal");
   const listenerActive = ref(false);
   const progressTimer = ref<number>(0);
@@ -86,6 +86,11 @@ export const useAudioStore = defineStore("audio-store", () => {
   });
   const recentlyPlayed = ref<number[]>([]);
   const router = useRouter();
+  const { downloadAudioFile, downloadFileProgress } = useAudioFile(
+    audioFiles,
+    recitionsStore.selectedReciter?.id
+  );
+  //const { verseTiming } = useVerseTiming(audioFiles);
 
   const chapterName = computed(() => {
     if (chapterId.value) {
@@ -129,6 +134,7 @@ export const useAudioStore = defineStore("audio-store", () => {
         isLoading.value = false;
         return;
       }
+      audioFiles.value = null;
 
       await instance
         .get(
@@ -185,13 +191,13 @@ export const useAudioStore = defineStore("audio-store", () => {
       await getAudio({ audioID: chapterId.value });
       await presentLoading();
       // store selected chapter into chapterStore
-      const selectedChapter = chapterStore.chapters?.find(
+      const chapter = chapterStore.chapters?.find(
         (c) => c.id === chapterId.value
       );
-      if (selectedChapter) {
-        chapterStore.selectedChapter = selectedChapter;
+      if (chapter) {
+        chapterStore.selectedChapter = chapter;
         // route to chapter for data to be fetched
-        router.replace(`/chapter/${selectedChapter.id}/${selectedChapter.slug}`);
+        router.replace(`/chapter/${chapter.id}/${chapter.slug}`);
         await presentLoading(true);
       }
     }
@@ -202,10 +208,10 @@ export const useAudioStore = defineStore("audio-store", () => {
       chapterId.value = chapterId.value - 1;
       await getAudio({ audioID: chapterId.value });
       // store selected chapter into chapterStore
-      const selectedChapter = chapterStore.chapters?.find(
+      const chapter = chapterStore.chapters?.find(
         (c) => c.id === chapterId.value
       );
-      if (selectedChapter) chapterStore.selectedChapter = selectedChapter;
+      if (chapter) chapterStore.selectedChapter = chapter;
     }
   };
 
@@ -213,7 +219,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     const audioStorage = await settingsDB.getStorage("audioSettings");
     if (audioStorage) {
       audioPlayerSetting.value = audioStorage;
-      loopAudio.value =  audioPlayerSetting.value.loopAudio
+      loopAudio.value = audioPlayerSetting.value.loopAudio;
       mediaVolume.value = audioPlayerSetting.value.volume;
     }
     const recent = await settingsDB.getStorage("recently-played");
@@ -233,89 +239,89 @@ export const useAudioStore = defineStore("audio-store", () => {
     listenerActive.value = true;
   };
 
-  const downloadAudioFile = async () => {
-    isLoading.value = true;
-    if (audioFiles.value) {
-      const audioUrl = audioFiles.value.audio_url;
-      const key = `${String(audioFiles.value.reciterId)}-${
-        audioFiles.value.chapter_id
-      }`;
-      await instance
-        .get(audioUrl, {
-          responseType: "blob",
-          onDownloadProgress: async (progressEvent) => {
-            const { loaded, total } = progressEvent;
-            if (total)
-              downloadProgress.value = Math.round((loaded * 100) / total);
-          },
-        })
-        .then(async (response) => {
-          const base64Data = (await encodeBlobToBase64(
-            response.data
-          )) as string;
-          audioDB.setStorage(key, {
-            reciterId: String(audioFiles.value?.reciterId),
-            id: audioFiles.value?.id,
-            chapter_id: audioFiles.value?.chapter_id,
-            file_size: audioFiles.value?.file_size,
-            format: audioFiles.value?.format,
-            duration: audioFiles.value?.duration,
-            verse_timings: JSON.stringify(audioFiles.value?.verse_timings),
-            audio_url: base64Data,
-          });
-        })
-        .catch(async (error) => {
-          await presentToast({ message: String(error) });
-        })
-        .finally(async () => {
-          isLoading.value = false;
-        });
-    }
-  };
+  // const downloadAudioFile = async () => {
+  //   isLoading.value = true;
+  //   if (audioFiles.value) {
+  //     const audioUrl = audioFiles.value.audio_url;
+  //     const key = `${String(audioFiles.value.reciterId)}-${
+  //       audioFiles.value.chapter_id
+  //     }`;
+  //     await instance
+  //       .get(audioUrl, {
+  //         responseType: "blob",
+  //         onDownloadProgress: async (progressEvent) => {
+  //           const { loaded, total } = progressEvent;
+  //           if (total)
+  //             downloadProgress.value = Math.round((loaded * 100) / total);
+  //         },
+  //       })
+  //       .then(async (response) => {
+  //         const base64Data = (await encodeBlobToBase64(
+  //           response.data
+  //         )) as string;
+  //         audioDB.setStorage(key, {
+  //           reciterId: String(audioFiles.value?.reciterId),
+  //           id: audioFiles.value?.id,
+  //           chapter_id: audioFiles.value?.chapter_id,
+  //           file_size: audioFiles.value?.file_size,
+  //           format: audioFiles.value?.format,
+  //           duration: audioFiles.value?.duration,
+  //           verse_timings: JSON.stringify(audioFiles.value?.verse_timings),
+  //           audio_url: base64Data,
+  //         });
+  //       })
+  //       .catch(async (error) => {
+  //         await presentToast({ message: String(error) });
+  //       })
+  //       .finally(async () => {
+  //         isLoading.value = false;
+  //       });
+  //   }
+  // };
 
-  const attemptFileSave = async (chapterId: number | string) => {
-    await instance
-      .get(
-        audioRecitersUrl(recitionsStore.selectedReciter?.id, Number(chapterId))
-      )
-      .then((response) => {
-        if (response.data) {
-          const file: AudioFile = response.data.audio_files[0];
-          saveFile(Number(chapterId), file.audio_url, String(file.format));
-        }
-      })
-      .catch(async (error) => {
-        await presentToast({ message: String(error) });
-      });
-  };
+  // const attemptFileSave = async (chapterId: number | string) => {
+  //   await instance
+  //     .get(
+  //       audioRecitersUrl(recitionsStore.selectedReciter?.id, Number(chapterId))
+  //     )
+  //     .then((response) => {
+  //       if (response.data) {
+  //         const file: AudioFile = response.data.audio_files[0];
+  //         saveFile(Number(chapterId), file.audio_url, String(file.format));
+  //       }
+  //     })
+  //     .catch(async (error) => {
+  //       await presentToast({ message: String(error) });
+  //     });
+  // };
 
-  const saveFile = (
-    chapterId: number,
-    url: string,
-    format: string = "audio/mp3"
-  ) => {
-    instance
-      .get(url, { responseType: "blob" })
-      .then((response) => {
-        const blob = new Blob([response.data], { type: `audio/${format}` });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        const chapterName = chapterStore.getChapterName(chapterId);
-        if (chapterName) {
-          link.download = chapterName?.nameSimple;
-        } else {
-          link.download = String(chapterId);
-        }
+  // const saveFile = (
+  //   chapterId: number,
+  //   url: string,
+  //   format: string = "audio/mp3"
+  // ) => {
+  //   instance
+  //     .get(url, { responseType: "blob" })
+  //     .then((response) => {
+  //       const blob = new Blob([response.data], { type: `audio/${format}` });
+  //       const link = document.createElement("a");
+  //       link.href = URL.createObjectURL(blob);
+  //       const chapterName = chapterStore.getChapterName(chapterId);
+  //       if (chapterName) {
+  //         link.download = chapterName?.nameSimple;
+  //       } else {
+  //         link.download = String(chapterId);
+  //       }
 
-        link.click();
-        URL.revokeObjectURL(link.href);
-      })
-      .catch(async (error) => {
-        await presentToast({ message: String(error) });
-      });
-  };
+  //       link.click();
+  //       URL.revokeObjectURL(link.href);
+  //     })
+  //     .catch(async (error) => {
+  //       await presentToast({ message: String(error) });
+  //     });
+  // };
   const resetValues = () => {
-    verseTiming.value = undefined;
+    //verseTiming.value = undefined;
     selectedVerseKey.value = "";
     chapterId.value = undefined;
     audioFiles.value = null;
@@ -355,7 +361,9 @@ export const useAudioStore = defineStore("audio-store", () => {
     }
   };
 
-  const handlePlay = async (ev: { audioID: number; verseKey?: string } | boolean) => {
+  const handlePlay = async (
+    ev: { audioID: number; verseKey?: string } | boolean
+  ) => {
     if (typeof ev === "object") {
       selectedVerseKey.value = ev.verseKey;
       loadedData();
@@ -483,7 +491,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     audioEl.value?.removeEventListener("timeupdate", playbackListener);
     audioEl.value?.removeEventListener("ended", playbackEnded);
     audioEl.value?.removeEventListener("pause", playbackPaused);
-    verseTiming.value = undefined;
+    //verseTiming.value = undefined;
   };
 
   const playbackListener = () => {
@@ -517,7 +525,7 @@ export const useAudioStore = defineStore("audio-store", () => {
         isPlaying.value = false;
         isPaused.value = true;
         listenerActive.value = false;
-        verseTiming.value = undefined;
+        // verseTiming.value = undefined;
         cleanupListeners();
         // dismiss on playbavc ends
         if (audioPlayerSetting.value.dismissOnEnd) {
@@ -538,74 +546,77 @@ export const useAudioStore = defineStore("audio-store", () => {
   };
 
   // Verse Timing watcher
-  const isCurrentTimeInRange = (
-    currentTimeValue: number,
-    timestampFrom: number,
-    timestampTo: number
-  ) => currentTimeValue >= timestampFrom && currentTimeValue < timestampTo;
+  // const isCurrentTimeInRange = (
+  //   currentTimeValue: number,
+  //   timestampFrom: number,
+  //   timestampTo: number
+  // ) => currentTimeValue >= timestampFrom && currentTimeValue < timestampTo;
 
-  const getVerseTiming = computed((): VerseTimings[] | undefined => {
-    if (audioFiles.value) {
-      return audioFiles.value.verse_timings.map((vt) => {
-        return {
-          inRange: false,
-          wordLocation: "",
-          wordPosition: 0,
-          verseNumber: 0,
-          ...vt,
-        };
-      });
-    }
-  });
+  // const getVerseTiming = computed((): VerseTimings[] | undefined => {
+  //   if (audioFiles.value) {
+  //     return audioFiles.value.verse_timings.map((vt) => {
+  //       return {
+  //         inRange: false,
+  //         wordLocation: "",
+  //         wordPosition: 0,
+  //         verseNumber: 0,
+  //         ...vt,
+  //       };
+  //     });
+  //   }
+  // });
 
-  watchEffect(() => {
-    if (getVerseTiming.value) {
-      const currentTime = Math.ceil(
-        secondsToMilliSeconds(currentTimestamp.value)
-      );
-      // Find current verse Key
-      const currentVerseTimingData = getVerseTiming.value?.find(
-        (vt) =>
-          currentTime >= vt.timestamp_from && currentTime <= vt.timestamp_to
-      );
-      if (currentVerseTimingData) {
-        const isVerseInRange = isCurrentTimeInRange(
-          currentTime,
-          currentVerseTimingData.timestamp_from,
-          currentVerseTimingData?.timestamp_to
-        );
+  // watchEffect(() => {
+  //   if (getVerseTiming.value) {
+  //     console.log(getVerseTiming.value);
 
-        if (isVerseInRange) {
-          currentVerseTimingData.segments.map((vt: VerseTimingSegments) => {
-            const isSegmentInRange = isCurrentTimeInRange(
-              currentTime,
-              vt[1],
-              vt[2]
-            );
-            if (isSegmentInRange) {
-              verseTiming.value = {
-                chapterId: getChapterIdfromKey(
-                  currentVerseTimingData.verse_key
-                ),
-                verseKey: currentVerseTimingData.verse_key,
-                inRange: isSegmentInRange,
-                verseNumber: getVerseNumberFromKey(
-                  currentVerseTimingData.verse_key
-                ),
-                wordLocation: makeWordLocation(
-                  currentVerseTimingData.verse_key,
-                  vt[0]
-                ),
-                wordPosition: vt[0],
-                audioSrc: audioPayLoadSrc.value,
-              };
-              return;
-            }
-          });
-        }
-      }
-    }
-  });
+  //     const currentTime = Math.ceil(
+  //       secondsToMilliSeconds(currentTimestamp.value)
+  //     );
+  //     // Find current verse Key
+  //     const currentVerseTimingData = getVerseTiming.value?.find(
+  //       (vt) =>
+  //         currentTime >= vt.timestamp_from && currentTime <= vt.timestamp_to
+  //     );
+  //     if (currentVerseTimingData) {
+  //       const isVerseInRange = isCurrentTimeInRange(
+  //         currentTime,
+  //         currentVerseTimingData.timestamp_from,
+  //         currentVerseTimingData?.timestamp_to
+  //       );
+
+  //       if (isVerseInRange) {
+  //         currentVerseTimingData.segments.map((vt: VerseTimingSegments) => {
+  //           const isSegmentInRange = isCurrentTimeInRange(
+  //             currentTime,
+  //             vt[1],
+  //             vt[2]
+  //           );
+  //           if (isSegmentInRange) {
+  //             verseTiming.value = {
+  //               chapterId: getChapterIdfromKey(
+  //                 currentVerseTimingData.verse_key
+  //               ),
+  //               verseKey: currentVerseTimingData.verse_key,
+  //               inRange: isSegmentInRange,
+  //               verseNumber: getVerseNumberFromKey(
+  //                 currentVerseTimingData.verse_key
+  //               ),
+  //               wordLocation: makeWordLocation(
+  //                 currentVerseTimingData.verse_key,
+  //                 vt[0]
+  //               ),
+  //               wordPosition: vt[0],
+  //               // pageNumber: currentVerseTimingData.pageNumber,
+  //               audioSrc: audioPayLoadSrc.value,
+  //             };
+  //             return;
+  //           }
+  //         });
+  //       }
+  //     }
+  //   }
+  // });
 
   const handleAudioSetting = async (ev: CustomEvent) => {
     const audio: { checked: boolean; value: string } = ev.detail;
@@ -631,12 +642,15 @@ export const useAudioStore = defineStore("audio-store", () => {
   };
 
   const setLoopAudio = async (event: string) => {
-    if(event) {
-      loopAudio.value = event
-      audioPlayerSetting.value.autoPlay
-      await settingsDB.setStorage("audioSettings", {...audioPlayerSetting.value, loop: event});
+    if (event) {
+      loopAudio.value = event;
+      audioPlayerSetting.value.autoPlay;
+      await settingsDB.setStorage("audioSettings", {
+        ...audioPlayerSetting.value,
+        loop: event,
+      });
     }
-  }
+  };
 
   const playChapterAudio = async (audioID: number) => {
     await getAudio({ audioID });
@@ -666,7 +680,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     chapterId,
     autoStartPlayer,
     selectedVerseKey,
-    verseTiming,
+    //verseTiming,
     audioPayLoadSrc,
     playbackRate,
     listenerActive,
@@ -687,9 +701,10 @@ export const useAudioStore = defineStore("audio-store", () => {
     isVisible,
     recentlyPlayed,
     getRecentlyPlayed,
+    // verseTimingsData,
     setLoopAudio,
-    attemptFileSave,
-    saveFile,
+    //attemptFileSave,
+    //saveFile,
     playAudio,
     pauseAudio,
     changeMediaVolume,
