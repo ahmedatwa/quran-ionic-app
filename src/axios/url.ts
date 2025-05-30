@@ -48,7 +48,7 @@ export const getAccessToken = async () => {
     "base64"
   );
 
-  
+
   try {
     const response = await instance({
       method: "post",
@@ -60,7 +60,7 @@ export const getAccessToken = async () => {
       data: "grant_type=client_credentials&scope=content",
     });
 
-    console.log(response.data.access_token);
+    return response.data.access_token
     
   } catch (error) {
     console.error("Error getting access token:", error);

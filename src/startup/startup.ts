@@ -1,4 +1,4 @@
-import { onMounted, shallowRef } from "vue";
+import { onBeforeMount, onMounted, shallowRef } from "vue";
 // stores
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 import { useRecitionsStore } from "@/stores/RecitionsStore";
@@ -128,7 +128,6 @@ export const useStartup = () => {
   const runStartup = async () => {
     try {
       await Promise.all([
-        getAccessToken(),
         logDeviceLocaleInfo(),
         setTranslation(),
         setScheme(),
@@ -142,9 +141,16 @@ export const useStartup = () => {
     }
   };
 
-  onMounted(() =>
-    import.meta.env.DEV ? console.info("startup-script loaded 👽") : ""
+  onBeforeMount(() =>  import.meta.env.DEV ? console.info("startup-script loaded 👽") : ""
   );
+
+
+  onMounted(async () =>
+    await getAccessToken().then((res) => {
+      console.log(res);
+      
+    })
+  )
 
   return {
     setTranslation,
