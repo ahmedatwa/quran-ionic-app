@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
-import { IonApp, IonRouterOutlet, IonContent } from '@ionic/vue';
+import { onBeforeMount, onMounted } from 'vue';
+import { IonApp, IonRouterOutlet, IonContent, onIonViewDidEnter } from '@ionic/vue';
 // stores
 import { useMetaStore } from '@/stores/MetaStore';
 // utils
 import AudioHtmlElComponent from "@/components/audio/AudioHtmlElComponent.vue";
 import { useStartup } from "@/startup/startup"
+import { App } from '@capacitor/app';
 
 const metaStore = useMetaStore()
 const { runStartup } = useStartup()
@@ -14,6 +15,16 @@ onBeforeMount(async () => {
   await runStartup()
 })
 
+App.addListener('appStateChange', (event) => {
+ console.log(event);
+});
+
+onMounted(() => {
+  onIonViewDidEnter(() => {
+    console.log("HomePage");
+    
+  })
+})
 </script>
 
 <template>

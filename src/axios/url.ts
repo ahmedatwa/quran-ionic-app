@@ -36,7 +36,7 @@ export const getVersesUrl = (
   limit?: number
 ) => {
   const currentPage = page ? "&page=" + page : "";
-  const currentLimit = limit ? "&per_page" + limit : "";
+  const currentLimit = limit ? "&per_page=" + limit : "";
   return `/verses/${key}/${id}?translations=${translations}&${urlFields}${currentPage}${currentLimit}`;
 };
 

@@ -1,4 +1,4 @@
-import { onBeforeMount, onMounted, shallowRef } from "vue";
+import { onBeforeMount, shallowRef } from "vue";
 // stores
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 import { useRecitionsStore } from "@/stores/RecitionsStore";
@@ -7,10 +7,6 @@ import { useStorage } from "@/composables/useStorage";
 import { useLocale } from "@/composables/useLocale";
 // capacitor plugins
 import { Device } from "@capacitor/device";
-// axios
-// axios
-import { instance } from "@/axios";
-import { Buffer } from "buffer";
 
 
 export const useStartup = () => {
@@ -147,38 +143,6 @@ export const useStartup = () => {
   onBeforeMount(() =>  import.meta.env.DEV ? console.info("startup-script loaded 👽") : ""
   );
 
-
-  onMounted(async () =>
-    await getAccessToken().then((res) => {
-      console.log(res);
-      
-    })
-  )
-
-  
-  const getAccessToken = async () => {
-  const auth = Buffer.from(`${import.meta.env.VITE_API_CLIENT_ID}:${import.meta.env.VITE_API_CLIENT_SECRET}`).toString(
-    "base64"
-  );
-
-
-  try {
-    const response = await instance({
-      method: "post",
-      url: import.meta.env.VITE_API_CLIENT_END_POINT,
-      headers: {
-        Authorization: `Basic ${auth}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      data: "grant_type=client_credentials&scope=content",
-    });
-
-    return response.data.access_token
-    
-  } catch (error) {
-    console.error("Error getting access token:", error);
-  }
-};
 
   return {
     setTranslation,

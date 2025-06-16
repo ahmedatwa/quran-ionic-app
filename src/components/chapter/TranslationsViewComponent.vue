@@ -14,7 +14,7 @@ import { useScrollToElement } from "@/composables/useScrollToElement";
 import { useVerseTiming } from '@/composables/useVerseTiming';
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
-
+import { useTranslationsStore } from "@/stores/TranslationsStore";
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { Pagination } from "@/types/chapter";
@@ -30,6 +30,7 @@ import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsCom
 // stores
 
 const verseSearchInput = ref("")
+const translationStore = useTranslationsStore();
 const { getLine } = useLocale()
 const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
 const { getChapterName } = useChapterStore()
@@ -241,7 +242,9 @@ const playAudio = (ev: PlayAudioEmit) => {
                             <ion-col size="11" class="ion-text-left">
                                 <ion-note v-for="translation in verse.translations" :key="translation.id"
                                     class="translation">
-                                    <span v-html="translation.text"></span>
+                                    <div v-if="translationStore.selectedTranslationId === translation.resource_id">
+                                        <span v-html="translation.text"></span>
+                                    </div>
                                 </ion-note>
                             </ion-col>
                         </ion-row>

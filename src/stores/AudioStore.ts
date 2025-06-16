@@ -22,12 +22,14 @@ import { useAudioFile } from "@/composables/useAudioFile";
 import { useStorage } from "@/composables/useStorage";
 import { useAlert } from "@/composables/useAlert";
 import { useLocale } from "@/composables/useLocale";
-
+import { useVerseTiming } from "@/composables/useVerseTiming";
 // router
 import { useRouter } from "vue-router";
 
 export const useAudioStore = defineStore("audio-store", () => {
   const audioEl = ref<HTMLAudioElement>();
+  const { downloadAudioFile } = useAudioFile();
+  const { verseTiming } = useVerseTiming();
   const metaStore = useMetaStore();
   const recitionsStore = useRecitionsStore();
   const { setMediaSession } = useMediaSession(audioEl);
@@ -43,7 +45,6 @@ export const useAudioStore = defineStore("audio-store", () => {
   const audioPayLoadSrc = ref<string | undefined>("");
   const selectedVerseKey = ref<string | undefined>("");
   const { getLocale } = useLocale();
-  const downloadProgress = computed(() => downloadFileProgress.value);
   const playbackSpeeds = ref([
     "0.25",
     "0.5",
@@ -55,7 +56,6 @@ export const useAudioStore = defineStore("audio-store", () => {
     "2",
   ]);
 
-  //const verseTiming = ref<VerseTimingsProps>();
   const playbackRate = ref("Normal");
   const listenerActive = ref(false);
   const progressTimer = ref<number>(0);
@@ -81,11 +81,8 @@ export const useAudioStore = defineStore("audio-store", () => {
     loopAudio: "none",
   });
   const recentlyPlayed = ref<number[]>([]);
-  const router = useRouter();
+  const { replace } = useRouter();
 
-  const { downloadAudioFile, downloadFileProgress } = useAudioFile();
-
-  
   const chapterName = computed(() => {
     if (chapterId.value) {
       const chapter = chapterStore.getChapterNameByChapterId(chapterId.value);
@@ -191,7 +188,7 @@ export const useAudioStore = defineStore("audio-store", () => {
       if (chapter) {
         chapterStore.selectedChapter = chapter;
         // route to chapter for data to be fetched
-        router.replace(`/chapter/${chapter.id}/${chapter.slug}`);
+        replace(`/chapter/${chapter.id}/${chapter.slug}`);
         await presentLoading(true);
       }
     }
@@ -233,89 +230,8 @@ export const useAudioStore = defineStore("audio-store", () => {
     listenerActive.value = true;
   };
 
-  // const downloadAudioFile = async () => {
-  //   isLoading.value = true;
-  //   if (audioFiles.value) {
-  //     const audioUrl = audioFiles.value.audio_url;
-  //     const key = `${String(audioFiles.value.reciterId)}-${
-  //       audioFiles.value.chapter_id
-  //     }`;
-  //     await instance
-  //       .get(audioUrl, {
-  //         responseType: "blob",
-  //         onDownloadProgress: async (progressEvent) => {
-  //           const { loaded, total } = progressEvent;
-  //           if (total)
-  //             downloadProgress.value = Math.round((loaded * 100) / total);
-  //         },
-  //       })
-  //       .then(async (response) => {
-  //         const base64Data = (await encodeBlobToBase64(
-  //           response.data
-  //         )) as string;
-  //         audioDB.setStorage(key, {
-  //           reciterId: String(audioFiles.value?.reciterId),
-  //           id: audioFiles.value?.id,
-  //           chapter_id: audioFiles.value?.chapter_id,
-  //           file_size: audioFiles.value?.file_size,
-  //           format: audioFiles.value?.format,
-  //           duration: audioFiles.value?.duration,
-  //           verse_timings: JSON.stringify(audioFiles.value?.verse_timings),
-  //           audio_url: base64Data,
-  //         });
-  //       })
-  //       .catch(async (error) => {
-  //         await presentToast({ message: String(error) });
-  //       })
-  //       .finally(async () => {
-  //         isLoading.value = false;
-  //       });
-  //   }
-  // };
-
-  // const attemptFileSave = async (chapterId: number | string) => {
-  //   await instance
-  //     .get(
-  //       audioRecitersUrl(recitionsStore.selectedReciter?.id, Number(chapterId))
-  //     )
-  //     .then((response) => {
-  //       if (response.data) {
-  //         const file: AudioFile = response.data.audio_files[0];
-  //         saveFile(Number(chapterId), file.audio_url, String(file.format));
-  //       }
-  //     })
-  //     .catch(async (error) => {
-  //       await presentToast({ message: String(error) });
-  //     });
-  // };
-
-  // const saveFile = (
-  //   chapterId: number,
-  //   url: string,
-  //   format: string = "audio/mp3"
-  // ) => {
-  //   instance
-  //     .get(url, { responseType: "blob" })
-  //     .then((response) => {
-  //       const blob = new Blob([response.data], { type: `audio/${format}` });
-  //       const link = document.createElement("a");
-  //       link.href = URL.createObjectURL(blob);
-  //       const chapterName = chapterStore.getChapterName(chapterId);
-  //       if (chapterName) {
-  //         link.download = chapterName?.nameSimple;
-  //       } else {
-  //         link.download = String(chapterId);
-  //       }
-
-  //       link.click();
-  //       URL.revokeObjectURL(link.href);
-  //     })
-  //     .catch(async (error) => {
-  //       await presentToast({ message: String(error) });
-  //     });
-  // };
   const resetValues = () => {
-    //verseTiming.value = undefined;
+    verseTiming.value = undefined;
     selectedVerseKey.value = "";
     chapterId.value = undefined;
     audioFiles.value = null;
@@ -331,10 +247,14 @@ export const useAudioStore = defineStore("audio-store", () => {
     isPaused.value = false;
   };
 
-  const pauseAudio = () => {
+  const pauseAudio = async () => {
     audioEl.value?.pause();
     isPlaying.value = false;
     isPaused.value = true;
+    // Store Last reading verse
+    await settingsDB.setStorage("lastreadingverse", {
+      ...verseTiming.value,
+    });
   };
 
   const changeMediaVolume = async (volume: number) => {
@@ -691,7 +611,6 @@ export const useAudioStore = defineStore("audio-store", () => {
     currentTimestamp,
     audioPlayerSetting,
     isPaused,
-    downloadProgress,
     isVisible,
     recentlyPlayed,
     getRecentlyPlayed,

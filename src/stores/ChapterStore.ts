@@ -152,15 +152,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
     }
 
     await instance
-      .get(
-        getVersesUrl(
-          "by_chapter",
-          id,
-          Number(translationsStore.selectedTranslationId),
-          page,
-          limit
-        )
-      )
+      .get(`qurandb/${id}.json`)
       .then((response) => {
         if (chapter) {
           response.data.verses.forEach((verse: Verse) => {
@@ -190,10 +182,10 @@ export const useChapterStore = defineStore("chapter-store", () => {
           selectedChapter.value?.id +
           "-" +
           translationsStore.selectedTranslationId;
-        setStorage(id, {
-          data: JSON.stringify(selectedChapter.value),
-          length: selectedChapter.value?.verses?.length,
-        });
+        // setStorage(id, {
+        //   data: JSON.stringify(selectedChapter.value),
+        //   length: selectedChapter.value?.verses?.length,
+        // });
       });
   };
 

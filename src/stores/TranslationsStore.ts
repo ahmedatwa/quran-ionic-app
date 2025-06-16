@@ -4,7 +4,6 @@ import { ref, computed, onBeforeMount } from "vue";
 import { Translation, TranslationReduceMap } from "@/types/translations";
 // composables
 import { useAlert } from "@/composables/useAlert";
-import { useStorage } from '@/composables/useStorage';
 
 
 export const useTranslationsStore = defineStore("translations-store", () => {
@@ -12,9 +11,8 @@ export const useTranslationsStore = defineStore("translations-store", () => {
   const translationsList = ref<Translation[]>([]);
   const selectedTranslation = ref<Translation>();
   const selectedTranslationId = computed(() => selectedTranslation.value?.id);
-  const defaultTranslationID = ref(131);
+  const defaultTranslationID = ref(85);
   const { presentToast } = useAlert();
-  const { getStorage, setStorage } = useStorage("__settingsDB")
 
   const getAllTranslations = (): Promise<Translation[]> => {
     return new Promise((resolve, reject) => {

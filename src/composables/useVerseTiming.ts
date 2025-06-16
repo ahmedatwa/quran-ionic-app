@@ -10,9 +10,7 @@ import type { VerseTimingsProps, VerseTimingSegments } from "@/types/audio";
 
 export const useVerseTiming = () => {
   const audioStore = useAudioStore();
-
   const verseTiming = shallowRef<VerseTimingsProps | undefined>();
-
   const audioPayLoadSrc = shallowRef<string | undefined>("");
 
   const isCurrentTimeInRange = (
