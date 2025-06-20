@@ -44,7 +44,7 @@ type VerseWord = {
     text: string;
     language_name: string;
   };
-  inRange?: boolean
+  inRange?: boolean;
 };
 
 interface VerseTranslation {
@@ -61,4 +61,24 @@ type MapVersesByPage = {
   [key: string]: Verse[];
 };
 
-export { Verse, MapVersesByPage, VerseWord, VerseTranslation };
+type VersesPagination = {
+  per_page: number;
+  current_page: number;
+  next_page: number | null;
+  total_pages: number;
+  total_records: number;
+};
+
+type JSONDataPromise = {
+  verses: Verse[];
+  pagination: VersesPagination;
+};
+
+export {
+  Verse,
+  MapVersesByPage,
+  VerseWord,
+  VerseTranslation,
+  VersesPagination,
+  JSONDataPromise,
+};

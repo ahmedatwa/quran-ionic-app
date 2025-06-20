@@ -17,7 +17,7 @@ export const useTranslationsStore = defineStore("translations-store", () => {
   const getAllTranslations = (): Promise<Translation[]> => {
     return new Promise((resolve, reject) => {
       try {
-        import("@/json/translations.json").then((response) => {
+        import(`@jsonDataPath/translations.json`).then((response) => {
           resolve(response.translations);
         });
       } catch (error) {

@@ -2,7 +2,7 @@
 import { ref, computed, watch } from "vue"
 import { IonIcon, IonCardHeader } from "@ionic/vue";
 import { IonContent, IonNote, IonCardTitle, IonCardSubtitle } from "@ionic/vue";
-import { IonCol, IonRow, IonGrid, IonItem, IonCard, IonRefresher, IonRefresherContent } from "@ionic/vue";
+import { IonCol, IonRow, IonGrid, IonItem, IonCard } from "@ionic/vue";
 import { IonLabel, IonText } from "@ionic/vue";
 import { IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 // icons
@@ -10,35 +10,36 @@ import { ellipsisVerticalOutline } from "ionicons/icons";
 // composables
 import { useLocale } from "@/composables/useLocale";
 import { useScrollToElement } from "@/composables/useScrollToElement";
-import { useStorage } from "@/composables/useStorage";
-import { useAlert } from '@/composables/useAlert';
+import { useVerseTiming } from '@/composables/useVerseTiming';
 // router
 import { useRoute } from "vue-router";
-
 // types
+import type { ShallowRef } from "vue"
 import type { Verse, VerseWord } from "@/types/verse";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 import type { Pagination } from "@/types/page"
 import type { juzVersesByPageMap } from "@/types/juz";
-import type { RefresherCustomEvent } from "@ionic/vue"
+
 // components
 import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
 import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
+import { useBookmark } from "@/composables/useBookmark";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 
 const cardRef = ref()
 const contentRef = ref()
+const bookmarkedVerse = <ShallowRef<Verse> | null>(null)
 const { getLine } = useLocale()
-const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
-const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
+const { verseTiming } = useVerseTiming()
+const { getChapterNameByFirstVerse } = useChapterStore()
 const { params } = useRoute()
 const juzId = computed(() => Number(params.juzId))
 const intersectingVerseNumber = ref<number>()
-const { presentAlert } = useAlert()
 const { scrollToElement } = useScrollToElement()
+const { setBookmarked } = useBookmark(bookmarkedVerse)
 
 
 const props = defineProps<{
@@ -52,112 +53,52 @@ const props = defineProps<{
     translatedBy?: string;
     chapterName?: string
     isBismillah: string
-    verses?: juzVersesByPageMap
+    computedVerses?: juzVersesByPageMap
+    verses?: Verse[] | null
     pagination?: Pagination | null
     verseTiming?: VerseTimingsProps
     activeAudioId?: number
     styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
-
+    selectedTranslationId?: number
 }>()
 
 const emit = defineEmits<{
-    "update:getVerses": [value: { key: string, nextPage: number }];
+    "update:getVerses": [value: InfiniteScrollCustomEvent];
     "update:playAudio": [value: PlayAudioEmit];
     "update:modalValue": [value: boolean]
 }>();
 
-const setBookmarked = async (verse: Verse) => {
-    const v = bookmarkedItems.value.find(({ key }) => {
-        const vNumber = key.split("-").pop()
-        return Number(vNumber) === verse.verse_number
-
-    })
-    if (!v) {
-        bookmarkedItems.value.push({
-            key: `/page/${verse.page_number}-${verse.verse_number}`,
-            value: {
-                pageNumber: verse.page_number,
-                verseNumber: verse.verse_number,
-                verseText: verse.text_uthmani,
-                chapterName: getChapterName(verse.chapter_id)?.nameSimple
-            }
-        })
-        bookmarkedItems.value.forEach(({ key, value }) => {
-            setStorage(key, value)
-        })
-
-        await presentAlert({
-            message: getLine("quranReader.verseBookmarked"),
-        })
-    } else {
-        await presentAlert({
-            message: getLine("quranReader.verseAlreadyBookmarked"),
-        })
-    }
-};
-
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
-    if (props.pagination?.next_page) {
-        loadMoreVerses()
-        setTimeout(() => ev.target.complete(), 500);
-    } else {
-        ev.target.complete()
+    if (props.verses) {
+        emit("update:getVerses", ev);
     }
 }
 
 // scrolling based on verseNumber sent by audioStore
-watch(() => props.verseTiming, (t) => {
+watch(() => verseTiming.value, (t) => {
     if (t?.verseNumber) {
         const verseNumber = t.verseNumber
-        if (props.audioExperience.autoScroll && props.isPlaying) {
-            intersectingVerseNumber.value = t.verseNumber
-            scroll(verseNumber)
+        if (props.audioExperience) {
+            if (props.audioExperience.autoScroll && props.isPlaying) {
+                intersectingVerseNumber.value = t.verseNumber
+                scroll(verseNumber)
+            }
         }
     }
 })
 
-const isWordHighlighted = (word: VerseWord) => {
-    if (props.verseTiming) {
-        return props.verseTiming.wordLocation === word.location
-    }
-};
 
-const loadMoreVerses = () => {
-    if (props.pagination) {
-        if (props.pagination?.total_pages === props.pagination?.next_page) {
-            return;
-        } else {
-            emit("update:getVerses", { key: props.id, nextPage: props.pagination?.next_page })
-        }
-    }
-
-}
 const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el)
+const isPlaying = (chapterId: number) => props.isPlaying && chapterId === props.activeAudioId
+const isWordHighlighted = (word: VerseWord) => verseTiming.value?.wordLocation === word.location
 
-const handleRefresh = (event: RefresherCustomEvent) => {
-    if (!props.pagination?.next_page) {
-        event.target?.complete();
-    }
-
-    setTimeout(() => {
-        loadMoreVerses()
-        event.target?.complete();
-    }, 500);
-};
-
-const isPlaying = (chapterId: number) => {
-    return props.isPlaying && chapterId === props.activeAudioId
-}
 </script>
 <template>
     <div class="ion-page" :id="`translations-${id}-${juzId}`">
         <toolbar-component :route-back-label="getLine('tabs.juzs')" :is-loading="isLoading"></toolbar-component>
-        <ion-content class="quran-translation-content-wapper smooth-scroll-behaviour" :fullscreen="true"
-            :scrollY="true" ref="contentRef" style="position: relative">
-            <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-                <ion-refresher-content></ion-refresher-content>
-            </ion-refresher>
-            <ion-card class="ion-padding card-wrapper" ref="cardRef" v-for="(mappedVerses, chapterId) in verses"
+        <ion-content class="quran-translation-content-wapper smooth-scroll-behaviour" :fullscreen="true" :scrollY="true"
+            ref="contentRef" style="position: relative">
+            <ion-card class="ion-padding card-wrapper" ref="cardRef" v-for="(mappedVerses, chapterId) in computedVerses"
                 :key="chapterId" :id="`card-${chapterId}`">
                 <card-header-buttons-component :chapter-id="mappedVerses[0].chapter_id"
                     :download-progress="downloadProgress" :verse-key="mappedVerses[0].verse_key"
@@ -177,7 +118,8 @@ const isPlaying = (chapterId: number) => {
                     :data-juz-number="verse.juz_number" :id="`verse-col-${verse.verse_number}`">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
-                            <ion-col size="11" class="translations-view-col" :id="`main-verse-col-${verse.verse_number}`">
+                            <ion-col size="11" class="translations-view-col"
+                                :id="`main-verse-col-${verse.verse_number}`">
                                 <ion-label v-for="word in verse.words" :key="word.id">
                                     <ion-text :color="isWordHighlighted(word) ? styles.colorCode : ''">
                                         <span v-if="word.char_type_name === 'end'" class="end">
@@ -198,7 +140,9 @@ const isPlaying = (chapterId: number) => {
                             <ion-col size="11" class="ion-text-left">
                                 <ion-note v-for="translation in verse.translations" :key="translation.id"
                                     class="translation">
-                                    <span v-html="translation.text"></span>
+                                    <div v-if="selectedTranslationId === translation.resource_id">
+                                        <span v-html="translation.text"></span>
+                                    </div>
                                 </ion-note>
                             </ion-col>
                         </ion-row>

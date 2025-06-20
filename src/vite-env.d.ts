@@ -1,4 +1,6 @@
 /// <reference types="vite/client" />
+declare const __JSON_DATA_PATH__: string
+
 interface ImportMetaEnv {
   readonly VITE_APP_TITLE: string;
   readonly VITE_BASE_URL: string;
@@ -11,5 +13,3 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
-
- 

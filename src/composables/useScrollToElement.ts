@@ -43,10 +43,10 @@ export function useScrollToElement() {
     if (el && !isInViewport(el, parent)) {
       await delay(timeout ? timeout : 100);
 
-      if (!el.classList.contains(`scroll-margin-bottom:${scrollMargin}px`)) {
-        el.classList.add(`scroll-margin-bottom:${scrollMargin}px`);
-        el.classList.add(`scroll-margin-top:20px`);
-      }
+    //  if (!el.classList.contains(`scroll-margin-top:${scrollMargin}px`)) {
+       // el.classList.add(`scroll-margin-bottom:${scrollMargin}px`);
+        el.classList.add(`scroll-margin-top:-100px`);
+      //}
 
       el.scrollIntoView(options);
     } else {

@@ -1,0 +1,114 @@
+{
+  "translations": [
+    {
+      "id": 85,
+      "name": "M.A.S. Abdel Haleem",
+      "author_name": "Abdul Haleem",
+      "slug": "en-haleem",
+      "language_name": "english",
+      "translated_name": {
+        "name": "M.A.S. Abdel Haleem",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 20,
+      "name": "Saheeh International",
+      "author_name": "Saheeh International",
+      "slug": "en-sahih-international",
+      "language_name": "english",
+      "translated_name": {
+        "name": "Saheeh International",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 83,
+      "name": "Sheikh Isa Garcia",
+      "author_name": "Sheikh Isa Garcia",
+      "slug": "es-isa-garcia",
+      "language_name": "spanish",
+      "translated_name": {
+        "name": "Sheikh Isa Garcia",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 136,
+      "name": "Montada Islamic Foundation",
+      "author_name": "Montada Islamic Foundation",
+      "slug": null,
+      "language_name": "french",
+      "translated_name": {
+        "name": "Montada Islamic Foundation",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 153,
+      "name": "Hamza Roberto Piccardo",
+      "author_name": "Hamza Roberto Piccardo",
+      "slug": "hamza-roberto-piccardo",
+      "language_name": "italian",
+      "translated_name": {
+        "name": "Hamza Roberto Piccardo",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 235,
+      "name": "Malak Faris Abdalsalaam",
+      "author_name": "Malak Faris Abdalsalaam",
+      "slug": "nl-abdalsalaam",
+      "language_name": "dutch",
+      "translated_name": {
+        "name": "Malak Faris Abdalsalaam",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 78,
+      "name": "Ministry of Awqaf, Egypt",
+      "author_name": "Ministry of Awqaf, Egypt",
+      "slug": "ru-ministry-of-awqaf",
+      "language_name": "russian",
+      "translated_name": {
+        "name": "Ministry of Awqaf, Egypt",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 210,
+      "name": "Dar Al-Salam Center",
+      "author_name": "Dar Al-Salam Center",
+      "slug": null,
+      "language_name": "turkish",
+      "translated_name": {
+        "name": "Dar Al-Salam Center",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 27,
+      "name": "Frank Bubenheim and Nadeem",
+      "author_name": "Frank Bubenheim and Nadeem",
+      "slug": "de-bubenheim",
+      "language_name": "german",
+      "translated_name": {
+        "name": "Frank Bubenheim and Nadeem",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 209,
+      "name": "Othman al-Sharif",
+      "author_name": "Othman al-Sharif",
+      "slug": null,
+      "language_name": "italian",
+      "translated_name": {
+        "name": "Othman al-Sharif",
+        "language_name": "english"
+      }
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "reciters": [
+    {
+      "id": 6,
+      "reciter_id": 5,
+      "name": "Mahmoud Khalil Al-Husary",
+      "translated_name": {
+        "name": "Mahmoud Khalil Al-Husary",
+        "language_name": "english"
+      },
+      "style": {
+        "name": "Murattal",
+        "language_name": "english",
+        "description": "Murattal is Quranic recitation at a slower pace, used for study and practice."
+      },
+      "qirat": {
+        "name": "Hafs",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 7,
+      "reciter_id": 6,
+      "name": "Mishari Rashid al-`Afasy",
+      "translated_name": {
+        "name": "Mishari Rashid al-`Afasy",
+        "language_name": "english"
+      },
+      "style": {
+        "name": "Murattal",
+        "language_name": "english",
+        "description": "Murattal is Quranic recitation at a slower pace, used for study and practice."
+      },
+      "qirat": {
+        "name": "Hafs",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 9,
+      "reciter_id": 7,
+      "name": "Mohamed Siddiq al-Minshawi",
+      "translated_name": {
+        "name": "Mohamed Siddiq al-Minshawi",
+        "language_name": "english"
+      },
+      "style": {
+        "name": "Murattal",
+        "language_name": "english",
+        "description": "Murattal is Quranic recitation at a slower pace, used for study and practice."
+      },
+      "qirat": {
+        "name": "Hafs",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 168,
+      "reciter_id": 7,
+      "name": "Mohamed Siddiq al-Minshawi",
+      "translated_name": {
+        "name": "Mohamed Siddiq al-Minshawi",
+        "language_name": "english"
+      },
+      "style": {
+        "name": "Kids repeat",
+        "language_name": "english",
+        "description": "Kids repeat after the qari"
+      },
+      "qirat": {
+        "name": "Hafs",
+        "language_name": "english"
+      }
+    }
+  ]
+}

@@ -1,18 +1,10 @@
 import { onBeforeMount, ref, toValue } from "vue";
 import { Drivers, Storage } from "@ionic/storage";
+// sqlite
 import CordovaSQLiteDriver from "localforage-cordovasqlitedriver";
-import type { MaybeRefOrGetter, Ref } from "vue";
+// types
+import type { MaybeRefOrGetter } from "vue";
 
-export type BookmarkedItems = {
-  key: string;
-  value: {
-    pageNumber: number;
-    chapterName?: string;
-    verseNumber: number;
-    verseText: string;
-  };
-};
-const bookmarkedItems = ref<BookmarkedItems[]>([]);
 
 export const useStorage = (key: string) => {
   const storage = ref<Storage | null>(null);
@@ -78,7 +70,6 @@ export const useStorage = (key: string) => {
 
   return {
     storage,
-    bookmarkedItems,
     getStorage,
     setStorage,
     removeItem,

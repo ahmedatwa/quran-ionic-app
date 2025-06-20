@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
-import { useAudioStore } from "@/stores/AudioStore";
+import { shallowRef, watch } from "vue"
+import { useAudioStore } from '@/stores/AudioStore';
 
-const audioPlayerRef = ref<HTMLAudioElement>()
+const audioRef = shallowRef<HTMLAudioElement>()
 const audioStore = useAudioStore()
 
-onMounted(() => audioStore.audioEl = audioPlayerRef.value)
+watch((audioRef), (x) => {
+    if (x) audioStore.audioEl = x
+})
 
 </script>
 <template>
-    <div class="d-none">
-        <audio controls :autoplay="audioStore.audioPlayerSetting?.autoPlay" ref="audioPlayerRef"
+    <div v-if="audioStore.isVisible" class="d-none">
+        <audio controls :autoplay="audioStore.audioPlayerSetting.autoPlay" ref="audioRef"
             :src="audioStore.audioFiles?.audio_url" :id="`chapter-${audioStore.audioFiles?.chapter_id}`"
             :type="`audio/${audioStore.audioFiles?.format}`" @pause="audioStore.playbackPaused"
             @ended="audioStore.playbackEnded" @playing="audioStore.playbackPlaying"

@@ -1,27 +1,22 @@
 import { defineStore } from "pinia";
 import { ref, computed, onMounted, watch } from "vue";
-
 // stores
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 // axios
 import { instance } from "@/axios";
-import { getVersesUrl, makeChapterInfoUrl } from "@/axios/url";
+import { makeChapterInfoUrl } from "@/axios/url";
 // types
 import type { Chapter, ChapterInfo } from "@/types/chapter";
 import type { Loading } from "@/types/chapter";
-import type { Verse } from "@/types/verse";
+import type { Verse, JSONDataPromise } from "@/types/verse";
 // composables
-import { useStorage } from "@/composables/useStorage";
 import { useAlert } from "@/composables/useAlert";
 import { useLocale } from "@/composables/useLocale";
 
 export const useChapterStore = defineStore("chapter-store", () => {
   const translationsStore = useTranslationsStore();
   const { getLine } = useLocale();
-
-  const { getStorage, setStorage } = useStorage("__chaptersDB");
   const { presentToast } = useAlert();
-
   const isLoading = ref<Loading>({ chapters: false, verses: false });
   const chaptersList = ref<Chapter[]>([]);
   const currentSortDir = ref("asc");
@@ -29,7 +24,8 @@ export const useChapterStore = defineStore("chapter-store", () => {
   const searchValue = ref("");
   const selectedChapter = ref<Chapter | null>(null);
   const chapterInfo = ref<ChapterInfo | null>(null);
-  const perPage = ref(15);
+  const versesTotalRecords = ref(0);
+  const verses = ref<Verse[] | null>(null);
   const TOTAL_CHAPTERS = ref(114);
 
   const selectedChapterId = computed(() => {
@@ -65,9 +61,9 @@ export const useChapterStore = defineStore("chapter-store", () => {
   });
 
   const getAllChapters = (): Promise<Chapter[]> => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       try {
-        import("@/json/chapters.json").then((response) => {
+        import(`@jsonDataPath/chapters.json`).then((response) => {
           resolve(response.chapters);
         });
       } catch (error) {
@@ -131,93 +127,34 @@ export const useChapterStore = defineStore("chapter-store", () => {
     }
   };
 
-  const getVerses = async (
-    id: number,
-    loading: boolean,
-    page?: number,
-    limit?: number
-  ) => {
-    isLoading.value.verses = loading;
-    page = page ? page : 1;
-    limit = limit ? limit : perPage.value;
-    isLoading.value.length = perPage.value;
+  const getVerses = async (id: number, loading: boolean, page?: number) => {
+    isLoading.value.verses = true;
     const chapter = chaptersList.value.find((s) => s.id === id);
-    // Check for DB Storage to avoid the api call
-    if (chapter) {
-      const check = await isDBStorageData(id, chapter);
-      if (check) {
-        isLoading.value.verses = false;
-        return;
-      }
-    }
-
-    await instance
-      .get(`qurandb/${id}.json`)
-      .then((response) => {
-        if (chapter) {
-          response.data.verses.forEach((verse: Verse) => {
-            const verseFound = chapter.verses?.find(
-              (v) => v.verse_key === verse.verse_key
-            );
-
-            if (!verseFound) {
-              chapter.verses?.push({ ...verse, bookmarked: false });
-            }
-          });
-
-          chapter.pagination = response.data.pagination;
-          if (selectedChapter.value?.id === chapter.id) {
-            selectedChapter.value.pagination = chapter.pagination;
-            selectedChapter.value.verses = chapter.verses;
-          }
-        }
+    if (chapter?.verses?.length) return;
+    await loadVersesFromJson(id.toString())
+      .then((res: JSONDataPromise) => {
+        verses.value = res.verses;
+        versesTotalRecords.value = res.pagination.total_records;
       })
-      .catch(async (error) => {
-        await presentToast({ message: String(error) });
+      .catch(async (e) => {
+        await presentToast({ message: String(e) });
       })
       .finally(() => {
         isLoading.value.verses = false;
-        // save chapter in DB
-        const id =
-          selectedChapter.value?.id +
-          "-" +
-          translationsStore.selectedTranslationId;
-        // setStorage(id, {
-        //   data: JSON.stringify(selectedChapter.value),
-        //   length: selectedChapter.value?.verses?.length,
-        // });
       });
   };
 
-  const getVerseByKey = async (id: number, verseKey: string) => {
-    if (!verseKey || !id) return;
-    isLoading.value.verses = true;
-    isLoading.value.length = 1;
-    await instance
-      .get(
-        getVersesUrl(
-          "by_key",
-          verseKey,
-          Number(translationsStore.selectedTranslationId)
-        )
-      )
-      .then((response) => {
-        const chapter = chaptersList.value.find((s) => s.id === id);
-        if (chapter) {
-          const verseFound = chapter.verses?.find(
-            (v) => v.verse_key === verseKey
-          );
-          if (!verseFound) {
-            chapter.verses?.push({ ...response.data.verse, bookmarked: false });
-          }
-        }
-      })
-      .catch(async (error) => {
-        await presentToast({ message: String(error) });
-      })
-      .finally(() => {
-        isLoading.value.verses = false;
-      });
+  // Load Verses from JSON file
+  const loadVersesFromJson = (fileName: string): Promise<JSONDataPromise> => {
+    return new Promise((resolve) => {
+      try {
+        import(`@jsonDataPath/chapters/${fileName}.json`).then((response) => {
+          resolve(response);
+        });
+      } catch (e) {
+        console.warn(e);
+      }
+    });
   };
 
   onMounted(async () => {
@@ -334,42 +271,14 @@ export const useChapterStore = defineStore("chapter-store", () => {
     }
   };
 
-  const isDBStorageData = async (chapterId: number, chapter: Chapter) => {
-    const id = chapterId + "-" + translationsStore.selectedTranslationId;
-    const chaptersDB: { data: string; length: number } = await getStorage(id);
-
-    if (chaptersDB) {
-      //versecount === length
-      if (chapter.verses?.length === 0) {
-        chapter.verses = JSON.parse(chaptersDB.data).verses;
-        chapter.pagination = JSON.parse(chaptersDB.data).pagination;
-        selectedChapter.value = chapter;
-        return true;
-      } else if (chapter.verses?.length) {
-        if (chaptersDB.length > chapter.verses.length) {
-          chapter.verses = JSON.parse(chaptersDB.data).verses;
-          chapter.pagination = JSON.parse(chaptersDB.data).pagination;
-          selectedChapter.value = chapter;
-          return true;
-        }
-      } else if (chaptersDB.length === chapter.versesCount) {
-        chapter.verses = JSON.parse(chaptersDB.data).verses;
-        chapter.pagination = JSON.parse(chaptersDB.data).pagination;
-        selectedChapter.value = chapter;
-        return true;
-      }
-    }
-
-    return false;
-  };
-
   return {
     chapters,
     searchValue,
     selectedChapter,
     selectedChapterId,
     isLoading,
-    perPage,
+    verses,
+    versesTotalRecords,
     currentSort,
     currentSortDir,
     chapterInfo,
@@ -389,7 +298,6 @@ export const useChapterStore = defineStore("chapter-store", () => {
     getchapterInfo,
     getVerses,
     getChapterBySlug,
-    getVerseByKey,
     getChapters,
     getChapter,
     getChapterNameByChapterId,

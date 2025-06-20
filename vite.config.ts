@@ -10,10 +10,14 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@jsonDataPath": path.resolve(__dirname, "./src/jsonData"),
     },
   },
   test: {
     globals: true,
     environment: "jsdom",
+  },
+  define: {
+    
   },
 });

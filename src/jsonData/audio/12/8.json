@@ -1,0 +1,916 @@
+{
+    "audio_files": [
+        {
+            "id": 1675,
+            "chapter_id": 1,
+            "file_size": 371.65,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/1.mp3",
+            "duration": 48000
+        },
+        {
+            "id": 1677,
+            "chapter_id": 2,
+            "file_size": 2048.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/2.mp3",
+            "duration": 11972000
+        },
+        {
+            "id": 1679,
+            "chapter_id": 3,
+            "file_size": 110221440.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/3.mp3",
+            "duration": 6897000
+        },
+        {
+            "id": 1681,
+            "chapter_id": 4,
+            "file_size": 110434432.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/4.mp3",
+            "duration": 6906000
+        },
+        {
+            "id": 1683,
+            "chapter_id": 5,
+            "file_size": 88928384.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/5.mp3",
+            "duration": 5558000
+        },
+        {
+            "id": 1685,
+            "chapter_id": 6,
+            "file_size": 100429952.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/6.mp3",
+            "duration": 6280000
+        },
+        {
+            "id": 1687,
+            "chapter_id": 7,
+            "file_size": 103628928.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/7.mp3",
+            "duration": 6483000
+        },
+        {
+            "id": 1689,
+            "chapter_id": 8,
+            "file_size": 40024192.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/8.mp3",
+            "duration": 2495000
+        },
+        {
+            "id": 1691,
+            "chapter_id": 9,
+            "file_size": 82976896.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/9.mp3",
+            "duration": 5188000
+        },
+        {
+            "id": 1693,
+            "chapter_id": 10,
+            "file_size": 57079936.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/10.mp3",
+            "duration": 3558000
+        },
+        {
+            "id": 1695,
+            "chapter_id": 11,
+            "file_size": 52852864.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/11.mp3",
+            "duration": 3295000
+        },
+        {
+            "id": 1697,
+            "chapter_id": 12,
+            "file_size": 54888576.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/12.mp3",
+            "duration": 3423000
+        },
+        {
+            "id": 1699,
+            "chapter_id": 13,
+            "file_size": 26144896.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/13.mp3",
+            "duration": 1619000
+        },
+        {
+            "id": 1701,
+            "chapter_id": 14,
+            "file_size": 26501248.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/14.mp3",
+            "duration": 1651000
+        },
+        {
+            "id": 1703,
+            "chapter_id": 15,
+            "file_size": 21790848.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/15.mp3",
+            "duration": 1351000
+        },
+        {
+            "id": 1705,
+            "chapter_id": 16,
+            "file_size": 55982208.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/16.mp3",
+            "duration": 3497000
+        },
+        {
+            "id": 1707,
+            "chapter_id": 17,
+            "file_size": 48345216.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/17.mp3",
+            "duration": 3020000
+        },
+        {
+            "id": 1709,
+            "chapter_id": 18,
+            "file_size": 45920384.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/18.mp3",
+            "duration": 2861000
+        },
+        {
+            "id": 1711,
+            "chapter_id": 19,
+            "file_size": 23773312.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/19.mp3",
+            "duration": 1483000
+        },
+        {
+            "id": 1713,
+            "chapter_id": 20,
+            "file_size": 36886656.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/20.mp3",
+            "duration": 2301000
+        },
+        {
+            "id": 1715,
+            "chapter_id": 21,
+            "file_size": 35290292.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/21.mp3",
+            "duration": 2229000
+        },
+        {
+            "id": 1717,
+            "chapter_id": 22,
+            "file_size": 40548480.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/22.mp3",
+            "duration": 2526000
+        },
+        {
+            "id": 1719,
+            "chapter_id": 23,
+            "file_size": 34064512.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/23.mp3",
+            "duration": 2125000
+        },
+        {
+            "id": 1721,
+            "chapter_id": 24,
+            "file_size": 42877056.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/24.mp3",
+            "duration": 2673000
+        },
+        {
+            "id": 1723,
+            "chapter_id": 25,
+            "file_size": 28153984.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/25.mp3",
+            "duration": 1754000
+        },
+        {
+            "id": 1725,
+            "chapter_id": 26,
+            "file_size": 47644800.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/26.mp3",
+            "duration": 2981000
+        },
+        {
+            "id": 1727,
+            "chapter_id": 27,
+            "file_size": 40992896.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/27.mp3",
+            "duration": 2557000
+        },
+        {
+            "id": 1729,
+            "chapter_id": 28,
+            "file_size": 50307533.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/28.mp3",
+            "duration": 3137000
+        },
+        {
+            "id": 1731,
+            "chapter_id": 29,
+            "file_size": 32718976.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/29.mp3",
+            "duration": 2037000
+        },
+        {
+            "id": 1733,
+            "chapter_id": 30,
+            "file_size": 27635840.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/30.mp3",
+            "duration": 1720000
+        },
+        {
+            "id": 1735,
+            "chapter_id": 31,
+            "file_size": 18265526.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/31.mp3",
+            "duration": 1121000
+        },
+        {
+            "id": 1737,
+            "chapter_id": 32,
+            "file_size": 13238400.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/32.mp3",
+            "duration": 819000
+        },
+        {
+            "id": 1739,
+            "chapter_id": 33,
+            "file_size": 38895744.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/33.mp3",
+            "duration": 2428000
+        },
+        {
+            "id": 1741,
+            "chapter_id": 34,
+            "file_size": 23629952.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/34.mp3",
+            "duration": 1471000
+        },
+        {
+            "id": 1743,
+            "chapter_id": 35,
+            "file_size": 22857856.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/35.mp3",
+            "duration": 1419000
+        },
+        {
+            "id": 1745,
+            "chapter_id": 36,
+            "file_size": 22900864.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/36.mp3",
+            "duration": 1427000
+        },
+        {
+            "id": 1747,
+            "chapter_id": 37,
+            "file_size": 33052800.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/37.mp3",
+            "duration": 2064000
+        },
+        {
+            "id": 1749,
+            "chapter_id": 38,
+            "file_size": 24328320.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/38.mp3",
+            "duration": 1514000
+        },
+        {
+            "id": 1751,
+            "chapter_id": 39,
+            "file_size": 37167232.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/39.mp3",
+            "duration": 2317000
+        },
+        {
+            "id": 1753,
+            "chapter_id": 40,
+            "file_size": 37570688.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/40.mp3",
+            "duration": 2341000
+        },
+        {
+            "id": 1755,
+            "chapter_id": 41,
+            "file_size": 23851136.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/41.mp3",
+            "duration": 1484000
+        },
+        {
+            "id": 1757,
+            "chapter_id": 42,
+            "file_size": 27472000.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/42.mp3",
+            "duration": 1708000
+        },
+        {
+            "id": 1759,
+            "chapter_id": 43,
+            "file_size": 30017664.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/43.mp3",
+            "duration": 1870000
+        },
+        {
+            "id": 1761,
+            "chapter_id": 44,
+            "file_size": 13451392.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/44.mp3",
+            "duration": 832000
+        },
+        {
+            "id": 1763,
+            "chapter_id": 45,
+            "file_size": 17168512.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/45.mp3",
+            "duration": 1061000
+        },
+        {
+            "id": 1765,
+            "chapter_id": 46,
+            "file_size": 18477184.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/46.mp3",
+            "duration": 1148000
+        },
+        {
+            "id": 1767,
+            "chapter_id": 47,
+            "file_size": 17481856.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/47.mp3",
+            "duration": 1081000
+        },
+        {
+            "id": 1769,
+            "chapter_id": 48,
+            "file_size": 16431232.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/48.mp3",
+            "duration": 1016000
+        },
+        {
+            "id": 1771,
+            "chapter_id": 49,
+            "file_size": 12466304.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/49.mp3",
+            "duration": 765000
+        },
+        {
+            "id": 1773,
+            "chapter_id": 50,
+            "file_size": 12667008.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/50.mp3",
+            "duration": 779000
+        },
+        {
+            "id": 1775,
+            "chapter_id": 51,
+            "file_size": 11008128.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/51.mp3",
+            "duration": 683000
+        },
+        {
+            "id": 1777,
+            "chapter_id": 52,
+            "file_size": 9576576.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/52.mp3",
+            "duration": 591000
+        },
+        {
+            "id": 1779,
+            "chapter_id": 53,
+            "file_size": 10983552.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/53.mp3",
+            "duration": 679000
+        },
+        {
+            "id": 1781,
+            "chapter_id": 54,
+            "file_size": 11722880.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/54.mp3",
+            "duration": 726000
+        },
+        {
+            "id": 1783,
+            "chapter_id": 55,
+            "file_size": 16484480.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/55.mp3",
+            "duration": 1025000
+        },
+        {
+            "id": 1785,
+            "chapter_id": 56,
+            "file_size": 15939712.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/56.mp3",
+            "duration": 992000
+        },
+        {
+            "id": 1787,
+            "chapter_id": 57,
+            "file_size": 17752192.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/57.mp3",
+            "duration": 1100000
+        },
+        {
+            "id": 1789,
+            "chapter_id": 58,
+            "file_size": 16007296.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/58.mp3",
+            "duration": 988000
+        },
+        {
+            "id": 1791,
+            "chapter_id": 59,
+            "file_size": 13480064.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/59.mp3",
+            "duration": 830000
+        },
+        {
+            "id": 1793,
+            "chapter_id": 60,
+            "file_size": 9703552.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/60.mp3",
+            "duration": 596000
+        },
+        {
+            "id": 1795,
+            "chapter_id": 61,
+            "file_size": 6770816.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/61.mp3",
+            "duration": 410000
+        },
+        {
+            "id": 1797,
+            "chapter_id": 62,
+            "file_size": 5261440.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/62.mp3",
+            "duration": 321000
+        },
+        {
+            "id": 1799,
+            "chapter_id": 63,
+            "file_size": 6256768.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/63.mp3",
+            "duration": 379000
+        },
+        {
+            "id": 1801,
+            "chapter_id": 64,
+            "file_size": 8116352.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/64.mp3",
+            "duration": 497000
+        },
+        {
+            "id": 1803,
+            "chapter_id": 65,
+            "file_size": 8693888.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/65.mp3",
+            "duration": 534000
+        },
+        {
+            "id": 1805,
+            "chapter_id": 66,
+            "file_size": 9273472.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/66.mp3",
+            "duration": 570000
+        },
+        {
+            "id": 1807,
+            "chapter_id": 67,
+            "file_size": 10780800.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/67.mp3",
+            "duration": 662000
+        },
+        {
+            "id": 1809,
+            "chapter_id": 68,
+            "file_size": 10893440.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/68.mp3",
+            "duration": 673000
+        },
+        {
+            "id": 1811,
+            "chapter_id": 69,
+            "file_size": 7682176.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/69.mp3",
+            "duration": 471000
+        },
+        {
+            "id": 1813,
+            "chapter_id": 70,
+            "file_size": 6946944.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/70.mp3",
+            "duration": 429000
+        },
+        {
+            "id": 1815,
+            "chapter_id": 71,
+            "file_size": 6723712.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/71.mp3",
+            "duration": 411000
+        },
+        {
+            "id": 1817,
+            "chapter_id": 72,
+            "file_size": 8243328.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/72.mp3",
+            "duration": 506000
+        },
+        {
+            "id": 1819,
+            "chapter_id": 73,
+            "file_size": 6156416.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/73.mp3",
+            "duration": 373000
+        },
+        {
+            "id": 1821,
+            "chapter_id": 74,
+            "file_size": 7108736.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/74.mp3",
+            "duration": 437000
+        },
+        {
+            "id": 1823,
+            "chapter_id": 75,
+            "file_size": 4866176.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/75.mp3",
+            "duration": 297000
+        },
+        {
+            "id": 1825,
+            "chapter_id": 76,
+            "file_size": 8413312.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/76.mp3",
+            "duration": 515000
+        },
+        {
+            "id": 1827,
+            "chapter_id": 77,
+            "file_size": 7161984.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/77.mp3",
+            "duration": 439000
+        },
+        {
+            "id": 1829,
+            "chapter_id": 78,
+            "file_size": 6480000.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/78.mp3",
+            "duration": 394000
+        },
+        {
+            "id": 1831,
+            "chapter_id": 79,
+            "file_size": 6426752.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/79.mp3",
+            "duration": 393000
+        },
+        {
+            "id": 1833,
+            "chapter_id": 80,
+            "file_size": 4538496.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/80.mp3",
+            "duration": 275000
+        },
+        {
+            "id": 1835,
+            "chapter_id": 81,
+            "file_size": 3448960.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/81.mp3",
+            "duration": 208000
+        },
+        {
+            "id": 1837,
+            "chapter_id": 82,
+            "file_size": 2891904.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/82.mp3",
+            "duration": 171000
+        },
+        {
+            "id": 1839,
+            "chapter_id": 83,
+            "file_size": 6525056.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/83.mp3",
+            "duration": 398000
+        },
+        {
+            "id": 1841,
+            "chapter_id": 84,
+            "file_size": 3766400.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/84.mp3",
+            "duration": 223000
+        },
+        {
+            "id": 1843,
+            "chapter_id": 85,
+            "file_size": 3874944.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/85.mp3",
+            "duration": 229000
+        },
+        {
+            "id": 1845,
+            "chapter_id": 86,
+            "file_size": 2207872.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/86.mp3",
+            "duration": 127000
+        },
+        {
+            "id": 1847,
+            "chapter_id": 87,
+            "file_size": 2607232.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/87.mp3",
+            "duration": 151000
+        },
+        {
+            "id": 1849,
+            "chapter_id": 88,
+            "file_size": 3530880.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/88.mp3",
+            "duration": 210000
+        },
+        {
+            "id": 1851,
+            "chapter_id": 89,
+            "file_size": 5204096.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/89.mp3",
+            "duration": 315000
+        },
+        {
+            "id": 1853,
+            "chapter_id": 90,
+            "file_size": 2930816.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/90.mp3",
+            "duration": 173000
+        },
+        {
+            "id": 1855,
+            "chapter_id": 91,
+            "file_size": 2031744.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/91.mp3",
+            "duration": 117000
+        },
+        {
+            "id": 1857,
+            "chapter_id": 92,
+            "file_size": 2672768.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/92.mp3",
+            "duration": 156000
+        },
+        {
+            "id": 1859,
+            "chapter_id": 93,
+            "file_size": 1517696.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/93.mp3",
+            "duration": 83000
+        },
+        {
+            "id": 1861,
+            "chapter_id": 94,
+            "file_size": 1017984.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/94.mp3",
+            "duration": 51000
+        },
+        {
+            "id": 1863,
+            "chapter_id": 95,
+            "file_size": 1355904.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/95.mp3",
+            "duration": 73000
+        },
+        {
+            "id": 1865,
+            "chapter_id": 96,
+            "file_size": 2510976.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/96.mp3",
+            "duration": 145000
+        },
+        {
+            "id": 1867,
+            "chapter_id": 97,
+            "file_size": 1079424.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/97.mp3",
+            "duration": 56000
+        },
+        {
+            "id": 1869,
+            "chapter_id": 98,
+            "file_size": 3014784.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/98.mp3",
+            "duration": 175000
+        },
+        {
+            "id": 1871,
+            "chapter_id": 99,
+            "file_size": 1437824.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/99.mp3",
+            "duration": 77000
+        },
+        {
+            "id": 1873,
+            "chapter_id": 100,
+            "file_size": 1523840.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/100.mp3",
+            "duration": 83000
+        },
+        {
+            "id": 1875,
+            "chapter_id": 101,
+            "file_size": 1450112.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/101.mp3",
+            "duration": 79000
+        },
+        {
+            "id": 1877,
+            "chapter_id": 102,
+            "file_size": 1183872.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/102.mp3",
+            "duration": 63000
+        },
+        {
+            "id": 1879,
+            "chapter_id": 103,
+            "file_size": 645248.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/103.mp3",
+            "duration": 29000
+        },
+        {
+            "id": 1881,
+            "chapter_id": 104,
+            "file_size": 1265792.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/104.mp3",
+            "duration": 68000
+        },
+        {
+            "id": 1883,
+            "chapter_id": 105,
+            "file_size": 938112.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/105.mp3",
+            "duration": 46000
+        },
+        {
+            "id": 1885,
+            "chapter_id": 106,
+            "file_size": 813184.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/106.mp3",
+            "duration": 40000
+        },
+        {
+            "id": 1887,
+            "chapter_id": 107,
+            "file_size": 1099904.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/107.mp3",
+            "duration": 56000
+        },
+        {
+            "id": 1889,
+            "chapter_id": 108,
+            "file_size": 530560.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/108.mp3",
+            "duration": 22000
+        },
+        {
+            "id": 1891,
+            "chapter_id": 109,
+            "file_size": 1052800.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/109.mp3",
+            "duration": 54000
+        },
+        {
+            "id": 1893,
+            "chapter_id": 110,
+            "file_size": 792704.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/110.mp3",
+            "duration": 38000
+        },
+        {
+            "id": 1895,
+            "chapter_id": 111,
+            "file_size": 878720.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/111.mp3",
+            "duration": 43000
+        },
+        {
+            "id": 1897,
+            "chapter_id": 112,
+            "file_size": 565376.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/112.mp3",
+            "duration": 25000
+        },
+        {
+            "id": 1899,
+            "chapter_id": 113,
+            "file_size": 780416.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/113.mp3",
+            "duration": 36000
+        },
+        {
+            "id": 1901,
+            "chapter_id": 114,
+            "file_size": 917632.0,
+            "format": "mp3",
+            "audio_url": "https://download.quranicaudio.com/qdc/khalil_al_husary/murattal/114.mp3",
+            "duration": 46000
+        }
+    ]
+}

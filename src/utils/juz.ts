@@ -1,5 +1,5 @@
-import jsonJuzsData from "@/json/juz-to-chapter-mappings.json";
-import jsonChaptersData from "@/json/chapters.json";
+import jsonJuzsData from "@jsonDataPath/juz-to-chapter-mappings.json";
+import jsonChaptersData from "@jsonDataPath/chapters.json";
 import type { Verse } from "@/types/verse";
 
 /**
@@ -77,7 +77,7 @@ interface JuzsToChapters {
 export const AllJuzsToChapters = (): Promise<JuzsToChapters[]> => {
   return new Promise((resolve, reject) => {
     try {
-      import("@/json/juzs-to-chapters.json").then((res) =>
+      import(`@jsonDataPath/juzs-to-chapters.json`).then((res) =>
         resolve(res.default)
       );
     } catch (error) {

@@ -1,11 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, onBeforeMount, computed } from "vue";
-
-//axios
-import { instance } from "@/axios";
-import { audioRecitersUrl } from "@/axios/url";
 // types
-import type { AudioFile, AudioPlayerSettings } from "@/types/audio";
+import type { AudioFile } from "@/types/audio";
 import type { PlayAudioEmit } from "@/types/audio";
 import type { Chapter } from "@/types/chapter";
 // stores
@@ -98,75 +94,55 @@ export const useAudioStore = defineStore("audio-store", () => {
     chapterId.value = payload.audioID;
     selectedVerseKey.value = payload.verseKey;
     audioPayLoadSrc.value = payload.audioSrc ? payload.audioSrc : audioSrc;
-    const chapter = chapterStore.getChapter(payload.audioID);
 
     if (recitionsStore.selectedReciter) {
-      // check for DB files return if audio found
-      const audioStorage = await audioDB.getStorage(
-        `${recitionsStore.selectedReciter.id}-${payload.audioID}`
-      );
-
-      if (audioStorage) {
-        audioFiles.value = {
-          ...audioStorage,
-          verse_timings: JSON.parse(audioStorage.verse_timings),
-        };
-        chapterId.value = payload.audioID;
-        isLoading.value = false;
-        return;
-      }
-      // stop the api call if audio files are already loaded
-      // to chapter from prev api call
-      if (
-        chapter?.audioFile?.reciterId === recitionsStore.selectedReciter.id &&
-        chapter?.audioFile.chapter_id === payload.audioID
-      ) {
-        audioFiles.value = chapter.audioFile;
-        isLoading.value = false;
-        return;
-      }
+      const chapter = chapterStore.getChapter(payload.audioID);
       audioFiles.value = null;
-
-      await instance
-        .get(
-          audioRecitersUrl(recitionsStore.selectedReciter?.id, payload.audioID)
-        )
+      await loadAudioFromJSON(
+        recitionsStore.selectedReciter?.id.toString(),
+        payload.audioID.toString()
+      )
         .then((response) => {
           audioFiles.value = {
             reciterId: recitionsStore.selectedReciter?.id,
-            ...response.data.audio_files[0],
+            ...response[0],
           };
           // push audio chapter data
           if (chapter) {
             chapter.audioFile = {
               reciterId: recitionsStore.selectedReciter?.id,
-              ...response.data.audio_files[0],
+              ...response[0],
             };
           }
         })
-        .catch(async (error) => {
-          await presentToast({ message: String(error) });
+        .catch(async (e) => {
+          await presentToast({ message: String(e) });
         })
-        .finally(async () => {
+        .finally(() => {          
           isLoading.value = false;
-          const audioSettings: AudioPlayerSettings =
-            await settingsDB.getStorage("audioSettings");
-          if (audioSettings.autoDownload) {
-            await downloadAudioFile();
-          }
           // Store recelty played
           if (!recentlyPlayed.value.includes(payload.audioID)) {
             recentlyPlayed.value.push(payload.audioID);
           }
-
-          await settingsDB.setStorage(
-            "recently-played",
-            JSON.stringify(recentlyPlayed.value)
-          );
         });
     }
   };
 
+  // Load Audio JSON Data
+  const loadAudioFromJSON = (
+    reciterId: string,
+    audioID: string
+  ): Promise<AudioFile[]> => {
+    return new Promise((resolve, reject) => {
+      try {
+        import(`@jsonDataPath/audio/${reciterId}/${audioID}.json`).then(
+          (response) => resolve(response.audio_files)
+        );
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
   /**
    * play next chapter and loaddata when needed
    * @param audioSrc
@@ -225,7 +201,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     listenerActive.value = false;
   };
 
-  const playbackPlaying = () => {
+  const playbackPlaying = (_ev: Event) => {    
     isPlaying.value = true;
     listenerActive.value = true;
   };

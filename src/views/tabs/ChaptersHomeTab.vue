@@ -39,7 +39,7 @@ const isPlaying = (chapterId: number) => {
       </ion-list>
       <ion-list>
         <ion-item button detail v-for="chapter in chapterStore.chapters" :key="chapter.id"
-          :router-link="`chapter/${chapter.slug}/${chapter.id}/1`">
+          :router-link="`chapter/${chapter.slug}/${chapter.id}`">
           <ion-spinner name="dots" color="danger" class="ml-1" v-if="isPlaying(chapter.id)"></ion-spinner>
           <ion-label>{{ localizeNumber(chapter.id, getLocale) }}- {{ isRtl ? chapter.nameArabic : chapter.nameSimple }}
           </ion-label>

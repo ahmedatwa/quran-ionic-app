@@ -24,7 +24,7 @@ export const useRecitionsStore = defineStore("recitions-store", () => {
   const getAllRecitations = (): Promise<Recitations[]> => {
     return new Promise((resolve, reject) => {
       try {
-        import("@/json/reciters.json").then((res) => resolve(res.reciters));
+        import("@jsonDataPath/reciters.json").then((res) => resolve(res.reciters));
       } catch (error) {
         reject(error);
       }

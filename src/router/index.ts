@@ -63,7 +63,7 @@ const routes: Array<RouteRecordRaw> = [
     props: true,
   },
   {
-    path: "/chapter/:slug/:chapterId/:verseId",
+    path: "/chapter/:slug/:chapterId",
     name: "single.chapter",
     component: () => import("@/views/pages/Chapter.vue"),
     props: true,
@@ -74,5 +74,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
+
+router.afterEach(async (to, from, failure) => {
+  if (failure) {
+    await router.push('/')
+  }
+})
 
 export default router;

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onMounted } from 'vue';
+import { ref, watchEffect, computed, onMounted, shallowRef } from 'vue';
 import { IonContent, IonButton, IonPage } from '@ionic/vue';
 // components
 import TranslationsViewComponent from '@/components/chapter/TranslationsViewComponent.vue';
@@ -7,21 +7,24 @@ import ReadingViewComponent from '@/components/chapter/ReadingViewComponent.vue'
 import ChapterInfoModalComponent from '@/components/chapter/ChapterInfoModalComponent.vue';
 import SegmentsComponent from '@/components/common/SegmentsComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
-
+// Route
 import { useRoute } from 'vue-router';
 // stores
 import { useChapterStore } from "@/stores/ChapterStore"
 import { useAudioStore } from "@/stores/AudioStore";
+import { useTranslationsStore } from '@/stores/TranslationsStore';
 // composables
 import { useSettings } from '@/composables/useSettings';
-// utils
-import { makeVerseKey } from '@/utils/verse';
+import { useAudioFile } from '@/composables/useAudioFile';
 // types
 import type { ChapterInfo } from '@/types/chapter';
+import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 
 const currentSegment = ref("translations")
 const chapterStore = useChapterStore()
+const { selectedTranslationId } = useTranslationsStore()
 const audioStore = useAudioStore()
+const { downloadFileProgress } = useAudioFile()
 
 const pageRef = ref()
 const pageRefEl = ref()
@@ -29,15 +32,19 @@ const settings = useSettings()
 const chapterInfoModalRef = ref()
 const pagination = computed(() => chapterStore.selectedChapter?.pagination)
 const chapterInfo = ref<ChapterInfo | null>(null)
-
-const verses = computed(() => {
-    return chapterStore.selectedChapterVerses?.sort(
-        (a, b) => a.verse_number - b.verse_number)
-})
-
+const currentPageEnd = shallowRef()
+const perPage = shallowRef(20)
 const { params } = useRoute()
 const chapterId = computed(() => Number(params.chapterId))
 const chapterSlug = computed(() => params.slug)
+const searchValue = shallowRef("");
+
+// verses
+const computedVerses = computed(() => {
+    return chapterStore.selectedChapter?.verses?.filter
+        (({ verse_number }) => verse_number.toString().includes(searchValue.value))
+        .sort((a, b) => a.verse_number - b.verse_number)
+})
 
 watchEffect(async () => {
     if (chapterId.value) {
@@ -46,6 +53,11 @@ watchEffect(async () => {
         if (found) {
             if (!found.verses?.length) {
                 await chapterStore.getVerses(found.id, true)
+                const verses = chapterStore.verses?.slice(0, perPage.value)
+                if (verses) {
+                    chapterStore.selectedChapter = found
+                    verses.forEach((v) => chapterStore.selectedChapter?.verses?.push({ ...v, bookmarked: false }))
+                }
             } else {
                 chapterStore.selectedChapter = found
             }
@@ -66,12 +78,23 @@ const playAudio = async (event: { audioID: number, verseKey?: string }) => {
     await audioStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
 }
 
-const loadMoreVerses = async (ev: { key: string, nextPage: number }) => {
-    if (ev.nextPage) {
-        if (chapterStore.selectedChapter) {
-            await chapterStore.getVerses(chapterStore.selectedChapter.id, true, pagination.value?.next_page)
+const loadMoreVerses = (infiniteScrollEvent: InfiniteScrollCustomEvent) => {
+    if (computedVerses.value?.length === chapterStore.versesTotalRecords) {
+        infiniteScrollEvent.target.complete()
+    } else {
+        if (computedVerses.value) {
+            chapterStore.isLoading.verses = true
+            currentPageEnd.value = Math.ceil(computedVerses.value?.length + perPage.value)
+            const verses = chapterStore.verses?.slice(computedVerses.value?.length, currentPageEnd.value)
+            if (verses) {
+                verses.forEach((v) => chapterStore.selectedChapter?.verses?.push({ ...v, bookmarked: false }))
+                setTimeout(() => {
+                    infiniteScrollEvent.target.complete()
+                    chapterStore.isLoading.verses = false
+                }, 200);
+            }
         }
-    };
+    }
 }
 
 const styles = computed(() => {
@@ -92,9 +115,7 @@ const getSurahInfo = async (ev: number) => {
     chapterInfoModalRef.value.$el.click()
 }
 
-const verseByKey = async (verseNumber: number) => {
-    await chapterStore.getVerseByKey(chapterId.value, makeVerseKey(chapterId.value, verseNumber))
-}
+
 </script>
 
 
@@ -105,19 +126,20 @@ const verseByKey = async (verseNumber: number) => {
         <ion-content>
             <translations-view-component id="translations-chapters" :is-loading="chapterStore.isLoading.verses"
                 :is-playing="isPlaying" v-if="currentSegment === 'translations'" :chapter-id="chapterId"
-                :download-progress="audioStore.downloadProgress" :is-audio-loading="audioStore.isLoading"
+                :download-progress="downloadFileProgress" :is-audio-loading="audioStore.isLoading"
                 @update:play-audio="playAudio" :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles"
-                :last-chapter-verse="chapterStore.getLastVerseNumberOfChapter"
-                :verse-count="chapterStore.selectedChapter?.versesCount" @update:get-verses="loadMoreVerses"
-                :pagination="pagination" :verses="verses" :chapter-name="chapterStore.selectedChapterName.nameArabic"
-                :audio-experience="audioStore.audioPlayerSetting" @update:get-verse-by-key="verseByKey">
+                :last-chapter-verse="chapterStore.getLastVerseNumberOfChapter" :per-page="perPage"
+                :verse-count="chapterStore.versesTotalRecords" @update:get-verses="loadMoreVerses"
+                :pagination="pagination" :verses="computedVerses" @update:search-value="searchValue = $event"
+                :chapter-name="chapterStore.selectedChapterName.nameArabic"
+                :audio-experience="audioStore.audioPlayerSetting" :selected-translation-id="selectedTranslationId">
             </translations-view-component>
-            <reading-view-component id="reading-chapters" v-else :is-playing="isPlaying" :verses="verses"
+            <reading-view-component id="reading-chapters" v-else :is-playing="isPlaying" :verses="computedVerses"
                 :is-loading="chapterStore.isLoading.verses" :styles="styles" :chapter-id="chapterId"
-                @update:get-verses="loadMoreVerses" :is-audio-loading="audioStore.isLoading"
+                @update:get-verses="loadMoreVerses" :is-audio-loading="audioStore.isLoading" :per-page="perPage"
                 @update:surah-info="getSurahInfo" :pagination="pagination" @update:play-audio="playAudio"
-                :download-progress="audioStore.downloadProgress" :audio-experience="audioStore.audioPlayerSetting"
-                :verse-count="chapterStore.selectedChapter?.versesCount">
+                :download-progress="downloadFileProgress" :audio-experience="audioStore.audioPlayerSetting"
+                :verse-count="chapterStore.versesTotalRecords">
             </reading-view-component>
             <div>
                 <ion-button ref="chapterInfoModalRef" id="chapter-modal-info" class="ion-hide"></ion-button>
