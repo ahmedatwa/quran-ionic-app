@@ -1,121 +1,105 @@
 import { defineStore } from "pinia";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 import { useTranslationsStore } from "@/stores/TranslationsStore";
-// axios
-import { instance } from "@/axios";
-import { getVersesUrl } from "@/axios/url";
 // utils
 import { _range } from "@/utils/number";
 import { getAllPagesToChapters } from "@/utils/pages";
 // composables
-import { useStorage } from "@/composables/useStorage";
 import { useAlert } from "@/composables/useAlert";
 // types
 import type { Page } from "@/types/page";
-import type { Verse } from "@/types/verse";
+import type { JSONDataPromise, Verse } from "@/types/verse";
 
 export const usePageStore = defineStore("page-store", () => {
-  const isLoading = ref(false);
-  const perPage = ref(10);
-  const { selectedTranslation } = useTranslationsStore();
+  const { selectedTranslationId } = useTranslationsStore();
   const { getChapterNameByChapterId } = useChapterStore();
-  const { getStorage, setStorage } = useStorage("__pageDB");
   const { presentToast } = useAlert();
+  const verses = ref<Verse[]>();
+  const versesTotalRecords = ref(0);
+  const isLoading = ref(false);
   const selectedPage = ref<Page | null>(null);
   const selectedPageId = ref<number>();
-  const searchValue = ref("");
-  const pagesPageSize = ref(20);
-  const pagesCurrentPage = ref(1);
   const pagesList = ref<Page[]>([]);
-  const selectedTranslationId = computed(() => {
-    if (selectedTranslation?.id) {
-      return String(selectedTranslation.id);
-    }
-    return "131";
-  });
-  const pages = computed(() => {
-    if (pagesList.value) {
-      return pagesList.value
-        .filter((page) => {
-          return page.pageNumber
-            .toLocaleString()
-            .includes(searchValue.value.toLocaleLowerCase());
-        })
-        .sort((a, b) => a.pageNumber - b.pageNumber)
-        .filter((__, index) => {
-          let start = (pagesCurrentPage.value - 1) * pagesPageSize.value;
-          let end = pagesCurrentPage.value * pagesPageSize.value;
-          if (index >= start && index < end) return true;
-        });
-    }
-  });
 
-  const getVerses = async (
-    id: number,
-    loading: boolean,
-    page: number = 1,
-    limit: number = perPage.value
-  ) => {
+  const getVerses = async (id: number, loading: boolean) => {
     isLoading.value = loading;
     selectedPageId.value = id;
     const currentPage = pagesList.value?.find((p) => p.pageNumber === id);
-    // Check for DB Storage to avoid the api call
-    if (currentPage) {
-      const check = await isDBStorageData(id, currentPage);
-      if (check) {
-        isLoading.value = false;
-        return;
-      }
-    }
 
-    await instance
-      .get(
-        getVersesUrl("by_page", id, selectedTranslationId.value, page, limit)
-      )
+    await loadPageDataFromJSON(id)
       .then((response) => {
-        if (currentPage) {
-          response.data.verses.forEach((verse: Verse) => {
-            const verseFound = currentPage.verses?.find(
-              (v) => v.verse_key === verse.verse_key
-            );
-
-            if (!verseFound) {
-              currentPage.verses?.push({ ...verse, bookmarked: false });
-            }
-          });
-
-          currentPage.pagination = response.data.pagination;
-          if (selectedPage.value?.pageNumber === currentPage.pageNumber) {
-            if (selectedPage.value) {
-              selectedPage.value.verses = currentPage.verses;
-              selectedPage.value.pagination = currentPage.pagination;
-            }
-          }
-        }
+        verses.value = response.verses;
+        versesTotalRecords.value = response.pagination.total_records;
       })
-      .catch(async (error) => {
-        await presentToast({ message: String(error) });
-      })
-      .finally(() => {
-        isLoading.value = false;
-        // save chapter in DB
-        setStorage(String(selectedPage.value?.pageNumber), {
-          data: JSON.stringify(selectedPage.value),
-          length: selectedPage.value?.verses?.length,
-        });
-      });
+      .catch(async (error) => await presentToast({ message: String(error) }))
+      .finally(() => (isLoading.value = false));
+    // await instance
+    //   .get(
+    //     getVersesUrl("by_page", id, selectedTranslationId.value, page, limit)
+    //   )
+    //   .then((response) => {
+    //     if (currentPage) {
+    //       response.data.verses.forEach((verse: Verse) => {
+    //         const verseFound = currentPage.verses?.find(
+    //           (v) => v.verse_key === verse.verse_key
+    //         );
+
+    //         if (!verseFound) {
+    //           currentPage.verses?.push({ ...verse, bookmarked: false });
+    //         }
+    //       });
+
+    //       currentPage.pagination = response.data.pagination;
+    //       if (selectedPage.value?.pageNumber === currentPage.pageNumber) {
+    //         if (selectedPage.value) {
+    //           selectedPage.value.verses = currentPage.verses;
+    //           selectedPage.value.pagination = currentPage.pagination;
+    //         }
+    //       }
+    //     }
+    //   })
+    //   .catch(async (error) => {
+    //     await presentToast({ message: String(error) });
+    //   })
+    //   .finally(() => {
+    //     isLoading.value = false;
+    //     // save chapter in DB
+    //     setStorage(String(selectedPage.value?.pageNumber), {
+    //       data: JSON.stringify(selectedPage.value),
+    //       length: selectedPage.value?.verses?.length,
+    //     });
+    //   });
   };
 
-  onMounted(async () => {
-    await getAllPagesToChapters().then((response) => {
-      response.forEach((res) => pagesList.value.push(res));
+  const loadPageDataFromJSON = async (
+    pageNumber: number
+  ): Promise<JSONDataPromise> => {
+    return new Promise((resolve, reject) => {
+      try {
+        import(`@jsonDataPath/pages/page-${pageNumber}.json`).then((response) =>
+          resolve(response.default)
+        );
+      } catch (error) {
+        reject(error);
+      }
     });
+  };
+
+  onBeforeMount(async () => {
+    if (!pagesList.value.length) {
+      isLoading.value = true;
+      await getAllPagesToChapters().then((response) => {
+          pagesList.value = response;
+        })
+        .catch(async (error) => await presentToast({ message: String(error) }))
+        .finally(() => (isLoading.value = false));
+    }
   });
 
   watch(
-    () => selectedTranslationId.value,
+    () => selectedTranslationId,
     async (resources) => {
       if (resources) {
         if (selectedPage.value) {
@@ -151,33 +135,16 @@ export const usePageStore = defineStore("page-store", () => {
     }
   });
 
-  const isDBStorageData = async (chapterId: number, page: Page) => {
-    const pagesDB: { data: string; length: number } = await getStorage(
-      String(chapterId)
-    );
-    if (pagesDB) {
-      page.verses = JSON.parse(pagesDB.data).verses;
-      page.pagination = JSON.parse(pagesDB.data).pagination;
-      selectedPage.value = page;
-      return true;
-    }
-
-    return false;
-  };
-
   return {
-    pages,
     pagesList,
-    perPage,
+    verses,
+    versesTotalRecords,
     isLoading,
     selectedPage,
     selectedPageId,
-    searchValue,
     getLastVerseOfPage,
     getFirstVerseOfPage,
     getInitialHeaderData,
-    pagesCurrentPage,
-    pagesPageSize,
     getVerses,
   };
 });

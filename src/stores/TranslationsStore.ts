@@ -5,7 +5,6 @@ import { Translation, TranslationReduceMap } from "@/types/translations";
 // composables
 import { useAlert } from "@/composables/useAlert";
 
-
 export const useTranslationsStore = defineStore("translations-store", () => {
   const isLoading = ref(false);
   const translationsList = ref<Translation[]>([]);
@@ -26,20 +25,6 @@ export const useTranslationsStore = defineStore("translations-store", () => {
     });
   };
 
-  const getTranslations = async () => {
-    isLoading.value = true;
-    await getAllTranslations()
-      .then((response) => {
-        response.forEach((res) => translationsList.value?.push({ ...res }));
-      })
-      .catch(async (error) => {
-        await presentToast({ message: String(error) });
-      })
-      .finally(() => {
-        isLoading.value = false;
-      });
-  };
-
   // Group translators by language
   const translations = computed(() => {
     if (translationsList.value) {
@@ -54,7 +39,19 @@ export const useTranslationsStore = defineStore("translations-store", () => {
   });
 
   onBeforeMount(async () => {
-    await getTranslations();
+    if (!translationsList.value.length) {
+      isLoading.value = true;
+      await getAllTranslations()
+        .then((response) => {
+          translationsList.value = response;
+        })
+        .catch(async (error) => {
+          await presentToast({ message: String(error) });
+        })
+        .finally(() => {
+          isLoading.value = false;
+        });
+    }
   });
 
   const groupTranslationsByLanguage = computed(() => {
@@ -75,6 +72,5 @@ export const useTranslationsStore = defineStore("translations-store", () => {
     selectedTranslationId,
     defaultTranslationID,
     groupTranslationsByLanguage,
-    getTranslations,
   };
 });

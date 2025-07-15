@@ -63,5 +63,5 @@ export const useBookmark = (bookmarkedVerse: ShallowRef<Verse> | null) => {
     }
   };
 
-  return { setBookmarked };
+  return { setBookmarked, bookmarkedItems };
 };

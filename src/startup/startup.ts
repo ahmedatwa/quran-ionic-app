@@ -8,7 +8,6 @@ import { useLocale } from "@/composables/useLocale";
 // capacitor plugins
 import { Device } from "@capacitor/device";
 
-
 export const useStartup = () => {
   const translationsStore = useTranslationsStore();
   const recitionsStore = useRecitionsStore();
@@ -85,13 +84,10 @@ export const useStartup = () => {
     const stylesSettings = await getStorage("styles");
     if (!stylesSettings) {
       setStorage("styles", {
-        fontSize: "1",
-        fontFamily: "noto-kufi",
-        fontWeight: "normal",
-        wordColor: JSON.stringify({
-          code: "primary",
-          key: "Blue",
-        }),
+        fontSize: "Normal",
+        fontFamily: "Noto-Kufi",
+        fontWeight: "Normal",
+        wordColor: "Primary",
       });
     }
   };
@@ -140,9 +136,9 @@ export const useStartup = () => {
     }
   };
 
-  onBeforeMount(() =>  import.meta.env.DEV ? console.info("startup-script loaded 👽") : ""
+  onBeforeMount(() =>
+    import.meta.env.DEV ? console.info("startup-script loaded 👽") : ""
   );
-
 
   return {
     setTranslation,

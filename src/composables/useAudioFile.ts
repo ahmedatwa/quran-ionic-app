@@ -1,5 +1,5 @@
 // fetch.js
-import { ref, toValue } from "vue";
+import { ref, toValue, computed } from "vue";
 // axios
 import { instance } from "@/axios";
 import { audioRecitersUrl } from "@/axios/url";
@@ -9,13 +9,11 @@ import { useStorage } from "@/composables/useStorage";
 import { useBlob } from "@/composables/useBlob";
 // Stores
 import { useChapterStore } from "@/stores/ChapterStore";
-import { useAudioStore } from "@/stores/AudioStore";
 import { useRecitionsStore } from "@/stores/RecitionsStore";
 // types
 import type { AudioFile } from "@/types/audio";
 
 export const useAudioFile = () => {
-  const { audioFiles } = useAudioStore();
   const { selectedReciter } = useRecitionsStore();
   const { presentToast } = useAlert();
   const { getChapterName } = useChapterStore();
@@ -64,13 +62,11 @@ export const useAudioFile = () => {
       });
   };
 
-  const downloadAudioFile = async () => {
-    if (audioFiles) {
+  const downloadAudioFile = async (audioFile: AudioFile) => {
+    if (audioFile) {
       isAudioFileLoading.value = true;
-      const audioUrl = audioFiles.audio_url;
-      const key = `${String(audioFiles.reciterId)}-${
-        audioFiles.chapter_id
-      }`;
+      const audioUrl = audioFile.audio_url;
+      const key = `${String(audioFile.reciterId)}-${audioFile.chapter_id}`;
       await instance
         .get(audioUrl, {
           responseType: "blob",
@@ -85,13 +81,13 @@ export const useAudioFile = () => {
             response.data
           )) as string;
           audioDB.setStorage(key, {
-            reciterId: String(audioFiles?.reciterId),
-            id: audioFiles?.id,
-            chapter_id: audioFiles?.chapter_id,
-            file_size: audioFiles?.file_size,
-            format: audioFiles?.format,
-            duration: audioFiles?.duration,
-            verse_timings: JSON.stringify(audioFiles?.verse_timings),
+            reciterId: String(audioFile.reciterId),
+            id: audioFile.id,
+            chapter_id: audioFile.chapter_id,
+            file_size: audioFile.file_size,
+            format: audioFile.format,
+            duration: audioFile.duration,
+            verse_timings: JSON.stringify(audioFile.verse_timings),
             audio_url: base64Data,
           });
         })

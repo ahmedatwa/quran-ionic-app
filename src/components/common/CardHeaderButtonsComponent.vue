@@ -13,12 +13,20 @@ import { useSettings } from '@/composables/useSettings';
 // types
 import type { Translation } from '@/types/translations';
 import type { PlayAudioEmit } from '@/types/audio';
+import { storeToRefs } from 'pinia';
 
 
 const { getLine } = useLocale()
-const translationStore = useTranslationsStore()
-const settings = useSettings()
-const alertButtons = [getLine("buttons.cancel"), getLine("buttons.ok")];
+const { selectedTranslation, translationsList, selectedTranslationId } = storeToRefs(useTranslationsStore())
+const { updateSelectedTranslations } = useSettings()
+
+const alertButtons = [{
+    text: getLine("buttons.cancel"),
+    role: 'cancel',
+}, {
+    text: getLine("buttons.ok"),
+    role: 'confirm',
+}]
 
 const props = defineProps<{
     isPlaying: boolean
@@ -29,9 +37,10 @@ const props = defineProps<{
     downloadProgress?: string | number
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
     "update:playAudio": [value: PlayAudioEmit]
     "update:surahInfo": [value: number]
+    "update:selectedTranslation": [value: Translation]
 }>()
 
 const downloadStatus = computed(() => {
@@ -44,28 +53,32 @@ const downloadStatus = computed(() => {
 })
 
 const translationAlertHeader = computed(() => {
-    if (translationStore.selectedTranslation) {
-        return upperCaseFirst(translationStore.selectedTranslation.language_name) + ": " + translationStore.selectedTranslation?.author_name
+    if (selectedTranslation.value) {
+        return upperCaseFirst(selectedTranslation.value.language_name) + ": " + selectedTranslation.value?.author_name
     }
 })
 
 const translations = computed(() => {
-    return translationStore.translationsList.map((tr) => {
+    return translationsList.value.map((tr) => {
         return {
             label: upperCaseFirst(tr.language_name) + ' - ' + tr.author_name,
             type: 'radio',
-            value: tr
+            value: tr,
+            checked: selectedTranslationId.value === tr.id
         }
     }).sort((a, b) => a.label.localeCompare(b.label))
 })
 
-const getSelectedTranslation = (ev: CustomEvent) => {
-    if (ev.detail.data) {
+const getSelectedTranslation = (ev: CustomEvent) => {    
+    if (ev.detail.role === "confirm" && ev.detail.data.values) {
         const transaltion: Translation = ev.detail.data.values
-        translationStore.selectedTranslation = toValue(transaltion)
-        settings.updateSelectedTranslations(toValue(transaltion))
+        emit("update:selectedTranslation", toValue(transaltion))
+        updateSelectedTranslations(toValue(transaltion))
+    } else {
+        return
     }
 }
+
 
 </script>
 

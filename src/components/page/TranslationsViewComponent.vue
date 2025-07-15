@@ -2,20 +2,22 @@
 import { ref, computed, watch, onMounted } from "vue"
 import { IonButton, IonIcon, IonCardHeader } from "@ionic/vue";
 import { IonContent, IonNote, IonCardSubtitle, IonCardTitle } from "@ionic/vue";
-import { IonCol, IonRow, IonGrid, IonItem, IonCard, IonRefresher, IonRefresherContent } from "@ionic/vue";
+import { IonCol, IonRow, IonGrid, IonItem, IonCard } from "@ionic/vue";
 import { IonLabel, IonText } from "@ionic/vue";
 import { IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
 // icons
 import { arrowBackOutline, arrowForwardOutline, ellipsisVerticalOutline } from "ionicons/icons";
-// utils
+// composables
 import { useLocale } from "@/composables/useLocale";
 import { useScrollToElement } from "@/composables/useScrollToElement";
-import { useStorage } from "@/composables/useStorage";
 import { useAlert } from '@/composables/useAlert';
+import { useBookmark } from "@/composables/useBookmark";
+
 // router
 import { useRouter } from "vue-router";
 import { upperCaseFirst } from "@/utils/string"
 // types
+import type { ShallowRef } from "vue"
 import type { Verse, VerseWord } from "@/types/verse";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
@@ -31,14 +33,14 @@ import { useChapterStore } from "@/stores/ChapterStore";
 import { useRoute } from "vue-router";
 
 const { getLine } = useLocale()
-const { getChapterNameByFirstVerse, getChapterName } = useChapterStore()
-const { setStorage, bookmarkedItems } = useStorage("__bookmarksDB")
+const { getChapterNameByFirstVerse } = useChapterStore()
+const bookmarkedVerse = <ShallowRef<Verse> | null>(null)
+const { setBookmarked } = useBookmark(bookmarkedVerse)
+
 const router = useRouter()
 const cardRef = ref()
 const contentRef = ref()
 const intersectingVerseNumber = ref<number>()
-const intersectingPageNumber = ref<number>()
-const { presentAlert } = useAlert()
 const route = useRoute()
 const { scrollToElement } = useScrollToElement()
 
@@ -59,12 +61,8 @@ const props = defineProps<{
     activeAudioId?: number
     styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
     bookmarkedVerse?: number
+    selectedTranslationId?: number
 }>()
-
-const pageId = computed(() => {
-    return Number(props.id.split("-")[2])
-})
-
 
 const emit = defineEmits<{
     "update:getVerses": [value: { key: string, nextPage: number }];
@@ -79,41 +77,12 @@ watch(() => props.verseTiming, (t) => {
         const verseNumber = t.verseNumber
         if (props.audioExperience.autoScroll && props.isPlaying) {
             intersectingVerseNumber.value = t.verseNumber
-           // intersectingPageNumber.value = t.p
+            // intersectingPageNumber.value = t.p
             scroll(verseNumber)
         }
     }
 })
 
-const setBookmarked = async (verse: Verse) => {
-    const v = bookmarkedItems.value.find(({ key }) => {
-        const vNumber = key.split("-").pop()
-        return Number(vNumber) === verse.verse_number
-
-    })
-    if (!v) {
-        bookmarkedItems.value.push({
-            key: `/page/${verse.page_number}-${verse.verse_number}`,
-            value: {
-                pageNumber: verse.page_number,
-                verseNumber: verse.verse_number,
-                verseText: verse.text_uthmani,
-                chapterName: getChapterName(verse.chapter_id)?.nameSimple
-            }
-        })
-        bookmarkedItems.value.forEach(({ key, value }) => {
-            setStorage(key, value)
-        })
-
-        await presentAlert({
-            message: getLine("quranReader.verseBookmarked"),
-        })
-    } else {
-        await presentAlert({
-            message: getLine("quranReader.verseAlreadyBookmarked"),
-        })
-    }
-};
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     if (props.pagination?.next_page) {
@@ -124,14 +93,8 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
     }
 }
 
-
-const isWordHighlighted = (word: VerseWord) => {
-    if (props.verseTiming) {
-        return props.verseTiming.wordLocation === word.location
-    }
-};
-
-const routeBackName = computed(() => {    
+    
+const routeBackName = computed(() => {
     if (router.options.history.state.back) {
         return upperCaseFirst(router.options.history.state.back.toString().substring(1))
     }
@@ -144,35 +107,23 @@ const loadMoreVerses = () => {
     }
 }
 
-const scroll = (verseNumber: number) => {
-    scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
-}
-const handleRefresh = (event: RefresherCustomEvent) => {
-    if (!props.pagination?.next_page) {
-        event.target?.complete();
-    }
+const pageId = computed(() => Number(props.id.split("-")[2]))
+const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
+const isPlaying = (chapterId: number) => props.isPlaying && chapterId === props.activeAudioId
+const isWordHighlighted = (word: VerseWord) => props.verseTiming?.wordLocation === word.location
 
-    setTimeout(() => {
-        loadMoreVerses()
-        event.target?.complete();
-    }, 500);
-};
-
-const isPlaying = (chapterId: number) => {
-    return props.isPlaying && chapterId === props.activeAudioId
-}
 
 onMounted(() => {
     // snap to verse if presented in route params
     const params = route.params
-    if(params.pageId) {
-        if(params.pageId.includes("-")) {
+    if (params.pageId) {
+        if (params.pageId.includes("-")) {
             const parts = params.pageId.toString().split('-')
             const verseNumber = parts[1]
-            if(verseNumber) {
-                 setTimeout(() => {
+            if (verseNumber) {
+                setTimeout(() => {
                     scroll(Number(verseNumber))
-                 }, 200);
+                }, 200);
             }
         }
     }
@@ -185,9 +136,6 @@ onMounted(() => {
         <toolbar-component :route-back-label="routeBackName" :is-loading="isLoading"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef"
             style="position: relative">
-            <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-                <ion-refresher-content></ion-refresher-content>
-            </ion-refresher>
             <ion-card class="ion-padding card-wrapper" v-for="(verses, chapterId) in verses" :key="chapterId"
                 :id="`card-${chapterId}`" ref="cardRef">
                 <card-header-buttons-component :chapter-id="verses[0].chapter_id" :download-progress="downloadProgress"
@@ -207,7 +155,8 @@ onMounted(() => {
                     :id="`verse-col-${verse.verse_number}`">
                     <ion-grid>
                         <ion-row class="ion-align-items-start">
-                            <ion-col size="11" class="translations-view-col" :id="`main-verse-col-${verse.verse_number}`">
+                            <ion-col size="11" class="translations-view-col"
+                                :id="`main-verse-col-${verse.verse_number}`">
                                 <ion-label v-for="word in verse.words" :key="word.id" class="word">
                                     <ion-text :color="isWordHighlighted(word) ? styles.colorCode : ''">
                                         <h3 v-if="word.char_type_name === 'end'" class="end">
@@ -228,7 +177,9 @@ onMounted(() => {
                             <ion-col size="11" class="ion-text-left">
                                 <ion-note v-for="translation in verse.translations" :key="translation.id"
                                     class="translation ">
-                                    <span v-html="translation.text"></span>
+                                    <div v-if="selectedTranslationId === translation.resource_id">
+                                        <span v-html="translation.text"></span>
+                                    </div>
                                 </ion-note>
                             </ion-col>
                         </ion-row>

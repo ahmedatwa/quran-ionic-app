@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { shallowRef, computed } from "vue"
 import { IonPage, IonItem, IonList, IonContent, IonSkeletonText } from '@ionic/vue';
 import { IonText, IonLabel, IonNote, IonIcon } from '@ionic/vue';
-import { IonInfiniteScroll, IonInfiniteScrollContent, InfiniteScrollCustomEvent } from '@ionic/vue';
+import { chevronForward, documentOutline, chevronBack } from 'ionicons/icons';
 // composables
 import { useLocale } from '@/composables/useLocale';
 // utils
@@ -12,29 +12,25 @@ import { localizeNumber } from '@/utils/number';
 import { usePageStore } from "@/stores/PageStore";
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
-// icons
-import { chevronForward, documentOutline, chevronBack } from 'ionicons/icons';
 
 const { getLine, getLocale, isRtl } = useLocale()
 const pageStore = usePageStore()
-const pages = computed(() => pageStore.pages)
+const searchValue = shallowRef("")
 
-const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
-  if (DEFAULT_NUMBER_OF_PAGES === pageStore.pages?.length) {
-    setTimeout(() => ev.target.complete(), 300);
-  } else {
-    pageStore.pagesPageSize = pageStore.pagesPageSize + 10
-    setTimeout(() => ev.target.complete(), 700);
+const pages = computed(() => {
+  if (pageStore.pagesList) {
+    return pageStore.pagesList.filter((p) => {
+      return p.pageNumber.toLocaleString().includes(searchValue.value.toLocaleLowerCase())
+    })
   }
-};
-
+});
 
 </script>
 
 <template>
   <ion-page>
     <header-component :title="getLine('tabs.pages')" :icon="documentOutline" input-mode="numeric" type="number"
-      @update:search-value=" pageStore.searchValue = $event" search></header-component>
+      @update:search-value="searchValue = $event.detail.value" search></header-component>
     <ion-content :fullscreen="true">
       <ion-list v-if="!pages?.length">
         <ion-item v-for="n in DEFAULT_NUMBER_OF_PAGES" :key="n">
@@ -55,9 +51,6 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
           </div>
         </ion-item>
       </ion-list>
-      <ion-infinite-scroll @ion-infinite="ionInfinite">
-        <ion-infinite-scroll-content></ion-infinite-scroll-content>
-      </ion-infinite-scroll>
     </ion-content>
   </ion-page>
 </template>

@@ -10,11 +10,15 @@ import HeaderComponent from '@/components/common/HeaderComponent.vue';
 import { truncate } from "@/utils/string";
 // composables
 import { useLocale } from '@/composables/useLocale';
-import { useStorage, BookmarkedItems } from "@/composables/useStorage";
+import { useStorage } from "@/composables/useStorage";
+import { useBookmark } from "@/composables/useBookmark";
+// type
+import type { BookmarkedItems } from "@/composables/useBookmark"
 
 const { getLine } = useLocale()
 const bookmarks = ref<BookmarkedItems[]>([])
 const bookmarksBD = useStorage("__bookmarksDB")
+const { bookmarkedItems } = useBookmark(null)
 
 onBeforeMount(async () => {
     const len = await bookmarksBD.storageLength()
@@ -24,8 +28,8 @@ onBeforeMount(async () => {
 })
 
 watchEffect(() => {
-    if (bookmarksBD.bookmarkedItems.value) {
-        bookmarksBD.bookmarkedItems.value.forEach((item) => {
+    if (bookmarkedItems.value) {
+        bookmarkedItems.value.forEach((item) => {
             if (!bookmarks.value.includes(item)) {
                 bookmarks.value?.push(item)
             }

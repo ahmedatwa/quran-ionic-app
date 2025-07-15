@@ -21,14 +21,9 @@ defineProps<{
     icon: typeof documentOutline | typeof bookOutline | typeof newspaperOutline | typeof cogOutline
 }>()
 
-const emit = defineEmits<{
-    "update:searchValue": [value: string]
+defineEmits<{
+    "update:searchValue": [value: CustomEvent]
 }>()
-
-const handleInput = (ev: CustomEvent) => {
-    emit("update:searchValue", ev.detail.value)
-
-}
 
 </script>
 <template>
@@ -40,7 +35,7 @@ const handleInput = (ev: CustomEvent) => {
             </ion-title>
         </ion-toolbar>
         <ion-toolbar v-if="search">
-            <ion-searchbar name="filter" @ion-input="handleInput" :animated="true" :placeholder="searchPlaceholder"
+            <ion-searchbar name="filter" @ion-input="$emit('update:searchValue', $event)" :animated="true" :placeholder="searchPlaceholder"
                 autocomplete="on" :inputmode="inputMode ? inputMode : 'text'"
                 :type="type ? type : 'text'"></ion-searchbar>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>

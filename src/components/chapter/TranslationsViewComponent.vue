@@ -10,25 +10,23 @@ import { useLocale } from "@/composables/useLocale";
 import { useScrollToElement } from "@/composables/useScrollToElement";
 import { useVerseTiming } from '@/composables/useVerseTiming';
 import { useBookmark } from "@/composables/useBookmark";
-// stores
-import { useTranslationsStore } from "@/stores/TranslationsStore";
+// components
+import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
+import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
+import VerseSeachInputComponent from "@/components/common/VerseSeachInputComponent.vue";
+import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { Pagination } from "@/types/chapter";
 import type { PlayAudioEmit, AudioExperience } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 import type { ShallowRef } from "vue"
-// components
-import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
-import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
-import VerseSeachInputComponent from "@/components/common/VerseSeachInputComponent.vue";
-import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
+import type { Translation } from "@/types/translations";
 
 const contentRef = ref()
 const cardRef = ref()
 const intersectingVerseNumber = shallowRef(1)
 const bookmarkedVerse = <ShallowRef<Verse> | null>(null)
-const translationStore = useTranslationsStore();
 const { getLine } = useLocale()
 const { setBookmarked } = useBookmark(bookmarkedVerse)
 const { scrollToElement } = useScrollToElement()
@@ -58,6 +56,7 @@ const emit = defineEmits<{
     "update:playAudio": [value: PlayAudioEmit];
     "update:modalValue": [value: boolean]
     "update:searchValue": [value: string]
+    "update:selectedTranslation": [value: Translation]
 }>();
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
@@ -81,6 +80,7 @@ watch(() => verseTiming.value, (t) => {
 
 const scroll = async (verseNumber: number) => await scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
 const playAudio = (ev: PlayAudioEmit) => emit('update:playAudio', ev)
+
 const isWordHighlighted = (word: VerseWord) => verseTiming.value?.wordLocation === word.location
 
 </script>
@@ -96,6 +96,7 @@ const isWordHighlighted = (word: VerseWord) => verseTiming.value?.wordLocation =
                 <card-header-buttons-component :chapter-id="chapterId" :is-playing="isPlaying"
                     :download-progress="downloadProgress" @update:play-audio="playAudio"
                     :is-audio-loading="isAudioLoading"
+                    @update:selected-translation="$emit('update:selectedTranslation', $event)"
                     @update:language-modal-value="$emit('update:modalValue', $event)">
                 </card-header-buttons-component>
                 <ion-card-header class="ion-text-center">
@@ -125,14 +126,13 @@ const isWordHighlighted = (word: VerseWord) => verseTiming.value?.wordLocation =
                                     :id="`open-action-sheet${verse.verse_number}`"></ion-icon>
                                 <verse-action-component :verse="verse"
                                     :trigger-prop="`open-action-sheet${verse.verse_number}`"
-                                    @update:bookmarked="setBookmarked"
-                                    @update:play-verse-audio="$emit('update:playAudio', { ...$event })">
+                                    @update:bookmarked="setBookmarked" @update:play-verse-audio="playAudio">
                                 </verse-action-component>
                             </ion-col>
                             <ion-col size="11" class="ion-text-left">
                                 <ion-note v-for="translation in verse.translations" :key="translation.id"
                                     class="translation">
-                                    <div v-if="translationStore.selectedTranslationId === translation.resource_id">
+                                    <div v-if="selectedTranslationId === translation.resource_id">
                                         <span v-html="translation.text"></span>
                                     </div>
                                 </ion-note>

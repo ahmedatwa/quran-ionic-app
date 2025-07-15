@@ -6,71 +6,51 @@ import { useLocale } from "@/composables/useLocale";
 import type { Recitations } from "@/types/audio";
 import type { Styles } from "@/types/settings";
 import type { Translation } from "@/types/translations";
-// utils
-import { lowerCase } from "@/utils/string";
 
 const colorScheme = shallowRef("auto");
 
 // Styles
 const styles = shallowRef<Styles>({
-  fontSize: "1",
-  fontFamily: "noto-Kufi",
-  fontWeight: "normal",
-  wordColor: {
-    code: "primary",
-    key: "Blue",
-  },
+  fontSize: "Normal",
+  fontFamily: "Noto-Kufi",
+  fontWeight: "Normal",
+  wordColor: "Primary",
 });
-
-const selectedWordColor = shallowRef({ key: "Blue", code: "primary" });
 
 export const useSettings = () => {
   const { getLine, setLocale, supportedLocales } = useLocale();
   const { getStorage, setStorage } = useStorage("__settingsDB");
-  const wordColors = shallowRef([
-    { key: "Blue", code: "primary" },
-    { key: "Green", code: "success" },
-    { key: "Red", code: "danger" },
-    { key: "Tertiary", code: "tertiary" },
-  ]);
-
+  const wordColors = shallowRef(["Primary", "Success", "Danger", "Tertiary"]);
   const fontSizes = shallowRef([
-    { key: 1, value: "Normal" },
-    { key: 2, value: "Medium" },
-    { key: 3, value: "Large" },
-    { key: 4, value: "Extra Large" },
-    { key: 5, value: "Mega" },
+    "Normal",
+    "Medium",
+    "Large",
+    "Extra Large",
+    "Mega",
+  ]);
+  const fontFamilyGroup = shallowRef([
+    "Amiri",
+    "Noto-Kufi",
+    "Hafs-Nastaleeq",
+    "Uthman-Taha-Naskh",
   ]);
 
-  const getSelectedFontSize = computed(() => {
-    const found = fontSizes.value.find(
-      (font) => font.key === styles.value.fontSize
-    );
-    if (found) {
-      return found.value;
-    }
-    return "Normal";
-  });
+  const fontWeights = shallowRef([
+    "Normal",
+    "Medium",
+    "Semi Bold",
+    "Bold",
+    "Extra Bold",
+  ]);
+
+  const getSelectedFontSize = computed(() =>
+    fontSizes.value.find((font) => font === styles.value.fontSize)
+  );
   // Color Schemes
   const colorSchemes = shallowRef([
     { key: "dark", value: getLine("settings.dark") },
     { key: "light", value: getLine("settings.light") },
     { key: "auto", value: getLine("settings.auto") },
-  ]);
-
-  const fontFamilyGroup = shallowRef([
-    { key: "amiri", value: "Amiri" },
-    { key: "noto-kufi", value: "Noto-Kufi" },
-    { key: "hafs-nastaleeq", value: "Hafs-Nastaleeq" },
-    { key: "uthman-taha-naskh", value: "Uthman-Taha-Naskh" },
-  ]);
-
-  const fontWeights = shallowRef([
-    { key: "normal", value: "Normal" },
-    { key: "medium", value: "Medium" },
-    { key: "semibold", value: "Semi Bold" },
-    { key: "bold", value: "Bold" },
-    { key: "extra-bold", value: "Extra Bold" },
   ]);
 
   const appVersion = computed(() => import.meta.env.VITE_APP_VERSION);
@@ -86,10 +66,12 @@ export const useSettings = () => {
   };
 
   const applyStyle = (key: string, ev: CustomEvent) => {
+    console.log(ev);
+
     if (key) {
       switch (key) {
         case "fontWeight":
-          styles.value.fontWeight = lowerCase(ev.detail.value);
+          styles.value.fontWeight = ev.detail.value;
           break;
         case "fontFamily":
           styles.value.fontFamily = ev.detail.value;
@@ -108,7 +90,7 @@ export const useSettings = () => {
         fontWeight: styles.value.fontWeight,
         fontFamily: styles.value.fontFamily,
         fontSize: styles.value.fontSize,
-        wordColor: JSON.stringify(styles.value.wordColor),
+        wordColor: styles.value.wordColor,
       });
     }
   };
@@ -136,16 +118,28 @@ export const useSettings = () => {
 
   onBeforeMount(async () => {
     // styles
-    const stylesStorage = await getStorage("styles");
+    const stylesStorage = (await getStorage("styles")) as Styles;
     if (stylesStorage) {
       styles.value = {
         ...stylesStorage,
-        wordColor: JSON.parse(stylesStorage.wordColor),
+        wordColor: stylesStorage.wordColor,
       };
     }
     // color scheme
     const scheme = await getStorage("colorScheme");
     if (scheme) colorScheme.value = scheme;
+  });
+
+  const computedCSS = computed(() => {
+    return {
+      fontFamily: `var(--font-family-${styles.value.fontFamily.toLocaleLowerCase()})`,
+      fontSize:
+        typeof styles.value.fontSize === "string"
+          ? `var(--font-size-${styles.value.fontSize.toLocaleLowerCase()})`
+          : `var(--font-size-${styles.value.fontSize})`,
+      fontWeight: `var(--font-weight-${styles.value.fontWeight.toLocaleLowerCase()})`,
+      colorCode: styles.value.wordColor.toLocaleLowerCase(),
+    };
   });
 
   return {
@@ -157,9 +151,9 @@ export const useSettings = () => {
     wordColors,
     fontWeights,
     fontFamilyGroup,
-    selectedWordColor,
     getSelectedFontSize,
     getSelectedTranslationDB,
+    computedCSS,
     updateSelectedReciter,
     updateSelectedTranslations,
     appleColorScheme,

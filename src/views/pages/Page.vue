@@ -7,7 +7,6 @@ import ReadingViewComponent from '@/components/page/ReadingViewComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 import ChapterInfoModalComponent from '@/components/chapter/ChapterInfoModalComponent.vue';
 import SegmentsComponent from '@/components/common/SegmentsComponent.vue';
-
 import { useRoute } from 'vue-router';
 // stores
 import { usePageStore } from "@/stores/PageStore"
@@ -17,6 +16,7 @@ import { useChapterStore } from '@/stores/ChapterStore';
 // composables
 import { useSettings } from '@/composables/useSettings';
 import { useAlert } from '@/composables/useAlert';
+import { useAudioFile } from '@/composables/useAudioFile';
 // types
 import type { GroupVersesByChapterID } from "@/types/page"
 import type { ChapterInfo } from '@/types/chapter';
@@ -24,12 +24,11 @@ import type { ChapterInfo } from '@/types/chapter';
 const currentSegment = ref("translations")
 const pageStore = usePageStore()
 const { presentAlert } = useAlert()
-const settings = useSettings()
+const { computedCSS } = useSettings()
 const transaltionStore = useTranslationsStore()
 const { selectedChapterName, selectedChapterBismillah, getchapterInfo } = useChapterStore()
 const audioStore = useAudioStore()
-const audioModelValue = ref(false)
-
+const { downloadFileProgress } = useAudioFile()
 const pagination = computed(() => pageStore.selectedPage?.pagination)
 const pageRef = ref()
 const pageRefEl = ref()
@@ -39,6 +38,7 @@ const router = useRoute()
 const pageParam = computed(() => router.params.pageId ? router.params.pageId.toString().split("-") : '')
 const pageId = computed(() => Number(pageParam.value[0]))
 const vNumber = computed(() => Number(pageParam.value[1]))
+const perPage = ref(20)
 
 watchEffect(async () => {
     if (pageId.value) {
@@ -47,6 +47,11 @@ watchEffect(async () => {
         if (found) {
             if (!found.verses?.length) {
                 await pageStore.getVerses(found.pageNumber, true)
+                const verses = pageStore.verses?.slice(0, perPage.value)
+                if (verses) {
+                    pageStore.selectedPage = found
+                    verses.forEach((v) => pageStore.selectedPage?.verses?.push({ ...v, bookmarked: false }))
+                }
             } else {
                 pageStore.selectedPage = found
             }
@@ -73,15 +78,6 @@ const getVerses = async (ev: { key: string, nextPage: number }) => {
     };
 }
 
-const styles = computed(() => {
-    return {
-        fontFamily: `var(--font-family-${settings.styles.value.fontFamily})`,
-        fontSize: `var(--font-size-${settings.styles.value.fontSize})`,
-        fontWeight: `var(--font-weight-${settings.styles.value.fontWeight})`,
-        colorCode: settings.styles.value.wordColor.code
-    }
-})
-
 const selectedVerses = computed(() => {
     if (pageStore.selectedPage) {
         return pageStore.selectedPage.verses
@@ -96,6 +92,7 @@ const groupVersesByChapter = computed(() => {
         }, {});
     }
 })
+
 const getSurahInfo = async (ev: number) => {
     await getchapterInfo(ev).then((response) => {
         chapterInfo.value = response.data.chapter_info
@@ -127,15 +124,16 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
             <translations-view-component :id="`translations-pages-${router.params.pageId}`"
                 :is-loading="pageStore.isLoading" :is-playing="audioStore.isPlaying"
                 v-if="currentSegment === 'translations'" @update:play-audio="playAudio"
-                :is-bismillah="selectedChapterBismillah" :styles="styles" :verses="groupVersesByChapter"
+                :is-bismillah="selectedChapterBismillah" :styles="computedCSS" :verses="groupVersesByChapter"
                 :chapter-name="selectedChapterName.nameArabic" :audio-experience="audioStore.audioPlayerSetting"
                 @update:modal-value="getTranslationAlert" @update:get-verses="getVerses" :pagination="pagination"
-                :is-audio-loading="audioStore.isLoading" :download-progress="audioStore.downloadProgress"
-                :active-audio-id="audioStore.audioFiles?.chapter_id" :bookmarked-verse="vNumber">
+                :is-audio-loading="audioStore.isLoading" :download-progress="downloadFileProgress"
+                :active-audio-id="audioStore.audioFiles?.chapter_id" :bookmarked-verse="vNumber"
+                :selected-translation-id="transaltionStore.selectedTranslationId">
             </translations-view-component>
             <reading-view-component id="reading-pages" v-else :is-playing="audioStore.isPlaying"
                 :verses="groupVersesByChapter" @update:play-audio="playAudio" @update:surah-info="getSurahInfo"
-                :is-loading="pageStore.isLoading" :styles="styles" :download-progress="audioStore.downloadProgress"
+                :is-loading="pageStore.isLoading" :styles="computedCSS" :download-progress="downloadFileProgress"
                 :audio-experience="audioStore.audioPlayerSetting" :is-audio-loading="audioStore.isLoading"
                 @update:get-verses="getVerses" :pagination="pagination"
                 :active-audio-id="audioStore.audioFiles?.chapter_id">

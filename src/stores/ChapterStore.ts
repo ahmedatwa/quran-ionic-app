@@ -14,14 +14,13 @@ import { useAlert } from "@/composables/useAlert";
 import { useLocale } from "@/composables/useLocale";
 
 export const useChapterStore = defineStore("chapter-store", () => {
-  const translationsStore = useTranslationsStore();
+  const { selectedTranslationId } = useTranslationsStore();
   const { getLine } = useLocale();
   const { presentToast } = useAlert();
   const isLoading = ref<Loading>({ chapters: false, verses: false });
   const chaptersList = ref<Chapter[]>([]);
   const currentSortDir = ref("asc");
   const currentSort = ref("id");
-  const searchValue = ref("");
   const selectedChapter = ref<Chapter | null>(null);
   const chapterInfo = ref<ChapterInfo | null>(null);
   const versesTotalRecords = ref(0);
@@ -35,68 +34,17 @@ export const useChapterStore = defineStore("chapter-store", () => {
     return 1;
   });
 
-  const selectedChapterPagination = computed(() => {
-    if (selectedChapter.value) {
-      return selectedChapter.value.pagination;
-    }
-  });
-
-  const chapters = computed((): Chapter[] | undefined => {
-    if (chaptersList.value) {
-      const searchableKeys = ["nameSimple", "nameArabic", "id"];
-      return chaptersList.value.filter(
-        (chapter: { nameSimple: string; nameArabic: string; id: number }) => {
-          return searchableKeys.some((key) => {
-            return chapter[key as keyof typeof chapter]
-              .toString()
-              .toLocaleLowerCase()
-              .replace(/([\-\'])/, "")
-              .includes(
-                searchValue.value.toLocaleLowerCase().replace(/([\-\'])/, "")
-              );
-          });
-        }
-      );
-    }
-  });
-
   const getAllChapters = (): Promise<Chapter[]> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       try {
         import(`@jsonDataPath/chapters.json`).then((response) => {
           resolve(response.chapters);
         });
       } catch (error) {
-        presentToast({ message: String(error) });
+        reject(error);
       }
     });
   };
-
-  /**
-   * get all chapters data from json file
-   */
-  const getChapters = async () => {
-    isLoading.value.chapters = true;
-    await getAllChapters()
-      .then((response) => {
-        response.forEach((chapter: Chapter) => {
-          chaptersList.value?.push({
-            ...chapter,
-            verses: [],
-            pagination: null,
-            chapterInfo: null,
-            audioFile: null,
-          });
-        });
-      })
-      .catch(async (error) => {
-        await presentToast({ message: String(error) });
-      })
-      .finally(() => {
-        isLoading.value.chapters = false;
-      });
-  };
-
   // /**
   //  *
   //  * @param chapterId
@@ -159,7 +107,25 @@ export const useChapterStore = defineStore("chapter-store", () => {
 
   onMounted(async () => {
     if (!chaptersList.value.length) {
-      await getChapters();
+      isLoading.value.chapters = true;
+      await getAllChapters()
+        .then((response) => {
+          response.forEach((chapter: Chapter) => {
+            chaptersList.value?.push({
+              ...chapter,
+              verses: [],
+              pagination: null,
+              chapterInfo: null,
+              audioFile: null,
+            });
+          });
+        })
+        .catch(async (error) => {
+          await presentToast({ message: String(error) });
+        })
+        .finally(() => {
+          isLoading.value.chapters = false;
+        });
     }
   });
 
@@ -169,7 +135,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
 
   // Add New Translations
   watch(
-    () => translationsStore.selectedTranslationId,
+    () => selectedTranslationId,
     async (resources) => {
       if (resources) {
         if (selectedChapter.value) {
@@ -272,8 +238,6 @@ export const useChapterStore = defineStore("chapter-store", () => {
   };
 
   return {
-    chapters,
-    searchValue,
     selectedChapter,
     selectedChapterId,
     isLoading,
@@ -289,7 +253,6 @@ export const useChapterStore = defineStore("chapter-store", () => {
     getLastVerseNumberOfChapter,
     getFirstVerseHeaderData,
     selectedChapterVerses,
-    selectedChapterPagination,
     selectedChapterBismillah,
     TOTAL_CHAPTERS,
     getChapterNameByFirstVerse,
@@ -298,7 +261,6 @@ export const useChapterStore = defineStore("chapter-store", () => {
     getchapterInfo,
     getVerses,
     getChapterBySlug,
-    getChapters,
     getChapter,
     getChapterNameByChapterId,
   };

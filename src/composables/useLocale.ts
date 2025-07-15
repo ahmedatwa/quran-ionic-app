@@ -4,8 +4,10 @@ import locales from "@/locales";
 
 const rtl = shallowRef(false);
 const locale = shallowRef("en");
+const isRtl = computed(() => rtl.value);
 
 const getLocale = computed(() => locale.value);
+
 const getLocaleValue = computed(() => {
   if (locale.value) {
     const result = supportedLocales.value.find((l) => l.key === locale.value);
@@ -13,7 +15,12 @@ const getLocaleValue = computed(() => {
   }
 });
 
-const isRtl = computed(() => rtl.value);
+const getLocaleKey= computed(() => {
+  if (locale.value) {
+    const result = supportedLocales.value.find((l) => l.key === locale.value);
+    return result?.key;
+  }
+});
 
 const supportedLocales = shallowRef([
   { key: "en", value: "English", rtl: false },
@@ -70,5 +77,6 @@ export const useLocale = () => {
     isRtl,
     supportedLocales,
     getLocaleValue,
+    getLocaleKey,
   };
 };

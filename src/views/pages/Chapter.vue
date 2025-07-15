@@ -13,31 +13,37 @@ import { useRoute } from 'vue-router';
 import { useChapterStore } from "@/stores/ChapterStore"
 import { useAudioStore } from "@/stores/AudioStore";
 import { useTranslationsStore } from '@/stores/TranslationsStore';
+import { useRecitionsStore } from '@/stores/RecitionsStore';
+import { useJuzStore } from '@/stores/JuzStore';
+
 // composables
 import { useSettings } from '@/composables/useSettings';
 import { useAudioFile } from '@/composables/useAudioFile';
 // types
 import type { ChapterInfo } from '@/types/chapter';
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
+import { storeToRefs } from 'pinia';
 
 const currentSegment = ref("translations")
 const chapterStore = useChapterStore()
-const { selectedTranslationId } = useTranslationsStore()
 const audioStore = useAudioStore()
+const recitionsStore = useRecitionsStore()
+const { selectedTranslationId, selectedTranslation } = storeToRefs(useTranslationsStore())
+const { juzList } = useJuzStore()
 const { downloadFileProgress } = useAudioFile()
 
 const pageRef = ref()
 const pageRefEl = ref()
-const settings = useSettings()
 const chapterInfoModalRef = ref()
-const pagination = computed(() => chapterStore.selectedChapter?.pagination)
+const perPage = shallowRef(20)
+const searchValue = shallowRef("");
+const { computedCSS } = useSettings()
 const chapterInfo = ref<ChapterInfo | null>(null)
 const currentPageEnd = shallowRef()
-const perPage = shallowRef(20)
+const pagination = computed(() => chapterStore.selectedChapter?.pagination)
 const { params } = useRoute()
 const chapterId = computed(() => Number(params.chapterId))
 const chapterSlug = computed(() => params.slug)
-const searchValue = shallowRef("");
 
 // verses
 const computedVerses = computed(() => {
@@ -49,7 +55,7 @@ const computedVerses = computed(() => {
 watchEffect(async () => {
     if (chapterId.value) {
         chapterStore.selectedChapter = null
-        const found = chapterStore.chapters?.find((c) => c.id === chapterId.value || c.slug === chapterSlug.value)
+        const found = chapterStore.chaptersList?.find((c) => c.id === chapterId.value || c.slug === chapterSlug.value)
         if (found) {
             if (!found.verses?.length) {
                 await chapterStore.getVerses(found.id, true)
@@ -97,15 +103,6 @@ const loadMoreVerses = (infiniteScrollEvent: InfiniteScrollCustomEvent) => {
     }
 }
 
-const styles = computed(() => {
-    return {
-        fontFamily: `var(--font-family-${settings.styles.value.fontFamily})`,
-        fontSize: `var(--font-size-${settings.styles.value.fontSize})`,
-        fontWeight: `var(--font-weight-${settings.styles.value.fontWeight})`,
-        colorCode: settings.styles.value.wordColor.code
-    }
-})
-
 onMounted(() => pageRefEl.value = pageRef.value.$el)
 
 const getSurahInfo = async (ev: number) => {
@@ -115,27 +112,26 @@ const getSurahInfo = async (ev: number) => {
     chapterInfoModalRef.value.$el.click()
 }
 
-
 </script>
-
-
 <template>
     <ion-page :data-chapter-id="chapterId" ref="pageRef">
         <segments-component :selected-segment="currentSegment"
             @update:selected-segment="currentSegment = $event"></segments-component>
         <ion-content>
-            <translations-view-component id="translations-chapters" :is-loading="chapterStore.isLoading.verses"
-                :is-playing="isPlaying" v-if="currentSegment === 'translations'" :chapter-id="chapterId"
+            <translations-view-component id="translations-chapters" :key="chapterId"
+                :is-loading="chapterStore.isLoading.verses" :is-playing="isPlaying"
+                v-if="currentSegment === 'translations'" :chapter-id="chapterId"
                 :download-progress="downloadFileProgress" :is-audio-loading="audioStore.isLoading"
-                @update:play-audio="playAudio" :is-bismillah="chapterStore.selectedChapterBismillah" :styles="styles"
-                :last-chapter-verse="chapterStore.getLastVerseNumberOfChapter" :per-page="perPage"
+                @update:play-audio="playAudio" :is-bismillah="chapterStore.selectedChapterBismillah"
+                :styles="computedCSS" :last-chapter-verse="chapterStore.getLastVerseNumberOfChapter" :per-page="perPage"
                 :verse-count="chapterStore.versesTotalRecords" @update:get-verses="loadMoreVerses"
                 :pagination="pagination" :verses="computedVerses" @update:search-value="searchValue = $event"
                 :chapter-name="chapterStore.selectedChapterName.nameArabic"
+                @update:selected-translation="selectedTranslation = $event"
                 :audio-experience="audioStore.audioPlayerSetting" :selected-translation-id="selectedTranslationId">
             </translations-view-component>
             <reading-view-component id="reading-chapters" v-else :is-playing="isPlaying" :verses="computedVerses"
-                :is-loading="chapterStore.isLoading.verses" :styles="styles" :chapter-id="chapterId"
+                :is-loading="chapterStore.isLoading.verses" :styles="computedCSS" :chapter-id="chapterId"
                 @update:get-verses="loadMoreVerses" :is-audio-loading="audioStore.isLoading" :per-page="perPage"
                 @update:surah-info="getSurahInfo" :pagination="pagination" @update:play-audio="playAudio"
                 :download-progress="downloadFileProgress" :audio-experience="audioStore.audioPlayerSetting"
@@ -150,7 +146,9 @@ const getSurahInfo = async (ev: number) => {
         </ion-content>
         <div class="footer">
             <audio-player-component :model-value="audioStore.isVisible"
-                @update:model-value="audioStore.isVisible = $event">
+                :selected-reciter="recitionsStore.selectedReciter" @update:model-value="audioStore.isVisible = $event"
+                :map-recitions="recitionsStore.mapRecitions"
+                @update:selected-reciter="recitionsStore.handleSelectedReciter($event)" :juz-list="juzList">
             </audio-player-component>
         </div>
     </ion-page>

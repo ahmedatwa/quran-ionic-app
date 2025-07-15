@@ -75,10 +75,5 @@ const router = createRouter({
   routes,
 });
 
-router.afterEach(async (to, from, failure) => {
-  if (failure) {
-    await router.push('/')
-  }
-})
 
 export default router;

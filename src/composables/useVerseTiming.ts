@@ -6,10 +6,12 @@ import { getChapterIdfromKey } from "@/utils/verse";
 import { makeWordLocation, getVerseNumberFromKey } from "@/utils/verse";
 // stores
 import { useAudioStore } from "@/stores/AudioStore";
+import { useChapterStore } from "@/stores/ChapterStore";
 import type { VerseTimingsProps, VerseTimingSegments } from "@/types/audio";
 
 export const useVerseTiming = () => {
   const audioStore = useAudioStore();
+  const { getVerseByVerseKey } = useChapterStore();
   const verseTiming = shallowRef<VerseTimingsProps | undefined>();
   const audioPayLoadSrc = shallowRef<string | undefined>("");
 
@@ -22,7 +24,7 @@ export const useVerseTiming = () => {
   // Store verse timings data retrived from API
   const verseTimingsMap = computed(() => {
     //console.log(audioStore.audioFiles);
-    
+
     return audioStore.audioFiles?.verse_timings.map((vt) => {
       return {
         inRange: false,
@@ -36,7 +38,7 @@ export const useVerseTiming = () => {
 
   watchEffect(() => {
     if (audioStore.currentTimestamp) {
-     // console.log(verseTimingsMap.value);
+      // console.log(verseTimingsMap.value);
 
       const currentTime = Math.ceil(
         secondsToMilliSeconds(audioStore.currentTimestamp)
@@ -86,7 +88,30 @@ export const useVerseTiming = () => {
     }
   });
 
+  const getCurrentVerseData = computed(() => {
+    if (verseTiming.value) {
+      const verseKey = verseTiming.value.verseKey;
+      const verse = getVerseByVerseKey(verseKey);
+      if (verse) {
+        return {
+          juzNumber: verse.juz_number,
+          hizbNumber: verse.hizb_number,
+          pageNumber: verse.page_number,
+          surah: verseTiming.value.chapterId,
+          ayah: verseTiming.value.verseNumber,
+        };
+      } else {
+        return {
+          surah: verseTiming.value.chapterId,
+          ayah: verseTiming.value.verseNumber,
+          juzNumber: null,
+          hizbNumber: null,
+          pageNumber: null,
+        };
+      }
+    }
+  });
   onUnmounted(() => (verseTiming.value = undefined));
 
-  return { verseTimingsMap, verseTiming, audioPayLoadSrc };
+  return { verseTimingsMap, verseTiming, audioPayLoadSrc, getCurrentVerseData };
 };

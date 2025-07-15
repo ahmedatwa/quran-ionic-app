@@ -7,7 +7,6 @@ import ReadingViewComponent from '@/components/juz/ReadingViewComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 import ChapterInfoModalComponent from '@/components/chapter/ChapterInfoModalComponent.vue';
 import SegmentsComponent from '@/components/common/SegmentsComponent.vue';
-
 import { useRoute } from 'vue-router';
 // stores
 import { useJuzStore } from "@/stores/JuzStore"
@@ -25,7 +24,7 @@ import { useAudioFile } from '@/composables/useAudioFile';
 const currentSegment = shallowRef("translations")
 const { presentAlert } = useAlert()
 const { downloadFileProgress } = useAudioFile()
-const settings = useSettings()
+const { computedCSS } = useSettings()
 const juzStore = useJuzStore()
 const transaltionStore = useTranslationsStore()
 const { selectedChapterName, selectedChapterBismillah, getchapterInfo } = useChapterStore()
@@ -39,7 +38,6 @@ const chapterInfoButtonRef = shallowRef()
 const router = useRoute()
 const perPage = shallowRef(20)
 const currentPageEnd = shallowRef()
-const currentPage = shallowRef(1)
 
 
 watchEffect(async () => {
@@ -90,16 +88,6 @@ const loadMoreVerses = async (infiniteScrollEvent: InfiniteScrollCustomEvent) =>
     }
 }
 
-
-const styles = computed(() => {
-    return {
-        fontFamily: `var(--font-family-${settings.styles.value.fontFamily})`,
-        fontSize: `var(--font-size-${settings.styles.value.fontSize})`,
-        fontWeight: `var(--font-weight-${settings.styles.value.fontWeight})`,
-        colorCode: settings.styles.value.wordColor.code
-    }
-})
-
 const getSurahInfo = async (ev: number) => {
     await getchapterInfo(ev).then((response) => {
         chapterInfo.value = response.data.chapter_info
@@ -131,7 +119,7 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
             <translations-view-component id="translations-juzs" :is-loading="juzStore.isLoading"
                 :is-playing="audioStore.isPlaying" @update:modal-value="getTranslationAlert"
                 v-if="currentSegment === 'translations'" @update:play-audio="playAudio"
-                :download-progress="downloadFileProgress" :is-bismillah="selectedChapterBismillah" :styles="styles"
+                :download-progress="downloadFileProgress" :is-bismillah="selectedChapterBismillah" :styles="computedCSS"
                 :verses="juzStore.selectedJuz?.verses" :computed-verses="juzStore.juzVersesByChapterMap"
                 :chapter-name="selectedChapterName.nameArabic" :audio-experience="audioStore.audioPlayerSetting"
                 @update:get-verses="loadMoreVerses" :pagination="pagination" :is-audio-loading="audioStore.isLoading"
@@ -140,7 +128,7 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
             </translations-view-component>
             <reading-view-component id="reading-juzs" v-else :is-playing="audioStore.isPlaying"
                 :verses="juzStore.selectedJuz?.verses" :computed-verses="juzStore.juzVersesByChapterMap"
-                @update:play-audio="playAudio" :is-loading="juzStore.isLoading" :styles="styles"
+                @update:play-audio="playAudio" :is-loading="juzStore.isLoading" :styles="computedCSS"
                 :audio-experience="audioStore.audioPlayerSetting" :download-progress="downloadFileProgress"
                 :pagination="pagination" @update:get-verses="loadMoreVerses" @update:surah-info="getSurahInfo"
                 :is-audio-loading="audioStore.isLoading" :active-audio-id="audioStore.audioFiles?.chapter_id">

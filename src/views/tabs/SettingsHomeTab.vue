@@ -28,7 +28,7 @@ import type { Translation } from '@/types/translations';
 
 const audioStore = useAudioStore()
 const recitationsStore = useRecitionsStore()
-const { getLine, getLocaleValue, supportedLocales, getLocale } = useLocale()
+const { getLine, getLocaleKey, supportedLocales, getLocale, getLocaleValue } = useLocale()
 const translationStore = useTranslationsStore()
 const appVersion = computed(() => import.meta.env.VITE_APP_VERSION)
 const colorScheme = ref("auto")
@@ -81,37 +81,40 @@ const presentCacheAlert = async () => {
                         <div slot="content">
                             <ion-list class="ion-padding">
                                 <ion-item>
-                                    <ion-select :label="getLine('settings.fontSize')"
+                                    <ion-select :label="getLine('settings.fontSize')" aria-label="Quran Fonts"
                                         :placeholder="settings.getSelectedFontSize.value"
+                                        :value="settings.getSelectedFontSize.value"
                                         @ion-change="settings.applyStyle('fontSize', $event)">
-                                        <ion-select-option v-for="item in settings.fontSizes.value" :key="item.key"
-                                            :value="item.key">
-                                            {{ item.value }}</ion-select-option>
+                                        <ion-select-option v-for="item in settings.fontSizes.value" :key="item"
+                                            :value="item">{{ item }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-select :label="getLine('settings.fontFamily')"
-                                        :placeholder="properCase(settings.styles.value.fontFamily)"
+                                    <ion-select :label="getLine('settings.fontFamily')" aria-label="Quran Font Family"
+                                        :placeholder="settings.styles.value.fontFamily"
+                                        :value="settings.styles.value.fontFamily"
                                         @ion-change="settings.applyStyle('fontFamily', $event)">
-                                        <ion-select-option v-for="n in settings.fontFamilyGroup.value" :key="n.key"
-                                            :value="n.key">{{ n.value }}</ion-select-option>
+                                        <ion-select-option v-for="fg in settings.fontFamilyGroup.value" :key="fg"
+                                            :value="fg">{{ fg }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-select :placeholder="properCase(settings.styles.value.fontWeight)"
-                                        :label="getLine('settings.boldText')"
+                                    <ion-select :placeholder="settings.styles.value.fontWeight"
+                                        :label="getLine('settings.boldText')" aria-label="Quran Font weight"
+                                        :value="settings.styles.value.fontWeight"
                                         @ion-change="settings.applyStyle('fontWeight', $event)">
-                                        <ion-select-option v-for="weight in settings.fontWeights.value"
-                                            :key="weight.key" :value="weight.key">
-                                            {{ weight.value }}</ion-select-option>
+                                        <ion-select-option v-for="weight in settings.fontWeights.value" :key="weight"
+                                            :value="weight">{{ weight }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-select :placeholder="settings.styles.value.wordColor.key"
+                                    <ion-select :placeholder="settings.styles.value.wordColor"
                                         :label="getLine('settings.highlightedWordColor')"
+                                        aria-label="Quran Font word color" :value="settings.styles.value.wordColor"
                                         @ion-change="settings.applyStyle('wordcolor', $event)">
-                                        <ion-select-option v-for="item in settings.wordColors.value" :key="item.code"
-                                            :value="item">{{ item.key }}
+
+                                        <ion-select-option v-for="item in settings.wordColors.value" :key="item"
+                                            :value="item"> {{ item }}
                                         </ion-select-option>
                                     </ion-select>
                                 </ion-item>
@@ -188,12 +191,11 @@ const presentCacheAlert = async () => {
                         <div slot="content">
                             <ion-list class="ion-padding">
                                 <ion-item>
-                                    <ion-select :label="getLine('settings.language')"
+                                    <ion-select :label="getLine('settings.language')" :value="getLocaleKey"
                                         :aria-label="getLine('settings.language')" interface="popover"
                                         :placeholder="getLocaleValue" @ion-change="settings.updateSelectedLocale">
                                         <ion-select-option :value="locale" v-for="locale in supportedLocales"
-                                            :key="locale.key">{{
-                                                locale.value }}</ion-select-option>
+                                            :key="locale.key">{{ locale.value }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>

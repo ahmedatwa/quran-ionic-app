@@ -87,7 +87,6 @@ watch(() => verseTiming.value, (t) => {
     }
 })
 
-
 const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el)
 const isPlaying = (chapterId: number) => props.isPlaying && chapterId === props.activeAudioId
 const isWordHighlighted = (word: VerseWord) => verseTiming.value?.wordLocation === word.location

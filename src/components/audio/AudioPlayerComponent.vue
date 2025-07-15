@@ -1,15 +1,11 @@
 <script lang="ts" setup>
-import { computed } from "vue"
 import { IonToolbar, IonFooter, IonButtons, IonAvatar } from '@ionic/vue';
 import { IonIcon, IonButton, IonSpinner, IonChip, IonText } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline } from 'ionicons/icons';
 // components
 import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalComponent.vue';
 // stores
-import { useRecitionsStore } from '@/stores/RecitionsStore';
 import { useAudioStore } from '@/stores/AudioStore';
-import { useChapterStore } from "@/stores/ChapterStore";
-import { useJuzStore } from "@/stores/JuzStore";
 
 // utils
 import { truncate } from "@/utils/string";
@@ -18,50 +14,26 @@ import { useVerseTiming } from '@/composables/useVerseTiming';
 import { useAudioFile } from "@/composables/useAudioFile";
 
 // types
-import type { Recitations } from "@/types/audio"
+import type { MapRecitions, Recitations } from "@/types/audio"
+import type { Juz } from "@/types/juz"
 
-const recitationsStore = useRecitionsStore()
 const audioStore = useAudioStore()
-const chapterStore = useChapterStore()
-const juzStore = useJuzStore()
-const { verseTiming } = useVerseTiming()
+const { getCurrentVerseData } = useVerseTiming()
 const { attemptFileSave } = useAudioFile()
 
 defineProps<{
     modelValue: boolean
+    selectedReciter?: Recitations
+    mapRecitions?: MapRecitions
+    juzList?: Juz[]
 }>()
 
 defineEmits<{
     "update:modelValue": [value: boolean]
+    "update:selectedReciter": [value: Recitations]
 }>()
 
-const getCurrentVerseData = computed(() => {
-    if (verseTiming.value) {
-        const verseKey = verseTiming.value.verseKey
-        const verse = chapterStore.getVerseByVerseKey(verseKey)
-        if (verse) {
-            return {
-                juzNumber: verse.juz_number,
-                hizbNumber: verse.hizb_number,
-                pageNumber: verse.page_number,
-                surah: verseTiming.value.chapterId,
-                ayah: verseTiming.value.verseNumber,
-            }
-
-        } else {
-            return {
-                surah: verseTiming.value.chapterId,
-                ayah: verseTiming.value.verseNumber,
-                juzNumber: null,
-                hizbNumber: null,
-                pageNumber: null,
-            }
-        }
-    }
-})
-
 </script>
-
 <template>
     <Transition name="slide-fade">
         <ion-footer v-if="modelValue" class="footer ion-no-border">
@@ -69,10 +41,10 @@ const getCurrentVerseData = computed(() => {
                 <div id="audio-modal">
                     <ion-chip :outline="true" class="reciter-chip">
                         <ion-avatar>
-                            <img :alt="recitationsStore.selectedReciter?.name" class="img"
-                                :src="`/reciters/${recitationsStore.selectedReciter?.reciter_id}.jpg`" />
+                            <img :alt="selectedReciter?.name" class="img"
+                                :src="`/reciters/${selectedReciter?.reciter_id}.jpg`" />
                         </ion-avatar>
-                        <ion-text>{{ truncate(String(recitationsStore.selectedReciter?.name), 25) }}
+                        <ion-text>{{ truncate(String(selectedReciter?.name), 25) }}
                             <p style="margin: 1px;">{{ audioStore.chapterName }} </p>
                         </ion-text>
                     </ion-chip>
@@ -90,16 +62,15 @@ const getCurrentVerseData = computed(() => {
             </ion-toolbar>
             <audio-player-modal-component trigger="audio-modal" :is-playing="audioStore.isPlaying"
                 :active-audio-id="audioStore.chapterId" :is-loading="audioStore.isLoading"
-                :verse-data="getCurrentVerseData" :juzs="juzStore.juzs"
-                :selected-reciter="recitationsStore.selectedReciter" :audio-files="audioStore.audioFiles"
-                :chapter-name="audioStore.chapterName" :loop-audio="audioStore.loopAudio"
-                :media-volume="audioStore.mediaVolume" :map-recitions="recitationsStore.mapRecitions"
+                :verse-data="getCurrentVerseData" :juzs="juzList" :selected-reciter="selectedReciter"
+                :audio-files="audioStore.audioFiles" :chapter-name="audioStore.chapterName"
+                :loop-audio="audioStore.loopAudio" :media-volume="audioStore.mediaVolume" :map-recitions="mapRecitions"
                 :progress-timer="audioStore.progressTimer" @update:change-volume="audioStore.changeMediaVolume"
-                @update:seek="audioStore.playbackSeek" @update:download="attemptFileSave($event)"
+                @update:seek="audioStore.playbackSeek" @update:download=""
                 @update:play-chapter="audioStore.playChapterAudio" @update:play-next="audioStore.playNext"
                 @update:play-prev="audioStore.playPrevious()" @update:play-audio="audioStore.handlePlay"
                 @update:loop-audio="audioStore.setLoopAudio($event)" :recently-played="audioStore.getRecentlyPlayed"
-                @update:selected-reciter="recitationsStore.handleSelectedReciter">
+                @update:selected-reciter="$emit('update:selectedReciter', $event)">
             </audio-player-modal-component>
         </ion-footer>
     </Transition>

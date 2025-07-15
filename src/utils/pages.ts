@@ -1,5 +1,7 @@
-import jsonChaptersData from "@/json/chapters.json";
+import jsonChaptersData from "@jsonDataPath/chapters.json";
+// types
 import type { Verse } from "@/types/verse";
+// utils
 import { localizeNumber, _range } from "@/utils/number";
 
 export const DEFAULT_NUMBER_OF_PAGES = 604;
@@ -11,7 +13,7 @@ type Pages2ChaptersMappings = {
 export const getPages2ChaptersMappings =
   (): Promise<Pages2ChaptersMappings> => {
     return new Promise((res) => {
-      import("@/json/page-to-chapter-mappings.json").then((data) => {
+      import("@jsonDataPath/page-to-chapter-mappings.json").then((data) => {
         res(data.default);
       });
     });
@@ -92,7 +94,7 @@ interface GetAllPagesToChapters {
 export const getAllPagesToChapters = (): Promise<GetAllPagesToChapters[]> => {
   return new Promise((resolve, reject) => {
     try {
-      import("@/json/pages-to-chapters.json").then((res) =>
+      import("@jsonDataPath/pages-to-chapters.json").then((res) =>
         resolve(res.default)
       );
     } catch (error) {
