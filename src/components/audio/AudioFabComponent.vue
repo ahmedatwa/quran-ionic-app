@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { IonFab, IonFabButton, IonFabList, IonIcon, IonAvatar } from '@ionic/vue';
 import { ellipsisHorizontalCircleOutline, pauseCircleOutline, playCircleOutline } from 'ionicons/icons';
 import { playForwardOutline, playBackOutline } from 'ionicons/icons';
@@ -11,11 +12,13 @@ import { useRecitionsStore } from '@/stores/RecitionsStore';
 import { useJuzStore } from "@/stores/JuzStore";
 // composables
 import { useVerseTiming } from '@/composables/useVerseTiming';
+import { useAudioFile } from "@/composables/useAudioFile";
 
 const audioStore = useAudioStore()
 const recitionsStore = useRecitionsStore()
-const juzStore = useJuzStore()
+const { juzList } = storeToRefs(useJuzStore())
 const { verseTiming } = useVerseTiming()
+const { attemptFileSave } = useAudioFile()
 
 const playChapterAudio = (audioID: number) => {
     audioStore.getAudio({ audioID })
@@ -59,11 +62,11 @@ const isPlaying = computed(() => {
             :chapter-name="audioStore.chapterName" :loop-audio="audioStore.loopAudio"
             :media-volume="audioStore.mediaVolume" :map-recitions="recitionsStore.mapRecitions"
             :progress-timer="audioStore.progressTimer" @update:change-volume="audioStore.changeMediaVolume"
-            @update:seek="audioStore.playbackSeek" @update:download="audioStore.downloadAudioFile"
+            @update:seek="audioStore.playbackSeek" @update:download="attemptFileSave"
             @update:play-chapter="playChapterAudio" @update:play-next="audioStore.playNext"
             @update:play-prev="audioStore.playPrevious()" @update:play-audio="audioStore.handlePlay"
-            @update:loop-audio="audioStore.loopAudio = $event"  :recently-played="audioStore.getRecentlyPlayed"
-            @update:selected-reciter="recitionsStore.handleSelectedReciter" :juzs="juzStore.juzs">
+            @update:loop-audio="audioStore.loopAudio = $event" :recently-played="audioStore.getRecentlyPlayed"
+            @update:selected-reciter="recitionsStore.handleSelectedReciter" :juzs="juzList">
         </audio-player-modal-component>
     </div>
 </template>
