@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { shallowRef, watch } from "vue"
+import { ref, watch } from "vue"
 import { useAudioStore } from '@/stores/AudioStore';
 
-const audioRef = shallowRef<HTMLAudioElement>()
+const audioRef = ref<HTMLAudioElement>()
 const audioStore = useAudioStore()
 
 watch((audioRef), (x) => {
     if (x) audioStore.audioEl = x
 })
 
+const props = defineProps<{
+    appState?: boolean
+}>()
+
+watch(() => props.appState, (state) => {
+    audioStore.appState = state
+})
 </script>
 <template>
     <div v-if="audioStore.isVisible" class="d-none">

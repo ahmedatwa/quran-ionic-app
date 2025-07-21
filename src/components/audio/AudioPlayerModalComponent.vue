@@ -188,9 +188,11 @@ const isVolumeVisible = () => {
                 <audio-modal-recent-play :is-playing="isPlaying" :audio-id="activeAudioId"
                     :recently-played="recentlyPlayed" :chapter-id="audioFiles?.chapter_id"></audio-modal-recent-play>
                 <!-- All -->
+                 <div v-if="juzs">
                 <audio-modal-all-chapters :juzs="juzs" :chapter-id="audioFiles?.chapter_id"
                     @update:download="$emit('update:download', $event)"
                     @update:play-chapter="$emit('update:playChapter', $event)"></audio-modal-all-chapters>
+                </div>
             </ion-grid>
         </ion-content>
     </ion-modal>

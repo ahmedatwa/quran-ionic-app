@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import { IonApp, IonRouterOutlet, IonContent } from '@ionic/vue';
+import { App } from '@capacitor/app';
 // stores
 import { useMetaStore } from '@/stores/MetaStore';
 // utils
@@ -9,10 +10,17 @@ import { useStartup } from "@/startup/startup"
 
 const metaStore = useMetaStore()
 const { runStartup } = useStartup()
+const appState = ref(false)
 
 onBeforeMount(async () => {
   await runStartup()
 })
+
+App.addListener('appStateChange', ({ isActive }) => {
+  appState.value = isActive    
+});
+
+
 
 </script>
 
@@ -24,7 +32,7 @@ onBeforeMount(async () => {
   </teleport>
   <ion-app>
     <ion-content class="ion-padding" fixed-slot-placement="before">
-      <audio-html-el-component></audio-html-el-component>
+      <audio-html-el-component :app-state="appState"></audio-html-el-component>
       <ion-router-outlet></ion-router-outlet>
     </ion-content>
   </ion-app>

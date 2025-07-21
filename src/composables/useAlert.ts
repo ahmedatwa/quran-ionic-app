@@ -1,8 +1,7 @@
-import {
-  toastController,
-  alertController,
-  loadingController,
-} from "@ionic/vue";
+// ionic
+import { toastController, alertController } from "@ionic/vue";
+import { loadingController } from "@ionic/vue";
+// utils
 import { properCase } from "@/utils/string";
 
 type ToastParams = {
@@ -51,18 +50,23 @@ export const useAlert = () => {
   };
 
   const presentLoading = async (
-    dismiss?: boolean,
-    message: string = "Loading please wait...",
-    duration: number = 0,
-    id?: "loading-spinner"
+    id: string,
+    dismiss: boolean = true,
+    duration?: number,
+    message: string = "Loading please wait..."
   ) => {
     const loading = await loadingController.create({
       id,
       message,
       duration,
+      htmlAttributes: { ariaLabel: id },
     });
 
-    dismiss ? await loadingController.dismiss() : await loading.present();
+    if (dismiss) {
+      await loadingController.dismiss();
+    } else {
+      loading.present();
+    }
   };
 
   return { presentToast, presentAlert, presentLoading };

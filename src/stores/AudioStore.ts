@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, onBeforeMount, computed } from "vue";
+import { ref, onBeforeMount, computed, shallowRef } from "vue";
 // types
 import type { AudioFile, AudioPlayerSettings } from "@/types/audio";
 import type { PlayAudioEmit } from "@/types/audio";
@@ -51,7 +51,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     "1.75",
     "2",
   ]);
-
+  const appState = ref(false);
   const playbackRate = ref("Normal");
   const listenerActive = ref(false);
   const progressTimer = ref<number>(0);
@@ -65,6 +65,7 @@ export const useAudioStore = defineStore("audio-store", () => {
   const isResumed = ref(false);
   const loopAudio = ref("none");
   const audioBuffer = ref();
+  const playbackSeekedValue = ref<number>();
   const currentTimestamp = ref(0);
   const audioPlayerSetting = ref({
     autoPlay: true,
@@ -76,6 +77,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     volume: 100,
     loopAudio: "none",
   });
+
   const recentlyPlayed = ref<number[]>([]);
   const { replace } = useRouter();
 
@@ -98,31 +100,31 @@ export const useAudioStore = defineStore("audio-store", () => {
     if (recitionsStore.selectedReciter) {
       const chapter = chapterStore.getChapter(payload.audioID);
       // check for DB files return if audio found
-      const audioStorage = await audioDB.getStorage(
-        `${recitionsStore.selectedReciter.id}-${payload.audioID}`
-      );
+      // const audioStorage = await audioDB.getStorage(
+      //   `${recitionsStore.selectedReciter.id}-${payload.audioID}`
+      // );
 
-      if (audioStorage) {
-        audioFiles.value = {
-          ...audioStorage,
-          verse_timings: JSON.parse(audioStorage.verse_timings),
-        };
-        chapterId.value = payload.audioID;
-        isLoading.value = false;
-        return;
-      }
+      // if (audioStorage) {
+      //   audioFiles.value = {
+      //     ...audioStorage,
+      //     verse_timings: JSON.parse(audioStorage.verse_timings),
+      //   };
+      //   chapterId.value = payload.audioID;
+      //   isLoading.value = false;
+      //   return;
+      // }
       // stop the api call if audio files are already loaded
       // to chapter from prev api call
-      if (
-        chapter?.audioFile?.reciterId === recitionsStore.selectedReciter.id &&
-        chapter?.audioFile.chapter_id === payload.audioID
-      ) {
-        audioFiles.value = chapter.audioFile;
-        isLoading.value = false;
-        return;
-      }
+      // if (
+      //   chapter?.audioFile?.reciterId === recitionsStore.selectedReciter.id &&
+      //   chapter?.audioFile.chapter_id === payload.audioID
+      // ) {
+      //   audioFiles.value = chapter.audioFile;
+      //   isLoading.value = false;
+      //   return;
+      // }
 
-      audioFiles.value = null;
+      
       await loadAudioFromJSON(
         recitionsStore.selectedReciter?.id.toString(),
         payload.audioID.toString()
@@ -145,11 +147,11 @@ export const useAudioStore = defineStore("audio-store", () => {
         })
         .finally(async () => {
           isLoading.value = false;
-          const audioSettings: AudioPlayerSettings =
-            await settingsDB.getStorage("audioSettings");
-          if (audioSettings.autoDownload) {
-           if(audioFiles.value) await downloadAudioFile(audioFiles.value);
-          }
+          // const audioSettings: AudioPlayerSettings =
+          //   await settingsDB.getStorage("audioSettings");
+          // if (audioSettings.autoDownload) {
+          //   if (audioFiles.value) await downloadAudioFile(audioFiles.value);
+          // }
           // Store recelty played
           if (!recentlyPlayed.value.includes(payload.audioID)) {
             recentlyPlayed.value.push(payload.audioID);
@@ -191,7 +193,7 @@ export const useAudioStore = defineStore("audio-store", () => {
           : chapterId.value + 1;
       // get the audio files
       await getAudio({ audioID: chapterId.value });
-      await presentLoading();
+      await presentLoading("fetching-audio-data", false);
       // store selected chapter into chapterStore
       const chapter = chapterStore.chaptersList?.find(
         (c) => c.id === chapterId.value
@@ -200,7 +202,7 @@ export const useAudioStore = defineStore("audio-store", () => {
         chapterStore.selectedChapter = chapter;
         // route to chapter for data to be fetched
         replace(`/chapter/${chapter.id}/${chapter.slug}`);
-        await presentLoading(true);
+        await presentLoading("fetching-audio-data", true);
       }
     }
   };
@@ -283,6 +285,8 @@ export const useAudioStore = defineStore("audio-store", () => {
     if (audioEl.value) {
       progressTimer.value = seekValue;
       audioEl.value.currentTime = milliSecondsToSeconds(seekValue);
+      currentTimestamp.value = audioEl.value.currentTime;
+      playbackSeekedValue.value = audioEl.value.currentTime;
     }
   };
 
@@ -553,6 +557,8 @@ export const useAudioStore = defineStore("audio-store", () => {
     isVisible,
     recentlyPlayed,
     getRecentlyPlayed,
+    appState,
+    playbackSeekedValue,
     setLoopAudio,
     playAudio,
     pauseAudio,

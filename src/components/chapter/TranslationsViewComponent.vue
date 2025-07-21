@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, shallowRef, watch } from "vue"
+import { nextTick, ref, shallowRef, watch } from "vue"
 import { IonIcon, IonCardHeader, IonItem, IonGrid, IonRow } from "@ionic/vue";
 import { IonContent, IonNote, IonCardTitle, IonCardSubtitle } from "@ionic/vue";
 import { IonLabel, IonText, IonCol, IonCard, IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
@@ -8,8 +8,9 @@ import { ellipsisVerticalOutline } from "ionicons/icons";
 // composables
 import { useLocale } from "@/composables/useLocale";
 import { useScrollToElement } from "@/composables/useScrollToElement";
-import { useVerseTiming } from '@/composables/useVerseTiming';
 import { useBookmark } from "@/composables/useBookmark";
+import { useAlert } from "@/composables/useAlert"
+
 // components
 import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
 import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
@@ -18,7 +19,7 @@ import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsCom
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { Pagination } from "@/types/chapter";
-import type { PlayAudioEmit, AudioExperience } from "@/types/audio";
+import type { PlayAudioEmit, AudioExperience, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 import type { ShallowRef } from "vue"
 import type { Translation } from "@/types/translations";
@@ -30,7 +31,7 @@ const bookmarkedVerse = <ShallowRef<Verse> | null>(null)
 const { getLine } = useLocale()
 const { setBookmarked } = useBookmark(bookmarkedVerse)
 const { scrollToElement } = useScrollToElement()
-const { verseTiming } = useVerseTiming()
+const { presentLoading } = useAlert()
 
 const props = defineProps<{
     id: string;
@@ -49,6 +50,8 @@ const props = defineProps<{
     verseCount: number
     perPage: number
     selectedTranslationId?: number
+    verseTiming?: VerseTimingsProps
+    playbackSeeked?: number
 }>()
 
 const emit = defineEmits<{
@@ -57,6 +60,8 @@ const emit = defineEmits<{
     "update:modalValue": [value: boolean]
     "update:searchValue": [value: string]
     "update:selectedTranslation": [value: Translation]
+    "update:loadingVerses": [value: boolean]
+    "update:playbackSeeked": [value: boolean]
 }>();
 
 const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
@@ -66,13 +71,12 @@ const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
 }
 
 // scrolling based on verseNumber sent by audioStore
-watch(() => verseTiming.value, (t) => {
+watch(() => props.verseTiming, async (t) => {
     if (t?.verseNumber) {
         const verseNumber = t.verseNumber
         if (props.audioExperience) {
             if (props.audioExperience.autoScroll && props.isPlaying) {
-                intersectingVerseNumber.value = t.verseNumber
-                scroll(verseNumber)
+                intersectingVerseNumber.value = verseNumber
             }
         }
     }
@@ -80,13 +84,38 @@ watch(() => verseTiming.value, (t) => {
 
 const scroll = async (verseNumber: number) => await scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
 const playAudio = (ev: PlayAudioEmit) => emit('update:playAudio', ev)
+const isWordHighlighted = (word: VerseWord) => props.verseTiming?.wordLocation === word.location
 
-const isWordHighlighted = (word: VerseWord) => verseTiming.value?.wordLocation === word.location
+watch(intersectingVerseNumber, async (verseNumber) => {
+    if (verseNumber) {
+        await nextTick(async () => {
+            scroll(verseNumber)
+            if (props.isLoading) {
+                await presentLoading("loading-verses", true)
+                emit("update:loadingVerses", false)
+            }
 
+        })
+    }
+})
+
+/**
+ * on Audio seek 
+ * scroll to verse location
+ */
+watch(() => props.playbackSeeked, (val) => {
+    if(val) {
+        console.log(val);
+        
+        if(props.verseTiming)
+          intersectingVerseNumber.value = props.verseTiming?.verseNumber
+        emit("update:playbackSeeked", false)
+    }
+})
 </script>
 <template>
     <div class="ion-page" :id="`translations-${id}-${chapterId}`">
-        <toolbar-component :route-back-label="getLine('tabs.chapters')" :is-loading="isLoading"></toolbar-component>
+        <toolbar-component :route-back-label="getLine('tabs.chapters')"></toolbar-component>
         <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef"
             style="position: relative">
             <ion-card class="ion-padding card-wrapper" ref="cardRef" style="position: relative;"

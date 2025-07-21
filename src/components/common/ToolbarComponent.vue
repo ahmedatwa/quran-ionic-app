@@ -14,7 +14,7 @@ defineProps<{
     routeBackLabel: string
     routerDirection?: "back" | "forward" | "root"
     routeBackPath?: string
-    isLoading: boolean
+    isLoading?: boolean
 }>()
 
 </script>

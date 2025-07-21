@@ -155,24 +155,24 @@ const presentCacheAlert = async () => {
                                         }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-toggle @ion-change="audioStore.handleAudioSetting" value="dismissOnEnd"
-                                        :checked="audioStore.audioPlayerSetting.dismissOnEnd">
-                                        {{ getLine("settings.playerDismiss") }}</ion-toggle>
-                                </ion-item>
-                                <ion-item>
                                     <ion-toggle @ion-change="audioStore.handleAudioSetting" value="autoScroll"
                                         :checked="audioStore.audioPlayerSetting.autoScroll">
                                         {{ getLine("settings.autoScroll") }}</ion-toggle>
                                 </ion-item>
-                                <ion-item>
+                                <!-- <ion-item>
                                     <ion-toggle @ion-change="audioStore.handleAudioSetting" value="autoDownload"
                                         :checked="audioStore.audioPlayerSetting.autoDownload">
                                         {{ getLine("settings.autoDownload") }}</ion-toggle>
-                                </ion-item>
+                                </ion-item> -->
                                 <ion-item>
                                     <ion-toggle @ion-change="audioStore.handleAudioSetting"
                                         :checked="audioStore.audioPlayerSetting.fab" value="fab">
                                         {{ getLine("settings.fab") }}</ion-toggle>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-toggle @ion-change="audioStore.handleAudioSetting" value="dismissOnEnd"
+                                        :checked="audioStore.audioPlayerSetting.dismissOnEnd">
+                                        {{ getLine("settings.playerDismiss") }}</ion-toggle>
                                 </ion-item>
                                 <ion-item>
                                     <ion-toggle @ion-change="handleKeepAwake" :checked="isAwake">

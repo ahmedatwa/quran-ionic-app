@@ -17,33 +17,32 @@ export const SCROLL_TO_NEAREST_ELEMENT = {
 const elementID = shallowRef("");
 
 export function useScrollToElement() {
+
   const scrollToElement = async (
     elID: string,
     root: ".ion-page",
-    timeout?: 100,
+    timeout?: number,
     options: ScrollIntoViewOptions = SMOOTH_SCROLL_TO_CENTER
   ) => {
     const el = document.querySelector(elID) as HTMLDivElement;
-    // return if same verse el was sent
-    if (elementID.value === elID) {
-      return;
-    }
-    elementID.value = elID;
     const parent =
       typeof root === "string"
         ? (document.querySelector(root) as HTMLElement)
         : root;
+    // return if same verse el was sent
+    if (elementID.value === elID && isInViewport(el, parent)) {
+      return;
+    }
+    elementID.value = elID;
 
-    const scrollMargin = getMainScrollElRect(elID);
+   // const scrollMargin = getMainScrollElRect(elID);
 
     if (el && !isInViewport(el, parent)) {
-      await delay(timeout ? timeout : 100);
+      if (timeout) await delay(timeout);
 
       //  if (!el.classList.contains(`scroll-margin-top:${scrollMargin}px`)) {
       // el.classList.add(`scroll-margin-bottom:${scrollMargin}px`);
       el.classList.add(`scroll-margin-top:-100px`);
-      //}
-
       el.scrollIntoView(options);
     } else {
       return;
@@ -98,9 +97,10 @@ export function useScrollToElement() {
   const getMainScrollElRect = (elID: string): string => {
     const div = elID.replace("#", "#main-");
     const el = document.querySelector(div) as HTMLDivElement;
-    return el.getBoundingClientRect()
-      ? el.getBoundingClientRect().height.toString()
-      : "250";
+    if (el) {
+      return el.getBoundingClientRect().height.toString();
+    }
+    return "250";
   };
 
   const delay = (length: number): Promise<void> => {
