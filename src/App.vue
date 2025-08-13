@@ -1,34 +1,33 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, shallowRef } from 'vue';
 import { IonApp, IonRouterOutlet, IonContent } from '@ionic/vue';
 import { App } from '@capacitor/app';
 // stores
-import { useMetaStore } from '@/stores/MetaStore';
+import { useMetaData } from '@/composables/useMetaData';
 // utils
 import AudioHtmlElComponent from "@/components/audio/AudioHtmlElComponent.vue";
-import { useStartup } from "@/startup/startup"
+// startup
+import { useStartupScript } from "@/startup/useStartupScript"
 
-const metaStore = useMetaStore()
-const { runStartup } = useStartup()
-const appState = ref(false)
+const { metaData, pageTitle } = useMetaData()
+const { run } = useStartupScript()
+const appState = shallowRef(false)
 
 onBeforeMount(async () => {
-  await runStartup()
+  await run()
 })
 
 App.addListener('appStateChange', ({ isActive }) => {
-  appState.value = isActive    
+  appState.value = isActive
 });
-
-
 
 </script>
 
 <template>
-  <teleport to="head title">{{ metaStore.pageTitle }}</teleport>
+  <teleport to="head title">{{ pageTitle }}</teleport>
   <teleport to="head">
-    <meta v-for="(metaItem, i) in metaStore.metaData" :key="i" :name="metaItem.name" :property="metaItem.property"
-      :content="metaItem.content">
+    <meta v-for="(item, index) in metaData" :key="index" :name="item.name" :property="item.property"
+      :content="item.content">
   </teleport>
   <ion-app>
     <ion-content class="ion-padding" fixed-slot-placement="before">

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { IonToolbar, IonFooter, IonButtons, IonAvatar } from '@ionic/vue';
+import { computed } from "vue"
+import { IonToolbar, IonFooter, IonButtons, IonAvatar, IonProgressBar } from '@ionic/vue';
 import { IonIcon, IonButton, IonSpinner, IonChip, IonText } from '@ionic/vue';
 import { playOutline, playForwardOutline, pauseOutline } from 'ionicons/icons';
 // components
@@ -33,10 +34,18 @@ defineEmits<{
     "update:selectedReciter": [value: Recitations]
 }>()
 
+const progressTimerValue = computed(() => {
+    if (audioStore.currentTimestamp) {
+        return audioStore.currentTimestamp / audioStore.duration
+    } else {
+        return 0
+    }
+})
 </script>
 <template>
     <Transition name="slide-fade">
         <ion-footer v-if="modelValue" class="footer ion-no-border">
+            <ion-progress-bar :value="progressTimerValue"></ion-progress-bar>
             <ion-toolbar>
                 <div id="audio-modal">
                     <ion-chip :outline="true" class="reciter-chip">

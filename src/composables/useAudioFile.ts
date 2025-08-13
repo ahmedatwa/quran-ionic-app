@@ -1,5 +1,7 @@
 // fetch.js
-import { ref, toValue, computed } from "vue";
+import { shallowRef } from "vue";
+import { storeToRefs } from "pinia";
+
 // axios
 import { instance } from "@/axios";
 import { audioRecitersUrl } from "@/axios/url";
@@ -14,18 +16,17 @@ import { useRecitionsStore } from "@/stores/RecitionsStore";
 import type { AudioFile } from "@/types/audio";
 
 export const useAudioFile = () => {
-  const { selectedReciter } = useRecitionsStore();
+  const { selectedReciter } = storeToRefs(useRecitionsStore());
   const { presentToast } = useAlert();
   const { getChapterName } = useChapterStore();
   const { encodeBlobToBase64 } = useBlob();
-  const isAudioFileLoading = ref(false);
-  const reciterId = toValue(selectedReciter?.id);
-  const downloadFileProgress = ref();
+  const isAudioFileLoading = shallowRef(false);
+  const downloadFileProgress = shallowRef();
   const audioDB = useStorage("__audioDB");
 
   const attemptFileSave = async (chapterId: number | string) => {
     await instance
-      .get(audioRecitersUrl(reciterId, Number(chapterId)))
+      .get(audioRecitersUrl(selectedReciter.value?.id, Number(chapterId)))
       .then((response) => {
         if (response.data) {
           const file: AudioFile = response.data.audio_files[0];
@@ -49,7 +50,7 @@ export const useAudioFile = () => {
         link.href = URL.createObjectURL(blob);
         const chapterName = getChapterName(chapterId);
         if (chapterName) {
-          link.download = chapterName?.nameSimple;
+          link.download = `${chapterName?.nameSimple} - ${selectedReciter.value?.name}`;
         } else {
           link.download = String(chapterId);
         }

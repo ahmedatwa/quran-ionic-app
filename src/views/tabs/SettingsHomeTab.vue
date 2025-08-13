@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, shallowRef } from 'vue';
 import { IonContent, IonItem, IonList, IonListHeader, IonAccordion } from '@ionic/vue';
 import { IonToggle, IonPage, IonSelectOption, IonSelect, IonAccordionGroup } from "@ionic/vue"
 import { IonLabel, IonText } from '@ionic/vue';
@@ -37,6 +37,7 @@ const settings = useSettings()
 const keepAwake = useKeepAwake()
 const isAwake = ref(false)
 const { presentAlert } = useAlert()
+const loopAudio = shallowRef(false)
 
 const handleSelectedTranslation = (transaltion: Translation) => {
     translationStore.selectedTranslation = transaltion
@@ -64,6 +65,16 @@ const presentCacheAlert = async () => {
         id: "clear-cache-alert"
     })
 }
+
+const aboutApp = async () => {
+    await presentAlert({
+        header: "Nobel Quran",
+        message: getLine("quranReader.introSubtitle"),
+        id: "present-info-alert",
+        buttons: ["Close"]
+    })
+}
+
 </script>
 
 <template>
@@ -159,16 +170,28 @@ const presentCacheAlert = async () => {
                                         :checked="audioStore.audioPlayerSetting.autoScroll">
                                         {{ getLine("settings.autoScroll") }}</ion-toggle>
                                 </ion-item>
-                                <!-- <ion-item>
+                                <ion-item>
                                     <ion-toggle @ion-change="audioStore.handleAudioSetting" value="autoDownload"
                                         :checked="audioStore.audioPlayerSetting.autoDownload">
                                         {{ getLine("settings.autoDownload") }}</ion-toggle>
-                                </ion-item> -->
+                                </ion-item>
                                 <ion-item>
+                                    <ion-select :label="getLine('settings.loopAudio')"
+                                        :aria-label="getLine('settings.loopAudio')"
+                                        :placeholder="getLine('settings.loopAudio')"
+                                        @ion-change="audioStore.handleAudioSetting" :value="audioStore.audioPlayerSetting.loopAudio">
+                                        <ion-select-option value="none">{{ getLine('audio.none') }}</ion-select-option>
+                                        <ion-select-option value="once">{{ getLine('audio.once') }}</ion-select-option>
+                                        <ion-select-option value="repeat">{{ getLine('audio.repeat')
+                                            }}</ion-select-option>
+                                    </ion-select>
+
+                                </ion-item>
+                                <!-- <ion-item>
                                     <ion-toggle @ion-change="audioStore.handleAudioSetting"
                                         :checked="audioStore.audioPlayerSetting.fab" value="fab">
                                         {{ getLine("settings.fab") }}</ion-toggle>
-                                </ion-item>
+                                </ion-item> -->
                                 <ion-item>
                                     <ion-toggle @ion-change="audioStore.handleAudioSetting" value="dismissOnEnd"
                                         :checked="audioStore.audioPlayerSetting.dismissOnEnd">
@@ -222,6 +245,9 @@ const presentCacheAlert = async () => {
                                 <ion-item>
                                     <ion-label>{{ getLine('settings.version') }}</ion-label>
                                     <ion-text>{{ appVersion }}</ion-text>
+                                </ion-item>
+                                <ion-item @click="aboutApp" :button="true">
+                                    <ion-label>{{ getLine('settings.about') }}</ion-label>
                                 </ion-item>
                                 <ion-item :button="true" @click="presentCacheAlert">
                                     <ion-label>{{ getLine('settings.cache') }}</ion-label>

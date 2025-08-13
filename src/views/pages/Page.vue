@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, watchEffect, computed, onMounted } from 'vue';
 import { IonContent, IonPage, IonButton } from '@ionic/vue';
+import { storeToRefs } from 'pinia';
 // components
 import TranslationsViewComponent from '@/components/page/TranslationsViewComponent.vue';
 import ReadingViewComponent from '@/components/page/ReadingViewComponent.vue';
@@ -12,7 +13,9 @@ import { useRoute } from 'vue-router';
 import { usePageStore } from "@/stores/PageStore"
 import { useAudioStore } from "@/stores/AudioStore";
 import { useTranslationsStore } from '@/stores/TranslationsStore';
+import { useRecitionsStore } from '@/stores/RecitionsStore';
 import { useChapterStore } from '@/stores/ChapterStore';
+import { useJuzStore } from '@/stores/JuzStore';
 // composables
 import { useSettings } from '@/composables/useSettings';
 import { useAlert } from '@/composables/useAlert';
@@ -25,6 +28,8 @@ const currentSegment = ref("translations")
 const pageStore = usePageStore()
 const { presentAlert } = useAlert()
 const { computedCSS } = useSettings()
+const recitionsStore = useRecitionsStore()
+const { juzList } = storeToRefs(useJuzStore())
 const transaltionStore = useTranslationsStore()
 const { selectedChapterName, selectedChapterBismillah, getchapterInfo } = useChapterStore()
 const audioStore = useAudioStore()
@@ -69,13 +74,57 @@ const playAudio = async (event: { audioID: number, verseKey?: string }) => {
     await audioStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
 }
 
-const getVerses = async (ev: { key: string, nextPage: number }) => {
-    if (ev.nextPage) {
-        if (pageStore.selectedPage) {
-            await pageStore.getVerses(pageStore.selectedPage?.pageNumber, true, pagination.value?.next_page)
+const loadMoreVerses = (infiniteScrollEvent: InfiniteScrollCustomEvent) => {
+    if (computedVerses.value?.length === chapterStore.versesTotalRecords) {
+        infiniteScrollEvent.target.complete()
+    } else {
+        fetchMoreVerses(infiniteScrollEvent)
+    }
+}
 
+const fetchMoreVerses = async (infiniteScrollEvent?: InfiniteScrollCustomEvent) => {
+    if (infiniteScrollEvent) {
+        if (computedVerses.value) {
+            loadingVerses.value = true
+            currentPageEnd.value = Math.ceil(computedVerses.value?.length + perPage.value)
+            const verses = chapterStore.verses?.slice(computedVerses.value?.length, currentPageEnd.value)
+            if (verses) {
+                verses.forEach((v) => chapterStore.selectedChapter?.verses?.push({ ...v, bookmarked: false }))
+                setTimeout(() => {
+                    if (infiniteScrollEvent) infiniteScrollEvent.target.complete()
+                    loadingVerses.value = false
+                }, 200);
+            }
         }
-    };
+    } else {
+        // look for number in chapter verses 
+        const toBFoundVerse: Verse | undefined = computedVerses.value?.find(
+            (v) => v.verse_number === currentVerseNumberFromTiming.value)
+
+        if (!toBFoundVerse) {
+
+            const lastVerseInComputedVerses = computedVerses.value?.slice(-1)[0]
+            if (lastVerseInComputedVerses?.verse_number && currentVerseNumberFromTiming.value) {
+                const calc = Math.ceil(currentVerseNumberFromTiming.value - lastVerseInComputedVerses?.verse_number)
+                if (computedVerses.value) {
+                    currentPageEnd.value = Math.ceil(computedVerses.value?.length + calc)
+                    const verses = chapterStore.verses?.slice(computedVerses.value?.length, (currentPageEnd.value + 1))
+                    if (verses) {
+                        verses.forEach((v) => chapterStore.selectedChapter?.verses?.push({ ...v, bookmarked: false }))
+                        await nextTick(async () => {
+                            if (computedVerses.value) {
+                                if (computedVerses.value?.length >= calc)
+                                    loadingVerses.value = true
+                            }
+                        })
+
+                    }
+                }
+            }
+        } else {
+            return
+        }
+    }
 }
 
 const selectedVerses = computed(() => {
@@ -126,16 +175,16 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
                 v-if="currentSegment === 'translations'" @update:play-audio="playAudio"
                 :is-bismillah="selectedChapterBismillah" :styles="computedCSS" :verses="groupVersesByChapter"
                 :chapter-name="selectedChapterName.nameArabic" :audio-experience="audioStore.audioPlayerSetting"
-                @update:modal-value="getTranslationAlert" @update:get-verses="getVerses" :pagination="pagination"
+                @update:modal-value="getTranslationAlert" @update:get-verses="loadMoreVerses" :pagination="pagination"
                 :is-audio-loading="audioStore.isLoading" :download-progress="downloadFileProgress"
-                :active-audio-id="audioStore.audioFiles?.chapter_id" :bookmarked-verse="vNumber"
+                :active-audio-id="audioStore.audioFiles?.chapter_id" :bookmarked-verse="vNumber" :per-page="perPage"
                 :selected-translation-id="transaltionStore.selectedTranslationId">
             </translations-view-component>
             <reading-view-component id="reading-pages" v-else :is-playing="audioStore.isPlaying"
                 :verses="groupVersesByChapter" @update:play-audio="playAudio" @update:surah-info="getSurahInfo"
                 :is-loading="pageStore.isLoading" :styles="computedCSS" :download-progress="downloadFileProgress"
                 :audio-experience="audioStore.audioPlayerSetting" :is-audio-loading="audioStore.isLoading"
-                @update:get-verses="getVerses" :pagination="pagination"
+                @update:get-verses="loadMoreVerses" :pagination="pagination"
                 :active-audio-id="audioStore.audioFiles?.chapter_id">
             </reading-view-component>
             <div>
@@ -146,7 +195,9 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
         </ion-content>
         <div class="footer">
             <audio-player-component :model-value="audioStore.isVisible"
-                @update:model-value="audioStore.isVisible = $event">
+                :selected-reciter="recitionsStore.selectedReciter" @update:model-value="audioStore.isVisible = $event"
+                :map-recitions="recitionsStore.mapRecitions"
+                @update:selected-reciter="recitionsStore.handleSelectedReciter($event)" :juz-list="juzList">
             </audio-player-component>
         </div>
     </ion-page>

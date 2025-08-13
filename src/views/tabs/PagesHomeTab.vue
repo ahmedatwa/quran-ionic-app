@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { shallowRef, computed } from "vue"
+import { storeToRefs } from 'pinia';
 import { IonPage, IonItem, IonList, IonContent, IonSkeletonText } from '@ionic/vue';
 import { IonText, IonLabel, IonNote, IonIcon } from '@ionic/vue';
 import { chevronForward, documentOutline, chevronBack } from 'ionicons/icons';
@@ -10,11 +11,18 @@ import { DEFAULT_NUMBER_OF_PAGES } from "@/utils/pages"
 import { localizeNumber } from '@/utils/number';
 // stores
 import { usePageStore } from "@/stores/PageStore";
+import { useRecitionsStore } from '@/stores/RecitionsStore';
+import { useJuzStore } from '@/stores/JuzStore';
+import { useAudioStore } from "@/stores/AudioStore";
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
+import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 
 const { getLine, getLocale, isRtl } = useLocale()
 const pageStore = usePageStore()
+const recitionsStore = useRecitionsStore()
+const { isVisible } = storeToRefs(useAudioStore())
+const { juzList } = storeToRefs(useJuzStore())
 const searchValue = shallowRef("")
 
 const pages = computed(() => {
@@ -52,5 +60,9 @@ const pages = computed(() => {
         </ion-item>
       </ion-list>
     </ion-content>
+    <audio-player-component :model-value="isVisible" :selected-reciter="recitionsStore.selectedReciter"
+      @update:model-value="isVisible = $event" :map-recitions="recitionsStore.mapRecitions"
+      @update:selected-reciter="recitionsStore.handleSelectedReciter($event)" :juz-list="juzList">
+    </audio-player-component>
   </ion-page>
 </template>

@@ -8,7 +8,7 @@ import { useLocale } from "@/composables/useLocale";
 // capacitor plugins
 import { Device } from "@capacitor/device";
 
-export const useStartup = () => {
+export const useStartupScript = () => {
   const translationsStore = useTranslationsStore();
   const recitionsStore = useRecitionsStore();
 
@@ -120,7 +120,7 @@ export const useStartup = () => {
     if (info) deviceLocale.value = info.value;
   };
 
-  const runStartup = async () => {
+  const run = async () => {
     try {
       await Promise.all([
         logDeviceLocaleInfo(),
@@ -137,7 +137,7 @@ export const useStartup = () => {
   };
 
   onBeforeMount(() =>
-    import.meta.env.DEV ? console.info("startup-script loaded 👽") : ""
+    import.meta.env.DEV ? console.info("Startup Script Loaded 👽") : ""
   );
 
   return {
@@ -147,6 +147,6 @@ export const useStartup = () => {
     setFontStyles,
     setDefaultLocale,
     setReciter,
-    runStartup,
+    run,
   };
 };

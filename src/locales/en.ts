@@ -8,7 +8,7 @@ export default {
     translations: "Translations",
     reading: "Reading",
     audio: "Audio",
-    search: "Search {0}"
+    search: "Search {0}",
   },
   settings: {
     title: "Settings",
@@ -37,12 +37,15 @@ export default {
     dark: "Dark",
     auto: "Auto",
     autoScroll: "Auto Scroll",
+    loopAudio: "Loop Audio",
     cache: "Clear cache",
-    autoDownload: "Auto Download Audio",
+    autoDownload: "Offline Audio",
     keepAwake: "Always On Display",
     highlightedWordColor: "Highlighted word color",
     fab: "Audio Fab Button",
-    cacheNote: "Clearing cache will only remove audio cache files, without removing any personal settings",
+    cacheNote:
+      "Clearing cache will only remove audio cache files, without removing any personal settings",
+    about: "About",
   },
   bookmark: {
     title: "Bookmarks",
@@ -61,7 +64,10 @@ export default {
     juz: "Juz {0}",
     surah: "Surah {0}",
     ayah: "Ayah {0}",
-    recentlyPlayed: "Recently Played"
+    recentlyPlayed: "Recently Played",
+    none: "No",
+    repeat: "Repeat",
+    once: "Once"
   },
   quranReader: {
     textPage: "Page",
@@ -84,14 +90,19 @@ export default {
     loadingChapterInfo: "Loading Surah Information...",
     textDowloading: "Downloading...",
     verseBookmarked: "Success: Verse has been bookmarked.",
-    verseAlreadyBookmarked: "Warning: Verse is already bookmarked."
+    verseAlreadyBookmarked: "Warning: Verse is already bookmarked.",
+    introSubtitle:
+      "Quran Mac/IOS/Android App is a Sadaqah Jariyah. I hope to make it easy for everyone to read, study, and learn The Noble Quran.",
   },
   buttons: {
-    ok: "Ok", 
-    cancel: "Cancel", 
-    close: "Close", 
-    dismiss: "Dismiss", 
+    ok: "Ok",
+    cancel: "Cancel",
+    close: "Close",
+    dismiss: "Dismiss",
     confirm: "Confirm",
     clear: "Clear",
-  }
+  },
+  text: {
+    loading: "Loading please wait...",
+  },
 };

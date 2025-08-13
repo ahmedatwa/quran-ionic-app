@@ -63,7 +63,7 @@ const routes: Array<RouteRecordRaw> = [
     props: true,
   },
   {
-    path: "/chapter/:slug/:chapterId",
+    path: "/chapter/:chapterId",
     name: "single.chapter",
     component: () => import("@/views/pages/Chapter.vue"),
     props: true,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { IonHeader, IonToolbar, IonTitle, IonSearchbar } from "@ionic/vue";
-import { IonIcon, IonLabel, IonProgressBar, } from "@ionic/vue";
+import { IonIcon, IonLabel, IonProgressBar } from "@ionic/vue";
 // icons
 import { documentOutline, cogOutline } from 'ionicons/icons';
 import { bookOutline, newspaperOutline } from 'ionicons/icons';
@@ -35,12 +35,13 @@ defineEmits<{
             </ion-title>
         </ion-toolbar>
         <ion-toolbar v-if="search">
-            <ion-searchbar name="filter" @ion-input="$emit('update:searchValue', $event)" :animated="true" :placeholder="searchPlaceholder"
-                autocomplete="on" :inputmode="inputMode ? inputMode : 'text'"
+            <ion-searchbar name="filter" @ion-input="$emit('update:searchValue', $event)" :animated="true"
+                :placeholder="searchPlaceholder" autocomplete="on" :inputmode="inputMode ? inputMode : 'text'"
                 :type="type ? type : 'text'"></ion-searchbar>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
         </ion-toolbar>
     </ion-header>
+
 </template>
 <style scoped>
 .header-label {

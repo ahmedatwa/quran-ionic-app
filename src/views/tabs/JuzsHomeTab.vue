@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { shallowRef, computed } from "vue"
+import { storeToRefs } from 'pinia';
 import { IonPage, IonSkeletonText, IonText, IonIcon, IonSpinner } from '@ionic/vue';
-import { IonLabel, IonNote, IonContent, IonList, IonItem } from '@ionic/vue';
+import { IonLabel, IonNote, IonContent, IonList, IonItem, IonFooter } from '@ionic/vue';
 import { chevronBack, chevronForward, newspaperOutline } from "ionicons/icons";
 // composables
 import { useLocale } from '@/composables/useLocale';
@@ -9,13 +10,17 @@ import { useLocale } from '@/composables/useLocale';
 import { localizeNumber } from '@/utils/number';
 // stores
 import { useJuzStore } from '@/stores/JuzStore';
+import { useRecitionsStore } from '@/stores/RecitionsStore';
 import { useAudioStore } from "@/stores/AudioStore";
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
+import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 
 const searchValue = shallowRef("");
 const juzStore = useJuzStore()
-const audioStore = useAudioStore()
+const { isVisible, isPlaying, chapterId } = storeToRefs(useAudioStore())
+const recitionsStore = useRecitionsStore()
+const { juzList } = storeToRefs(useJuzStore())
 const { getLine, getLocale, isRtl } = useLocale()
 
 const juzs = computed(() => {
@@ -32,11 +37,11 @@ const verseMapping = computed((): string[] | undefined => {
   }
 })
 
-const isPlaying = (juzNumber: number) => {
-  if (audioStore.isPlaying) {
+const isAudioPlaying = (juzNumber: number) => {
+  if (isPlaying.value) {
     if (juzNumber === juzStore.selectedJuz?.juz_number) {
-      if (audioStore.chapterId) {
-        return verseMapping.value?.includes(audioStore.chapterId.toString())
+      if (chapterId.value) {
+        return verseMapping.value?.includes(chapterId.value.toString())
       }
     }
   }
@@ -57,7 +62,7 @@ const isPlaying = (juzNumber: number) => {
         <ion-item :button="true" :detail="false" v-for="juz in juzs" :key="juz.id"
           :router-link="{ name: 'single.juz', params: { juzId: juz.juz_number } }">
           <ion-label>
-            <ion-spinner name="dots" color="danger" class="mr-3" v-if="isPlaying(juz.juz_number)"></ion-spinner>
+            <ion-spinner name="dots" color="danger" class="mr-3" v-if="isAudioPlaying(juz.juz_number)"></ion-spinner>
             <ion-text>{{ getLine('quranReader.textJuz') }} {{ localizeNumber(juz.juz_number, getLocale) }}</ion-text>
             <ion-text v-for="chapter in juz.chapters" :key="chapter.chapterId" color="medium" class="d-flex">
               {{ chapter.en }}</ion-text>
@@ -69,7 +74,10 @@ const isPlaying = (juzNumber: number) => {
         </ion-item>
       </ion-list>
     </ion-content>
-
+    <audio-player-component :model-value="isVisible" :selected-reciter="recitionsStore.selectedReciter"
+      @update:model-value="isVisible = $event" :map-recitions="recitionsStore.mapRecitions"
+      @update:selected-reciter="recitionsStore.handleSelectedReciter($event)" :juz-list="juzList">
+    </audio-player-component>
   </ion-page>
 </template>
 <style scoped>

@@ -8,7 +8,7 @@ import { useRoute } from "vue-router";
 // composables
 import { useScrollToElement } from "@/composables/useScrollToElement";
 import { useLocale } from "@/composables/useLocale";
-
+import { useVerseTiming } from "@/composables/useVerseTiming";
 // Types
 import type { Verse, MapVersesByPage, VerseWord } from "@/types/verse"
 import type { Pagination } from "@/types/page";
@@ -21,28 +21,33 @@ import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
 
 const { params } = useRoute()
-const { getChapterName } = useChapterStore()
+const { getChapterNameByChapterId } = useChapterStore()
 const { getLine } = useLocale()
 const intersectingVerseNumber = ref(1)
 const contentRef = ref()
 const cardRef = ref()
 const chapterId = computed(() => Number(params.chapterId))
 const { scrollToElement } = useScrollToElement()
+const { verseTiming } = useVerseTiming();
 
 const props = defineProps<{
     id: string;
-    isReadingView?: boolean
+    chapterId: number
     downloadProgress?: string | number
     isPlaying: boolean
-    verseTiming?: VerseTimingsProps
-    verses?: Verse[]
-    audioExperience: AudioExperience;
-    verseCount: number
     isLoading: boolean
     isAudioLoading: boolean
+    chapterName?: string
+    isBismillah: string
+    verses?: Verse[]
+    audioExperience: AudioExperience;
     pagination?: Pagination | null
     styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
+    lastChapterVerse: number
+    verseCount: number
     perPage: number
+    selectedTranslationId?: number
+    playbackSeeked?: number
 }>()
 
 const emit = defineEmits<{
@@ -61,7 +66,7 @@ const mapVersesByPage = computed((): MapVersesByPage | undefined => {
 });
 
 // scrolling based on verseNumber sent by audioStore
-watch(() => props.verseTiming, (t) => {
+watch(() => verseTiming.value, (t) => {
     if (t?.verseNumber) {
         const verseNumber = t.verseNumber
         if (props.audioExperience) {
@@ -75,8 +80,8 @@ watch(() => props.verseTiming, (t) => {
 
 // Highlight Active Words
 const isWordHighlighted = (word: VerseWord) => {
-    if (props.verseTiming) {
-        return props.verseTiming.wordLocation === word.location
+    if (verseTiming.value) {
+        return verseTiming.value?.wordLocation === word.location
     }
 };
 
@@ -101,10 +106,10 @@ const scroll = (verseNumber: number) => scrollToElement(`#line-${verseNumber}`, 
                     chapter-info>
                 </card-header-buttons-component>
                 <ion-card-header class="ion-text-center">
-                    <ion-card-subtitle>{{ getChapterName(Number(params.chapterId))?.bismillahPre ?
+                    <ion-card-subtitle>{{ getChapterNameByChapterId(Number(params.chapterId))?.bismillahPre ?
                         getLine('quranReader.textBismillah') : '' }}</ion-card-subtitle>
                     <ion-card-title>
-                        {{ getChapterName(Number(params.chapterId))?.nameArabic }}
+                        {{ getChapterNameByChapterId(Number(params.chapterId))?.nameArabic }}
                     </ion-card-title>
                 </ion-card-header>
                 <div v-for="(verses, page) in mapVersesByPage" :key="page" :id="`row-page-${page}`">
@@ -130,7 +135,7 @@ const scroll = (verseNumber: number) => scrollToElement(`#line-${verseNumber}`, 
                         <ion-col size="12">
                             <ion-item-divider>
                                 <ion-label class="m-auto">{{ getLine('quranReader.textPage') }} {{ page
-                                }}</ion-label>
+                                    }}</ion-label>
                             </ion-item-divider>
                         </ion-col>
                     </ion-card-content>

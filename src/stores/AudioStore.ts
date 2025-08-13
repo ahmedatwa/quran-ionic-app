@@ -1,11 +1,12 @@
 import { defineStore } from "pinia";
-import { ref, onBeforeMount, computed, shallowRef } from "vue";
+import { ref, onBeforeMount, computed, watch } from "vue";
+
 // types
-import type { AudioFile, AudioPlayerSettings } from "@/types/audio";
+import type { AudioFile } from "@/types/audio";
 import type { PlayAudioEmit } from "@/types/audio";
 import type { Chapter } from "@/types/chapter";
+
 // stores
-import { useMetaStore } from "@/stores/MetaStore";
 import { useRecitionsStore } from "@/stores/RecitionsStore";
 import { useChapterStore } from "@/stores/ChapterStore";
 // utils
@@ -19,6 +20,8 @@ import { useStorage } from "@/composables/useStorage";
 import { useAlert } from "@/composables/useAlert";
 import { useLocale } from "@/composables/useLocale";
 import { useVerseTiming } from "@/composables/useVerseTiming";
+import { useMetaData } from "@/composables/useMetaData";
+
 // router
 import { useRouter } from "vue-router";
 
@@ -26,7 +29,7 @@ export const useAudioStore = defineStore("audio-store", () => {
   const audioEl = ref<HTMLAudioElement>();
   const { downloadAudioFile } = useAudioFile();
   const { verseTiming } = useVerseTiming();
-  const metaStore = useMetaStore();
+  const { setPageTitle, setMetaData } = useMetaData();
   const recitionsStore = useRecitionsStore();
   const { setMediaSession } = useMediaSession(audioEl);
   const chapterStore = useChapterStore();
@@ -34,7 +37,8 @@ export const useAudioStore = defineStore("audio-store", () => {
   const isLoading = ref(false);
   const settingsDB = useStorage("__settingsDB");
   const audioDB = useStorage("__audioDB");
-  const { presentToast, presentAlert, presentLoading } = useAlert();
+  const { presentToast, presentAlert, presentLoading, didDismissState } =
+    useAlert();
   const audioFiles = ref<AudioFile | null>(null);
   const autoStartPlayer = ref(false);
   const chapterId = ref<number>();
@@ -96,35 +100,33 @@ export const useAudioStore = defineStore("audio-store", () => {
     chapterId.value = payload.audioID;
     selectedVerseKey.value = payload.verseKey;
     audioPayLoadSrc.value = payload.audioSrc ? payload.audioSrc : audioSrc;
-
     if (recitionsStore.selectedReciter) {
       const chapter = chapterStore.getChapter(payload.audioID);
       // check for DB files return if audio found
-      // const audioStorage = await audioDB.getStorage(
-      //   `${recitionsStore.selectedReciter.id}-${payload.audioID}`
-      // );
+      const audioStorage = await audioDB.getStorage(
+        `${recitionsStore.selectedReciter.id}-${payload.audioID}`
+      );
 
-      // if (audioStorage) {
-      //   audioFiles.value = {
-      //     ...audioStorage,
-      //     verse_timings: JSON.parse(audioStorage.verse_timings),
-      //   };
-      //   chapterId.value = payload.audioID;
-      //   isLoading.value = false;
-      //   return;
-      // }
-      // stop the api call if audio files are already loaded
+      if (audioStorage) {
+        audioFiles.value = {
+          ...audioStorage,
+          verse_timings: JSON.parse(audioStorage.verse_timings),
+        };
+        chapterId.value = payload.audioID;
+        isLoading.value = false;
+        return;
+      }
+      //stop the api call if audio files are already loaded
       // to chapter from prev api call
-      // if (
-      //   chapter?.audioFile?.reciterId === recitionsStore.selectedReciter.id &&
-      //   chapter?.audioFile.chapter_id === payload.audioID
-      // ) {
-      //   audioFiles.value = chapter.audioFile;
-      //   isLoading.value = false;
-      //   return;
-      // }
+      if (
+        chapter?.audioFile?.reciterId === recitionsStore.selectedReciter.id &&
+        chapter?.audioFile.chapter_id === payload.audioID
+      ) {
+        audioFiles.value = chapter.audioFile;
+        isLoading.value = false;
+        return;
+      }
 
-      
       await loadAudioFromJSON(
         recitionsStore.selectedReciter?.id.toString(),
         payload.audioID.toString()
@@ -143,7 +145,7 @@ export const useAudioStore = defineStore("audio-store", () => {
           }
         })
         .catch(async (e) => {
-          await presentToast({ message: String(e) });
+          await presentToast({ message: String(e), id: "error-loading-audio" });
         })
         .finally(async () => {
           isLoading.value = false;
@@ -179,32 +181,6 @@ export const useAudioStore = defineStore("audio-store", () => {
         reject(error);
       }
     });
-  };
-  /**
-   * play next chapter and loaddata when needed
-   * @param audioSrc
-   * @return void
-   */
-  const playNext = async (__ev?: boolean) => {
-    if (chapterId.value) {
-      chapterId.value =
-        chapterId.value >= chapterStore.TOTAL_CHAPTERS
-          ? 1
-          : chapterId.value + 1;
-      // get the audio files
-      await getAudio({ audioID: chapterId.value });
-      await presentLoading("fetching-audio-data", false);
-      // store selected chapter into chapterStore
-      const chapter = chapterStore.chaptersList?.find(
-        (c) => c.id === chapterId.value
-      );
-      if (chapter) {
-        chapterStore.selectedChapter = chapter;
-        // route to chapter for data to be fetched
-        replace(`/chapter/${chapter.id}/${chapter.slug}`);
-        await presentLoading("fetching-audio-data", true);
-      }
-    }
   };
 
   const playPrevious = async () => {
@@ -341,8 +317,8 @@ export const useAudioStore = defineStore("audio-store", () => {
 
   const loadMetaData = () => {
     if (chapterName.value) {
-      metaStore.setPageTitle(chapterName.value);
-      metaStore.setMetaData([
+      setPageTitle(chapterName.value);
+      setMetaData([
         { property: "og:audio:title", content: chapterName.value },
         { name: "twitter:title", content: chapterName.value },
         { property: "og:title", content: chapterName.value },
@@ -350,7 +326,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     }
 
     if (audioFiles) {
-      metaStore.setMetaData([
+      setMetaData([
         {
           property: "music:song:track",
           content: String(audioFiles.value?.id),
@@ -379,7 +355,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     }
 
     if (recitionsStore.selectedReciter) {
-      metaStore.setMetaData([
+      setMetaData([
         {
           name: "twitter:image",
           content: `/reciters/${recitionsStore.selectedReciter?.reciter_id}.jpg`,
@@ -417,10 +393,10 @@ export const useAudioStore = defineStore("audio-store", () => {
   const cleanupListeners = () => {
     listenerActive.value = false;
     isPlaying.value = false;
+    isVisible.value = false;
     audioEl.value?.removeEventListener("timeupdate", playbackListener);
     audioEl.value?.removeEventListener("ended", playbackEnded);
     audioEl.value?.removeEventListener("pause", playbackPaused);
-    //verseTiming.value = undefined;
   };
 
   const playbackListener = () => {
@@ -448,7 +424,16 @@ export const useAudioStore = defineStore("audio-store", () => {
         }
         break;
       case "repeat":
-        await playNext();
+        await presentLoading(false, {
+          id: "playback-ended",
+          message: `Playing Next Chapter ${Number(chapterId.value) + 1} in 5s`,
+          duration: 5000,
+        }).then(async () => {
+          if (didDismissState.value) {
+            await playNext();
+          }
+        });
+
         break;
       case "none":
         isPlaying.value = false;
@@ -464,6 +449,32 @@ export const useAudioStore = defineStore("audio-store", () => {
     }
   };
 
+  /**
+   * play next chapter and loaddata when needed
+   * @param audioSrc
+   * @return void
+   */
+  const playNext = async (__ev?: boolean) => {
+    if (chapterId.value) {
+      chapterId.value =
+        chapterId.value >= chapterStore.TOTAL_CHAPTERS
+          ? 1
+          : chapterId.value + 1;
+      // get the audio files
+      await getAudio({ audioID: chapterId.value }).then(() => {
+        // store selected chapter into chapterStore
+        const chapter = chapterStore.chaptersList?.find(
+          (c) => c.id === chapterId.value
+        );
+        if (chapter) {
+          chapterStore.selectedChapter = chapter;
+          // route to chapter for data to be fetched
+          replace(`/chapter/${chapter.id}`);
+        }
+      });
+    }
+  };
+
   const closePlayer = () => {
     if (audioEl.value) {
       audioEl.value.pause();
@@ -475,35 +486,45 @@ export const useAudioStore = defineStore("audio-store", () => {
   };
 
   const handleAudioSetting = async (ev: CustomEvent) => {
-    const audio: { checked: boolean; value: string } = ev.detail;
-    switch (audio.value) {
+    switch (ev.detail.value) {
       case "autoPlay":
-        audioPlayerSetting.value.autoPlay = audio.checked;
+        audioPlayerSetting.value.autoPlay = ev.detail.checked;
         break;
       case "dismissOnEnd":
-        audioPlayerSetting.value.dismissOnEnd = audio.checked;
+        audioPlayerSetting.value.dismissOnEnd = ev.detail.checked;
         break;
       case "autoScroll":
-        audioPlayerSetting.value.autoScroll = audio.checked;
+        audioPlayerSetting.value.autoScroll = ev.detail.checked;
         break;
       case "autoDownload":
-        audioPlayerSetting.value.autoDownload = audio.checked;
+        audioPlayerSetting.value.autoDownload = ev.detail.checked;
         break;
       case "fab":
-        audioPlayerSetting.value.fab = audio.checked;
+        audioPlayerSetting.value.fab = ev.detail.checked;
+        break;
+      case "once":
+        loopAudio.value = ev.detail.value;
+        audioPlayerSetting.value.loopAudio = ev.detail.value;
+        break;
+      case "none":
+        loopAudio.value = ev.detail.value;
+        audioPlayerSetting.value.loopAudio = ev.detail.value;
+        break;
+      case "repeat":
+        loopAudio.value = ev.detail.value;
+        audioPlayerSetting.value.loopAudio = ev.detail.value;
         break;
     }
 
     await settingsDB.setStorage("audioSettings", audioPlayerSetting);
   };
 
-  const setLoopAudio = async (event: string) => {
-    if (event) {
-      loopAudio.value = event;
-      audioPlayerSetting.value.autoPlay;
+  const setLoopAudio = async (loopType: string) => {
+    if (loopType) {
+      loopAudio.value = loopType;
       await settingsDB.setStorage("audioSettings", {
         ...audioPlayerSetting.value,
-        loop: event,
+        loopAudio: loopAudio.value,
       });
     }
   };
@@ -528,6 +549,61 @@ export const useAudioStore = defineStore("audio-store", () => {
   const clearAudioStoragecache = async () => {
     await audioDB.clearStorage();
   };
+
+  /**
+   * watch audio seek
+   * then feed the verse number value
+   * to translation component for scroll
+   * to correct html element
+   */
+
+  watch(
+    () => playbackSeekedValue,
+    async (num) => {
+      if (num) {
+        await chapterStore.fetchMoreVerses();
+      }
+    }
+  );
+
+  /**
+   * watch App State
+   * compare verse number in verse timing with chapter verses
+   * if not located keep fetching till found
+   * for scroll to work if being inactive
+   */
+  watch(appState, async (state) => {
+    if (state === true) {
+      await chapterStore.fetchMoreVerses();
+    }
+  });
+
+  // handle play button
+  const handlePlayAudio = async (event: {
+    audioID: number;
+    verseKey?: string;
+  }) => {
+    if (event.audioID === chapterId.value) {
+      if (event.verseKey) {
+        await handlePlay(event);
+      } else {
+        await handlePlay(true);
+      }
+    } else {
+      resetValues();
+      await getAudio({ audioID: event.audioID, verseKey: event.verseKey });
+    }
+  };
+
+  /**
+   * isPlaying validation for Audio
+   * male sure same ID for chapter
+   * presented in both audioStore and chapterStore
+   */
+  const isPlayingState = computed(
+    () =>
+      isPlaying.value && chapterId.value === chapterStore.selectedChapter?.id
+  );
 
   return {
     audioEl,
@@ -559,6 +635,8 @@ export const useAudioStore = defineStore("audio-store", () => {
     getRecentlyPlayed,
     appState,
     playbackSeekedValue,
+    isPlayingState,
+    handlePlayAudio,
     setLoopAudio,
     playAudio,
     pauseAudio,

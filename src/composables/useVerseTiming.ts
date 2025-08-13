@@ -1,5 +1,5 @@
-// mouse.js
 import { shallowRef, computed, watchEffect, onUnmounted } from "vue";
+import { storeToRefs } from "pinia";
 // utils
 import { secondsToMilliSeconds } from "@/utils/datetime";
 import { getChapterIdfromKey } from "@/utils/verse";
@@ -7,12 +7,13 @@ import { makeWordLocation, getVerseNumberFromKey } from "@/utils/verse";
 // stores
 import { useAudioStore } from "@/stores/AudioStore";
 import { useChapterStore } from "@/stores/ChapterStore";
+// type
 import type { VerseTimingsProps, VerseTimingSegments } from "@/types/audio";
 
 export const useVerseTiming = () => {
-  const audioStore = useAudioStore();
+  const { audioFiles, currentTimestamp } = storeToRefs(useAudioStore());
   const { getVerseByVerseKey } = useChapterStore();
-  const verseTiming = shallowRef<VerseTimingsProps | undefined>();
+  const verseTiming = shallowRef<VerseTimingsProps>();
   const audioPayLoadSrc = shallowRef<string | undefined>("");
 
   const isCurrentTimeInRange = (
@@ -23,9 +24,7 @@ export const useVerseTiming = () => {
 
   // Store verse timings data retrived from API
   const verseTimingsMap = computed(() => {
-    //console.log(audioStore.audioFiles);
-
-    return audioStore.audioFiles?.verse_timings.map((vt) => {
+    return audioFiles.value?.verse_timings.map((vt) => {
       return {
         inRange: false,
         wordLocation: "",
@@ -37,11 +36,9 @@ export const useVerseTiming = () => {
   });
 
   watchEffect(() => {
-    if (audioStore.currentTimestamp) {
-      // console.log(verseTimingsMap.value);
-
+    if (currentTimestamp) {
       const currentTime = Math.ceil(
-        secondsToMilliSeconds(audioStore.currentTimestamp)
+        secondsToMilliSeconds(currentTimestamp.value)
       );
       // Find current verse Key
       const currentVerseTimingData = verseTimingsMap.value?.find(
@@ -77,7 +74,6 @@ export const useVerseTiming = () => {
                   vt[0]
                 ),
                 wordPosition: vt[0],
-                // pageNumber: currentVerseTimingData.pageNumber,
                 audioSrc: audioPayLoadSrc.value,
               };
               return;
@@ -111,6 +107,7 @@ export const useVerseTiming = () => {
       }
     }
   });
+
   onUnmounted(() => (verseTiming.value = undefined));
 
   return { verseTimingsMap, verseTiming, audioPayLoadSrc, getCurrentVerseData };

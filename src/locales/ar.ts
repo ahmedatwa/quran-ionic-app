@@ -20,6 +20,7 @@ export default {
     translations: "ترجمة",
     audioPlayer: "مشغل الصوت",
     autoPlay: "تشغيل تلقائي",
+    loopAudio: "تكرار الصوت",
     playerDismiss: "غلق المشغل تلقائي",
     translatedBy: "تمت الترجمة بواسطة",
     language: "اللغة",
@@ -37,11 +38,12 @@ export default {
     auto: "آلي",
     autoScroll: "التمرير التلقائي",
     cache: "مسح ذاكرة التخزين المؤقت",
-    autoDownload: "تنزيل الصوت تلقائيًا",
+    autoDownload: "حفظ الصوت تلقائيًا",
     keepAwake: "معروض دائمًا",
     highlightedWordColor: "لون الكلمة",
     fab: "زر الصوت الرائع",
-    cacheNote: "سيؤدي مسح ذاكرة التخزين المؤقت إلى إزالة ملفات ذاكرة التخزين المؤقت الصوتية فقط، دون إزالة أي إعدادات شخصية",
+    cacheNote:
+      "سيؤدي مسح ذاكرة التخزين المؤقت إلى إزالة ملفات ذاكرة التخزين المؤقت الصوتية فقط، دون إزالة أي إعدادات شخصية",
   },
   bookmark: {
     title: "الإشارات المرجعية",
@@ -61,6 +63,9 @@ export default {
     surah: "سورة {0}",
     ayah: "آية {0}",
     recentlyPlayed: "لعبت مؤخرًا",
+    none: "عدم التكرار",
+    repeat: "تكرار",
+    once: "تكرار مرة واحدة"
   },
   quranReader: {
     textPage: "صفحة",
@@ -84,6 +89,9 @@ export default {
     textDowloading: "جارٍ التنزيل...",
     verseBookmarked: "تم وضع إشارة مرجعية على الآية.",
     verseAlreadyBookmarked: "تحذير: تم وضع إشارة مرجعية على الآية بالفعل.",
+    introSubtitle:
+      "تطبيق القرآن الكريم لأجهزة ماك/آي أو إس/أندرويد هو صدقة جارية. أتمنى أن يُسهّل على الجميع قراءة القرآن الكريم ودراسته وتعلمه.",
+    about: "حول",
   },
   buttons: {
     ok: "نعم",
@@ -92,5 +100,8 @@ export default {
     dismiss: "رفض",
     confirm: "تأكيد",
     clear: "مسح",
+  },
+  text: {
+    loading: "جاري التحميل الرجاء الانتظار...",
   },
 };

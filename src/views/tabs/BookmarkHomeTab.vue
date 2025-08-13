@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, watchEffect } from "vue"
+import { storeToRefs } from 'pinia';
 import { IonContent, IonItem, IonLabel, IonNote, IonItemOptions } from '@ionic/vue';
 import { IonList, IonPage, IonIcon, IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { IonCardContent, IonItemOption, IonCard, IonItemSliding } from "@ionic/vue";
 import { bookmarkOutline, bookmarksOutline, trashOutline } from 'ionicons/icons';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
+import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 // utils
 import { truncate } from "@/utils/string";
 // composables
@@ -14,11 +16,18 @@ import { useStorage } from "@/composables/useStorage";
 import { useBookmark } from "@/composables/useBookmark";
 // type
 import type { BookmarkedItems } from "@/composables/useBookmark"
+// stores
+import { useAudioStore } from "@/stores/AudioStore";
+import { useRecitionsStore } from '@/stores/RecitionsStore';
+import { useJuzStore } from '@/stores/JuzStore';
 
 const { getLine } = useLocale()
 const bookmarks = ref<BookmarkedItems[]>([])
 const bookmarksBD = useStorage("__bookmarksDB")
 const { bookmarkedItems } = useBookmark(null)
+const { isVisible } = storeToRefs(useAudioStore())
+const recitionsStore = useRecitionsStore()
+const { juzList } = storeToRefs(useJuzStore())
 
 onBeforeMount(async () => {
     const len = await bookmarksBD.storageLength()
@@ -89,6 +98,10 @@ const deleteBookmark = async (key: string) => {
                 </ion-item-sliding>
             </ion-list>
         </ion-content>
+        <audio-player-component :model-value="isVisible" :selected-reciter="recitionsStore.selectedReciter"
+            @update:model-value="isVisible = $event" :map-recitions="recitionsStore.mapRecitions"
+            @update:selected-reciter="recitionsStore.handleSelectedReciter($event)" :juz-list="juzList">
+        </audio-player-component>
     </ion-page>
 </template>
 <style scoped>

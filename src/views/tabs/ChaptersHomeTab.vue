@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, shallowRef } from "vue"
+import { storeToRefs } from 'pinia';
 // ionic
 import { IonPage, IonContent, IonSkeletonText } from '@ionic/vue';
 import { IonNote, IonItem, IonList, IonLabel, IonSpinner } from '@ionic/vue';
@@ -7,22 +8,26 @@ import { bookOutline } from "ionicons/icons";
 // stores
 import { useAudioStore } from "@/stores/AudioStore";
 import { useChapterStore } from '@/stores/ChapterStore';
+import { useRecitionsStore } from '@/stores/RecitionsStore';
+import { useJuzStore } from '@/stores/JuzStore';
 // utils
 import { localizeNumber } from '@/utils/number';
 // composables
 import { useLocale } from '@/composables/useLocale';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
+import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 // types
 import type { Chapter } from "@/types/chapter"
 
 const searchValue = shallowRef("")
 const { getLocale, getLine, isRtl } = useLocale()
-const audioStore = useAudioStore()
+const { isPlaying, chapterId, isVisible } = storeToRefs(useAudioStore())
+const { juzList } = storeToRefs(useJuzStore())
 const { chaptersList, TOTAL_CHAPTERS } = useChapterStore()
+const recitionsStore = useRecitionsStore()
 
-
-const playingState = (id: number) => audioStore.isPlaying && id === audioStore.chapterId
+const playingState = (id: number) => isPlaying.value && id === chapterId.value
 
 const chapters = computed((): Chapter[] | undefined => {
   if (chaptersList) {
@@ -57,7 +62,7 @@ const chapters = computed((): Chapter[] | undefined => {
       </ion-list>
       <ion-list v-else>
         <ion-item button detail v-for="chapter in chapters" :key="chapter.id"
-          :router-link="`chapter/${chapter.slug}/${chapter.id}`">
+          :router-link="`chapter/${chapter.id}`">
           <ion-spinner name="dots" color="danger" class="ml-1" v-if="playingState(chapter.id)"></ion-spinner>
           <ion-label>{{ localizeNumber(chapter.id, getLocale) }}- {{ isRtl ? chapter.nameArabic : chapter.nameSimple }}
           </ion-label>
@@ -65,10 +70,19 @@ const chapters = computed((): Chapter[] | undefined => {
         </ion-item>
       </ion-list>
     </ion-content>
+    <audio-player-component :model-value="isVisible" :selected-reciter="recitionsStore.selectedReciter"
+      @update:model-value="isVisible = $event" :map-recitions="recitionsStore.mapRecitions"
+      @update:selected-reciter="recitionsStore.handleSelectedReciter($event)" :juz-list="juzList">
+    </audio-player-component>
   </ion-page>
 </template>
 <style scoped>
 .ml-1 {
   margin-right: 2px;
+}
+
+ion-col {
+  border: solid 1px #333;
+  text-align: center;
 }
 </style>

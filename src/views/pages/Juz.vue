@@ -123,7 +123,7 @@ onMounted(() => pageRefEl.value = pageRef.value.$el)
                 :verses="juzStore.selectedJuz?.verses" :computed-verses="juzStore.juzVersesByChapterMap"
                 :chapter-name="selectedChapterName.nameArabic" :audio-experience="audioStore.audioPlayerSetting"
                 @update:get-verses="loadMoreVerses" :pagination="pagination" :is-audio-loading="audioStore.isLoading"
-                :active-audio-id="audioStore.audioFiles?.chapter_id"
+                :active-audio-id="audioStore.audioFiles?.chapter_id" :per-page="perPage"
                 :selected-translation-id="transaltionStore.selectedTranslationId">
             </translations-view-component>
             <reading-view-component id="reading-juzs" v-else :is-playing="audioStore.isPlaying"

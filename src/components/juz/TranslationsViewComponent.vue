@@ -11,6 +11,7 @@ import { ellipsisVerticalOutline } from "ionicons/icons";
 import { useLocale } from "@/composables/useLocale";
 import { useScrollToElement } from "@/composables/useScrollToElement";
 import { useVerseTiming } from '@/composables/useVerseTiming';
+import { useBookmark } from "@/composables/useBookmark";
 // router
 import { useRoute } from "vue-router";
 // types
@@ -20,12 +21,11 @@ import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 import type { Pagination } from "@/types/page"
 import type { juzVersesByPageMap } from "@/types/juz";
-
 // components
 import VerseActionComponent from "@/components/common/VerseActionComponent.vue";
 import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
-import { useBookmark } from "@/composables/useBookmark";
+import VerseLoadingStateComponent from "@/components/common/VersesLoadingStateComponent.vue"
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
 
@@ -58,6 +58,7 @@ const props = defineProps<{
     pagination?: Pagination | null
     verseTiming?: VerseTimingsProps
     activeAudioId?: number
+    perPage: number
     styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
     selectedTranslationId?: number
 }>()
@@ -112,6 +113,8 @@ const isWordHighlighted = (word: VerseWord) => verseTiming.value?.wordLocation =
                     <ion-card-title>{{ getChapterNameByFirstVerse(mappedVerses[0])?.nameArabic }} </ion-card-title>
                 </ion-card-header>
                 <hr>
+                <verse-loading-state-component :loading="!verses?.length" :total="perPage">
+                </verse-loading-state-component>
                 <ion-item v-for="verse in mappedVerses" :key="verse.verse_number"
                     :data-verse-number="verse.verse_number" :data-hizb-number="verse.hizb_number"
                     :data-juz-number="verse.juz_number" :id="`verse-col-${verse.verse_number}`">

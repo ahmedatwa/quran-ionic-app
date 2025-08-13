@@ -86,6 +86,7 @@ type AudioPlayerSettings = {
   fullwidth?: boolean;
   autoDownload?: boolean;
   fab: boolean;
+  loopType: string
 };
 
 type AudioExperience = { autoScroll: boolean; tooltip: boolean } | null;
