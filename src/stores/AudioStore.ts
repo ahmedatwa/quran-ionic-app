@@ -9,6 +9,8 @@ import type { Chapter } from "@/types/chapter";
 // stores
 import { useRecitionsStore } from "@/stores/RecitionsStore";
 import { useChapterStore } from "@/stores/ChapterStore";
+import { useJuzStore } from "@/stores/JuzStore";
+import { usePageStore } from "@/stores/PageStore";
 // utils
 import { getLangFullLocale } from "@/utils/locale";
 import { secondsFormatter, secondsToMilliSeconds } from "@/utils/datetime";
@@ -21,20 +23,24 @@ import { useAlert } from "@/composables/useAlert";
 import { useLocale } from "@/composables/useLocale";
 import { useVerseTiming } from "@/composables/useVerseTiming";
 import { useMetaData } from "@/composables/useMetaData";
-
 // router
-import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 export const useAudioStore = defineStore("audio-store", () => {
   const audioEl = ref<HTMLAudioElement>();
   const { downloadAudioFile } = useAudioFile();
   const { verseTiming } = useVerseTiming();
   const { setPageTitle, setMetaData } = useMetaData();
-  const recitionsStore = useRecitionsStore();
-  const { setMediaSession } = useMediaSession(audioEl);
+  // stores
   const chapterStore = useChapterStore();
+  const recitionsStore = useRecitionsStore();
+  const { playNextPage } = usePageStore();
+  const { playNextJuz, fetchMoreJuzVerses } = useJuzStore();
+
+  const { setMediaSession } = useMediaSession(audioEl);
   const isVisible = ref(false);
   const isLoading = ref(false);
+  const route = useRoute();
   const settingsDB = useStorage("__settingsDB");
   const audioDB = useStorage("__audioDB");
   const { presentToast, presentAlert, presentLoading, didDismissState } =
@@ -55,7 +61,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     "1.75",
     "2",
   ]);
-  const appState = ref(false);
+
   const playbackRate = ref("Normal");
   const listenerActive = ref(false);
   const progressTimer = ref<number>(0);
@@ -67,7 +73,6 @@ export const useAudioStore = defineStore("audio-store", () => {
   const isMuted = ref(false);
   const isPaused = ref(false);
   const isResumed = ref(false);
-  const loopAudio = ref("none");
   const audioBuffer = ref();
   const playbackSeekedValue = ref<number>();
   const currentTimestamp = ref(0);
@@ -79,11 +84,10 @@ export const useAudioStore = defineStore("audio-store", () => {
     fab: true,
     autoDownload: true,
     volume: 100,
-    loopAudio: "none",
+    loopAudio: "never",
   });
 
   const recentlyPlayed = ref<number[]>([]);
-  const { replace } = useRouter();
 
   const chapterName = computed(() => {
     if (chapterId.value) {
@@ -183,23 +187,21 @@ export const useAudioStore = defineStore("audio-store", () => {
     });
   };
 
+  // check this
   const playPrevious = async () => {
-    if (chapterId.value) {
-      chapterId.value = chapterId.value - 1;
-      await getAudio({ audioID: chapterId.value });
-      // store selected chapter into chapterStore
-      const chapter = chapterStore.chaptersList?.find(
-        (c) => c.id === chapterId.value
-      );
-      if (chapter) chapterStore.selectedChapter = chapter;
-    }
+    // if (chapterId.value) {
+    //   chapterId.value = chapterId.value - 1;
+    //   await getAudio({ audioID: chapterId.value });
+    //   // store selected chapter into chapterStore
+    //   const chapter = chaptersList?.find((c) => c.id === chapterId.value);
+    //   if (chapter) selectedChapter = chapter;
+    // }
   };
 
   onBeforeMount(async () => {
     const audioStorage = await settingsDB.getStorage("audioSettings");
     if (audioStorage) {
       audioPlayerSetting.value = audioStorage;
-      loopAudio.value = audioPlayerSetting.value.loopAudio;
       mediaVolume.value = audioPlayerSetting.value.volume;
     }
     const recent = await settingsDB.getStorage("recently-played");
@@ -246,6 +248,16 @@ export const useAudioStore = defineStore("audio-store", () => {
     });
   };
 
+  const resumeAudio = async () => {
+    audioEl.value?.play();
+    isPlaying.value = true;
+    isPaused.value = false;
+    // Store Last reading verse
+    await settingsDB.setStorage("lastreadingverse", {
+      ...verseTiming.value,
+    });
+  };
+
   const changeMediaVolume = async (volume: number) => {
     if (audioEl.value) {
       mediaVolume.value = volume;
@@ -263,17 +275,6 @@ export const useAudioStore = defineStore("audio-store", () => {
       audioEl.value.currentTime = milliSecondsToSeconds(seekValue);
       currentTimestamp.value = audioEl.value.currentTime;
       playbackSeekedValue.value = audioEl.value.currentTime;
-    }
-  };
-
-  const handlePlay = async (
-    ev: { audioID: number; verseKey?: string } | boolean
-  ) => {
-    if (typeof ev === "object") {
-      selectedVerseKey.value = ev.verseKey;
-      loadedData();
-    } else {
-      isPlaying.value ? pauseAudio() : playAudio();
     }
   };
 
@@ -415,7 +416,7 @@ export const useAudioStore = defineStore("audio-store", () => {
   };
 
   const playbackEnded = async () => {
-    switch (loopAudio.value) {
+    switch (audioPlayerSetting.value.loopAudio) {
       case "once":
         if (audioEl.value) {
           audioEl.value.currentTime = 0;
@@ -426,7 +427,9 @@ export const useAudioStore = defineStore("audio-store", () => {
       case "repeat":
         await presentLoading(false, {
           id: "playback-ended",
-          message: `Playing Next Chapter ${Number(chapterId.value) + 1} in 5s`,
+          message: `Playing ${audioPayLoadSrc.value} ${
+            Number(chapterId.value) + 1
+          } in 5s`,
           duration: 5000,
         }).then(async () => {
           if (didDismissState.value) {
@@ -435,43 +438,16 @@ export const useAudioStore = defineStore("audio-store", () => {
         });
 
         break;
-      case "none":
+      case "never":
         isPlaying.value = false;
         isPaused.value = true;
         listenerActive.value = false;
-        // verseTiming.value = undefined;
         cleanupListeners();
         // dismiss on playbavc ends
         if (audioPlayerSetting.value.dismissOnEnd) {
           closePlayer();
         }
         break;
-    }
-  };
-
-  /**
-   * play next chapter and loaddata when needed
-   * @param audioSrc
-   * @return void
-   */
-  const playNext = async (__ev?: boolean) => {
-    if (chapterId.value) {
-      chapterId.value =
-        chapterId.value >= chapterStore.TOTAL_CHAPTERS
-          ? 1
-          : chapterId.value + 1;
-      // get the audio files
-      await getAudio({ audioID: chapterId.value }).then(() => {
-        // store selected chapter into chapterStore
-        const chapter = chapterStore.chaptersList?.find(
-          (c) => c.id === chapterId.value
-        );
-        if (chapter) {
-          chapterStore.selectedChapter = chapter;
-          // route to chapter for data to be fetched
-          replace(`/chapter/${chapter.id}`);
-        }
-      });
     }
   };
 
@@ -483,6 +459,19 @@ export const useAudioStore = defineStore("audio-store", () => {
     audioFiles.value = null;
     selectedVerseKey.value = "";
     cleanupListeners();
+  };
+
+  /**
+   * for paused audio
+   * soft close the player but preserve the values
+   * in case on repeat mode don't have to refetch the audio files data
+   * and remove only audio listeners
+   * @return void
+   */
+  const softClosePlayer = () => {
+    if (isPaused.value) {
+      cleanupListeners();
+    }
   };
 
   const handleAudioSetting = async (ev: CustomEvent) => {
@@ -503,15 +492,12 @@ export const useAudioStore = defineStore("audio-store", () => {
         audioPlayerSetting.value.fab = ev.detail.checked;
         break;
       case "once":
-        loopAudio.value = ev.detail.value;
         audioPlayerSetting.value.loopAudio = ev.detail.value;
         break;
-      case "none":
-        loopAudio.value = ev.detail.value;
+      case "never":
         audioPlayerSetting.value.loopAudio = ev.detail.value;
         break;
       case "repeat":
-        loopAudio.value = ev.detail.value;
         audioPlayerSetting.value.loopAudio = ev.detail.value;
         break;
     }
@@ -521,10 +507,9 @@ export const useAudioStore = defineStore("audio-store", () => {
 
   const setLoopAudio = async (loopType: string) => {
     if (loopType) {
-      loopAudio.value = loopType;
       await settingsDB.setStorage("audioSettings", {
         ...audioPlayerSetting.value,
-        loopAudio: loopAudio.value,
+        loopAudio: loopType,
       });
     }
   };
@@ -537,7 +522,7 @@ export const useAudioStore = defineStore("audio-store", () => {
     let cs: Chapter[] = [];
     if (recentlyPlayed.value) {
       recentlyPlayed.value.forEach((chapterId) => {
-        const chapter = chapterStore.chaptersList?.find(
+        const chapter = chapterStore.chaptersList.find(
           (c) => c.id === chapterId
         );
         if (chapter) cs.push({ ...chapter });
@@ -561,37 +546,44 @@ export const useAudioStore = defineStore("audio-store", () => {
     () => playbackSeekedValue,
     async (num) => {
       if (num) {
-        await chapterStore.fetchMoreVerses();
+        switch (audioPayLoadSrc.value) {
+          case "Chapter":
+            await chapterStore.fetchMoreChapterVerses();
+            break;
+          case "Juz":
+            await fetchMoreJuzVerses();
+            break;
+          case "Page":
+            break;
+
+          default:
+            break;
+        }
       }
     }
   );
 
-  /**
-   * watch App State
-   * compare verse number in verse timing with chapter verses
-   * if not located keep fetching till found
-   * for scroll to work if being inactive
-   */
-  watch(appState, async (state) => {
-    if (state === true) {
-      await chapterStore.fetchMoreVerses();
-    }
-  });
-
   // handle play button
-  const handlePlayAudio = async (event: {
-    audioID: number;
-    verseKey?: string;
-  }) => {
-    if (event.audioID === chapterId.value) {
-      if (event.verseKey) {
-        await handlePlay(event);
+  const handlePlayAudio = async (ev: PlayAudioEmit) => {
+    if (ev.audioID === chapterId.value) {
+      if (ev.verseKey) {
+        await handlePlay(ev);
       } else {
         await handlePlay(true);
       }
     } else {
       resetValues();
-      await getAudio({ audioID: event.audioID, verseKey: event.verseKey });
+      await getAudio(ev);
+    }
+  };
+
+  const handlePlay = async (ev: PlayAudioEmit | boolean) => {
+    if (typeof ev === "boolean") {
+      isPlaying.value ? pauseAudio() : playAudio();
+    } else {
+      await getAudio(ev);
+      // selectedVerseKey.value = ev.verseKey;
+      // loadedData();
     }
   };
 
@@ -600,10 +592,28 @@ export const useAudioStore = defineStore("audio-store", () => {
    * male sure same ID for chapter
    * presented in both audioStore and chapterStore
    */
-  const isPlayingState = computed(
-    () =>
+  const isPlayingState = computed(() => {
+    return (
       isPlaying.value && chapterId.value === chapterStore.selectedChapter?.id
-  );
+    );
+  });
+
+  const playNext = async (_ev?: boolean) => {
+    switch (audioPayLoadSrc.value) {
+      case "chapter":
+        if (chapterId.value)
+          await chapterStore.playNextChapter(chapterId.value);
+        break;
+      case "juz":
+        if (chapterId.value) await playNextJuz();
+        break;
+      case "page":
+        await playNextPage(Number(route.params.pageId));
+        break;
+      default:
+        break;
+    }
+  };
 
   return {
     audioEl,
@@ -624,20 +634,21 @@ export const useAudioStore = defineStore("audio-store", () => {
     mediaVolume,
     isPlaying,
     isMuted,
-    loopAudio,
     isResumed,
     audioBuffer,
     currentTimestamp,
     audioPlayerSetting,
     isPaused,
     isVisible,
+    resumeAudio,
     recentlyPlayed,
     getRecentlyPlayed,
-    appState,
     playbackSeekedValue,
     isPlayingState,
     handlePlayAudio,
     setLoopAudio,
+    softClosePlayer,
+    closePlayer,
     playAudio,
     pauseAudio,
     changeMediaVolume,

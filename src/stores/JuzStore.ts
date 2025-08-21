@@ -115,6 +115,22 @@ export const useJuzStore = defineStore("juz-store", () => {
     return 0;
   });
 
+  const fetchMoreJuzVerses = () => {};
+  /**
+   * play next chapter and loaddata when needed
+   * @param audioSrc
+   * @return void
+   */
+  const playNextJuz = async () => {
+    if (pageNumber) {
+      pageNumber = pageNumber >= DEFAULT_NUMBER_OF_PAGES ? 1 : pageNumber + 1;
+      // get the audio files
+      await getAudio(payload).then(() => {
+        replace(`/page/${pageNumber}`);
+      });
+    }
+  };
+
   return {
     juzList,
     verses,
@@ -124,6 +140,8 @@ export const useJuzStore = defineStore("juz-store", () => {
     juzVersesByChapterMap,
     getFirstVerseOfJuz,
     getLastVerseOfJuz,
+    playNextJuz,
+    fetchMoreJuzVerses,
     getVerses,
   };
 });

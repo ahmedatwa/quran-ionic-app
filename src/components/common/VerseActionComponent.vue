@@ -8,6 +8,7 @@ import type { Verse } from "@/types/verse";
 
 const { presentAlert } = useAlert()
 const props = defineProps<{
+    id: string | number
     verse: Verse
     triggerProp: string
     actionSheetButtonsProps?: { text: string, role: string }[]
@@ -54,14 +55,14 @@ const handleDismiss = (ev: CustomEvent) => {
 }
 
 const copyText = async (text: string) => {
-    await Clipboard.write({
-        string: text
-    });
-    
-    await presentAlert({
-        header: "Success",
-        message: "Verse Text Copied."
-    })
+    await Promise.all([
+        Clipboard.write({ string: text }),
+        presentAlert({
+            id: "text-copy-success",
+            header: "Success",
+            message: "Verse Text Copied."
+        })
+    ])
 }
 
 </script>
@@ -69,6 +70,6 @@ const copyText = async (text: string) => {
 <template>
     <div class="container">
         <ion-action-sheet :trigger="triggerProp" :header="`Verse ${verse.verse_key}`" :buttons="actionSheetButtons"
-            @did-dismiss="handleDismiss($event)"></ion-action-sheet>
+            @did-dismiss="handleDismiss($event)" :key="id" :id="id"></ion-action-sheet>
     </div>
 </template>

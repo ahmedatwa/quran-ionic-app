@@ -8,7 +8,9 @@ import { useLocale } from "@/composables/useLocale";
 // capacitor plugins
 import { Device } from "@capacitor/device";
 
-export const useStartupScript = () => {
+const appState = shallowRef(false);
+
+export const useStartup = () => {
   const translationsStore = useTranslationsStore();
   const recitionsStore = useRecitionsStore();
 
@@ -75,7 +77,7 @@ export const useStartupScript = () => {
         fab: true,
         autoDownload: true,
         volume: 100,
-        loopAudio: "none",
+        loopAudio: "never",
       });
     }
   };
@@ -148,5 +150,6 @@ export const useStartupScript = () => {
     setDefaultLocale,
     setReciter,
     run,
+    appState,
   };
 };

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watchEffect, computed, onMounted } from 'vue';
+import { ref, watchEffect, computed, onMounted, shallowRef, watch, nextTick } from 'vue';
 import { IonContent, IonPage, IonButton } from '@ionic/vue';
 import { storeToRefs } from 'pinia';
 // components
@@ -8,7 +8,7 @@ import ReadingViewComponent from '@/components/page/ReadingViewComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 import ChapterInfoModalComponent from '@/components/chapter/ChapterInfoModalComponent.vue';
 import SegmentsComponent from '@/components/common/SegmentsComponent.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from "vue-router";
 // stores
 import { usePageStore } from "@/stores/PageStore"
 import { useAudioStore } from "@/stores/AudioStore";
@@ -20,18 +20,25 @@ import { useJuzStore } from '@/stores/JuzStore';
 import { useSettings } from '@/composables/useSettings';
 import { useAlert } from '@/composables/useAlert';
 import { useAudioFile } from '@/composables/useAudioFile';
+import { useLocale } from '@/composables/useLocale';
+import { useMetaData } from '@/composables/useMetaData';
 // types
 import type { GroupVersesByChapterID } from "@/types/page"
 import type { ChapterInfo } from '@/types/chapter';
+import type { PlayAudioEmit } from "@/types/audio";
+
+
 
 const currentSegment = ref("translations")
 const pageStore = usePageStore()
-const { presentAlert } = useAlert()
+const { presentAlert, presentToast } = useAlert()
+const { getLine } = useLocale()
+const { setMetaData, setPageTitle } = useMetaData()
 const { computedCSS } = useSettings()
 const recitionsStore = useRecitionsStore()
 const { juzList } = storeToRefs(useJuzStore())
-const transaltionStore = useTranslationsStore()
-const { selectedChapterName, selectedChapterBismillah, getchapterInfo } = useChapterStore()
+const { selectedTranslation, selectedTranslationId } = storeToRefs(useTranslationsStore())
+const { selectedChapterName, selectedChapterBismillah, getchapterInfo, getTotalVersesOfChapter } = useChapterStore()
 const audioStore = useAudioStore()
 const { downloadFileProgress } = useAudioFile()
 const pagination = computed(() => pageStore.selectedPage?.pagination)
@@ -39,107 +46,54 @@ const pageRef = ref()
 const pageRefEl = ref()
 const chapterInfo = ref<ChapterInfo | null>(null)
 const chapterInfoButtonRef = ref()
-const router = useRoute()
-const pageParam = computed(() => router.params.pageId ? router.params.pageId.toString().split("-") : '')
-const pageId = computed(() => Number(pageParam.value[0]))
-const vNumber = computed(() => Number(pageParam.value[1]))
-const perPage = ref(20)
+const route = useRoute()
+const router = useRouter()
+const perPage = shallowRef(30)
+const lastIntersectingVerseOfPage = shallowRef<{ verseNumber: number, chapterId: number }>()
+const currentPageId = shallowRef<number>()
+const isFirstVerseOfVerses = computed(() => pageStore.getFirstVerseOfSeletedPage?.verse_number)
 
+/** 
+ * entry point for storing verses 
+ * based on URL pageId param change
+ */
 watchEffect(async () => {
-    if (pageId.value) {
-        pageStore.selectedPage = null
-        const found = pageStore.pagesList.find((p) => p.pageNumber === pageId.value)
-        if (found) {
-            if (!found.verses?.length) {
-                await pageStore.getVerses(found.pageNumber, true)
-                const verses = pageStore.verses?.slice(0, perPage.value)
-                if (verses) {
-                    pageStore.selectedPage = found
-                    verses.forEach((v) => pageStore.selectedPage?.verses?.push({ ...v, bookmarked: false }))
-                }
-            } else {
-                pageStore.selectedPage = found
-            }
-
-        }
-    }
-})
-
-const playAudio = async (event: { audioID: number, verseKey?: string }) => {
-    if (event.audioID === audioStore.chapterId) {
-        await audioStore.handlePlay(true);
-        return;
-    }
-    audioStore.resetValues()
-    await audioStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
-}
-
-const loadMoreVerses = (infiniteScrollEvent: InfiniteScrollCustomEvent) => {
-    if (computedVerses.value?.length === chapterStore.versesTotalRecords) {
-        infiniteScrollEvent.target.complete()
-    } else {
-        fetchMoreVerses(infiniteScrollEvent)
-    }
-}
-
-const fetchMoreVerses = async (infiniteScrollEvent?: InfiniteScrollCustomEvent) => {
-    if (infiniteScrollEvent) {
-        if (computedVerses.value) {
-            loadingVerses.value = true
-            currentPageEnd.value = Math.ceil(computedVerses.value?.length + perPage.value)
-            const verses = chapterStore.verses?.slice(computedVerses.value?.length, currentPageEnd.value)
-            if (verses) {
-                verses.forEach((v) => chapterStore.selectedChapter?.verses?.push({ ...v, bookmarked: false }))
-                setTimeout(() => {
-                    if (infiniteScrollEvent) infiniteScrollEvent.target.complete()
-                    loadingVerses.value = false
-                }, 200);
-            }
-        }
-    } else {
-        // look for number in chapter verses 
-        const toBFoundVerse: Verse | undefined = computedVerses.value?.find(
-            (v) => v.verse_number === currentVerseNumberFromTiming.value)
-
-        if (!toBFoundVerse) {
-
-            const lastVerseInComputedVerses = computedVerses.value?.slice(-1)[0]
-            if (lastVerseInComputedVerses?.verse_number && currentVerseNumberFromTiming.value) {
-                const calc = Math.ceil(currentVerseNumberFromTiming.value - lastVerseInComputedVerses?.verse_number)
-                if (computedVerses.value) {
-                    currentPageEnd.value = Math.ceil(computedVerses.value?.length + calc)
-                    const verses = chapterStore.verses?.slice(computedVerses.value?.length, (currentPageEnd.value + 1))
-                    if (verses) {
-                        verses.forEach((v) => chapterStore.selectedChapter?.verses?.push({ ...v, bookmarked: false }))
-                        await nextTick(async () => {
-                            if (computedVerses.value) {
-                                if (computedVerses.value?.length >= calc)
-                                    loadingVerses.value = true
-                            }
+    if (currentPageId.value) {
+        if (pageStore.pagesList) {
+            pageStore.loadingVerses = true
+            const pageFound = pageStore.pagesList.find((p) => p.pageNumber === currentPageId.value)
+            if (pageFound) {
+                // reset values
+                pageStore.selectedPageVerses = []
+                pageStore.allVerses = []
+                pageStore.selectedPage = null
+                // then fetch verses
+                await pageStore.getVerses(pageFound.pageNumber).then(() => {
+                    if (pageStore.allVerses.length) {
+                        pageStore.selectedPage = pageFound
+                        pageStore.allVerses?.slice(0, perPage.value)
+                            .forEach((v) => pageStore.selectedPageVerses.push({ ...v, bookmarked: false }))
+                        pageStore.loadingVerses = false
+                    }
+                })
+                if (audioStore.audioPlayerSetting.loopAudio === "repeat") {
+                    if (pageStore.selectedPageVerses.length && audioStore.isPaused) {
+                        await audioStore.resumeAudio().then(() => {
+                            pageStore.loadingVerses = false
                         })
-
                     }
                 }
-            }
-        } else {
-            return
-        }
-    }
-}
 
-const selectedVerses = computed(() => {
-    if (pageStore.selectedPage) {
-        return pageStore.selectedPage.verses
+            }
+        }
     }
 })
 
 const groupVersesByChapter = computed(() => {
-    if (selectedVerses.value) {
-        return selectedVerses.value?.reduce((i: GroupVersesByChapterID, o) => {
-            (i[o.chapter_id] = i[o.chapter_id] || []).push(o);
-            return i;
-        }, {});
-    }
+    return pageStore.selectedPageVerses.reduce((i: GroupVersesByChapterID, o) => {
+        (i[o.chapter_id] = i[o.chapter_id] || []).push(o);
+        return i;
+    }, {})
 })
 
 const getSurahInfo = async (ev: number) => {
@@ -150,42 +104,132 @@ const getSurahInfo = async (ev: number) => {
 }
 
 const getTranslationAlert = async () => {
-    if (transaltionStore.selectedTranslation) {
+    if (selectedTranslation.value) {
         await presentAlert({
-            header: transaltionStore.selectedTranslation?.language_name,
-            message: transaltionStore.selectedTranslation.author_name,
+            header: selectedTranslation.value.language_name,
+            message: selectedTranslation.value.author_name,
             id: "translation-alert",
             buttons: ['Ok']
         })
     }
 }
 
-onMounted(() => pageRefEl.value = pageRef.value.$el)
+onMounted(() => {
+    setPageTitle(getLine("metaPage.view"))
+    pageRefEl.value = pageRef.value.$el
+})
 
+/**
+ * if it's not the last verse of chapter 
+ * go lto next page 
+ * otherwise audio store will handle page change 
+ * if the chapter audio is ended in playback ended listener 
+ */
+watch(lastIntersectingVerseOfPage, async (v) => {
+    if (v) {
+        const totalRecords = await getTotalVersesOfChapter(v.chapterId.toString())
+        if (totalRecords?.total_records === v.verseNumber) {
+            return
+        } else {
+            if (audioStore.audioPlayerSetting.loopAudio === "repeat") {
+                if (currentPageId.value) {
+                    currentPageId.value = currentPageId.value + 1
+                    await audioStore.pauseAudio().then(() => {
+                        // go to next page only if on repeat mode
+                        router.push({ path: `/page/${currentPageId.value}`, replace: true })
+
+                    })
+                }
+            } else {
+                await audioStore.pauseAudio().then(() => {
+                    audioStore.softClosePlayer()
+                })
+            }
+        }
+    }
+})
+
+/**
+ * 
+ * @param ev 
+ * take care of play/pause or new audio play
+ * for audioStore
+ */
+const playAudio = (ev: PlayAudioEmit) => {
+    if (ev.audioID === audioStore.chapterId) {
+        audioStore.handlePlay(true)
+    } else {
+        audioStore.handlePlay({ ...ev, audioSrc: "page" })
+    }
+}
+
+/**
+ * back to main pages page 
+ */
+watch(currentSegment, (s) => {
+    if (s === "home") {
+        router.replace({ path: "/pages" })
+    }
+})
+
+/** 
+ * for route params changes
+ */
+watch(() => route.params.pageId, (id) => {
+    if (id) {
+        if (Number(id) === currentPageId.value) {
+            return
+        } else {
+            currentPageId.value = Number(id)
+        }
+    }
+}, { immediate: true })
+
+/**
+ * works only if App is back focused or got active again
+ * as data fetching will stop work when App is in background 
+ * or broswer tab has been changed
+ * @param ev 
+ * this will cause no linear routing 
+ * 
+ */
+const isAppActive = (ev: boolean) => {
+    if (ev) {
+        if (audioStore.audioPlayerSetting.loopAudio === "repeat") {
+            router.push({ path: `/page/${currentPageId.value}`, replace: true })
+        }
+    }
+}
 </script>
 
 
 <template>
-    <ion-page :data-page-id="router.params.pageId" ref="pageRef">
+    <ion-page :data-page-id="currentPageId" ref="pageRef" :key="currentPageId">
         <segments-component :selected-segment="currentSegment"
             @update:selected-segment="currentSegment = $event"></segments-component>
         <ion-content>
-            <translations-view-component :id="`translations-pages-${router.params.pageId}`"
-                :is-loading="pageStore.isLoading" :is-playing="audioStore.isPlaying"
-                v-if="currentSegment === 'translations'" @update:play-audio="playAudio"
-                :is-bismillah="selectedChapterBismillah" :styles="computedCSS" :verses="groupVersesByChapter"
+            <translations-view-component :id="`pages-${currentPageId}-translations`"
+                :key="`pages-${currentPageId}-translations`" :is-loading="pageStore.isLoading"
+                :is-playing="audioStore.isPlaying" v-if="currentSegment === 'translations'"
+                @update:play-audio="playAudio" :is-bismillah="selectedChapterBismillah" :styles="computedCSS"
+                :verses-group="groupVersesByChapter" :selected-verses-length="pageStore.selectedPageVerses.length"
                 :chapter-name="selectedChapterName.nameArabic" :audio-experience="audioStore.audioPlayerSetting"
-                @update:modal-value="getTranslationAlert" @update:get-verses="loadMoreVerses" :pagination="pagination"
+                @update:modal-value="getTranslationAlert" :pagination="pagination"
                 :is-audio-loading="audioStore.isLoading" :download-progress="downloadFileProgress"
-                :active-audio-id="audioStore.audioFiles?.chapter_id" :bookmarked-verse="vNumber" :per-page="perPage"
-                :selected-translation-id="transaltionStore.selectedTranslationId">
+                :active-audio-id="audioStore.chapterId" :per-page="perPage" :page-id="pageStore.selectedPageId"
+                :selected-translation-id="selectedTranslationId" :first-verse-of-verses="isFirstVerseOfVerses"
+                @update:last-verse-reached-of-page="lastIntersectingVerseOfPage = $event"
+                @update:active-state="isAppActive" @update:loading-verses="pageStore.loadingVerses = $event"
+                :verse-count="pageStore.versesTotalRecords">
             </translations-view-component>
-            <reading-view-component id="reading-pages" v-else :is-playing="audioStore.isPlaying"
-                :verses="groupVersesByChapter" @update:play-audio="playAudio" @update:surah-info="getSurahInfo"
-                :is-loading="pageStore.isLoading" :styles="computedCSS" :download-progress="downloadFileProgress"
+            <reading-view-component :id="`pages-reading-${currentPageId}`" v-else :is-playing="audioStore.isPlaying"
+                :key="`pages-reading-${currentPageId}`" :verses-group="groupVersesByChapter"
+                @update:play-audio="playAudio" @update:surah-info="getSurahInfo" :is-loading="pageStore.isLoading"
+                :styles="computedCSS" :download-progress="downloadFileProgress"
                 :audio-experience="audioStore.audioPlayerSetting" :is-audio-loading="audioStore.isLoading"
-                @update:get-verses="loadMoreVerses" :pagination="pagination"
-                :active-audio-id="audioStore.audioFiles?.chapter_id">
+                :pagination="pagination" :active-audio-id="audioStore.audioFiles?.chapter_id"
+                :verse-count="pageStore.versesTotalRecords"
+                :selected-verses-length="pageStore.selectedPageVerses.length">
             </reading-view-component>
             <div>
                 <ion-button ref="chapterInfoButtonRef" id="page-chapter-modal" class="ion-hide"></ion-button>

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, shallowRef, watch } from "vue"
-import { IonIcon, IonCardHeader, IonItem, IonGrid, IonRow } from "@ionic/vue";
-import { IonContent, IonNote, IonCardTitle, IonCardSubtitle } from "@ionic/vue";
-import { IonLabel, IonText, IonCol, IonCard, IonInfiniteScrollContent, IonInfiniteScroll } from "@ionic/vue";
+import { IonIcon, IonCardHeader, IonItem, IonGrid, IonRow, IonPage } from "@ionic/vue";
+import { IonContent, IonNote, IonCardTitle, IonCardSubtitle, IonButton } from "@ionic/vue";
+import { IonLabel, IonText, IonCol, IonCard } from "@ionic/vue";
 // icons
 import { ellipsisVerticalOutline } from "ionicons/icons";
 // composables
@@ -16,6 +16,7 @@ import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 import VerseSeachInputComponent from "@/components/common/VerseSeachInputComponent.vue";
 import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
 import VerseLoadingStateComponent from "@/components/common/VersesLoadingStateComponent.vue"
+import infiniteScrollComponent from "@/components/common/infiniteScrollComponent.vue";
 // types
 import type { Verse, VerseWord } from "@/types/verse";
 import type { Pagination } from "@/types/chapter";
@@ -24,14 +25,13 @@ import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 import type { ShallowRef } from "vue"
 import type { Translation } from "@/types/translations";
 
-const contentRef = ref()
 const cardRef = ref()
 const intersectingVerseNumber = shallowRef<number>()
 const bookmarkedVerse = <ShallowRef<Verse> | null>(null)
 const { getLine } = useLocale()
 const { setBookmarked } = useBookmark(bookmarkedVerse)
 const { scrollToElement } = useScrollToElement()
-const { verseTiming } = useVerseTiming();
+const { verseTiming, getCurrentVerseData } = useVerseTiming();
 
 const props = defineProps<{
     id: string;
@@ -51,6 +51,7 @@ const props = defineProps<{
     perPage: number
     selectedTranslationId?: number
     playbackSeeked?: number
+    audioSrc?: string
 }>()
 
 const emit = defineEmits<{
@@ -62,35 +63,31 @@ const emit = defineEmits<{
     "update:loadingVerses": [value: boolean]
 }>();
 
-const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
-    if (props.verses) {
-        emit("update:getVerses", ev);
-    }
-}
-
 /**
  * matching local verseNumber 
  * with audio Store verse timing verse number
  * used for scroll
  */
 watch(() => verseTiming.value, (t) => {
-    if (t?.verseNumber) {
-        const verseNumber = t.verseNumber
-        if (props.audioExperience) {
-            if (props.audioExperience.autoScroll && props.isPlaying) {
-                intersectingVerseNumber.value = verseNumber
+    if (t) {
+        if (props.audioSrc === "chapter") {
+            if (props.audioExperience) {
+                if (props.audioExperience.autoScroll && props.isPlaying) {
+                    intersectingVerseNumber.value = t.verseNumber
+                }
             }
         }
     }
 })
 
-// handle auto scroll
+/**
+ * handle auto scroll
+ * base on local intersectingVerseNumber
+ */
 watch(intersectingVerseNumber, async (verseNumber) => {
     if (verseNumber) {
         await nextTick(async () => {
-            if (props.audioExperience?.autoScroll) {
-                scroll(verseNumber)
-            }
+            await scroll(verseNumber)
             if (props.isLoading) {
                 emit("update:loadingVerses", false)
             }
@@ -106,7 +103,6 @@ watch(() => props.playbackSeeked, (val) => {
     if (val) {
         if (verseTiming.value)
             intersectingVerseNumber.value = verseTiming.value?.verseNumber
-        //emit("update:playbackSeeked", false)
     }
 })
 
@@ -119,18 +115,18 @@ onMounted(() => {
     }
 })
 
-const scroll = async (verseNumber: number) => await scrollToElement(`#verse-col-${verseNumber}`, contentRef.value.$el)
-const playAudio = (ev: PlayAudioEmit) => emit('update:playAudio', ev)
+const scroll = async (verseNumber: number) => await scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el)
+const playAudio = (ev: PlayAudioEmit) => emit('update:playAudio', { ...ev, audioSrc: "chapter" })
 const isWordHighlighted = (word: VerseWord) => verseTiming.value?.wordLocation === word.location
+
 
 </script>
 <template>
-    <div class="ion-page" :id="`translations-${id}-${chapterId}`">
-        <toolbar-component :route-back-label="getLine('tabs.chapters')"></toolbar-component>
-        <ion-content class="quran-translation-content-wapper" :fullscreen="true" :scrollY="true" ref="contentRef"
-            style="position: relative">
-            <ion-card class="ion-padding card-wrapper" ref="cardRef" style="position: relative;"
-                id=" chapter-translation-view-card">
+    <ion-page :id="`chapter-${chapterId}-translations-${id}`" :key="`chapter-${chapterId}-translations-${id}`">
+        <toolbar-component :route-back-label="getLine('tabs.chapters')"
+            :verse-data="getCurrentVerseData"></toolbar-component>
+        <ion-content class="quran-translation-content-wapper">
+            <ion-card class="ion-padding card-wrapper" ref="cardRef" id=" chapter-translation-view-card">
                 <verse-seach-input-component :verse-count="verseCount"
                     @update:search-value="$emit('update:searchValue', $event)"></verse-seach-input-component>
                 <card-header-buttons-component :chapter-id="chapterId" :is-playing="isPlaying"
@@ -165,9 +161,14 @@ const isWordHighlighted = (word: VerseWord) => verseTiming.value?.wordLocation =
                                 </ion-label>
                             </ion-col>
                             <ion-col size="1" class="action-sheet">
-                                <ion-icon :icon="ellipsisVerticalOutline" color="primary"
-                                    :id="`open-action-sheet${verse.verse_number}`"></ion-icon>
-                                <verse-action-component :verse="verse"
+                                <ion-button aria-label="action-sheet" size="small"
+                                    :id="`open-action-sheet${verse.verse_number}`" fill="clear">
+                                    <ion-icon :icon="ellipsisVerticalOutline" color="primary" slot="icon-only"
+                                        aria-hidden="true">
+                                    </ion-icon>
+                                </ion-button>
+                                <verse-action-component :verse="verse" :key="`chapter-${verse.verse_key}`"
+                                    :id="`chapter-${verse.verse_key}`"
                                     :trigger-prop="`open-action-sheet${verse.verse_number}`"
                                     @update:bookmarked="setBookmarked" @update:play-verse-audio="playAudio">
                                 </verse-action-component>
@@ -184,10 +185,8 @@ const isWordHighlighted = (word: VerseWord) => verseTiming.value?.wordLocation =
                     </ion-grid>
                 </ion-item>
             </ion-card>
-            <ion-infinite-scroll @ion-infinite="ionInfinite" :id="`translations-${id}-${chapterId}`">
-                <ion-infinite-scroll-content loading-text="Please wait..."
-                    loading-spinner="bubbles"></ion-infinite-scroll-content>
-            </ion-infinite-scroll>
+            <infinite-scroll-component :id="`translations-${id}-${chapterId}`" :verse-count="verseCount"
+                :length="verses?.length" @update:scroll="$emit('update:getVerses', $event)"></infinite-scroll-component>
         </ion-content>
-    </div>
+    </ion-page>
 </template>

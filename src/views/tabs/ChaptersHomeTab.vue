@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, shallowRef } from "vue"
+import { computed, onBeforeMount, shallowRef } from "vue"
 import { storeToRefs } from 'pinia';
 // ionic
 import { IonPage, IonContent, IonSkeletonText } from '@ionic/vue';
@@ -14,6 +14,7 @@ import { useJuzStore } from '@/stores/JuzStore';
 import { localizeNumber } from '@/utils/number';
 // composables
 import { useLocale } from '@/composables/useLocale';
+import { useMetaData } from "@/composables/useMetaData";
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
@@ -22,12 +23,15 @@ import type { Chapter } from "@/types/chapter"
 
 const searchValue = shallowRef("")
 const { getLocale, getLine, isRtl } = useLocale()
-const { isPlaying, chapterId, isVisible } = storeToRefs(useAudioStore())
+const { isPlaying, chapterId, isVisible, audioPayLoadSrc } = storeToRefs(useAudioStore())
 const { juzList } = storeToRefs(useJuzStore())
 const { chaptersList, TOTAL_CHAPTERS } = useChapterStore()
 const recitionsStore = useRecitionsStore()
+const { setMetaData, setPageTitle } = useMetaData()
 
-const playingState = (id: number) => isPlaying.value && id === chapterId.value
+const playingState = (id: number) =>
+  isPlaying.value && (id === chapterId.value) && audioPayLoadSrc.value === "chapter"
+
 
 const chapters = computed((): Chapter[] | undefined => {
   if (chaptersList) {
@@ -48,6 +52,9 @@ const chapters = computed((): Chapter[] | undefined => {
   }
 });
 
+onBeforeMount(() => {
+  setPageTitle(getLine("metaChapter.list"))
+})
 </script>
 
 <template>
@@ -61,8 +68,7 @@ const chapters = computed((): Chapter[] | undefined => {
         </ion-item>
       </ion-list>
       <ion-list v-else>
-        <ion-item button detail v-for="chapter in chapters" :key="chapter.id"
-          :router-link="`chapter/${chapter.id}`">
+        <ion-item button detail v-for="chapter in chapters" :key="chapter.id" :router-link="`chapter/${chapter.id}`">
           <ion-spinner name="dots" color="danger" class="ml-1" v-if="playingState(chapter.id)"></ion-spinner>
           <ion-label>{{ localizeNumber(chapter.id, getLocale) }}- {{ isRtl ? chapter.nameArabic : chapter.nameSimple }}
           </ion-label>

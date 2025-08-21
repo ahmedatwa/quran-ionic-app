@@ -9,13 +9,6 @@ watch((audioRef), (x) => {
     if (x) audioStore.audioEl = x
 })
 
-const props = defineProps<{
-    appState?: boolean
-}>()
-
-watch(() => props.appState, (state) => {
-    audioStore.appState = state
-})
 </script>
 <template>
     <div v-if="audioStore.isVisible" class="d-none">

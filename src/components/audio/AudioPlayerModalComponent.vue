@@ -6,7 +6,7 @@ import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonText, isPlatform } from 
 import { IonModal } from "@ionic/vue";
 // ionicons
 import { playOutline, playBackOutline, playForwardOutline, repeatOutline } from 'ionicons/icons';
-import { volumeLowOutline, volumeHighOutline, syncCircle, sync } from 'ionicons/icons';
+import { volumeLowOutline, volumeHighOutline, sync } from 'ionicons/icons';
 import { pauseOutline, chevronDownOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
 // composables
 import { useLocale } from "@/composables/useLocale";
@@ -73,9 +73,9 @@ const changeMediaVolume = (ev: CustomEvent) => {
     emit('update:changeVolume', vol)
 }
 
-const isAudioPlaying = (chapterId: number) => {
-    return props.isPlaying && (chapterId === props.activeAudioId)
-}
+const isAudioPlaying = (chapterId: number) =>
+    props.isPlaying && (chapterId === props.activeAudioId)
+
 
 const isVolumeVisible = () => {
     if (isPlatform('mobileweb') || isPlatform('desktop')) {
@@ -133,7 +133,7 @@ const isVolumeVisible = () => {
                 <ion-row class="ion-justify-content-center">
                     <ion-col size="12">
                         <ion-range aria-label="Seek" color="primary"
-                            @ion-input="$emit('update:seek', Number($event.detail.value))"
+                            @ion-change="$emit('update:seek', Number($event.detail.value))"
                             :value="Math.round(progressTimer)" :min="0" :max="audioFiles?.duration">
                         </ion-range>
                     </ion-col>
@@ -167,7 +167,7 @@ const isVolumeVisible = () => {
                         </ion-button>
                     </ion-col>
                     <ion-col>
-                        <ion-button fill="clear" v-if="loopAudio === 'none'" @click="$emit('update:loopAudio', 'once')">
+                        <ion-button fill="clear" v-if="loopAudio === 'never'" @click.prevent="$emit('update:loopAudio', 'once')">
                             <ion-icon slot="icon-only" :icon="sync" color="medium"></ion-icon>
                         </ion-button>
                         <ion-button fill="clear" v-else-if="loopAudio === 'once'"
@@ -175,7 +175,7 @@ const isVolumeVisible = () => {
                             <ion-icon slot="icon-only" :icon="repeatOutline" color="warning"></ion-icon>
                         </ion-button>
                         <ion-button fill="clear" v-else-if="loopAudio === 'repeat'"
-                            @click="$emit('update:loopAudio', 'none')">
+                            @click="$emit('update:loopAudio', 'never')">
                             <ion-icon slot="icon-only" :icon="repeatOutline" color="primary"></ion-icon>
                         </ion-button>
                     </ion-col>

@@ -6,30 +6,40 @@ export interface MetaData {
   content: string;
 }
 
-export const useMetaData = () => {
-  const _mainTitle = shallowRef("");
-  const _metaData = shallowRef<MetaData[]>([]);
-  const metaData = readonly(_metaData);
+const SEPARATOR = " - ";
 
-  const _title = computed(() => {
-    if (_mainTitle.value) {
-      return import.meta.env.VITE_APP_TITLE + " - " + _mainTitle.value;
-    }
-    return import.meta.env.VITE_APP_TITLE;
+const title = shallowRef("");
+const meta = shallowRef<MetaData[]>([]);
+
+export const useMetaData = () => {
+  const computedTitle = computed(() => {
+    return title.value.length
+      ? import.meta.env.VITE_APP_TITLE + SEPARATOR + title.value
+      : import.meta.env.VITE_APP_TITLE;
   });
-  const pageTitle = readonly(_title);
+
   /**
    *
-   * @param v string
+   * @param text string
    * @returns void
    */
-  const setPageTitle = (v: string) => (_mainTitle.value = v);
+  const setPageTitle = (text: string): void => {
+    if (text.length) title.value = text;
+  };
   /**
    *
-   * @param v MetaData[]
+   * @param arrayData MetaData[]
    * @returns void
    */
-  const setMetaData = (v: MetaData[]) => (_metaData.value = v);
+  const setMetaData = (arrayData: MetaData[]): void => {
+    if (arrayData.length) meta.value = arrayData;
+  };
+
+  /**
+   * readOnly
+   */
+  const metaData = readonly(meta);
+  const pageTitle = readonly(computedTitle);
 
   return {
     setPageTitle,

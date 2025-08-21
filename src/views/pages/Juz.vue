@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { watchEffect, computed, onMounted, shallowRef } from 'vue';
+import { watchEffect, computed, onMounted, shallowRef, watch } from 'vue';
 import { IonContent, IonPage, IonButton } from '@ionic/vue';
 // components
 import TranslationsViewComponent from '@/components/juz/TranslationsViewComponent.vue';
@@ -7,7 +7,7 @@ import ReadingViewComponent from '@/components/juz/ReadingViewComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
 import ChapterInfoModalComponent from '@/components/chapter/ChapterInfoModalComponent.vue';
 import SegmentsComponent from '@/components/common/SegmentsComponent.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 // stores
 import { useJuzStore } from "@/stores/JuzStore"
 import { useTranslationsStore } from '@/stores/TranslationsStore';
@@ -35,15 +35,16 @@ const pageRef = shallowRef()
 const pageRefEl = shallowRef()
 const chapterInfo = shallowRef<ChapterInfo | null>(null)
 const chapterInfoButtonRef = shallowRef()
-const router = useRoute()
+const { params } = useRoute()
+const { push } = useRouter()
 const perPage = shallowRef(20)
 const currentPageEnd = shallowRef()
 
 
 watchEffect(async () => {
-    if (router.params.juzId) {
+    if (params.juzId) {
         juzStore.selectedJuz = null
-        const found = juzStore.juzList.find((j) => j.juz_number === Number(router.params.juzId))
+        const found = juzStore.juzList.find((j) => j.juz_number === Number(params.juzId))
         if (found) {
             if (!found.verses?.length) {
                 await juzStore.getVerses(found.id, true)
@@ -108,11 +109,17 @@ const getTranslationAlert = async () => {
 
 onMounted(() => pageRefEl.value = pageRef.value.$el)
 
+watch(currentSegment, (s) => {
+    if (s === "home") {
+        push({ path: "/chapters", replace: true })
+    }
+})
+
 </script>
 
 
 <template>
-    <ion-page :data-juz-id="router.params.juzId" ref="pageRef">
+    <ion-page :data-juz-id="params.juzId" ref="pageRef">
         <segments-component :selected-segment="currentSegment"
             @update:selected-segment="currentSegment = $event"></segments-component>
         <ion-content>

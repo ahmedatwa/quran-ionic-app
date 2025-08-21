@@ -75,6 +75,7 @@ export const useVerseTiming = () => {
                 ),
                 wordPosition: vt[0],
                 audioSrc: audioPayLoadSrc.value,
+                duration: currentVerseTimingData.duration
               };
               return;
             }

@@ -2,8 +2,7 @@
 import { ref, watch, computed } from "vue"
 import { IonButton, IonIcon, IonText } from "@ionic/vue";
 import { IonGrid, IonRow, IonCol, IonCard, IonCardContent } from "@ionic/vue";
-import { IonLabel, IonInfiniteScrollContent, IonRefresher, IonRefresherContent } from "@ionic/vue";
-import { IonContent, IonItemDivider, IonInfiniteScroll } from "@ionic/vue";
+import { IonContent, IonItemDivider, IonLabel } from "@ionic/vue";
 // utils
 import { useRoute, useRouter } from "vue-router";
 import { upperCaseFirst } from "@/utils/string"
@@ -13,12 +12,13 @@ import { useScrollToElement } from "@/composables/useScrollToElement";
 // Types
 import type { GroupVersesByChapterID, Pagination } from "@/types/page";
 import type { PlayAudioEmit, VerseTimingsProps } from "@/types/audio";
-import type { InfiniteScrollCustomEvent, RefresherCustomEvent } from "@ionic/vue"
+import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 // icons
 import { arrowForwardOutline, arrowBackOutline } from "ionicons/icons";
 // components
 import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
 import CardHeaderButtonsComponent from "@/components/common/CardHeaderButtonsComponent.vue";
+import infiniteScrollComponent from "@/components/common/infiniteScrollComponent.vue";
 
 const route = useRoute()
 const router = useRouter()
@@ -42,10 +42,13 @@ const props = defineProps<{
     pagination?: Pagination | null
     activeAudioId?: number
     styles: Record<"fontSize" | "fontFamily" | "fontWeight" | "colorCode", string>
+    verseCount: number
+    selectedVersesLength?: number
+
 }>()
 
 const emit = defineEmits<{
-    "update:getVerses": [value: { key: string, nextPage: number }];
+    "update:getVerses": [value: InfiniteScrollCustomEvent];
     "update:playAudio": [value: PlayAudioEmit];
     "update:surahInfo": [value: number]
 }>();
@@ -62,16 +65,6 @@ const isWordHighlighted = (loaction: string, verseKey: string) => {
         }
     }
 };
-
-const ionInfinite = (ev: InfiniteScrollCustomEvent) => {
-    if (props.pagination?.next_page) {
-        loadMoreVerses()
-        setTimeout(() => ev.target.complete(), 500);
-    } else {
-        ev.target.complete()
-    }
-}
-
 
 const routeBackName = computed(() => {
     if (router.options.history.state.back) {
@@ -91,22 +84,7 @@ watch(() => props.verseTiming, (t) => {
     }
 })
 
-const loadMoreVerses = () => {
-    if (props.pagination?.next_page) {
-        emit("update:getVerses", { key: props.id, nextPage: props.pagination?.next_page })
-    }
-}
 
-const handleRefresh = (event: RefresherCustomEvent) => {
-    if (props.pagination?.next_page) {
-        setTimeout(() => {
-            loadMoreVerses()
-            event.target?.complete();
-        }, 500);
-    } else {
-        event.target?.complete();
-    }
-};
 
 const scroll = (verseNumber: number) => scrollToElement(`#verse-col-${verseNumber}`, cardRef.value.$el)
 
@@ -120,9 +98,6 @@ const isPlaying = (chapterId: number) => {
     <div class="ion-page" :id="`${id}-${pageId}`">
         <toolbar-component :is-loading="isLoading" :route-back-label="routeBackName"></toolbar-component>
         <ion-content ref="contentRef">
-            <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-                <ion-refresher-content></ion-refresher-content>
-            </ion-refresher>
             <ion-card class="ion-padding" v-for="(versesMap, page) in verses" :key="page" :id="`row-page-${page}`"
                 ref="cardRef">
                 <card-header-buttons-component :chapter-id="versesMap[0].chapter_id" :verse-key="versesMap[0].verse_key"
@@ -144,7 +119,7 @@ const isPlaying = (chapterId: number) => {
                                         :data-juz-number="verse.juz_number" :data-chapter-id="verse.chapter_id"
                                         :data-page-number="page">
                                         <ion-text :color="isWordHighlighted(word.location, word.verse_key)
-                                            ? styles.colorCode 
+                                            ? styles.colorCode
                                             : ''" class="word">
                                             <div v-if="word.char_type_name === 'end'" class="end">({{ word.text_uthmani
                                                 }})
@@ -176,10 +151,9 @@ const isPlaying = (chapterId: number) => {
                     </ion-button>
                 </div>
             </ion-card>
-            <ion-infinite-scroll @ion-infinite="ionInfinite">
-                <ion-infinite-scroll-content loading-text="Please wait..."
-                    loading-spinner="bubbles"></ion-infinite-scroll-content>
-            </ion-infinite-scroll>
+            <infinite-scroll-component :id="`translations-${id}-${pageId}`" :verse-count="verseCount"
+                :length="selectedVersesLength"
+                @update:scroll="$emit('update:getVerses', $event)"></infinite-scroll-component>
         </ion-content>
     </div>
 </template>

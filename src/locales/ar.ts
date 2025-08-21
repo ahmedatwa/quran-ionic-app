@@ -47,8 +47,7 @@ export default {
   },
   bookmark: {
     title: "الإشارات المرجعية",
-    emptyContent:
-      "عندما تقرأ القرآن، اضغط على زر الإشارة المرجعية لوضع علامة على الصفحة الحالية",
+    emptyContent: "عند قراءة القرآن الكريم اضغط على زر الإشارة المرجعية لتحديد الآية الحالية",
   },
   audio: {
     chapters: "سور",
@@ -63,13 +62,14 @@ export default {
     surah: "سورة {0}",
     ayah: "آية {0}",
     recentlyPlayed: "لعبت مؤخرًا",
-    none: "عدم التكرار",
+    never: "عدم التكرار",
     repeat: "تكرار",
     once: "تكرار مرة واحدة"
   },
   quranReader: {
     textPage: "صفحة",
     textJuz: "جزء",
+    textChapter: "سورة",
     textTranslation: "ترجمة",
     textReading: "قراءة",
     textBismillah: "بسم الله الرحمن الرحيم",
@@ -104,4 +104,12 @@ export default {
   text: {
     loading: "جاري التحميل الرجاء الانتظار...",
   },
+  metaChapter: {
+    list: "قائمة السور",
+    translation: "عرض السورة"
+  },
+   metaPage: {
+    list: "قائمة الصفحات",
+    translation: "عرض الصفحة"
+  }
 };

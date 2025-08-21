@@ -19,15 +19,13 @@ interface Chapter {
   pagination?: Pagination | null;
 }
 
-export type Pagination = Record<
-  | "per_page"
-  | "current_page"
-  | "next_page"
-  | "total_pages"
-  | "total_records"
-  | "totalRecordsFetched",
-  number
->;
+export type Pagination = {
+  per_page: number;
+  current_page: number;
+  next_page: number | null;
+  total_pages: number;
+  total_records: number;
+};
 
 type ChapterInfo = {
   id: number;

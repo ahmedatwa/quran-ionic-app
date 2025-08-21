@@ -1,4 +1,4 @@
-import { shallowRef } from "vue";
+import { onMounted, shallowRef } from "vue";
 // ionic
 import { toastController, alertController } from "@ionic/vue";
 import { loadingController } from "@ionic/vue";
@@ -8,6 +8,8 @@ import { properCase } from "@/utils/string";
 import { useLocale } from "@/composables/useLocale";
 // type
 import type { ToastOptions, AlertOptions, LoadingOptions } from "@ionic/vue";
+
+const loadingControllerInstance = shallowRef();
 
 export const useAlert = () => {
   const { getLine } = useLocale();
@@ -59,6 +61,7 @@ export const useAlert = () => {
       subHeader: args.subHeader,
       message: args.message,
       id: args.id,
+      inputs: args.inputs,
       buttons: args.buttons || ["Ok"],
       htmlAttributes: {
         "aria-label": `alert-${args.id}`,
@@ -84,8 +87,16 @@ export const useAlert = () => {
   const presentLoading = async (dismiss: boolean, args: LoadingOptions) => {
     didDismissState.value.loading = false;
     if (dismiss) {
-      await loadingController.dismiss();
-      didDismissState.value.loading = true;
+      const result = await loadingController.dismiss({
+        id: args.id,
+      });
+      if (result) {
+        didDismissState.value.loading = true;
+      } else {
+        if (args.id) document.getElementById(args.id)?.remove();
+        didDismissState.value.loading = true;
+      }
+
     } else {
       const loading = await loadingController.create({
         id: args.id,
@@ -105,6 +116,10 @@ export const useAlert = () => {
       }
     }
   };
+
+  onMounted(() => {
+    loadingControllerInstance.value = loadingController;
+  });
 
   return { presentToast, presentAlert, presentLoading, didDismissState };
 };

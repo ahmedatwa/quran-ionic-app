@@ -4,7 +4,7 @@ import type { Verse } from "@/types/verse";
 // utils
 import { localizeNumber, _range } from "@/utils/number";
 
-export const DEFAULT_NUMBER_OF_PAGES = 604;
+export const DEFAULT_NUMBER_OF_PAGES: number = 604;
 
 type Pages2ChaptersMappings = {
   [key: string]: string[];
@@ -102,3 +102,31 @@ export const getAllPagesToChapters = (): Promise<GetAllPagesToChapters[]> => {
     }
   });
 };
+
+export const getFirstVerseOfPage = (pageNumber: number): Promise<Verse> => {
+  return new Promise((resolve, reject) => {
+    try {
+      import(`@jsonDataPath/pages/page-${pageNumber}.json`).then((response) =>
+        resolve(response.verses[0])
+      );
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const getLastVerseOfPage = (pageNumber: number): Promise<Verse> => {
+  return new Promise((resolve, reject) => {
+    try {
+      import(`@jsonDataPath/pages/page-${pageNumber}.json`).then((response) =>
+        resolve(response.verses.slice(-1)[0])
+      );
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const getFirstVerseOfVerses = (verses: Verse[]) => {
+  return verses[0]
+}

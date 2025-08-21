@@ -50,7 +50,7 @@ export default {
   bookmark: {
     title: "Bookmarks",
     emptyContent:
-      "When you are reading the Quran, tap the Bookmark button to mark the current page",
+      "When you are reading the Quran, tap the Bookmark button to mark the current verse",
   },
   audio: {
     chapters: "Chapters",
@@ -65,13 +65,14 @@ export default {
     surah: "Surah {0}",
     ayah: "Ayah {0}",
     recentlyPlayed: "Recently Played",
-    none: "No",
+    never: "Never",
     repeat: "Repeat",
     once: "Once"
   },
   quranReader: {
     textPage: "Page",
     textJuz: "Juz",
+    textChapter: "Chapter",
     textTranslation: "Translation",
     textReading: "Reading",
     textBismillah: "بسم الله الرحمن الرحيم",
@@ -105,4 +106,12 @@ export default {
   text: {
     loading: "Loading please wait...",
   },
+  metaChapter: {
+    list: "Surahs List",
+    translation: "Surah View"
+  },
+  metaPage: {
+    list: "Pages List",
+    translation: "Page View"
+  }
 };

@@ -1,7 +1,5 @@
-// fetch.js
 import { shallowRef } from "vue";
 import { storeToRefs } from "pinia";
-
 // axios
 import { instance } from "@/axios";
 import { audioRecitersUrl } from "@/axios/url";
@@ -16,10 +14,10 @@ import { useRecitionsStore } from "@/stores/RecitionsStore";
 import type { AudioFile } from "@/types/audio";
 
 export const useAudioFile = () => {
-  const { selectedReciter } = storeToRefs(useRecitionsStore());
   const { presentToast } = useAlert();
-  const { getChapterName } = useChapterStore();
+  const { getChapterNameByChapterId } = useChapterStore();
   const { encodeBlobToBase64 } = useBlob();
+  const { selectedReciter } = storeToRefs(useRecitionsStore());
   const isAudioFileLoading = shallowRef(false);
   const downloadFileProgress = shallowRef();
   const audioDB = useStorage("__audioDB");
@@ -34,9 +32,10 @@ export const useAudioFile = () => {
         }
       })
       .catch(async (error) => {
-        await presentToast({ message: String(error) });
+        await presentToast({ id: "attempt-file-save", message: String(error) });
       });
   };
+
   const saveFile = (
     chapterId: number,
     url: string,
@@ -48,7 +47,7 @@ export const useAudioFile = () => {
         const blob = new Blob([response.data], { type: `audio/${format}` });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        const chapterName = getChapterName(chapterId);
+        const chapterName = getChapterNameByChapterId(chapterId);
         if (chapterName) {
           link.download = `${chapterName?.nameSimple} - ${selectedReciter.value?.name}`;
         } else {
@@ -59,7 +58,7 @@ export const useAudioFile = () => {
         URL.revokeObjectURL(link.href);
       })
       .catch(async (error) => {
-        await presentToast({ message: String(error) });
+        await presentToast({ id: "save-file-error", message: String(error) });
       });
   };
 
@@ -93,13 +92,16 @@ export const useAudioFile = () => {
           });
         })
         .catch(async (error) => {
-          await presentToast({ message: String(error) });
+          await presentToast({ id: "download-error", message: String(error) });
         })
         .finally(async () => {
           isAudioFileLoading.value = false;
         });
     } else {
-      throw "Error! File Not Found.";
+      await presentToast({
+        id: "file-not-found",
+        message: "Error! Failed to download, audio file not found.",
+      });
     }
   };
 

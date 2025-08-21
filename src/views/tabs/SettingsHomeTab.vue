@@ -180,7 +180,7 @@ const aboutApp = async () => {
                                         :aria-label="getLine('settings.loopAudio')"
                                         :placeholder="getLine('settings.loopAudio')"
                                         @ion-change="audioStore.handleAudioSetting" :value="audioStore.audioPlayerSetting.loopAudio">
-                                        <ion-select-option value="none">{{ getLine('audio.none') }}</ion-select-option>
+                                        <ion-select-option value="never">{{ getLine('audio.never') }}</ion-select-option>
                                         <ion-select-option value="once">{{ getLine('audio.once') }}</ion-select-option>
                                         <ion-select-option value="repeat">{{ getLine('audio.repeat')
                                             }}</ion-select-option>

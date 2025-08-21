@@ -12,7 +12,7 @@ import { useVerseTiming } from "@/composables/useVerseTiming";
 // Types
 import type { Verse, MapVersesByPage, VerseWord } from "@/types/verse"
 import type { Pagination } from "@/types/page";
-import type { PlayAudioEmit, VerseTimingsProps, AudioExperience } from "@/types/audio";
+import type { PlayAudioEmit, AudioExperience } from "@/types/audio";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
 // stores
 import { useChapterStore } from "@/stores/ChapterStore";
