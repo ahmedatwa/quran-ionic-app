@@ -1,31 +1,35 @@
 import { defineStore } from "pinia";
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onBeforeMount, watch } from "vue";
 import { shallowRef, nextTick } from "vue";
 // stores
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 import { useAudioStore } from "@/stores/AudioStore";
+import { useVerseTimingStore } from "@/stores/VerseTimingStore";
+
 // axios
 import { instance } from "@/axios";
 import { makeChapterInfoUrl } from "@/axios/url";
 // types
-import type { Chapter, ChapterInfo } from "@/types/chapter";
+import type {
+  Chapter,
+  ChapterInfo,
+  ReturnChapterNameByChapterId,
+} from "@/types/chapter";
 import type { Loading } from "@/types/chapter";
-import type { Verse, JSONDataPromise } from "@/types/verse";
+import type { Verse, JSONVersesPromiseReturn } from "@/types/verse";
 import type { InfiniteScrollCustomEvent } from "@ionic/vue";
-import type { Pagination } from "@/types/chapter";
 // composables
 import { useAlert } from "@/composables/useAlert";
 import { useLocale } from "@/composables/useLocale";
-import { useVerseTiming } from "@/composables/useVerseTiming";
-// router
-import { useRouter } from "vue-router";
+// utils
+import { jsonChapterVersesById, jsonAllChapters } from "@/utils/chapter";
 
 export const useChapterStore = defineStore("chapter-store", () => {
   const { selectedTranslationId } = useTranslationsStore();
   const audioStore = useAudioStore();
   const { getLine } = useLocale();
-  const { push } = useRouter();
   const { presentToast, presentLoading } = useAlert();
+
   const isLoading = ref<Loading>({ chapters: false, verses: false });
   const chaptersList = ref<Chapter[]>([]);
   const currentSortDir = ref("asc");
@@ -34,12 +38,12 @@ export const useChapterStore = defineStore("chapter-store", () => {
   const chapterInfo = ref<ChapterInfo | null>(null);
   const versesTotalRecords = ref(0);
   const allVerses = ref<Verse[]>([]);
-  const TOTAL_CHAPTERS = ref(114);
+  const totalChapters = ref(114);
   const searchVerseNumberValue = shallowRef("");
   const loadingVerses = shallowRef(false);
-  const { verseTiming } = useVerseTiming();
+  const verseTimingStore = useVerseTimingStore();
   const currentVerseNumberFromTiming = computed(
-    () => verseTiming.value?.verseNumber
+    () => verseTimingStore.verseTiming?.verseNumber
   );
   const currentPageEnd = shallowRef();
   // default for total verses per page
@@ -57,40 +61,23 @@ export const useChapterStore = defineStore("chapter-store", () => {
 
   /**
    *
-   * @returns promise void chapter[]
+   * @param slug
+   * @returns
    */
-  const getAllChapters = (): Promise<Chapter[]> => {
-    return new Promise((resolve, reject) => {
-      try {
-        import(`@jsonDataPath/chapters.json`).then((response) => {
-          resolve(response.chapters);
-        });
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
-  /**
-   *
-   * @param chapterId
-   * @returns void
-   */
-  const getChapter = (chapterId: number | string) => {
+  const getChapterBySlug = (slug: string): Chapter | undefined => {
     if (chaptersList.value) {
-      return chaptersList.value.find(
-        (chapter) => chapter.id === Number(chapterId)
-      );
+      return chaptersList.value.find((c) => c.slug === slug);
     }
   };
 
   /**
    *
-   * @param slug
-   * @returns void
+   * @param chapterId
+   * @returns
    */
-  const getChapterBySlug = (slug: string) => {
+  const getChapterById = (chapterId: number | string): Chapter | undefined => {
     if (chaptersList.value) {
-      return chaptersList.value.find((chapter) => chapter.slug === slug);
+      return chaptersList.value.find((c) => c.id === Number(chapterId));
     }
   };
 
@@ -99,8 +86,11 @@ export const useChapterStore = defineStore("chapter-store", () => {
    * @param chapterId
    * @returns {string}
    */
-  const getChapterNameByChapterId = (chapterId: number | string) => {
-    const chapter = getChapter(Number(chapterId));
+
+  const getChapterNameByChapterId = (
+    chapterId: number | string
+  ): ReturnChapterNameByChapterId | undefined => {
+    const chapter = getChapterById(chapterId);
     if (chapter) {
       return {
         nameSimple: chapter.nameSimple,
@@ -111,13 +101,36 @@ export const useChapterStore = defineStore("chapter-store", () => {
   };
 
   /**
+   *
+   * @param chapterId
+   * @returns
+   */
+  const getChapterVerseCount = (
+    chapterId: string | number
+  ): number | undefined => {
+    return getChapterById(chapterId)?.versesCount;
+  };
+
+  /**
+   *
+   * @param verse
+   * @returns {string}
+   */
+  const getChapterNameByVerseKey = (
+    verseKey: string
+  ): ReturnChapterNameByChapterId | undefined => {
+    const [chapterId, _verseNumber] = verseKey.split(":");
+    return getChapterNameByChapterId(chapterId);
+  };
+
+  /**
    * fetch verses and store in verses Ref
    * @param id
    * @returns
    */
   const getVerses = async (id: number) => {
-    isLoading.value.verses = true;
     const checkChapter = validateSelectedChapterVerses(id);
+
     if (checkChapter) {
       if (checkChapter.isValidVerseLength) {
         if (checkChapter.chapterData) {
@@ -129,8 +142,10 @@ export const useChapterStore = defineStore("chapter-store", () => {
       }
     }
 
-    await loadVersesFromJson(id.toString())
-      .then((res: JSONDataPromise) => {
+    allVerses.value = [];
+    versesTotalRecords.value = 0;
+    await jsonChapterVersesById(id.toString())
+      .then((res: JSONVersesPromiseReturn) => {
         allVerses.value = res.verses;
         versesTotalRecords.value = res.pagination.total_records;
       })
@@ -138,25 +153,8 @@ export const useChapterStore = defineStore("chapter-store", () => {
         await presentToast({ message: String(e) });
       })
       .finally(() => {
-        isLoading.value.verses = false;
+        //isLoading.value.verses = false;
       });
-  };
-
-  /**
-   *  Load Verses from JSON file
-   * @param fileName
-   * @returns
-   */
-  const loadVersesFromJson = (fileName: string): Promise<JSONDataPromise> => {
-    return new Promise((resolve) => {
-      try {
-        import(`@jsonDataPath/chapters/${fileName}.json`).then((response) => {
-          resolve(response);
-        });
-      } catch (e) {
-        console.warn(e);
-      }
-    });
   };
 
   /**
@@ -164,7 +162,7 @@ export const useChapterStore = defineStore("chapter-store", () => {
    */
   const getTotalVersesOfChapter = async (chapterId: string) => {
     try {
-      return (await loadVersesFromJson(chapterId)).pagination;
+      return (await jsonChapterVersesById(chapterId)).pagination;
     } catch (e) {
       console.warn(e);
     }
@@ -196,10 +194,10 @@ export const useChapterStore = defineStore("chapter-store", () => {
   /**
    * prepare for first run
    */
-  onMounted(async () => {
+  onBeforeMount(async () => {
     if (!chaptersList.value.length) {
       isLoading.value.chapters = true;
-      await getAllChapters()
+      await jsonAllChapters()
         .then((response) => {
           response.forEach((chapter: Chapter) => {
             chaptersList.value?.push({
@@ -279,142 +277,99 @@ export const useChapterStore = defineStore("chapter-store", () => {
   });
 
   /**
-   * for header and audio modal data
-   */
-  const getFirstVerseHeaderData = computed(() => {
-    if (getFirstVerseOfChapter.value) {
-      return {
-        left: selectedChapterName.value,
-        right: {
-          pageNumber: getFirstVerseOfChapter.value.page_number,
-          hizbNumber: getFirstVerseOfChapter.value.hizb_number,
-          juzNumber: getFirstVerseOfChapter.value.juz_number,
-        },
-      };
-    }
-  });
-
-  /**
-   *
-   * @param verse
-   * @returns {string}
-   */
-  const getChapterNameByFirstVerse = (verse: Verse) => {
-    const [chapterId, verseNumber] = verse.verse_key.split(":");
-    if (Number(verseNumber) === 1) {
-      return getChapterNameByChapterId(chapterId);
-    }
-  };
-
-  /**
    *
    * @param verseKey
    * @returns number
    */
-  const getVerseByVerseKey = (verseKey: string | number) => {
-    const split =
-      typeof verseKey === "number"
-        ? verseKey.toString().split(":")
-        : verseKey.split(":");
-
-    const chapter = getChapter(split[0]);
-    if (chapter) {
-      return chapter.verses?.find((v) => v.verse_number === parseInt(split[1]));
-    }
+  const getVerseByVerseKey = (verseKey: string) => {
+    return allVerses.value.find((v) => v.verse_key === verseKey);
   };
 
   /**
-   * load more verses when playing audio
-   * or when manual scrolling down
+   * handle 2 locations
+   * calls coming from audio store on seek
+   * and from  infiniteScrollEvent event on manual scroll
    *
    * @param ?infiniteScrollEvent
    * @returns void
    */
-  const fetchMoreChapterVerses = async (
-    infiniteScrollEvent?: InfiniteScrollCustomEvent
-  ) => {
-    if (infiniteScrollEvent) {
-      if (selectedChapterVerses.value) {
-        loadingVerses.value = true;
-        currentPageEnd.value = Math.ceil(
-          selectedChapterVerses.value?.length + perPage.value
+  const fetchMoreChapterVerses = async () => {
+    loadingVerses.value = true;
+    // look for number in chapter verses
+    const toBFoundVerse: Verse | undefined = selectedChapterVerses.value?.find(
+      (v) => v.verse_number === currentVerseNumberFromTiming.value
+    );
+
+    if (!toBFoundVerse) {
+      if (
+        lastVerseInselectedChapterVerses.value?.verse_number &&
+        currentVerseNumberFromTiming.value
+      ) {
+        const calc = Math.ceil(
+          currentVerseNumberFromTiming.value -
+            lastVerseInselectedChapterVerses.value?.verse_number
         );
-        const newVerses = allVerses.value.slice(
-          selectedChapterVerses.value?.length,
-          currentPageEnd.value
-        );
-        if (newVerses) {
-          newVerses.forEach((v) =>
-            selectedChapterVerses.value.push({
-              ...v,
-              bookmarked: false,
-            })
+        if (selectedChapterVerses.value) {
+          currentPageEnd.value = Math.ceil(
+            selectedChapterVerses.value?.length + calc
           );
-          setTimeout(() => {
-            if (infiniteScrollEvent) infiniteScrollEvent.target.complete();
-            loadingVerses.value = false;
-          }, 200);
+          const verses = selectedChapter.value?.verses?.slice(
+            selectedChapterVerses.value?.length,
+            currentPageEnd.value + 1
+          );
+          if (verses) {
+            verses.forEach((v) =>
+              selectedChapter.value?.verses?.push({
+                ...v,
+                bookmarked: false,
+              })
+            );
+            await nextTick(async () => {
+              if (selectedChapterVerses.value) {
+                if (selectedChapterVerses.value?.length >= calc)
+                  loadingVerses.value = false;
+              }
+            });
+          }
         }
       }
     } else {
-      // look for number in chapter verses
-      const toBFoundVerse: Verse | undefined =
-        selectedChapterVerses.value?.find(
-          (v) => v.verse_number === currentVerseNumberFromTiming.value
-        );
-
-      if (!toBFoundVerse) {
-        if (
-          lastVerseInselectedChapterVerses.value?.verse_number &&
-          currentVerseNumberFromTiming.value
-        ) {
-          const calc = Math.ceil(
-            currentVerseNumberFromTiming.value -
-              lastVerseInselectedChapterVerses.value?.verse_number
-          );
-          if (selectedChapterVerses.value) {
-            currentPageEnd.value = Math.ceil(
-              selectedChapterVerses.value?.length + calc
-            );
-            const verses = selectedChapter.value?.verses?.slice(
-              selectedChapterVerses.value?.length,
-              currentPageEnd.value + 1
-            );
-            if (verses) {
-              verses.forEach((v) =>
-                selectedChapter.value?.verses?.push({
-                  ...v,
-                  bookmarked: false,
-                })
-              );
-              await nextTick(async () => {
-                if (selectedChapterVerses.value) {
-                  if (selectedChapterVerses.value?.length >= calc)
-                    loadingVerses.value = false;
-                }
-              });
-            }
-          }
-        }
-      } else {
-        return;
-      }
+      return;
     }
   };
 
-  /**
-   * Fallbak for loading spinner
-   * in case of any errors
-   */
-  watch(loadingVerses, async (loadingSpinnerState) => {
-    if (loadingSpinnerState) {
-      await presentLoading(false, {
-        id: "loading-page-verses",
-      });
-    } else {
-      await presentLoading(true, { id: "loading-page-verses" });
+  const infiniteScrollMoreVerses = () => {
+    loadingVerses.value = true;
+    if (selectedChapterVerses.value) {
+      currentPageEnd.value = Math.ceil(
+        selectedChapterVerses.value?.length + perPage.value
+      );
+
+      allVerses.value
+        .slice(selectedChapterVerses.value?.length, currentPageEnd.value)
+        .forEach((v) =>
+          selectedChapterVerses.value.push({
+            ...v,
+            bookmarked: false,
+          })
+        );
+      setTimeout(() => (loadingVerses.value = false), 200);
     }
-  });
+  };
+
+  const isBismillahPre = (chapterId: string | number) => {
+    const name = getChapterNameByChapterId(Number(chapterId));
+    if (name) {
+      return name.bismillahPre ? getLine("quranReader.textBismillah") : "";
+    }
+  };
+
+  const getChapterArabicName = (chapterId: string | number) => {
+    const name = getChapterNameByChapterId(Number(chapterId));
+    if (name) {
+      return name.nameArabic;
+    }
+  };
 
   /**
    * play next chapter and loaddata when needed
@@ -424,13 +379,18 @@ export const useChapterStore = defineStore("chapter-store", () => {
   const playNextChapter = async (chapterId: number) => {
     if (chapterId) {
       loadingVerses.value = true;
-      chapterId = chapterId >= TOTAL_CHAPTERS.value ? 1 : chapterId + 1;
+      chapterId = chapterId >= totalChapters.value ? 1 : chapterId + 1;
+
+      await presentLoading({
+        id: `playback-ended-${chapterId}`,
+        message: `Playing chapter ${Number(chapterId)} in 2s`,
+        duration: 2000,
+      });
+
       // get the audio files
       await audioStore
-        .getAudio({ audioID: chapterId })
-        .catch((e) => console.error(new Error(e)))
+        .getAudio({ audioID: chapterId, audioSrc: "chapter" })
         .finally(() => {
-          push({ path: `/chapter/${chapterId}`, replace: false });
           loadingVerses.value = false;
         });
     }
@@ -450,24 +410,27 @@ export const useChapterStore = defineStore("chapter-store", () => {
     selectedChapterName,
     getFirstVerseOfChapter,
     getLastVerseNumberOfChapter,
-    getFirstVerseHeaderData,
     selectedChapterBismillah,
-    TOTAL_CHAPTERS,
+    totalChapters,
     perPage,
     searchVerseNumberValue,
     loadingVerses,
     selectedChapterVerses,
     lastVerseInselectedChapterVerses,
+    isBismillahPre,
+    infiniteScrollMoreVerses,
+    getChapterArabicName,
     playNextChapter,
-    getTotalVersesOfChapter,
+    getChapterBySlug,
     fetchMoreChapterVerses,
-    getChapterNameByFirstVerse,
+    getChapterNameByChapterId,
     validateSelectedChapterVerses,
     getVerseByVerseKey,
     getchapterInfo,
     getVerses,
-    getChapterBySlug,
-    getChapter,
-    getChapterNameByChapterId,
+    getTotalVersesOfChapter,
+    getChapterById,
+    getChapterVerseCount,
+    getChapterNameByVerseKey,
   };
 });

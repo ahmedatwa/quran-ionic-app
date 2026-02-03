@@ -1,0 +1,626 @@
+{
+    "verses": [
+        {
+            "id": 6205,
+            "verse_number": 1,
+            "verse_key": "108:1",
+            "hizb_number": 60,
+            "rub_el_hizb_number": 240,
+            "ruku_number": 552,
+            "manzil_number": 7,
+            "sajdah_number": null,
+            "chapter_id": 108,
+            "text_uthmani": " إِنَّآ أَعْطَيْنَـٰكَ ٱلْكَوْثَرَ",
+            "text_uthmani_simple": "انا اعطينك الكوثر",
+            "text_imlaei": "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ",
+            "text_imlaei_simple": "انا اعطيناك الكوثر",
+            "text_indopak": "اِنَّاۤ اَعۡطَيۡنٰكَ الۡكَوۡثَرَؕ‏",
+            "text_uthmani_tajweed": "إِ<tajweed class=ghunnah>نّ</tajweed><tajweed class=madda_obligatory>َآ</tajweed> أَعْطَيْنَ<tajweed class=madda_normal>ـٰ</tajweed>كَ <tajweed class=ham_wasl>ٱ</tajweed>لْكَوْثَرَ <span class=end>١</span>",
+            "page_number": 602,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/108_1.png",
+            "image_width": 675,
+            "v1_page": 602,
+            "v2_page": 602,
+            "page_number": 602,
+            "juz_number": 30,
+            "words": [
+                {
+                    "id": 276,
+                    "position": 1,
+                    "audio_url": "wbw/108_001_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِنَّآ",
+                    "text_indopak": "اِنَّاۤ",
+                    "text_imlaei": "إِنَّا",
+                    "verse_key": "108:1",
+                    "line_number": 14,
+                    "location": "108:1:1",
+                    "code_v1": "ﮆ",
+                    "code_v2": "ﱶ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 14,
+                    "text": "ﱶ",
+                    "translation": {
+                        "text": "Indeed, We",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "innā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 277,
+                    "position": 2,
+                    "audio_url": "wbw/108_001_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "أَعْطَيْنَـٰكَ",
+                    "text_indopak": "اَعۡطَيۡنٰكَ",
+                    "text_imlaei": "أَعْطَيْنَاكَ",
+                    "verse_key": "108:1",
+                    "line_number": 14,
+                    "location": "108:1:2",
+                    "code_v1": "ﮇ",
+                    "code_v2": "ﱷ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 14,
+                    "text": "ﱷ",
+                    "translation": {
+                        "text": "We have given you",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "aʿṭaynāka",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 278,
+                    "position": 3,
+                    "audio_url": "wbw/108_001_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْكَوْثَرَ",
+                    "text_indopak": "الۡكَوۡثَرَؕ‏",
+                    "text_imlaei": "الْكَوْثَرَ",
+                    "verse_key": "108:1",
+                    "line_number": 14,
+                    "location": "108:1:3",
+                    "code_v1": "ﮈ",
+                    "code_v2": "ﱸ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 14,
+                    "text": "ﱸ",
+                    "translation": {
+                        "text": "Al-Kauthar",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-kawthara",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 279,
+                    "position": 4,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "١",
+                    "text_indopak": "١",
+                    "text_imlaei": "١",
+                    "verse_key": "108:1",
+                    "line_number": 14,
+                    "location": "108:1:4",
+                    "code_v1": "ﮉ",
+                    "code_v2": "ﱹ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 14,
+                    "text": "ﱹ",
+                    "translation": {
+                        "text": "(1)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ],
+            "translations": [
+                {
+                    "id": 407908,
+                    "resource_id": 85,
+                    "text": "We have truly given abundance to you [Prophet]––",
+                    "resource_name": "M.A.S. Abdel Haleem",
+                    "id": 407908,
+                    "language_id": 38,
+                    "language_name": "english",
+                    "verse_key": "108:1",
+                    "chapter_id": 108,
+                    "verse_number": 1,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                },
+                {
+                    "id": 935106,
+                    "resource_id": 136,
+                    "text": "Nous t’avons certes donné un Fleuve d’Abondance.<sup foot_note=195248>1</sup>",
+                    "resource_name": "Montada Islamic Foundation",
+                    "id": 935106,
+                    "language_id": 49,
+                    "language_name": "french",
+                    "verse_key": "108:1",
+                    "chapter_id": 108,
+                    "verse_number": 1,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                },
+                {
+                    "id": 1301199,
+                    "resource_id": 153,
+                    "text": "In verità ti abbiamo dato l’abbondanza <a class=f><sup foot_note=160780>1</sup></a> .",
+                    "resource_name": "Hamza Roberto Piccardo",
+                    "id": 1301199,
+                    "language_id": 74,
+                    "language_name": "italian",
+                    "verse_key": "108:1",
+                    "chapter_id": 108,
+                    "verse_number": 1,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                },
+                {
+                    "id": 395436,
+                    "resource_id": 83,
+                    "text": "[¡Oh, Muhámmad!] te he agraciado con la abundancia<sup foot_note=169512>1</sup>.",
+                    "resource_name": "Sheikh Isa Garcia",
+                    "id": 395436,
+                    "language_id": 40,
+                    "language_name": "spanish",
+                    "verse_key": "108:1",
+                    "chapter_id": 108,
+                    "verse_number": 1,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                }
+            ]
+        },
+        {
+            "id": 6206,
+            "verse_number": 2,
+            "verse_key": "108:2",
+            "hizb_number": 60,
+            "rub_el_hizb_number": 240,
+            "ruku_number": 552,
+            "manzil_number": 7,
+            "sajdah_number": null,
+            "chapter_id": 108,
+            "text_uthmani": "فَصَلِّ لِرَبِّكَ وَٱنْحَرْ",
+            "text_uthmani_simple": "فصل لربك وانحر",
+            "text_imlaei": "فَصَلِّ لِرَبِّكَ وَانْحَرْ",
+            "text_imlaei_simple": "فصل لربك وانحر",
+            "text_indopak": "فَصَلِّ لِرَبِّكَ وَانۡحَرۡ ؕ‏",
+            "text_uthmani_tajweed": "فَصَلِّ لِرَبِّكَ وَ<tajweed class=ham_wasl>ٱ</tajweed>نْحَرْ <span class=end>٢</span>",
+            "page_number": 602,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/108_2.png",
+            "image_width": 675,
+            "v1_page": 602,
+            "v2_page": 602,
+            "page_number": 602,
+            "juz_number": 30,
+            "words": [
+                {
+                    "id": 996,
+                    "position": 1,
+                    "audio_url": "wbw/108_002_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فَصَلِّ",
+                    "text_indopak": "فَصَلِّ",
+                    "text_imlaei": "فَصَلِّ",
+                    "verse_key": "108:2",
+                    "line_number": 14,
+                    "location": "108:2:1",
+                    "code_v1": "ﮊ",
+                    "code_v2": "ﱺ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 14,
+                    "text": "ﱺ",
+                    "translation": {
+                        "text": "So pray",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "faṣalli",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 997,
+                    "position": 2,
+                    "audio_url": "wbw/108_002_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لِرَبِّكَ",
+                    "text_indopak": "لِرَبِّكَ",
+                    "text_imlaei": "لِرَبِّكَ",
+                    "verse_key": "108:2",
+                    "line_number": 14,
+                    "location": "108:2:2",
+                    "code_v1": "ﮋ",
+                    "code_v2": "ﱻ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 14,
+                    "text": "ﱻ",
+                    "translation": {
+                        "text": "to your Lord",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "lirabbika",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 998,
+                    "position": 3,
+                    "audio_url": "wbw/108_002_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَٱنْحَرْ",
+                    "text_indopak": "وَانۡحَرۡ ؕ‏",
+                    "text_imlaei": "وَانْحَرْ",
+                    "verse_key": "108:2",
+                    "line_number": 14,
+                    "location": "108:2:3",
+                    "code_v1": "ﮌ",
+                    "code_v2": "ﱼ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 14,
+                    "text": "ﱼ",
+                    "translation": {
+                        "text": "and sacrifice",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wa-in'ḥar",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 999,
+                    "position": 4,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٢",
+                    "text_indopak": "٢",
+                    "text_imlaei": "٢",
+                    "verse_key": "108:2",
+                    "line_number": 14,
+                    "location": "108:2:4",
+                    "code_v1": "ﮍ",
+                    "code_v2": "ﱽ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 14,
+                    "text": "ﱽ",
+                    "translation": {
+                        "text": "(2)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ],
+            "translations": [
+                {
+                    "id": 407909,
+                    "resource_id": 85,
+                    "text": "so pray to your Lord and make your sacrifice to Him alone––",
+                    "resource_name": "M.A.S. Abdel Haleem",
+                    "id": 407909,
+                    "language_id": 38,
+                    "language_name": "english",
+                    "verse_key": "108:2",
+                    "chapter_id": 108,
+                    "verse_number": 2,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                },
+                {
+                    "id": 935107,
+                    "resource_id": 136,
+                    "text": "Observe donc la Çalât  pour ton Seigneur, et sacrifie !",
+                    "resource_name": "Montada Islamic Foundation",
+                    "id": 935107,
+                    "language_id": 49,
+                    "language_name": "french",
+                    "verse_key": "108:2",
+                    "chapter_id": 108,
+                    "verse_number": 2,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                },
+                {
+                    "id": 1301200,
+                    "resource_id": 153,
+                    "text": "Esegui l’orazione per il tuo Signore e sacrifica <a class=f><sup foot_note=160781>1</sup></a> !",
+                    "resource_name": "Hamza Roberto Piccardo",
+                    "id": 1301200,
+                    "language_id": 74,
+                    "language_name": "italian",
+                    "verse_key": "108:2",
+                    "chapter_id": 108,
+                    "verse_number": 2,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                },
+                {
+                    "id": 395437,
+                    "resource_id": 83,
+                    "text": "Reza a tu Señor y sacrifica [los animales en Su nombre].",
+                    "resource_name": "Sheikh Isa Garcia",
+                    "id": 395437,
+                    "language_id": 40,
+                    "language_name": "spanish",
+                    "verse_key": "108:2",
+                    "chapter_id": 108,
+                    "verse_number": 2,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                }
+            ]
+        },
+        {
+            "id": 6207,
+            "verse_number": 3,
+            "verse_key": "108:3",
+            "hizb_number": 60,
+            "rub_el_hizb_number": 240,
+            "ruku_number": 552,
+            "manzil_number": 7,
+            "sajdah_number": null,
+            "chapter_id": 108,
+            "text_uthmani": "إِنَّ شَانِئَكَ هُوَ ٱلْأَبْتَرُ",
+            "text_uthmani_simple": "ان شانئك هو الابتر",
+            "text_imlaei": "إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ",
+            "text_imlaei_simple": "ان شانئك هو الابتر",
+            "text_indopak": "اِنَّ شَانِئَكَ هُوَ الۡاَبۡتَرُ‏",
+            "text_uthmani_tajweed": "إِ<tajweed class=ghunnah>نّ</tajweed>َ شَانِئَكَ هُوَ <tajweed class=ham_wasl>ٱ</tajweed>لْأَ<tajweed class=qalaqah>بْ</tajweed>تَرُ <span class=end>٣</span>",
+            "page_number": 602,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/108_3.png",
+            "image_width": 675,
+            "v1_page": 602,
+            "v2_page": 602,
+            "page_number": 602,
+            "juz_number": 30,
+            "words": [
+                {
+                    "id": 2556,
+                    "position": 1,
+                    "audio_url": "wbw/108_003_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِنَّ",
+                    "text_indopak": "اِنَّ",
+                    "text_imlaei": "إِنَّ",
+                    "verse_key": "108:3",
+                    "line_number": 15,
+                    "location": "108:3:1",
+                    "code_v1": "ﮎ",
+                    "code_v2": "ﱾ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 15,
+                    "text": "ﱾ",
+                    "translation": {
+                        "text": "Indeed",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "inna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 2557,
+                    "position": 2,
+                    "audio_url": "wbw/108_003_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "شَانِئَكَ",
+                    "text_indopak": "شَانِئَكَ",
+                    "text_imlaei": "شَانِئَكَ",
+                    "verse_key": "108:3",
+                    "line_number": 15,
+                    "location": "108:3:2",
+                    "code_v1": "ﮏ",
+                    "code_v2": "ﱿ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 15,
+                    "text": "ﱿ",
+                    "translation": {
+                        "text": "your enemy ",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "shāni-aka",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 2558,
+                    "position": 3,
+                    "audio_url": "wbw/108_003_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "هُوَ",
+                    "text_indopak": "هُوَ",
+                    "text_imlaei": "هُوَ",
+                    "verse_key": "108:3",
+                    "line_number": 15,
+                    "location": "108:3:3",
+                    "code_v1": "ﮐ",
+                    "code_v2": "ﲀ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 15,
+                    "text": "ﲀ",
+                    "translation": {
+                        "text": "he (is)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "huwa",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 2559,
+                    "position": 4,
+                    "audio_url": "wbw/108_003_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْأَبْتَرُ",
+                    "text_indopak": "الۡاَبۡتَرُ‏",
+                    "text_imlaei": "الْأَبْتَرُ",
+                    "verse_key": "108:3",
+                    "line_number": 15,
+                    "location": "108:3:4",
+                    "code_v1": "ﮑ",
+                    "code_v2": "ﲁ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 15,
+                    "text": "ﲁ",
+                    "translation": {
+                        "text": "the one cut off",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-abtaru",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 2560,
+                    "position": 5,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٣",
+                    "text_indopak": "٣",
+                    "text_imlaei": "٣",
+                    "verse_key": "108:3",
+                    "line_number": 15,
+                    "location": "108:3:5",
+                    "code_v1": "ﮒ",
+                    "code_v2": "ﲂ",
+                    "v1_page": 602,
+                    "v2_page": 602,
+                    "page_number": 602,
+                    "line_number": 15,
+                    "text": "ﲂ",
+                    "translation": {
+                        "text": "(3)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ],
+            "translations": [
+                {
+                    "id": 407910,
+                    "resource_id": 85,
+                    "text": "it is the one who hates you who has been cut off.",
+                    "resource_name": "M.A.S. Abdel Haleem",
+                    "id": 407910,
+                    "language_id": 38,
+                    "language_name": "english",
+                    "verse_key": "108:3",
+                    "chapter_id": 108,
+                    "verse_number": 3,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                },
+                {
+                    "id": 935108,
+                    "resource_id": 136,
+                    "text": "C’est celui qui te hait qui sera sans postérité.",
+                    "resource_name": "Montada Islamic Foundation",
+                    "id": 935108,
+                    "language_id": 49,
+                    "language_name": "french",
+                    "verse_key": "108:3",
+                    "chapter_id": 108,
+                    "verse_number": 3,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                },
+                {
+                    "id": 1301201,
+                    "resource_id": 153,
+                    "text": "In verità sarà colui che ti odia a non avere seguito <a class=f><sup foot_note=160782>1</sup></a> . <a class=f><sup foot_note=160783>2</sup></a> «l’abbondanza»: in arabo «al-Kawthar». Questo termine, secondo alcune tradizioni indica anche un fiume del Paradiso che Allah (gloria a Lui l’Altissimo) ha promesso in dono al Suo Inviato (pace e benedizioni su di lui) per compensarlo e consolarlo di tutto quello che ha subito per causa Sua. Secondo l’esegesi ortodossa indica la condizione di Muhammad nel Paradiso, dove sarà posto al più alto dei livelli (al-Wassìla) e «godrà abbondantemente» della Luce divina. <a class=f><sup foot_note=160784>3</sup></a> Versetto di grande importanza per quanto riguarda la pratica rituale della Festa del Sacrificio (‘îd Adhà) che si celebra il decimo giorno del mese del pellegrinaggio e ricorda la prova cui Àlìah (gloria a Lui l’Altissimo) sottopose il suo servo Abramo (pace su di lui). Il versetto prescrive l’ordine di svolgimento dei riti, prima la preghiera comunitaria (salât-ul-îd) alla quale devono partecipare tutti i musulmani poi il sacrificio degli animali. <a class=f><sup foot_note=160785>4</sup></a> «a non avere seguito»: lett. «sarà abtar». Questa espressione significa «senza coda» ed era un epiteto ironico e ingiurioso con cui gli arabi gratificavano quelli di loro che non avevano figli maschi. La tradizione riferisce che alla morte in tenerissima età di suo figlio Qasim l’Inviato di Allah (pace e benedizioni su di lui) dovette subire questa crudele oltraggiosa consuetudine. Uno dei suoi avversari giunse a dire che non avendo figli maschi, anche la religione che predicava non avrebbe avuto futuro. Miseria della Miscredenza!",
+                    "resource_name": "Hamza Roberto Piccardo",
+                    "id": 1301201,
+                    "language_id": 74,
+                    "language_name": "italian",
+                    "verse_key": "108:3",
+                    "chapter_id": 108,
+                    "verse_number": 3,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                },
+                {
+                    "id": 395438,
+                    "resource_id": 83,
+                    "text": "Porque a quien te desdeñe y odie le privaré de todo bien.",
+                    "resource_name": "Sheikh Isa Garcia",
+                    "id": 395438,
+                    "language_id": 40,
+                    "language_name": "spanish",
+                    "verse_key": "108:3",
+                    "chapter_id": 108,
+                    "verse_number": 3,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 602
+                }
+            ]
+        }
+    ],
+    "pagination": {
+        "per_page": 500,
+        "current_page": 1,
+        "next_page": null,
+        "total_pages": 1,
+        "total_records": 3
+    }
+}

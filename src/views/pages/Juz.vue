@@ -1,93 +1,110 @@
 <script lang="ts" setup>
 import { watchEffect, computed, onMounted, shallowRef, watch } from 'vue';
-import { IonContent, IonPage, IonButton } from '@ionic/vue';
+import { IonContent, IonPage, IonFooter } from '@ionic/vue';
+import { storeToRefs } from "pinia"
 // components
-import TranslationsViewComponent from '@/components/juz/TranslationsViewComponent.vue';
-import ReadingViewComponent from '@/components/juz/ReadingViewComponent.vue';
+import JuzCardViewComponent from '@/components/juz/JuzCardViewComponent.vue';
 import AudioPlayerComponent from "@/components/audio/AudioPlayerComponent.vue";
-import ChapterInfoModalComponent from '@/components/chapter/ChapterInfoModalComponent.vue';
-import SegmentsComponent from '@/components/common/SegmentsComponent.vue';
-import { useRoute, useRouter } from 'vue-router';
+import ToolbarComponent from "@/components/common/ToolbarComponent.vue";
+
+import { useRoute } from 'vue-router';
 // stores
 import { useJuzStore } from "@/stores/JuzStore"
 import { useTranslationsStore } from '@/stores/TranslationsStore';
-import { useChapterStore } from '@/stores/ChapterStore';
 import { useAudioStore } from "@/stores/AudioStore";
+import { useChapterStore } from '@/stores/ChapterStore';
+import { useRecitionsStore } from '@/stores/RecitionsStore';
+import { useSettingsStore } from '@/stores/SettingsStore';
+
 // types
 import type { ChapterInfo } from '@/types/chapter';
 import type { InfiniteScrollCustomEvent } from "@ionic/vue"
+import type { Verse } from '@/types/verse';
+import type { PlayAudioEmit } from '@/types/audio';
 // composables
-import { useSettings } from '@/composables/useSettings';
-import { useAlert } from '@/composables/useAlert';
 import { useAudioFile } from '@/composables/useAudioFile';
+import { useAlert } from '@/composables/useAlert';
+import { useLocale } from '@/composables/useLocale';
 
-const currentSegment = shallowRef("translations")
-const { presentAlert } = useAlert()
+const currentSegment = shallowRef<"translation" | "reading">("translation")
+const activeSegment = computed(() => currentSegment.value)
 const { downloadFileProgress } = useAudioFile()
-const { computedCSS } = useSettings()
+const { computedQuranCSS, computedTranslationCSS } = storeToRefs(useSettingsStore())
+const { getLine } = useLocale()
+const { presentLoading, dismissLoading } = useAlert()
 const juzStore = useJuzStore()
-const transaltionStore = useTranslationsStore()
+const { selectedTranslation, selectedTranslationId } = storeToRefs(useTranslationsStore())
 const { selectedChapterName, selectedChapterBismillah, getchapterInfo } = useChapterStore()
+const recitionsStore = useRecitionsStore()
 const audioStore = useAudioStore()
 const pagination = computed(() => juzStore.selectedJuz?.pagination)
 
-const pageRef = shallowRef()
+const juzPageRef = shallowRef()
 const pageRefEl = shallowRef()
 const chapterInfo = shallowRef<ChapterInfo | null>(null)
 const chapterInfoButtonRef = shallowRef()
-const { params } = useRoute()
-const { push } = useRouter()
-const perPage = shallowRef(20)
-const currentPageEnd = shallowRef()
+
+const route = useRoute()
+const currentJuzId = shallowRef<number>()
+
 
 
 watchEffect(async () => {
-    if (params.juzId) {
-        juzStore.selectedJuz = null
-        const found = juzStore.juzList.find((j) => j.juz_number === Number(params.juzId))
-        if (found) {
-            if (!found.verses?.length) {
-                await juzStore.getVerses(found.id, true)
-                const verses = juzStore.verses?.slice(0, perPage.value)
-                if (verses) {
-                    juzStore.selectedJuz = found
-                    verses.forEach((v) => juzStore.selectedJuz?.verses?.push({ ...v, bookmarked: false }))
-                }
-            } else {
-                juzStore.selectedJuz = found
+    if (route.params.juzId) {
+        currentJuzId.value = Number(route.params.juzId)
+        if (juzStore.juzList.length) {
+            await presentLoading({ id: `loading-juz-${currentJuzId.value}-verses` })
+            const isJuzFound = juzStore.juzList.find(({ juz_number }) => juz_number === currentJuzId.value)
+            if (isJuzFound) {
+                await juzStore.getVerses(isJuzFound.juz_number).then(() => {
+                    if (juzStore.allVerses.length) {
+                        juzStore.selectedJuzVerses = []
+                        juzStore.selectedJuz = null
+                        juzStore.allVerses?.slice(0, juzStore.perPage)
+                            .forEach((v) => juzStore.selectedJuzVerses.push({ ...v, bookmarked: false }))
+                    }
+                }).finally(async () => {
+                    juzStore.selectedJuz = isJuzFound
+                    // dismiss loading
+                    if (juzStore.selectedJuzVerses.length) {
+                        await dismissLoading(`loading-juz-${currentJuzId.value}-verses`)
+                    }
+                })
             }
-
         }
     }
 })
 
-const playAudio = async (event: { audioID: number, verseKey?: string }) => {
+const playAudio = async (event: PlayAudioEmit) => {
     if (event.audioID === audioStore.chapterId) {
         await audioStore.handlePlay(true);
         return;
     }
     audioStore.resetValues()
-    await audioStore.getAudio({ audioID: event.audioID, verseKey: event.verseKey })
+    await audioStore.getAudio({ ...event })
 }
 
-const loadMoreVerses = async (infiniteScrollEvent: InfiniteScrollCustomEvent) => {
-    if (juzStore.selectedJuz?.verses?.length === juzStore.versesTotalRecords) {
-        infiniteScrollEvent.target.complete()
-    } else {
-        if (juzStore.selectedJuz?.verses) {
-            juzStore.isLoading = true
-            currentPageEnd.value = Math.ceil(juzStore.selectedJuz?.verses?.length + perPage.value)
-            const verses = juzStore.verses?.slice(juzStore.selectedJuz?.verses?.length, currentPageEnd.value)
-            if (verses) {
-                verses.forEach((v) => juzStore.selectedJuz?.verses?.push({ ...v, bookmarked: false }))
-                setTimeout(() => {
-                    infiniteScrollEvent.target.complete()
-                    juzStore.isLoading = false
-                }, 200);
-            }
-        }
+/**
+ * if playAllJuz in audio settings is enabled
+ * @param chapterId 
+ */
+const playNextChapterOfJuz = async (ev: { chapterId: number, delay: number }) => {
+    if (audioStore.chapterId === ev.chapterId) return;
+
+    await Promise.all([
+        presentLoading({
+            id: `loading-next-juz-audio-${ev.chapterId}`,
+            message: getLine("text.loadingNextChapterAudio"),
+        }),
+        audioStore.handlePlay({ audioID: ev.chapterId, audioSrc: "juz" })
+    ])
+
+    if (audioStore.audioReadyState === 4 && audioStore.audioCanPlayThroughState) {
+        await dismissLoading(`loading-next-juz-audio-${ev.chapterId}`)
     }
+
 }
+
 
 const getSurahInfo = async (ev: number) => {
     await getchapterInfo(ev).then((response) => {
@@ -96,60 +113,108 @@ const getSurahInfo = async (ev: number) => {
     chapterInfoButtonRef.value.$el.click()
 }
 
-const getTranslationAlert = async () => {
-    if (transaltionStore.selectedTranslation) {
-        await presentAlert({
-            header: transaltionStore.selectedTranslation?.language_name,
-            message: transaltionStore.selectedTranslation.author_name,
-            id: "translation-alert",
-            buttons: ['Ok']
-        })
-    }
-}
-
-onMounted(() => pageRefEl.value = pageRef.value.$el)
-
-watch(currentSegment, (s) => {
-    if (s === "home") {
-        push({ path: "/chapters", replace: true })
+/**
+ * auto fetch verses 
+ * every 20s 
+ */
+watchEffect(() => {
+    if (audioStore.isPlayingState) {
+        if (juzStore.selectedJuzVerses?.length !== juzStore.versesTotalRecords) {
+            const intervalId = setInterval(() => {
+                if (juzStore.selectedJuzVerses) {
+                    juzStore.allVerses.slice(juzStore.selectedJuzVerses.length, Math.ceil(juzStore.perPage + juzStore.selectedJuzVerses.length)).forEach((v: Verse) =>
+                        juzStore.selectedJuzVerses.push({
+                            ...v,
+                            bookmarked: false,
+                        })
+                    );
+                }
+                if (juzStore.selectedJuzVerses.length === juzStore.versesTotalRecords) {
+                    clearInterval(intervalId)
+                }
+            }, 20000)
+        } else {
+            return
+        }
     }
 })
 
+onMounted(() => {
+    pageRefEl.value = juzPageRef.value.$el
+    // check for segments
+    const segment = localStorage.getItem("juzs-segment") as typeof currentSegment.value
+    if (segment) {
+        currentSegment.value = segment
+    }
+})
+
+const loadMoreVerses = async (infiniteScrollEvent: InfiniteScrollCustomEvent) => {
+    if (juzStore.selectedJuzVerses?.length === juzStore.versesTotalRecords) {
+        setTimeout(() => {
+            infiniteScrollEvent.target.complete()
+        }, 200);
+    } else {
+        await juzStore.fetchMoreJuzVerses(infiniteScrollEvent)
+    }
+}
+
+const handleSelectedSegment = (event: "translation" | "reading") => {
+    currentSegment.value = event
+    localStorage.setItem("juzs-segment", currentSegment.value)
+}
+
+const playAllChaptersinJuz = async (ev: boolean) => {
+    if (audioStore.audioPlayerSetting) {
+        audioStore.audioPlayerSetting.playAllJuz = ev
+    }
+    if (juzStore.selectedJuz) {
+        const first = juzStore.selectedJuz.chapters
+        if (first) {
+            await playAudio({
+                audioID: Number(first[0].chapterId),
+                verseKey: juzStore.getFirstVerseOfJuz?.verse_key,
+                audioSrc: 'juz'
+            })
+        }
+
+    }
+}
 </script>
 
 
 <template>
-    <ion-page :data-juz-id="params.juzId" ref="pageRef">
-        <segments-component :selected-segment="currentSegment"
-            @update:selected-segment="currentSegment = $event"></segments-component>
+    <ion-page ref="juzPageRef" :key="`juz-${juzStore.selectedJuzId}`" :id="`juz-${juzStore.selectedJuzId}`">
+        <toolbar-component :route-back-label="getLine('tabs.juzs')" route-back-path="/juzs"
+            :juz-id="juzStore.selectedJuzId" :selected-segment="activeSegment" id="juzs"
+            :is-playing="audioStore.isPlaying" @update:selected-segment="handleSelectedSegment"
+            @update:play-all-chapters="playAllChaptersinJuz">
+        </toolbar-component>
         <ion-content>
-            <translations-view-component id="translations-juzs" :is-loading="juzStore.isLoading"
-                :is-playing="audioStore.isPlaying" @update:modal-value="getTranslationAlert"
-                v-if="currentSegment === 'translations'" @update:play-audio="playAudio"
-                :download-progress="downloadFileProgress" :is-bismillah="selectedChapterBismillah" :styles="computedCSS"
-                :verses="juzStore.selectedJuz?.verses" :computed-verses="juzStore.juzVersesByChapterMap"
+            <juz-card-view-component :currentSegment="currentSegment" :id="`juz-${juzStore.selectedJuzId}-view`"
+                :key="`juz-${juzStore.selectedJuzId}-view`" :is-loading="juzStore.isLoading"
+                :is-playing="audioStore.isPlaying" @update:play-audio="playAudio"
+                :download-progress="downloadFileProgress" :is-bismillah="selectedChapterBismillah"
+                :quran-styles="computedQuranCSS" :translation-styles="computedTranslationCSS"
+                :verses="juzStore.selectedJuzVerses" :computed-verses="juzStore.juzVersesByChapterMap"
                 :chapter-name="selectedChapterName.nameArabic" :audio-experience="audioStore.audioPlayerSetting"
-                @update:get-verses="loadMoreVerses" :pagination="pagination" :is-audio-loading="audioStore.isLoading"
-                :active-audio-id="audioStore.audioFiles?.chapter_id" :per-page="perPage"
-                :selected-translation-id="transaltionStore.selectedTranslationId">
-            </translations-view-component>
-            <reading-view-component id="reading-juzs" v-else :is-playing="audioStore.isPlaying"
-                :verses="juzStore.selectedJuz?.verses" :computed-verses="juzStore.juzVersesByChapterMap"
-                @update:play-audio="playAudio" :is-loading="juzStore.isLoading" :styles="computedCSS"
-                :audio-experience="audioStore.audioPlayerSetting" :download-progress="downloadFileProgress"
-                :pagination="pagination" @update:get-verses="loadMoreVerses" @update:surah-info="getSurahInfo"
-                :is-audio-loading="audioStore.isLoading" :active-audio-id="audioStore.audioFiles?.chapter_id">
-            </reading-view-component>
-            <div>
-                <ion-button ref="chapterInfoButtonRef" id="juz-chapter-modal" class="ion-hide"></ion-button>
-                <chapter-info-modal-component trigger="juz-chapter-modal" :chapter-info="chapterInfo"
-                    :page-el="pageRefEl"></chapter-info-modal-component>
-            </div>
+                :pagination="pagination" :is-audio-loading="audioStore.isLoading" :juz-id="juzStore.selectedJuzId"
+                :active-audio-id="audioStore.audioFiles?.chapter_id" :per-page="juzStore.perPage"
+                :verses-count="juzStore.versesTotalRecords" :selected-translation-id="selectedTranslationId"
+                :total-juzs="juzStore.totalJuzs" :selected-juz-verse-mapping="juzStore.selectedJuzVerseMapping"
+                :chapters="juzStore.getSelectedJuzChapters" :play-all-juz="audioStore.audioPlayerSetting?.playAllJuz"
+                @update:get-verses="loadMoreVerses" @update:selected-translation="selectedTranslation = $event"
+                @update:play-next-chapter-in-selected-juz="playNextChapterOfJuz"
+                @update:end-of-juz="audioStore.closePlayer">
+
+            </juz-card-view-component>
         </ion-content>
-        <div class="footer">
-            <audio-player-component :model-value="audioStore.isVisible"
-                @update:model-value="audioStore.isVisible = $event">
+        <ion-footer>
+            <audio-player-component :model-value="audioStore.isVisible" trigger="juzs-audio-modal"
+                :selected-reciter="recitionsStore.selectedReciter" @update:model-value="audioStore.isVisible = $event"
+                :map-recitions="recitionsStore.mapRecitions"
+                @update:selected-reciter="recitionsStore.handleSelectedReciter($event, 'juz')" :juz-list="juzStore.juzList">
             </audio-player-component>
-        </div>
+        </ion-footer>
     </ion-page>
+
 </template>

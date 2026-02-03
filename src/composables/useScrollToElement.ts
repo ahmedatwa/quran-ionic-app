@@ -1,21 +1,7 @@
-import { computed, onMounted, onUnmounted, shallowRef } from "vue";
-
-export const SMOOTH_SCROLL_TO_CENTER = {
-  block: "center", // 'block' relates to vertical alignment. see: https://stackoverflow.com/a/48635751/1931451 for nearest.
-  behavior: "smooth",
-} as ScrollIntoViewOptions;
-
-export const SMOOTH_SCROLL_TO_TOP = {
-  block: "start",
-  behavior: "smooth",
-} as ScrollIntoViewOptions;
-
-export const SCROLL_TO_NEAREST_ELEMENT = {
-  block: "nearest",
-} as ScrollIntoViewOptions;
+import { computed, onMounted, shallowRef } from "vue";
 
 export const useScrollToElement = () => {
-  const scrollMargin = shallowRef(120);
+  const scrollMargin = shallowRef(100);
   const scrollElment = shallowRef<HTMLElement | null>(null);
   const parentElementId = shallowRef<HTMLElement | null>(null);
 
@@ -25,29 +11,26 @@ export const useScrollToElement = () => {
     timeout?: number,
     options: ScrollIntoViewOptions = SMOOTH_SCROLL_TO_CENTER
   ) => {
-    // const el = shallowRef<HTMLDivElement | null>();
-    parentElementId.value =
-      typeof root === "string"
-        ? (document.querySelector(root) as HTMLElement)
-        : root;
+    parentElementId.value = root.startsWith("#")
+      ? (document.querySelector(root) as HTMLElement)
+      : (document.getElementById(root) as HTMLElement);
 
     scrollElment.value = document.querySelector(elID) as HTMLElement;
 
-    // return if same verse el was sent
-    // if (
-    //   scrollElment.value === (document.querySelector(elID) as HTMLElement) &&
-    //   isInViewport.value
-    // ) {
-    //   return;
-    // }
-
+    console.log(parentElementId.value);
+    console.log(scrollElment.value);
     // attempt scroll
-    if (scrollElment.value && !isInViewport.value) {
-      if (timeout) await delay(timeout);
-      scrollElment.value.classList.add(`scroll-margin:${scrollMargin.value}px`);
-      scrollElment.value.scrollIntoView(options);
+    if (
+      scrollElment.value &&
+      isPVisible(scrollElment.value, parentElementId.value)
+    ) {
+       await delay(100);
+       
+      console.log("point");
+      
+      scrollElment.value.scrollIntoView(options)
     } else {
-      return;
+      return scrollElment.value;
     }
   };
 
@@ -66,14 +49,31 @@ export const useScrollToElement = () => {
     }
   });
 
+  const isPVisible = (element: Element, container: Element) => {
+    const elRect = element.getBoundingClientRect();
+    const conRect = container.getBoundingClientRect();
+
+    let result = false;
+
+    if (
+      elRect.x >= conRect.x &&
+      elRect.y >= conRect.y &&
+      elRect.x + elRect.width <= conRect.x + conRect.width &&
+      elRect.y + elRect.height <= conRect.y + conRect.height
+    ) {
+      result = true;
+    }
+    return result;
+  };
+
   /**
    *
-   * @param {HTMLElement} el
+   * @param {HTMLElement} ele
    * @return {{top: number, left: number}}
    */
-  const getElOffset = (el: HTMLElement | string) => {
+  const getElOffset = (ele: HTMLElement | string) => {
     let element: HTMLElement =
-      typeof el === "string" ? (document.querySelector(el) as HTMLElement) : el;
+      typeof ele === "string" ? (document.querySelector(ele) as HTMLElement) : ele;
     let top = 0,
       left = 0;
     // offsetParent = 0;
@@ -100,15 +100,6 @@ export const useScrollToElement = () => {
     }
   };
 
-  const getMainScrollElRect = (elID: string): string => {
-    const div = elID.replace("#", "#main-");
-    const el = document.querySelector(div) as HTMLDivElement;
-    if (el) {
-      return el.getBoundingClientRect().height.toString();
-    }
-    return "250";
-  };
-
   const delay = (length: number): Promise<void> => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -121,11 +112,35 @@ export const useScrollToElement = () => {
     });
   };
 
-  onUnmounted(() => {});
+  // const elementIsVisibleInViewport = (
+  //   el: Element,
+  //   parentElement: Element,
+  //   partiallyVisible: boolean = false
+  // ) => {
+  //   const { top, left, bottom, right } = el.getBoundingClientRect();
+  //   const { clientHeight, clientWidth } = parentElement;
+  //   return partiallyVisible
+  //     ? ((top > 0 && top < innerHeight) || (bottom > 0 && left < innerWidth)) &&
+  //         ((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth))
+  //     : top >= 0 && left >= 0 && bottom <= clientHeight && right <= clientWidth;
+  // };
+
+  // const getMainScrollElRect = (elID: string): string => {
+  //   const div = elID.replace("#", "#main-");
+  //   const el = document.querySelector(div) as HTMLDivElement;
+  //   if (el) {
+  //     return el.getBoundingClientRect().height.toString();
+  //   }
+  //   return "250";
+  // };
+
   onMounted(() => {
+    console.log("scroll mounted");
+    
     scrollElment.value = null;
     parentElementId.value = null;
   });
+  
   return {
     scrollToElement,
     scrollIfNeeded,
@@ -133,3 +148,17 @@ export const useScrollToElement = () => {
     isInViewport,
   };
 };
+
+export const SMOOTH_SCROLL_TO_CENTER = {
+  block: "center", // 'block' relates to vertical alignment. see: https://stackoverflow.com/a/48635751/1931451 for nearest.
+  behavior: "smooth",
+} as ScrollIntoViewOptions;
+
+export const SMOOTH_SCROLL_TO_TOP = {
+  block: "start",
+  behavior: "smooth",
+} as ScrollIntoViewOptions;
+
+export const SCROLL_TO_NEAREST_ELEMENT = {
+  block: "nearest",
+} as ScrollIntoViewOptions;

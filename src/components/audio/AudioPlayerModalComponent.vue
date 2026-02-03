@@ -1,54 +1,49 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue"
-import { IonButtons, IonButton, IonHeader, IonToolbar, IonSkeletonText } from "@ionic/vue"
-import { IonContent, modalController, IonRow, IonThumbnail, IonSpinner } from '@ionic/vue';
+import { computed, onMounted, ref } from "vue"
+import { IonButtons, IonButton, IonHeader, IonToolbar, IonSkeletonText, IonModal } from "@ionic/vue"
+import { IonContent, modalController, IonRow, IonThumbnail, IonSpinner, IonChip } from '@ionic/vue';
 import { IonRange, IonCol, IonGrid, IonIcon, IonImg, IonText, isPlatform } from '@ionic/vue';
-import { IonModal } from "@ionic/vue";
+
 // ionicons
-import { playOutline, playBackOutline, playForwardOutline, repeatOutline } from 'ionicons/icons';
-import { volumeLowOutline, volumeHighOutline, sync } from 'ionicons/icons';
-import { pauseOutline, chevronDownOutline, ellipsisHorizontalOutline } from 'ionicons/icons';
+import { playOutline, playBackOutline, playForwardOutline, repeatOutline, returnDownBackOutline } from 'ionicons/icons';
+import { volumeLowOutline, volumeHighOutline } from 'ionicons/icons';
+import { pauseOutline, chevronDownOutline } from 'ionicons/icons';
 // composables
 import { useLocale } from "@/composables/useLocale";
 import { useStorage } from "@/composables/useStorage";
 // components
-import ModalComponent from "@/components/common/ModalComponent.vue";
 import AudioModalAllChapters from "@/components/audio/parts/AudioModalAllChapters.vue";
 import AudioModalRecentPlay from "@/components/audio/parts/AudioModalRecentPlay.vue";
+
 // types
-import type { AudioFile, MapRecitions, Recitations } from "@/types/audio";
+import type { AudioFile, MapRecitions, Recitations, AudioPlayerSettings } from "@/types/audio";
 import type { Chapter } from "@/types/chapter";
 import type { Juz } from "@/types/juz";
+import type { VerseHeaderDataReturn } from "@/types/verse";
 
 const modalRef = ref()
 const { getLine } = useLocale()
 const isImgLoading = ref(true)
 const downloadedKeys = ref<string[]>([])
 const { storageKeys } = useStorage("__audioDB")
-const dismiss = () => modalController.dismiss(null, 'cancel');
+const dismissModal = () => modalController.dismiss(null, 'cancel');
 
 const props = defineProps<{
     trigger: string
     isPlaying: boolean
     activeAudioId?: number
     isLoading: boolean
-    verseData?: {
-        juzNumber: number | null;
-        hizbNumber: number | null;
-        pageNumber: number | null;
-        surah: number;
-        ayah: number
-    }
+    verseData?: VerseHeaderDataReturn
     chapters?: Chapter[]
     selectedReciter?: Recitations
     audioFiles: AudioFile | null
     chapterName?: string
     progressTimer: number
     mediaVolume: number
-    loopAudio: string
     mapRecitions?: MapRecitions
     recentlyPlayed?: Chapter[],
     juzs?: Juz[]
+    audioPlayerSetting?: AudioPlayerSettings
 }>()
 
 const emit = defineEmits<{
@@ -77,12 +72,36 @@ const isAudioPlaying = (chapterId: number) =>
     props.isPlaying && (chapterId === props.activeAudioId)
 
 
-const isVolumeVisible = () => {
-    if (isPlatform('mobileweb') || isPlatform('desktop')) {
-        return false;
+const isVolumeVisible = computed(() => {
+    if (isPlatform('ios') || isPlatform('android')) {
+        return false
     }
-    return true;
-}
+    return true
+})
+
+
+const loopButton = computed(() => {
+    if (props.audioPlayerSetting) {
+        if (props.audioPlayerSetting.loopAudio === "never") {
+            return {
+                emit: "repeat",
+                color: "medium",
+                icon: repeatOutline
+            }
+        } else if (props.audioPlayerSetting.loopAudio === "repeat") {
+            return {
+                emit: "never",
+                color: "primary",
+                icon: repeatOutline
+            }
+        }
+    }
+    return {
+        emit: "repeat",
+        color: "medium",
+        icon: repeatOutline
+    }
+})
 </script>
 
 <template>
@@ -90,7 +109,7 @@ const isVolumeVisible = () => {
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
-                    <ion-button color="medium" @click="dismiss">
+                    <ion-button color="medium" @click.stop="dismissModal">
                         <ion-icon :icon="chevronDownOutline"></ion-icon>
                     </ion-button>
                 </ion-buttons>
@@ -100,7 +119,7 @@ const isVolumeVisible = () => {
             <ion-grid>
                 <ion-row class="ion-justify-content-center">
                     <ion-col size="11">
-                        <ion-thumbnail style="height: 300px; width: 300px;" v-if="isImgLoading">
+                        <ion-thumbnail style="height: 250px; width: 250px;" v-if="isImgLoading">
                             <ion-skeleton-text :animated="true"></ion-skeleton-text>
                         </ion-thumbnail>
                         <ion-img @ion-img-did-load="isImgLoading = false"
@@ -108,7 +127,7 @@ const isVolumeVisible = () => {
                             :alt="selectedReciter?.name"></ion-img>
                     </ion-col>
                 </ion-row>
-                <ion-row>
+                <ion-row class="ion-padding-top">
                     <ion-col size="12">
                         <ion-text class="ion-padding-vertical">
                             <ion-text>
@@ -117,20 +136,23 @@ const isVolumeVisible = () => {
                             <ion-text>
                                 <h4>{{ selectedReciter?.name }}</h4>
                             </ion-text>
-                            <ion-text v-if="verseData">
-                                <ion-text>
-                                    {{ verseData?.hizbNumber ? getLine('audio.hizb', [verseData?.hizbNumber]) : '' }}
-                                    {{ verseData?.pageNumber ? getLine('audio.page', [verseData?.pageNumber]) : '' }}
-                                    {{ verseData?.juzNumber ? getLine('audio.juz', [verseData?.juzNumber]) : '' }}
-                                    <br />
-                                    {{ verseData.surah ? getLine('audio.surah', [verseData.surah]) : '' }}
-                                    {{ verseData.ayah ? getLine('audio.ayah', [verseData.ayah]) : '' }}
-                                </ion-text>
+                            <ion-text v-if="verseData" class="ion-padding-top">
+                                <ion-chip :outline="true">{{ verseData.hizbNumber ? getLine('audio.hizb',
+                                    [String(verseData.hizbNumber)]) : '' }}</ion-chip>
+                                <ion-chip :outline="true">{{ verseData.pageNumber ? getLine('audio.page',
+                                    [String(verseData.pageNumber)]) : '' }}</ion-chip>
+                                <ion-chip :outline="true">{{ verseData.juzNumber ? getLine('audio.juz',
+                                    [String(verseData.juzNumber)])
+                                    : '' }}</ion-chip>
+                                <ion-chip :outline="true">{{ verseData.surah ? getLine('audio.surah',
+                                    [verseData.surah]) : '' }}</ion-chip>
+                                <ion-chip :outline="true">{{ verseData.ayah ? getLine('audio.ayah',
+                                    [verseData.ayah]) : '' }}</ion-chip>
                             </ion-text>
                         </ion-text>
                     </ion-col>
                 </ion-row>
-                <ion-row class="ion-justify-content-center">
+                <ion-row class="ion-justify-content-center ion-padding-top">
                     <ion-col size="12">
                         <ion-range aria-label="Seek" color="primary"
                             @ion-change="$emit('update:seek', Number($event.detail.value))"
@@ -138,16 +160,7 @@ const isVolumeVisible = () => {
                         </ion-range>
                     </ion-col>
                 </ion-row>
-                <ion-row class="ion-justify-content-evenly">
-                    <ion-col>
-                        <ion-button fill="clear" id="reciters-modal">
-                            <ion-icon slot="icon-only" :icon="ellipsisHorizontalOutline"></ion-icon>
-                        </ion-button>
-                        <modal-component :title="getLine('settings.reciters')" trigger="reciters-modal"
-                            :data="mapRecitions" :selected="selectedReciter"
-                            @update:selected-recition="$emit('update:selectedReciter', $event)">
-                        </modal-component>
-                    </ion-col>
+                <ion-row class="ion-align-content-center ion-padding-top ion-text-center">
                     <ion-col>
                         <ion-button fill="clear" @click="$emit('update:playPrev', true)">
                             <ion-icon slot="icon-only" :icon="playBackOutline"></ion-icon>
@@ -167,19 +180,14 @@ const isVolumeVisible = () => {
                         </ion-button>
                     </ion-col>
                     <ion-col>
-                        <ion-button fill="clear" v-if="loopAudio === 'never'" @click.prevent="$emit('update:loopAudio', 'once')">
-                            <ion-icon slot="icon-only" :icon="sync" color="medium"></ion-icon>
-                        </ion-button>
-                        <ion-button fill="clear" v-else-if="loopAudio === 'once'"
-                            @click="$emit('update:loopAudio', 'repeat')">
-                            <ion-icon slot="icon-only" :icon="repeatOutline" color="warning"></ion-icon>
-                        </ion-button>
-                        <ion-button fill="clear" v-else-if="loopAudio === 'repeat'"
-                            @click="$emit('update:loopAudio', 'never')">
-                            <ion-icon slot="icon-only" :icon="repeatOutline" color="primary"></ion-icon>
+                        <ion-button fill="clear" @click="$emit('update:loopAudio', loopButton.emit)"
+                            :color="loopButton.color">
+                            <ion-icon slot="icon-only" :icon="loopButton.icon"></ion-icon>
                         </ion-button>
                     </ion-col>
-                    <ion-col size="12" v-if="isVolumeVisible()">
+                </ion-row>
+                <ion-row class="">
+                    <ion-col size="12" v-if="isVolumeVisible">
                         <ion-range label-placement="start" :pin="true" :value="mediaVolume"
                             @ion-input="changeMediaVolume">
                             <ion-icon slot="start" :icon="volumeLowOutline"></ion-icon>
@@ -200,3 +208,32 @@ const isVolumeVisible = () => {
         </ion-content>
     </ion-modal>
 </template>
+<style scoped>
+ion-modal#audio-settings-modal {
+    --width: fit-content;
+    --min-width: 250px;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+ion-modal#audio-settings-modal h1 {
+    margin: 20px 20px 10px 20px;
+}
+
+ion-modal#audio-settings-modal ion-icon {
+    margin-right: 6px;
+    width: 48px;
+    height: 48px;
+    padding: 4px 0;
+    color: #aaaaaa;
+}
+
+ion-modal#audio-settings-modal .wrapper {
+    margin-bottom: 10px;
+}
+
+ul {
+    list-style-type: none;
+}
+</style>

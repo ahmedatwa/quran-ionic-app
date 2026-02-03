@@ -22,14 +22,14 @@ export const useScrollBy = () => {
         return itemEl.value?.offsetTop - wrapperEl.value?.scrollTop - top.value;
     }); 
 
-    console.log(count.value);
-      console.log(itemEl.value);
-        console.log(wrapperEl.value);
+    console.log("count", count.value);
+      console.log("itemEl", itemEl.value);
+        console.log("wrapperEl", wrapperEl.value);
         
 
-    if (count.value) {
-      wrapperEl.value?.scroll({
-        top: count.value,
+    if (wrapperEl.value) {
+      itemEl.value?.scroll({
+        top: 0,
         left: 0,
         behavior: "smooth",
       });

@@ -1,8 +1,14 @@
 import { AudioFile } from "./audio";
 import { Verse } from "./verse";
 
-type VerseMapping = {
-  [key: string]: string | undefined;
+ 
+
+type JuzChapters = {
+  juzNumber: number;
+  chapterId: string | number;
+  en: string;
+  ar: string;
+  verses: string;
 };
 
 interface Juz {
@@ -10,16 +16,10 @@ interface Juz {
   id: number;
   juz_number: number;
   last_verse_id: number;
-  verse_mapping: VerseMapping;
+  verse_mapping: JuzVerseMapping;
   verses_count: number;
   verses: Verse[] | null;
-  chapters?: {
-    juzNumber: number;
-    chapterId: string | number;
-    en: string;
-    ar: string;
-    verses: string;
-  }[];
+  chapters?: JuzChapters[];
   pagination?: Pagination | null;
   audioFile?: AudioFiles | null;
 }
@@ -56,10 +56,29 @@ type JuzVersesIntersecting = {
   lastVerseNumber: number;
 };
 
+
+interface JuzsToChaptersReturn {
+  id: number;
+  juz_number: number;
+  verse_mapping: VerseMapping;
+  first_verse_id: number;
+  last_verse_id: number;
+  verses_count: number;
+  verses: Verse[];
+  chapters: {
+    juzNumber: number;
+    chapterId: string | number;
+    en: string;
+    ar: string;
+    verses: string;
+  }[];
+}
 export {
   Juz,
   JuzHeaderData,
   juzVersesByPageMap,
   JuzVerseMapping,
+  JuzChapters,
+  JuzsToChaptersReturn,
   JuzVersesIntersecting,
 };

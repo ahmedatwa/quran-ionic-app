@@ -1,0 +1,4311 @@
+{
+    "verses": [
+        {
+            "id": 1873,
+            "verse_number": 71,
+            "verse_key": "15:71",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 222,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "قَالَ هَـٰٓؤُلَآءِ بَنَاتِىٓ إِن كُنتُمْ فَـٰعِلِينَ",
+            "text_uthmani_simple": "قال هؤلاء بناتى ان كنتم فعلين",
+            "text_imlaei": "قَالَ هَٰؤُلَاءِ بَنَاتِي إِن كُنتُمْ فَاعِلِينَ",
+            "text_imlaei_simple": "قال هؤلاء بناتي ان كنتم فاعلين",
+            "text_indopak": "قَالَ هٰٓؤُلَاۤءِ بَنٰتِىۡۤ اِنۡ كُنۡـتُمۡ فٰعِلِيۡنَؕ‏",
+            "text_uthmani_tajweed": "قَالَ هَ<tajweed class=madda_obligatory>ـٰٓ</tajweed>ؤُل<tajweed class=madda_obligatory>َا</tajweed>ٓءِ بَنَات<tajweed class=madda_obligatory>ِىٓ</tajweed> إِ<tajweed class=ikhafa>ن ك</tajweed>ُ<tajweed class=ikhafa>نت</tajweed>ُمْ فَ<tajweed class=madda_normal>ـٰ</tajweed>عِل<tajweed class=madda_permissible>ِي</tajweed>نَ <span class=end>٧١</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_71.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 60243,
+                    "position": 1,
+                    "audio_url": "wbw/015_071_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "قَالَ",
+                    "text_indopak": "قَالَ",
+                    "text_imlaei": "قَالَ",
+                    "verse_key": "15:71",
+                    "line_number": 1,
+                    "location": "15:71:1",
+                    "code_v1": "ﭑ",
+                    "code_v2": "ﱁ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 1,
+                    "text": "ﱁ",
+                    "translation": {
+                        "text": "He said",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "qāla",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 60244,
+                    "position": 2,
+                    "audio_url": "wbw/015_071_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "هَـٰٓؤُلَآءِ",
+                    "text_indopak": "هٰٓؤُلَاۤءِ",
+                    "text_imlaei": "هَٰؤُلَاءِ",
+                    "verse_key": "15:71",
+                    "line_number": 1,
+                    "location": "15:71:2",
+                    "code_v1": "ﭒ",
+                    "code_v2": "ﱂ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 1,
+                    "text": "ﱂ",
+                    "translation": {
+                        "text": "These",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "hāulāi",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 60245,
+                    "position": 3,
+                    "audio_url": "wbw/015_071_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "بَنَاتِىٓ",
+                    "text_indopak": "بَنٰتِىۡۤ",
+                    "text_imlaei": "بَنَاتِي",
+                    "verse_key": "15:71",
+                    "line_number": 1,
+                    "location": "15:71:3",
+                    "code_v1": "ﭓ",
+                    "code_v2": "ﱃ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 1,
+                    "text": "ﱃ",
+                    "translation": {
+                        "text": "(are) my daughters",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "banātī",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 60246,
+                    "position": 4,
+                    "audio_url": "wbw/015_071_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِن",
+                    "text_indopak": "اِنۡ",
+                    "text_imlaei": "إِن",
+                    "verse_key": "15:71",
+                    "line_number": 1,
+                    "location": "15:71:4",
+                    "code_v1": "ﭔ",
+                    "code_v2": "ﱄ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 1,
+                    "text": "ﱄ",
+                    "translation": {
+                        "text": "if",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "in",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 60247,
+                    "position": 5,
+                    "audio_url": "wbw/015_071_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "كُنتُمْ",
+                    "text_indopak": "كُنۡـتُمۡ",
+                    "text_imlaei": "كُنتُمْ",
+                    "verse_key": "15:71",
+                    "line_number": 1,
+                    "location": "15:71:5",
+                    "code_v1": "ﭕ",
+                    "code_v2": "ﱅ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 1,
+                    "text": "ﱅ",
+                    "translation": {
+                        "text": "you would be",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "kuntum",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 60248,
+                    "position": 6,
+                    "audio_url": "wbw/015_071_006.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فَـٰعِلِينَ",
+                    "text_indopak": "فٰعِلِيۡنَؕ‏",
+                    "text_imlaei": "فَاعِلِينَ",
+                    "verse_key": "15:71",
+                    "line_number": 1,
+                    "location": "15:71:6",
+                    "code_v1": "ﭖ",
+                    "code_v2": "ﱆ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 1,
+                    "text": "ﱆ",
+                    "translation": {
+                        "text": "doers",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "fāʿilīna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 60249,
+                    "position": 7,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٧١",
+                    "text_indopak": "٧١",
+                    "text_imlaei": "٧١",
+                    "verse_key": "15:71",
+                    "line_number": 1,
+                    "location": "15:71:7",
+                    "code_v1": "ﭗ",
+                    "code_v2": "ﱇ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 1,
+                    "text": "ﱇ",
+                    "translation": {
+                        "text": "(71)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1874,
+            "verse_number": 72,
+            "verse_key": "15:72",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 222,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "لَعَمْرُكَ إِنَّهُمْ لَفِى سَكْرَتِهِمْ يَعْمَهُونَ",
+            "text_uthmani_simple": "لعمرك انهم لفى سكرتهم يعمهون",
+            "text_imlaei": "لَعَمْرُكَ إِنَّهُمْ لَفِي سَكْرَتِهِمْ يَعْمَهُونَ",
+            "text_imlaei_simple": "لعمرك انهم لفي سكرتهم يعمهون",
+            "text_indopak": "لَعَمۡرُكَ اِنَّهُمۡ لَفِىۡ سَكۡرَتِهِمۡ يَعۡمَهُوۡنَ‏",
+            "text_uthmani_tajweed": "لَعَمْرُكَ إِ<tajweed class=ghunnah>نّ</tajweed>َهُمْ لَفِى سَكْرَتِهِمْ يَعْمَه<tajweed class=madda_permissible>ُو</tajweed>نَ <span class=end>٧٢</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_72.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 60516,
+                    "position": 1,
+                    "audio_url": "wbw/015_072_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لَعَمْرُكَ",
+                    "text_indopak": "لَعَمۡرُكَ",
+                    "text_imlaei": "لَعَمْرُكَ",
+                    "verse_key": "15:72",
+                    "line_number": 1,
+                    "location": "15:72:1",
+                    "code_v1": "ﭘ",
+                    "code_v2": "ﱈ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 1,
+                    "text": "ﱈ",
+                    "translation": {
+                        "text": "By your life",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "laʿamruka",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 60517,
+                    "position": 2,
+                    "audio_url": "wbw/015_072_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِنَّهُمْ",
+                    "text_indopak": "اِنَّهُمۡ",
+                    "text_imlaei": "إِنَّهُمْ",
+                    "verse_key": "15:72",
+                    "line_number": 1,
+                    "location": "15:72:2",
+                    "code_v1": "ﭙ",
+                    "code_v2": "ﱉ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 1,
+                    "text": "ﱉ",
+                    "translation": {
+                        "text": "indeed, they",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "innahum",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 60518,
+                    "position": 3,
+                    "audio_url": "wbw/015_072_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لَفِى",
+                    "text_indopak": "لَفِىۡ",
+                    "text_imlaei": "لَفِي",
+                    "verse_key": "15:72",
+                    "line_number": 1,
+                    "location": "15:72:3",
+                    "code_v1": "ﭚ",
+                    "code_v2": "ﱊ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 1,
+                    "text": "ﱊ",
+                    "translation": {
+                        "text": "were in",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "lafī",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 60519,
+                    "position": 4,
+                    "audio_url": "wbw/015_072_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "سَكْرَتِهِمْ",
+                    "text_indopak": "سَكۡرَتِهِمۡ",
+                    "text_imlaei": "سَكْرَتِهِمْ",
+                    "verse_key": "15:72",
+                    "line_number": 1,
+                    "location": "15:72:4",
+                    "code_v1": "ﭛ",
+                    "code_v2": "ﱋ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 1,
+                    "text": "ﱋ",
+                    "translation": {
+                        "text": "their intoxication",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "sakratihim",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 60520,
+                    "position": 5,
+                    "audio_url": "wbw/015_072_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "يَعْمَهُونَ",
+                    "text_indopak": "يَعۡمَهُوۡنَ‏",
+                    "text_imlaei": "يَعْمَهُونَ",
+                    "verse_key": "15:72",
+                    "line_number": 2,
+                    "location": "15:72:5",
+                    "code_v1": "ﭜ",
+                    "code_v2": "ﱌ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 2,
+                    "text": "ﱌ",
+                    "translation": {
+                        "text": "wandering blindly",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "yaʿmahūna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 60521,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٧٢",
+                    "text_indopak": "٧٢",
+                    "text_imlaei": "٧٢",
+                    "verse_key": "15:72",
+                    "line_number": 2,
+                    "location": "15:72:6",
+                    "code_v1": "ﭝ",
+                    "code_v2": "ﱍ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 2,
+                    "text": "ﱍ",
+                    "translation": {
+                        "text": "(72)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1875,
+            "verse_number": 73,
+            "verse_key": "15:73",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 222,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "فَأَخَذَتْهُمُ ٱلصَّيْحَةُ مُشْرِقِينَ",
+            "text_uthmani_simple": "فاخذتهم الصيحة مشرقين",
+            "text_imlaei": "فَأَخَذَتْهُمُ الصَّيْحَةُ مُشْرِقِينَ",
+            "text_imlaei_simple": "فاخذتهم الصيحة مشرقين",
+            "text_indopak": "فَاَخَذَتۡهُمُ الصَّيۡحَةُ مُشۡرِقِيۡنَۙ‏",
+            "text_uthmani_tajweed": "فَأَخَذَتْهُمُ <tajweed class=ham_wasl>ٱ</tajweed><tajweed class=laam_shamsiyah>ل</tajweed>صَّيْحَةُ مُشْرِق<tajweed class=madda_permissible>ِي</tajweed>نَ <span class=end>٧٣</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_73.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 61109,
+                    "position": 1,
+                    "audio_url": "wbw/015_073_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فَأَخَذَتْهُمُ",
+                    "text_indopak": "فَاَخَذَتۡهُمُ",
+                    "text_imlaei": "فَأَخَذَتْهُمُ",
+                    "verse_key": "15:73",
+                    "line_number": 2,
+                    "location": "15:73:1",
+                    "code_v1": "ﭞ",
+                    "code_v2": "ﱎ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 2,
+                    "text": "ﱎ",
+                    "translation": {
+                        "text": "So, seized them",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "fa-akhadhathumu",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 61110,
+                    "position": 2,
+                    "audio_url": "wbw/015_073_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلصَّيْحَةُ",
+                    "text_indopak": "الصَّيۡحَةُ",
+                    "text_imlaei": "الصَّيْحَةُ",
+                    "verse_key": "15:73",
+                    "line_number": 2,
+                    "location": "15:73:2",
+                    "code_v1": "ﭟ",
+                    "code_v2": "ﱏ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 2,
+                    "text": "ﱏ",
+                    "translation": {
+                        "text": "the awful cry",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-ṣayḥatu",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 61111,
+                    "position": 3,
+                    "audio_url": "wbw/015_073_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مُشْرِقِينَ",
+                    "text_indopak": "مُشۡرِقِيۡنَۙ‏",
+                    "text_imlaei": "مُشْرِقِينَ",
+                    "verse_key": "15:73",
+                    "line_number": 2,
+                    "location": "15:73:3",
+                    "code_v1": "ﭠ",
+                    "code_v2": "ﱐ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 2,
+                    "text": "ﱐ",
+                    "translation": {
+                        "text": "at sunrise",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "mush'riqīna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 61112,
+                    "position": 4,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٧٣",
+                    "text_indopak": "٧٣",
+                    "text_imlaei": "٧٣",
+                    "verse_key": "15:73",
+                    "line_number": 2,
+                    "location": "15:73:4",
+                    "code_v1": "ﭡ",
+                    "code_v2": "ﱑ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 2,
+                    "text": "ﱑ",
+                    "translation": {
+                        "text": "(73)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1876,
+            "verse_number": 74,
+            "verse_key": "15:74",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 222,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "فَجَعَلْنَا عَـٰلِيَهَا سَافِلَهَا وَأَمْطَرْنَا عَلَيْهِمْ حِجَارَةً مِّن سِجِّيلٍ",
+            "text_uthmani_simple": "فجعلنا عليها سافلها وامطرنا عليهم حجارة من سجيل",
+            "text_imlaei": "فَجَعَلْنَا عَالِيَهَا سَافِلَهَا وَأَمْطَرْنَا عَلَيْهِمْ حِجَارَةً مِّن سِجِّيلٍ",
+            "text_imlaei_simple": "فجعلنا عاليها سافلها وامطرنا عليهم حجارة من سجيل",
+            "text_indopak": "فَجَعَلۡنَا عَالِيـَهَا سَافِلَهَا وَ اَمۡطَرۡنَا عَلَيۡهِمۡ حِجَارَةً مِّنۡ سِجِّيۡلٍؕ‏",
+            "text_uthmani_tajweed": "فَجَعَلْنَا عَ<tajweed class=madda_normal>ـٰ</tajweed>لِيَهَا سَافِلَهَا وَأَمْطَرْنَا عَلَيْهِمْ حِجَارَ<tajweed class=idgham_ghunnah>ةً م</tajweed>ِّ<tajweed class=ikhafa>ن س</tajweed>ِجّ<tajweed class=madda_permissible>ِي</tajweed>لٍ <span class=end>٧٤</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_74.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 61822,
+                    "position": 1,
+                    "audio_url": "wbw/015_074_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فَجَعَلْنَا",
+                    "text_indopak": "فَجَعَلۡنَا",
+                    "text_imlaei": "فَجَعَلْنَا",
+                    "verse_key": "15:74",
+                    "line_number": 2,
+                    "location": "15:74:1",
+                    "code_v1": "ﭢ",
+                    "code_v2": "ﱒ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 2,
+                    "text": "ﱒ",
+                    "translation": {
+                        "text": "And We made",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "fajaʿalnā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 61823,
+                    "position": 2,
+                    "audio_url": "wbw/015_074_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "عَـٰلِيَهَا",
+                    "text_indopak": "عَالِيـَهَا",
+                    "text_imlaei": "عَالِيَهَا",
+                    "verse_key": "15:74",
+                    "line_number": 2,
+                    "location": "15:74:2",
+                    "code_v1": "ﭣ",
+                    "code_v2": "ﱓ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 2,
+                    "text": "ﱓ",
+                    "translation": {
+                        "text": "its highest (part)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ʿāliyahā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 61824,
+                    "position": 3,
+                    "audio_url": "wbw/015_074_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "سَافِلَهَا",
+                    "text_indopak": "سَافِلَهَا",
+                    "text_imlaei": "سَافِلَهَا",
+                    "verse_key": "15:74",
+                    "line_number": 3,
+                    "location": "15:74:3",
+                    "code_v1": "ﭤ",
+                    "code_v2": "ﱔ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 3,
+                    "text": "ﱔ",
+                    "translation": {
+                        "text": "its lowest",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "sāfilahā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 61825,
+                    "position": 4,
+                    "audio_url": "wbw/015_074_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَأَمْطَرْنَا",
+                    "text_indopak": "وَ اَمۡطَرۡنَا",
+                    "text_imlaei": "وَأَمْطَرْنَا",
+                    "verse_key": "15:74",
+                    "line_number": 3,
+                    "location": "15:74:4",
+                    "code_v1": "ﭥ",
+                    "code_v2": "ﱕ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 3,
+                    "text": "ﱕ",
+                    "translation": {
+                        "text": "and We rained",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wa-amṭarnā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 61826,
+                    "position": 5,
+                    "audio_url": "wbw/015_074_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "عَلَيْهِمْ",
+                    "text_indopak": "عَلَيۡهِمۡ",
+                    "text_imlaei": "عَلَيْهِمْ",
+                    "verse_key": "15:74",
+                    "line_number": 3,
+                    "location": "15:74:5",
+                    "code_v1": "ﭦ",
+                    "code_v2": "ﱖ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 3,
+                    "text": "ﱖ",
+                    "translation": {
+                        "text": "upon them",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ʿalayhim",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 61827,
+                    "position": 6,
+                    "audio_url": "wbw/015_074_006.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "حِجَارَةًۭ",
+                    "text_indopak": "حِجَارَةً",
+                    "text_imlaei": "حِجَارَةً",
+                    "verse_key": "15:74",
+                    "line_number": 3,
+                    "location": "15:74:6",
+                    "code_v1": "ﭧ",
+                    "code_v2": "ﱗ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 3,
+                    "text": "ﱗ",
+                    "translation": {
+                        "text": "stones",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ḥijāratan",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 61828,
+                    "position": 7,
+                    "audio_url": "wbw/015_074_007.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مِّن",
+                    "text_indopak": "مِّنۡ",
+                    "text_imlaei": "مِّن",
+                    "verse_key": "15:74",
+                    "line_number": 3,
+                    "location": "15:74:7",
+                    "code_v1": "ﭨ",
+                    "code_v2": "ﱘ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 3,
+                    "text": "ﱘ",
+                    "translation": {
+                        "text": "of",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "min",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 61829,
+                    "position": 8,
+                    "audio_url": "wbw/015_074_008.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "سِجِّيلٍ",
+                    "text_indopak": "سِجِّيۡلٍؕ‏",
+                    "text_imlaei": "سِجِّيلٍ",
+                    "verse_key": "15:74",
+                    "line_number": 3,
+                    "location": "15:74:8",
+                    "code_v1": "ﭩ",
+                    "code_v2": "ﱙ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 3,
+                    "text": "ﱙ",
+                    "translation": {
+                        "text": "baked clay",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "sijjīlin",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 61830,
+                    "position": 9,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٧٤",
+                    "text_indopak": "٧٤",
+                    "text_imlaei": "٧٤",
+                    "verse_key": "15:74",
+                    "line_number": 3,
+                    "location": "15:74:9",
+                    "code_v1": "ﭪ",
+                    "code_v2": "ﱚ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 3,
+                    "text": "ﱚ",
+                    "translation": {
+                        "text": "(74)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1877,
+            "verse_number": 75,
+            "verse_key": "15:75",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 222,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "إِنَّ فِى ذَٰلِكَ لَـَٔايَـٰتٍ لِّلْمُتَوَسِّمِينَ",
+            "text_uthmani_simple": "ان فى ذلك لءايت للمتوسمين",
+            "text_imlaei": "إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّلْمُتَوَسِّمِينَ",
+            "text_imlaei_simple": "ان في ذلك لايات للمتوسمين",
+            "text_indopak": "اِنَّ فِىۡ ذٰ لِكَ لَاٰيٰتٍ لِّـلۡمُتَوَسِّمِيۡنَ‏",
+            "text_uthmani_tajweed": "إِ<tajweed class=ghunnah>نّ</tajweed>َ فِى ذ<tajweed class=madda_normal>َٲ</tajweed>لِكَ لَأَيَ<tajweed class=madda_normal>ـٰ</tajweed><tajweed class=idgham_wo_ghunnah>تٍ ل</tajweed>ِّلْمُتَوَسِّم<tajweed class=madda_permissible>ِي</tajweed>نَ <span class=end>٧٥</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_75.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 62016,
+                    "position": 1,
+                    "audio_url": "wbw/015_075_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِنَّ",
+                    "text_indopak": "اِنَّ",
+                    "text_imlaei": "إِنَّ",
+                    "verse_key": "15:75",
+                    "line_number": 3,
+                    "location": "15:75:1",
+                    "code_v1": "ﭫ",
+                    "code_v2": "ﱛ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 3,
+                    "text": "ﱛ",
+                    "translation": {
+                        "text": "Indeed",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "inna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62017,
+                    "position": 2,
+                    "audio_url": "wbw/015_075_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فِى",
+                    "text_indopak": "فِىۡ",
+                    "text_imlaei": "فِي",
+                    "verse_key": "15:75",
+                    "line_number": 3,
+                    "location": "15:75:2",
+                    "code_v1": "ﭬ",
+                    "code_v2": "ﱜ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 3,
+                    "text": "ﱜ",
+                    "translation": {
+                        "text": "in",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "fī",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62018,
+                    "position": 3,
+                    "audio_url": "wbw/015_075_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ذَٰلِكَ",
+                    "text_indopak": "ذٰ لِكَ",
+                    "text_imlaei": "ذَٰلِكَ",
+                    "verse_key": "15:75",
+                    "line_number": 3,
+                    "location": "15:75:3",
+                    "code_v1": "ﭭ",
+                    "code_v2": "ﱝ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 3,
+                    "text": "ﱝ",
+                    "translation": {
+                        "text": "that",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "dhālika",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62019,
+                    "position": 4,
+                    "audio_url": "wbw/015_075_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لَـَٔايَـٰتٍۢ",
+                    "text_indopak": "لَاٰيٰتٍ",
+                    "text_imlaei": "لَآيَاتٍ",
+                    "verse_key": "15:75",
+                    "line_number": 4,
+                    "location": "15:75:4",
+                    "code_v1": "ﭮ",
+                    "code_v2": "ﱞ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 4,
+                    "text": "ﱞ",
+                    "translation": {
+                        "text": "(are) the Signs",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "laāyātin",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62020,
+                    "position": 5,
+                    "audio_url": "wbw/015_075_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لِّلْمُتَوَسِّمِينَ",
+                    "text_indopak": "لِّـلۡمُتَوَسِّمِيۡنَ‏",
+                    "text_imlaei": "لِّلْمُتَوَسِّمِينَ",
+                    "verse_key": "15:75",
+                    "line_number": 4,
+                    "location": "15:75:5",
+                    "code_v1": "ﭯ",
+                    "code_v2": "ﱟ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 4,
+                    "text": "ﱟ",
+                    "translation": {
+                        "text": "for those who discern",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "lil'mutawassimīna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62021,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٧٥",
+                    "text_indopak": "٧٥",
+                    "text_imlaei": "٧٥",
+                    "verse_key": "15:75",
+                    "line_number": 4,
+                    "location": "15:75:6",
+                    "code_v1": "ﭰ",
+                    "code_v2": "ﱠ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 4,
+                    "text": "ﱠ",
+                    "translation": {
+                        "text": "(75)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1878,
+            "verse_number": 76,
+            "verse_key": "15:76",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 222,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "وَإِنَّهَا لَبِسَبِيلٍ مُّقِيمٍ",
+            "text_uthmani_simple": "وانها لبسبيل مقيم",
+            "text_imlaei": "وَإِنَّهَا لَبِسَبِيلٍ مُّقِيمٍ",
+            "text_imlaei_simple": "وانها لبسبيل مقيم",
+            "text_indopak": "وَاِنَّهَا لَبِسَبِيۡلٍ مُّقِيۡمٍ‏",
+            "text_uthmani_tajweed": "وَإِ<tajweed class=ghunnah>نّ</tajweed>َهَا لَبِسَبِي<tajweed class=idgham_ghunnah>لٍ م</tajweed>ُّق<tajweed class=madda_permissible>ِي</tajweed>مٍ <span class=end>٧٦</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_76.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 62717,
+                    "position": 1,
+                    "audio_url": "wbw/015_076_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَإِنَّهَا",
+                    "text_indopak": "وَاِنَّهَا",
+                    "text_imlaei": "وَإِنَّهَا",
+                    "verse_key": "15:76",
+                    "line_number": 4,
+                    "location": "15:76:1",
+                    "code_v1": "ﭱ",
+                    "code_v2": "ﱡ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 4,
+                    "text": "ﱡ",
+                    "translation": {
+                        "text": "And indeed, it",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wa-innahā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62718,
+                    "position": 2,
+                    "audio_url": "wbw/015_076_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لَبِسَبِيلٍۢ",
+                    "text_indopak": "لَبِسَبِيۡلٍ",
+                    "text_imlaei": "لَبِسَبِيلٍ",
+                    "verse_key": "15:76",
+                    "line_number": 4,
+                    "location": "15:76:2",
+                    "code_v1": "ﭲ",
+                    "code_v2": "ﱢ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 4,
+                    "text": "ﱢ",
+                    "translation": {
+                        "text": "(is) on a road",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "labisabīlin",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62719,
+                    "position": 3,
+                    "audio_url": "wbw/015_076_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مُّقِيمٍ",
+                    "text_indopak": "مُّقِيۡمٍ‏",
+                    "text_imlaei": "مُّقِيمٍ",
+                    "verse_key": "15:76",
+                    "line_number": 4,
+                    "location": "15:76:3",
+                    "code_v1": "ﭳ",
+                    "code_v2": "ﱣ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 4,
+                    "text": "ﱣ",
+                    "translation": {
+                        "text": "established",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "muqīmin",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62720,
+                    "position": 4,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٧٦",
+                    "text_indopak": "٧٦",
+                    "text_imlaei": "٧٦",
+                    "verse_key": "15:76",
+                    "line_number": 4,
+                    "location": "15:76:4",
+                    "code_v1": "ﭴ",
+                    "code_v2": "ﱤ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 4,
+                    "text": "ﱤ",
+                    "translation": {
+                        "text": "(76)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1879,
+            "verse_number": 77,
+            "verse_key": "15:77",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 222,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "إِنَّ فِى ذَٰلِكَ لَـَٔايَةً لِّلْمُؤْمِنِينَ",
+            "text_uthmani_simple": "ان فى ذلك لءاية للمؤمنين",
+            "text_imlaei": "إِنَّ فِي ذَٰلِكَ لَآيَةً لِّلْمُؤْمِنِينَ",
+            "text_imlaei_simple": "ان في ذلك لاية للمؤمنين",
+            "text_indopak": "اِنَّ فِىۡ ذٰلِكَ لَاٰيَةً لِّـلۡمُؤۡمِنِيۡنَؕ‏",
+            "text_uthmani_tajweed": "إِ<tajweed class=ghunnah>نّ</tajweed>َ فِى ذ<tajweed class=madda_normal>َٲ</tajweed>لِكَ لَأَيَ<tajweed class=idgham_wo_ghunnah>ةً ل</tajweed>ِّلْمُؤْمِن<tajweed class=madda_permissible>ِي</tajweed>نَ <span class=end>٧٧</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_77.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 62818,
+                    "position": 1,
+                    "audio_url": "wbw/015_077_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِنَّ",
+                    "text_indopak": "اِنَّ",
+                    "text_imlaei": "إِنَّ",
+                    "verse_key": "15:77",
+                    "line_number": 4,
+                    "location": "15:77:1",
+                    "code_v1": "ﭵ",
+                    "code_v2": "ﱥ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 4,
+                    "text": "ﱥ",
+                    "translation": {
+                        "text": "Indeed",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "inna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62819,
+                    "position": 2,
+                    "audio_url": "wbw/015_077_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فِى",
+                    "text_indopak": "فِىۡ",
+                    "text_imlaei": "فِي",
+                    "verse_key": "15:77",
+                    "line_number": 4,
+                    "location": "15:77:2",
+                    "code_v1": "ﭶ",
+                    "code_v2": "ﱦ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 4,
+                    "text": "ﱦ",
+                    "translation": {
+                        "text": "in",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "fī",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62820,
+                    "position": 3,
+                    "audio_url": "wbw/015_077_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ذَٰلِكَ",
+                    "text_indopak": "ذٰلِكَ",
+                    "text_imlaei": "ذَٰلِكَ",
+                    "verse_key": "15:77",
+                    "line_number": 4,
+                    "location": "15:77:3",
+                    "code_v1": "ﭷ",
+                    "code_v2": "ﱧ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 4,
+                    "text": "ﱧ",
+                    "translation": {
+                        "text": "that",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "dhālika",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62821,
+                    "position": 4,
+                    "audio_url": "wbw/015_077_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لَـَٔايَةًۭ",
+                    "text_indopak": "لَاٰيَةً",
+                    "text_imlaei": "لَآيَةً",
+                    "verse_key": "15:77",
+                    "line_number": 5,
+                    "location": "15:77:4",
+                    "code_v1": "ﭸ",
+                    "code_v2": "ﱨ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 5,
+                    "text": "ﱨ",
+                    "translation": {
+                        "text": "surely (is) a Sign",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "laāyatan",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62822,
+                    "position": 5,
+                    "audio_url": "wbw/015_077_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لِّلْمُؤْمِنِينَ",
+                    "text_indopak": "لِّـلۡمُؤۡمِنِيۡنَؕ‏",
+                    "text_imlaei": "لِّلْمُؤْمِنِينَ",
+                    "verse_key": "15:77",
+                    "line_number": 5,
+                    "location": "15:77:5",
+                    "code_v1": "ﭹ",
+                    "code_v2": "ﱩ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 5,
+                    "text": "ﱩ",
+                    "translation": {
+                        "text": "for the believers",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "lil'mu'minīna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 62823,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٧٧",
+                    "text_indopak": "٧٧",
+                    "text_imlaei": "٧٧",
+                    "verse_key": "15:77",
+                    "line_number": 5,
+                    "location": "15:77:6",
+                    "code_v1": "ﭺ",
+                    "code_v2": "ﱪ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 5,
+                    "text": "ﱪ",
+                    "translation": {
+                        "text": "(77)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1880,
+            "verse_number": 78,
+            "verse_key": "15:78",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 222,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "وَإِن كَانَ أَصْحَـٰبُ ٱلْأَيْكَةِ لَظَـٰلِمِينَ",
+            "text_uthmani_simple": "وان كان اصحب الايكة لظلمين",
+            "text_imlaei": "وَإِن كَانَ أَصْحَابُ الْأَيْكَةِ لَظَالِمِينَ",
+            "text_imlaei_simple": "وان كان اصحاب الايكة لظالمين",
+            "text_indopak": "وَاِنۡ كَانَ اَصۡحٰبُ الۡاَيۡكَةِ لَظٰلِمِيۡنَۙ‏",
+            "text_uthmani_tajweed": "وَإِ<tajweed class=ikhafa>ن ك</tajweed>َانَ أَصْحَ<tajweed class=madda_normal>ـٰ</tajweed>بُ <tajweed class=ham_wasl>ٱ</tajweed>لْأَيْكَةِ لَظَ<tajweed class=madda_normal>ـٰ</tajweed>لِم<tajweed class=madda_permissible>ِي</tajweed>نَ <span class=end>٧٨</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_78.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 63643,
+                    "position": 1,
+                    "audio_url": "wbw/015_078_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَإِن",
+                    "text_indopak": "وَاِنۡ",
+                    "text_imlaei": "وَإِن",
+                    "verse_key": "15:78",
+                    "line_number": 5,
+                    "location": "15:78:1",
+                    "code_v1": "ﭻ",
+                    "code_v2": "ﱫ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 5,
+                    "text": "ﱫ",
+                    "translation": {
+                        "text": "And were",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wa-in",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 63644,
+                    "position": 2,
+                    "audio_url": "wbw/015_078_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "كَانَ",
+                    "text_indopak": "كَانَ",
+                    "text_imlaei": "كَانَ",
+                    "verse_key": "15:78",
+                    "line_number": 5,
+                    "location": "15:78:2",
+                    "code_v1": "ﭼ",
+                    "code_v2": "ﱬ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 5,
+                    "text": "ﱬ",
+                    "translation": {
+                        "text": "And were",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "kāna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 63645,
+                    "position": 3,
+                    "audio_url": "wbw/015_078_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "أَصْحَـٰبُ",
+                    "text_indopak": "اَصۡحٰبُ",
+                    "text_imlaei": "أَصْحَابُ",
+                    "verse_key": "15:78",
+                    "line_number": 5,
+                    "location": "15:78:3",
+                    "code_v1": "ﭽ",
+                    "code_v2": "ﱭ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 5,
+                    "text": "ﱭ",
+                    "translation": {
+                        "text": "(the) companions",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "aṣḥābu",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 63646,
+                    "position": 4,
+                    "audio_url": "wbw/015_078_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْأَيْكَةِ",
+                    "text_indopak": "الۡاَيۡكَةِ",
+                    "text_imlaei": "الْأَيْكَةِ",
+                    "verse_key": "15:78",
+                    "line_number": 5,
+                    "location": "15:78:4",
+                    "code_v1": "ﭾ",
+                    "code_v2": "ﱮ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 5,
+                    "text": "ﱮ",
+                    "translation": {
+                        "text": "(of) the wood",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-aykati",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 63647,
+                    "position": 5,
+                    "audio_url": "wbw/015_078_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لَظَـٰلِمِينَ",
+                    "text_indopak": "لَظٰلِمِيۡنَۙ‏",
+                    "text_imlaei": "لَظَالِمِينَ",
+                    "verse_key": "15:78",
+                    "line_number": 5,
+                    "location": "15:78:5",
+                    "code_v1": "ﭿ",
+                    "code_v2": "ﱯ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 5,
+                    "text": "ﱯ",
+                    "translation": {
+                        "text": "surely wrongdoers",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "laẓālimīna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 63648,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٧٨",
+                    "text_indopak": "٧٨",
+                    "text_imlaei": "٧٨",
+                    "verse_key": "15:78",
+                    "line_number": 5,
+                    "location": "15:78:6",
+                    "code_v1": "ﮀ",
+                    "code_v2": "ﱰ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 5,
+                    "text": "ﱰ",
+                    "translation": {
+                        "text": "(78)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1881,
+            "verse_number": 79,
+            "verse_key": "15:79",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 222,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "فَٱنتَقَمْنَا مِنْهُمْ وَإِنَّهُمَا لَبِإِمَامٍ مُّبِينٍ",
+            "text_uthmani_simple": "فانتقمنا منهم وانهما لبامام مبين",
+            "text_imlaei": "فَانتَقَمْنَا مِنْهُمْ وَإِنَّهُمَا لَبِإِمَامٍ مُّبِينٍ",
+            "text_imlaei_simple": "فانتقمنا منهم وانهما لبامام مبين",
+            "text_indopak": "فَانتَقَمۡنَا مِنۡهُمۡ​ۘ وَاِنَّهُمَا لَبِاِمَامٍ مُّبِيۡنٍؕ‏",
+            "text_uthmani_tajweed": "فَ<tajweed class=ham_wasl>ٱ</tajweed><tajweed class=ikhafa>نت</tajweed>َقَمْنَا مِنْهُمْ وَإِ<tajweed class=ghunnah>نّ</tajweed>َهُمَا لَبِإِمَا<tajweed class=idgham_ghunnah>مٍ م</tajweed>ُّب<tajweed class=madda_permissible>ِي</tajweed>نٍ <span class=end>٧٩</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_79.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 63852,
+                    "position": 1,
+                    "audio_url": "wbw/015_079_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فَٱنتَقَمْنَا",
+                    "text_indopak": "فَانتَقَمۡنَا",
+                    "text_imlaei": "فَانتَقَمْنَا",
+                    "verse_key": "15:79",
+                    "line_number": 6,
+                    "location": "15:79:1",
+                    "code_v1": "ﮁ",
+                    "code_v2": "ﱱ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 6,
+                    "text": "ﱱ",
+                    "translation": {
+                        "text": "So We took retribution",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "fa-intaqamnā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 63853,
+                    "position": 2,
+                    "audio_url": "wbw/015_079_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مِنْهُمْ",
+                    "text_indopak": "مِنۡهُمۡ​ۘ",
+                    "text_imlaei": "مِنْهُمْ",
+                    "verse_key": "15:79",
+                    "line_number": 6,
+                    "location": "15:79:2",
+                    "code_v1": "ﮂ",
+                    "code_v2": "ﱲ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 6,
+                    "text": "ﱲ",
+                    "translation": {
+                        "text": "from them",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "min'hum",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 63854,
+                    "position": 3,
+                    "audio_url": "wbw/015_079_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَإِنَّهُمَا",
+                    "text_indopak": "وَاِنَّهُمَا",
+                    "text_imlaei": "وَإِنَّهُمَا",
+                    "verse_key": "15:79",
+                    "line_number": 6,
+                    "location": "15:79:3",
+                    "code_v1": "ﮃ",
+                    "code_v2": "ﱳ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 6,
+                    "text": "ﱳ",
+                    "translation": {
+                        "text": "and indeed, they both",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wa-innahumā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 63855,
+                    "position": 4,
+                    "audio_url": "wbw/015_079_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لَبِإِمَامٍۢ",
+                    "text_indopak": "لَبِاِمَامٍ",
+                    "text_imlaei": "لَبِإِمَامٍ",
+                    "verse_key": "15:79",
+                    "line_number": 6,
+                    "location": "15:79:4",
+                    "code_v1": "ﮄ",
+                    "code_v2": "ﱴ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 6,
+                    "text": "ﱴ",
+                    "translation": {
+                        "text": "(were) on a highway",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "labi-imāmin",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 63856,
+                    "position": 5,
+                    "audio_url": "wbw/015_079_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مُّبِينٍۢ",
+                    "text_indopak": "مُّبِيۡنٍؕ‏",
+                    "text_imlaei": "مُّبِينٍ",
+                    "verse_key": "15:79",
+                    "line_number": 6,
+                    "location": "15:79:5",
+                    "code_v1": "ﮅ",
+                    "code_v2": "ﱵ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 6,
+                    "text": "ﱵ",
+                    "translation": {
+                        "text": "clear",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "mubīnin",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 63857,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٧٩",
+                    "text_indopak": "٧٩",
+                    "text_imlaei": "٧٩",
+                    "verse_key": "15:79",
+                    "line_number": 6,
+                    "location": "15:79:6",
+                    "code_v1": "ﮆ",
+                    "code_v2": "ﱶ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 6,
+                    "text": "ﱶ",
+                    "translation": {
+                        "text": "(79)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1882,
+            "verse_number": 80,
+            "verse_key": "15:80",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 223,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "وَلَقَدْ كَذَّبَ أَصْحَـٰبُ ٱلْحِجْرِ ٱلْمُرْسَلِينَ",
+            "text_uthmani_simple": "ولقد كذب اصحب الحجر المرسلين",
+            "text_imlaei": "وَلَقَدْ كَذَّبَ أَصْحَابُ الْحِجْرِ الْمُرْسَلِينَ",
+            "text_imlaei_simple": "ولقد كذب اصحاب الحجر المرسلين",
+            "text_indopak": "وَلَـقَدۡ كَذَّبَ اَصۡحٰبُ الۡحِجۡرِ الۡمُرۡسَلِيۡنَۙ‏",
+            "text_uthmani_tajweed": "وَلَقَ<tajweed class=qalaqah>دْ</tajweed> كَذَّبَ أَصْحَ<tajweed class=madda_normal>ـٰ</tajweed>بُ <tajweed class=ham_wasl>ٱ</tajweed>لْحِ<tajweed class=qalaqah>جْ</tajweed>رِ <tajweed class=ham_wasl>ٱ</tajweed>لْمُرْسَل<tajweed class=madda_permissible>ِي</tajweed>نَ <span class=end>٨٠</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_80.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 64444,
+                    "position": 1,
+                    "audio_url": "wbw/015_080_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَلَقَدْ",
+                    "text_indopak": "وَلَـقَدۡ",
+                    "text_imlaei": "وَلَقَدْ",
+                    "verse_key": "15:80",
+                    "line_number": 6,
+                    "location": "15:80:1",
+                    "code_v1": "ﮇ",
+                    "code_v2": "ﱷ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 6,
+                    "text": "ﱷ",
+                    "translation": {
+                        "text": "And certainly",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "walaqad",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 64445,
+                    "position": 2,
+                    "audio_url": "wbw/015_080_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "كَذَّبَ",
+                    "text_indopak": "كَذَّبَ",
+                    "text_imlaei": "كَذَّبَ",
+                    "verse_key": "15:80",
+                    "line_number": 6,
+                    "location": "15:80:2",
+                    "code_v1": "ﮈ",
+                    "code_v2": "ﱸ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 6,
+                    "text": "ﱸ",
+                    "translation": {
+                        "text": "denied",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "kadhaba",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 64446,
+                    "position": 3,
+                    "audio_url": "wbw/015_080_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "أَصْحَـٰبُ",
+                    "text_indopak": "اَصۡحٰبُ",
+                    "text_imlaei": "أَصْحَابُ",
+                    "verse_key": "15:80",
+                    "line_number": 6,
+                    "location": "15:80:3",
+                    "code_v1": "ﮉ",
+                    "code_v2": "ﱹ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 6,
+                    "text": "ﱹ",
+                    "translation": {
+                        "text": "(the) companions",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "aṣḥābu",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 64447,
+                    "position": 4,
+                    "audio_url": "wbw/015_080_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْحِجْرِ",
+                    "text_indopak": "الۡحِجۡرِ",
+                    "text_imlaei": "الْحِجْرِ",
+                    "verse_key": "15:80",
+                    "line_number": 7,
+                    "location": "15:80:4",
+                    "code_v1": "ﮊ",
+                    "code_v2": "ﱺ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 7,
+                    "text": "ﱺ",
+                    "translation": {
+                        "text": "(of) the Rocky Tract",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-ḥij'ri",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 64448,
+                    "position": 5,
+                    "audio_url": "wbw/015_080_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْمُرْسَلِينَ",
+                    "text_indopak": "الۡمُرۡسَلِيۡنَۙ‏",
+                    "text_imlaei": "الْمُرْسَلِينَ",
+                    "verse_key": "15:80",
+                    "line_number": 7,
+                    "location": "15:80:5",
+                    "code_v1": "ﮋ",
+                    "code_v2": "ﱻ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 7,
+                    "text": "ﱻ",
+                    "translation": {
+                        "text": "the Messengers",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-mur'salīna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 64449,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٨٠",
+                    "text_indopak": "٨٠",
+                    "text_imlaei": "٨٠",
+                    "verse_key": "15:80",
+                    "line_number": 7,
+                    "location": "15:80:6",
+                    "code_v1": "ﮌ",
+                    "code_v2": "ﱼ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 7,
+                    "text": "ﱼ",
+                    "translation": {
+                        "text": "(80)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1883,
+            "verse_number": 81,
+            "verse_key": "15:81",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 223,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "وَءَاتَيْنَـٰهُمْ ءَايَـٰتِنَا فَكَانُوا۟ عَنْهَا مُعْرِضِينَ",
+            "text_uthmani_simple": "وءاتينهم ءايتنا فكانوا۟ عنها معرضين",
+            "text_imlaei": "وَآتَيْنَاهُمْ آيَاتِنَا فَكَانُوا عَنْهَا مُعْرِضِينَ",
+            "text_imlaei_simple": "واتيناهم اياتنا فكانوا عنها معرضين",
+            "text_indopak": "وَاٰتَيۡنٰهُمۡ اٰيٰتِنَا فَكَانُوۡا عَنۡهَا مُعۡرِضِيۡنَۙ‏",
+            "text_uthmani_tajweed": "وَءَاتَيْنَ<tajweed class=madda_normal>ـٰ</tajweed>هُمْ ءَايَ<tajweed class=madda_normal>ـٰ</tajweed>تِنَا فَكَانُو<tajweed class=slnt>اْ</tajweed> عَنْهَا مُعْرِض<tajweed class=madda_permissible>ِي</tajweed>نَ <span class=end>٨١</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_81.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 64455,
+                    "position": 1,
+                    "audio_url": "wbw/015_081_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَءَاتَيْنَـٰهُمْ",
+                    "text_indopak": "وَاٰتَيۡنٰهُمۡ",
+                    "text_imlaei": "وَآتَيْنَاهُمْ",
+                    "verse_key": "15:81",
+                    "line_number": 7,
+                    "location": "15:81:1",
+                    "code_v1": "ﮍ",
+                    "code_v2": "ﱽ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 7,
+                    "text": "ﱽ",
+                    "translation": {
+                        "text": "And We gave them",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "waātaynāhum",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 64456,
+                    "position": 2,
+                    "audio_url": "wbw/015_081_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ءَايَـٰتِنَا",
+                    "text_indopak": "اٰيٰتِنَا",
+                    "text_imlaei": "آيَاتِنَا",
+                    "verse_key": "15:81",
+                    "line_number": 7,
+                    "location": "15:81:2",
+                    "code_v1": "ﮎ",
+                    "code_v2": "ﱾ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 7,
+                    "text": "ﱾ",
+                    "translation": {
+                        "text": "Our Signs",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "āyātinā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 64457,
+                    "position": 3,
+                    "audio_url": "wbw/015_081_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فَكَانُوا۟",
+                    "text_indopak": "فَكَانُوۡا",
+                    "text_imlaei": "فَكَانُوا",
+                    "verse_key": "15:81",
+                    "line_number": 7,
+                    "location": "15:81:3",
+                    "code_v1": "ﮏ",
+                    "code_v2": "ﱿ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 7,
+                    "text": "ﱿ",
+                    "translation": {
+                        "text": "but they were",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "fakānū",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 64458,
+                    "position": 4,
+                    "audio_url": "wbw/015_081_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "عَنْهَا",
+                    "text_indopak": "عَنۡهَا",
+                    "text_imlaei": "عَنْهَا",
+                    "verse_key": "15:81",
+                    "line_number": 7,
+                    "location": "15:81:4",
+                    "code_v1": "ﮐ",
+                    "code_v2": "ﲀ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 7,
+                    "text": "ﲀ",
+                    "translation": {
+                        "text": "from them",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ʿanhā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 64459,
+                    "position": 5,
+                    "audio_url": "wbw/015_081_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مُعْرِضِينَ",
+                    "text_indopak": "مُعۡرِضِيۡنَۙ‏",
+                    "text_imlaei": "مُعْرِضِينَ",
+                    "verse_key": "15:81",
+                    "line_number": 7,
+                    "location": "15:81:5",
+                    "code_v1": "ﮑ",
+                    "code_v2": "ﲁ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 7,
+                    "text": "ﲁ",
+                    "translation": {
+                        "text": "turning away",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "muʿ'riḍīna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 64460,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٨١",
+                    "text_indopak": "٨١",
+                    "text_imlaei": "٨١",
+                    "verse_key": "15:81",
+                    "line_number": 8,
+                    "location": "15:81:6",
+                    "code_v1": "ﮒ",
+                    "code_v2": "ﲂ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 8,
+                    "text": "ﲂ",
+                    "translation": {
+                        "text": "(81)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1884,
+            "verse_number": 82,
+            "verse_key": "15:82",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 223,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "وَكَانُوا۟ يَنْحِتُونَ مِنَ ٱلْجِبَالِ بُيُوتًا ءَامِنِينَ",
+            "text_uthmani_simple": "وكانوا۟ ينحتون من الجبال بيوتا ءامنين",
+            "text_imlaei": "وَكَانُوا يَنْحِتُونَ مِنَ الْجِبَالِ بُيُوتًا آمِنِينَ",
+            "text_imlaei_simple": "وكانوا ينحتون من الجبال بيوتا امنين",
+            "text_indopak": "وَكَانُوۡا يَنۡحِتُوۡنَ مِنَ الۡجِبَالِ بُيُوۡتًا اٰمِنِيۡنَ‏",
+            "text_uthmani_tajweed": "وَكَانُو<tajweed class=slnt>اْ</tajweed> يَنْحِتُونَ مِنَ <tajweed class=ham_wasl>ٱ</tajweed>لْجِبَالِ بُيُوتًا ءَامِن<tajweed class=madda_permissible>ِي</tajweed>نَ <span class=end>٨٢</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_82.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 65222,
+                    "position": 1,
+                    "audio_url": "wbw/015_082_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَكَانُوا۟",
+                    "text_indopak": "وَكَانُوۡا",
+                    "text_imlaei": "وَكَانُوا",
+                    "verse_key": "15:82",
+                    "line_number": 8,
+                    "location": "15:82:1",
+                    "code_v1": "ﮓ",
+                    "code_v2": "ﲃ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 8,
+                    "text": "ﲃ",
+                    "translation": {
+                        "text": "And they used (to)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wakānū",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65223,
+                    "position": 2,
+                    "audio_url": "wbw/015_082_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "يَنْحِتُونَ",
+                    "text_indopak": "يَنۡحِتُوۡنَ",
+                    "text_imlaei": "يَنْحِتُونَ",
+                    "verse_key": "15:82",
+                    "line_number": 8,
+                    "location": "15:82:2",
+                    "code_v1": "ﮔ",
+                    "code_v2": "ﲄ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 8,
+                    "text": "ﲄ",
+                    "translation": {
+                        "text": "carve",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "yanḥitūna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65224,
+                    "position": 3,
+                    "audio_url": "wbw/015_082_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مِنَ",
+                    "text_indopak": "مِنَ",
+                    "text_imlaei": "مِنَ",
+                    "verse_key": "15:82",
+                    "line_number": 8,
+                    "location": "15:82:3",
+                    "code_v1": "ﮕ",
+                    "code_v2": "ﲅ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 8,
+                    "text": "ﲅ",
+                    "translation": {
+                        "text": "from",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "mina",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65225,
+                    "position": 4,
+                    "audio_url": "wbw/015_082_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْجِبَالِ",
+                    "text_indopak": "الۡجِبَالِ",
+                    "text_imlaei": "الْجِبَالِ",
+                    "verse_key": "15:82",
+                    "line_number": 8,
+                    "location": "15:82:4",
+                    "code_v1": "ﮖ",
+                    "code_v2": "ﲆ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 8,
+                    "text": "ﲆ",
+                    "translation": {
+                        "text": "the mountains",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-jibāli",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65226,
+                    "position": 5,
+                    "audio_url": "wbw/015_082_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "بُيُوتًا",
+                    "text_indopak": "بُيُوۡتًا",
+                    "text_imlaei": "بُيُوتًا",
+                    "verse_key": "15:82",
+                    "line_number": 8,
+                    "location": "15:82:5",
+                    "code_v1": "ﮗ",
+                    "code_v2": "ﲇ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 8,
+                    "text": "ﲇ",
+                    "translation": {
+                        "text": "houses",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "buyūtan",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65227,
+                    "position": 6,
+                    "audio_url": "wbw/015_082_006.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ءَامِنِينَ",
+                    "text_indopak": "اٰمِنِيۡنَ‏",
+                    "text_imlaei": "آمِنِينَ",
+                    "verse_key": "15:82",
+                    "line_number": 8,
+                    "location": "15:82:6",
+                    "code_v1": "ﮘ",
+                    "code_v2": "ﲈ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 8,
+                    "text": "ﲈ",
+                    "translation": {
+                        "text": "secure",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "āminīna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65228,
+                    "position": 7,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٨٢",
+                    "text_indopak": "٨٢",
+                    "text_imlaei": "٨٢",
+                    "verse_key": "15:82",
+                    "line_number": 8,
+                    "location": "15:82:7",
+                    "code_v1": "ﮙ",
+                    "code_v2": "ﲉ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 8,
+                    "text": "ﲉ",
+                    "translation": {
+                        "text": "(82)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1885,
+            "verse_number": 83,
+            "verse_key": "15:83",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 223,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "فَأَخَذَتْهُمُ ٱلصَّيْحَةُ مُصْبِحِينَ",
+            "text_uthmani_simple": "فاخذتهم الصيحة مصبحين",
+            "text_imlaei": "فَأَخَذَتْهُمُ الصَّيْحَةُ مُصْبِحِينَ",
+            "text_imlaei_simple": "فاخذتهم الصيحة مصبحين",
+            "text_indopak": "فَاَخَذَتۡهُمُ الصَّيۡحَةُ مُصۡبِحِيۡنَۙ‏",
+            "text_uthmani_tajweed": "فَأَخَذَتْهُمُ <tajweed class=ham_wasl>ٱ</tajweed><tajweed class=laam_shamsiyah>ل</tajweed>صَّيْحَةُ مُصْبِح<tajweed class=madda_permissible>ِي</tajweed>نَ <span class=end>٨٣</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_83.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 65399,
+                    "position": 1,
+                    "audio_url": "wbw/015_083_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فَأَخَذَتْهُمُ",
+                    "text_indopak": "فَاَخَذَتۡهُمُ",
+                    "text_imlaei": "فَأَخَذَتْهُمُ",
+                    "verse_key": "15:83",
+                    "line_number": 8,
+                    "location": "15:83:1",
+                    "code_v1": "ﮚ",
+                    "code_v2": "ﲊ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 8,
+                    "text": "ﲊ",
+                    "translation": {
+                        "text": "But seized them",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "fa-akhadhathumu",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65400,
+                    "position": 2,
+                    "audio_url": "wbw/015_083_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلصَّيْحَةُ",
+                    "text_indopak": "الصَّيۡحَةُ",
+                    "text_imlaei": "الصَّيْحَةُ",
+                    "verse_key": "15:83",
+                    "line_number": 9,
+                    "location": "15:83:2",
+                    "code_v1": "ﮛ",
+                    "code_v2": "ﲋ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 9,
+                    "text": "ﲋ",
+                    "translation": {
+                        "text": "the awful cry",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-ṣayḥatu",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65401,
+                    "position": 3,
+                    "audio_url": "wbw/015_083_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مُصْبِحِينَ",
+                    "text_indopak": "مُصۡبِحِيۡنَۙ‏",
+                    "text_imlaei": "مُصْبِحِينَ",
+                    "verse_key": "15:83",
+                    "line_number": 9,
+                    "location": "15:83:3",
+                    "code_v1": "ﮜ",
+                    "code_v2": "ﲌ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 9,
+                    "text": "ﲌ",
+                    "translation": {
+                        "text": "(at) early morning",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "muṣ'biḥīna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65402,
+                    "position": 4,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٨٣",
+                    "text_indopak": "٨٣",
+                    "text_imlaei": "٨٣",
+                    "verse_key": "15:83",
+                    "line_number": 9,
+                    "location": "15:83:4",
+                    "code_v1": "ﮝ",
+                    "code_v2": "ﲍ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 9,
+                    "text": "ﲍ",
+                    "translation": {
+                        "text": "(83)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1886,
+            "verse_number": 84,
+            "verse_key": "15:84",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 223,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "فَمَآ أَغْنَىٰ عَنْهُم مَّا كَانُوا۟ يَكْسِبُونَ",
+            "text_uthmani_simple": "فما اغنى عنهم ما كانوا۟ يكسبون",
+            "text_imlaei": "فَمَا أَغْنَىٰ عَنْهُم مَّا كَانُوا يَكْسِبُونَ",
+            "text_imlaei_simple": "فما اغنى عنهم ما كانوا يكسبون",
+            "text_indopak": "فَمَاۤ اَغۡنٰى عَنۡهُمۡ مَّا كَانُوۡا يَكۡسِبُوۡنَؕ‏",
+            "text_uthmani_tajweed": "فَم<tajweed class=madda_obligatory>َآ</tajweed> أَغْنَىٰ عَنْه<tajweed class=idgham_shafawi>ُم م</tajweed>َّا كَانُو<tajweed class=slnt>اْ</tajweed> يَكْسِب<tajweed class=madda_permissible>ُو</tajweed>نَ <span class=end>٨٤</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_84.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 65649,
+                    "position": 1,
+                    "audio_url": "wbw/015_084_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فَمَآ",
+                    "text_indopak": "فَمَاۤ",
+                    "text_imlaei": "فَمَا",
+                    "verse_key": "15:84",
+                    "line_number": 9,
+                    "location": "15:84:1",
+                    "code_v1": "ﮞ",
+                    "code_v2": "ﲎ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 9,
+                    "text": "ﲎ",
+                    "translation": {
+                        "text": "And not",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "famā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65650,
+                    "position": 2,
+                    "audio_url": "wbw/015_084_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "أَغْنَىٰ",
+                    "text_indopak": "اَغۡنٰى",
+                    "text_imlaei": "أَغْنَىٰ",
+                    "verse_key": "15:84",
+                    "line_number": 9,
+                    "location": "15:84:2",
+                    "code_v1": "ﮟ",
+                    "code_v2": "ﲏ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 9,
+                    "text": "ﲏ",
+                    "translation": {
+                        "text": "availed",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "aghnā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65651,
+                    "position": 3,
+                    "audio_url": "wbw/015_084_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "عَنْهُم",
+                    "text_indopak": "عَنۡهُمۡ",
+                    "text_imlaei": "عَنْهُم",
+                    "verse_key": "15:84",
+                    "line_number": 9,
+                    "location": "15:84:3",
+                    "code_v1": "ﮠ",
+                    "code_v2": "ﲐ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 9,
+                    "text": "ﲐ",
+                    "translation": {
+                        "text": "them",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ʿanhum",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65652,
+                    "position": 4,
+                    "audio_url": "wbw/015_084_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مَّا",
+                    "text_indopak": "مَّا",
+                    "text_imlaei": "مَّا",
+                    "verse_key": "15:84",
+                    "line_number": 9,
+                    "location": "15:84:4",
+                    "code_v1": "ﮡ",
+                    "code_v2": "ﲑ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 9,
+                    "text": "ﲑ",
+                    "translation": {
+                        "text": "what",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "mā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65653,
+                    "position": 5,
+                    "audio_url": "wbw/015_084_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "كَانُوا۟",
+                    "text_indopak": "كَانُوۡا",
+                    "text_imlaei": "كَانُوا",
+                    "verse_key": "15:84",
+                    "line_number": 9,
+                    "location": "15:84:5",
+                    "code_v1": "ﮢ",
+                    "code_v2": "ﲒ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 9,
+                    "text": "ﲒ",
+                    "translation": {
+                        "text": "they used (to)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "kānū",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65654,
+                    "position": 6,
+                    "audio_url": "wbw/015_084_006.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "يَكْسِبُونَ",
+                    "text_indopak": "يَكۡسِبُوۡنَؕ‏",
+                    "text_imlaei": "يَكْسِبُونَ",
+                    "verse_key": "15:84",
+                    "line_number": 9,
+                    "location": "15:84:6",
+                    "code_v1": "ﮣ",
+                    "code_v2": "ﲓ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 9,
+                    "text": "ﲓ",
+                    "translation": {
+                        "text": "earn",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "yaksibūna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 65655,
+                    "position": 7,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٨٤",
+                    "text_indopak": "٨٤",
+                    "text_imlaei": "٨٤",
+                    "verse_key": "15:84",
+                    "line_number": 9,
+                    "location": "15:84:7",
+                    "code_v1": "ﮤ",
+                    "code_v2": "ﲔ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 9,
+                    "text": "ﲔ",
+                    "translation": {
+                        "text": "(84)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1887,
+            "verse_number": 85,
+            "verse_key": "15:85",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 223,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "وَمَا خَلَقْنَا ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضَ وَمَا بَيْنَهُمَآ إِلَّا بِٱلْحَقِّ ۗ وَإِنَّ ٱلسَّاعَةَ لَـَٔاتِيَةٌ ۖ فَٱصْفَحِ ٱلصَّفْحَ ٱلْجَمِيلَ",
+            "text_uthmani_simple": "وما خلقنا السموت والارض وما بينهما الا بالحق وان الساعة لءاتية فاصفح الصفح الجميل",
+            "text_imlaei": "وَمَا خَلَقْنَا السَّمَاوَاتِ وَالْأَرْضَ وَمَا بَيْنَهُمَا إِلَّا بِالْحَقِّ ۗ وَإِنَّ السَّاعَةَ لَآتِيَةٌ ۖ فَاصْفَحِ الصَّفْحَ الْجَمِيلَ",
+            "text_imlaei_simple": "وما خلقنا السماوات والارض وما بينهما الا بالحق وان الساعة لاتية فاصفح الصفح الجميل",
+            "text_indopak": "وَمَا خَلَقۡنَا السَّمٰوٰتِ وَالۡاَرۡضَ وَمَا بَيۡنَهُمَاۤ اِلَّا بِالۡحَـقِّ​ ؕ وَاِنَّ السَّاعَةَ لَاٰتِيَةٌ​ فَاصۡفَحِ الصَّفۡحَ الۡجَمِيۡلَ‏",
+            "text_uthmani_tajweed": "وَمَا خَلَ<tajweed class=qalaqah>قْ</tajweed>نَا <tajweed class=ham_wasl>ٱ</tajweed><tajweed class=laam_shamsiyah>ل</tajweed>سَّمَ<tajweed class=madda_normal>ـٰ</tajweed>و<tajweed class=madda_normal>َٲ</tajweed>تِ وَ<tajweed class=ham_wasl>ٱ</tajweed>لْأَرْضَ وَمَا بَيْنَهُم<tajweed class=madda_obligatory>َآ</tajweed> إِلَّا بِ<tajweed class=ham_wasl>ٱ</tajweed>لْحَقِّ‌ۗ وَإِ<tajweed class=ghunnah>نّ</tajweed>َ <tajweed class=ham_wasl>ٱ</tajweed><tajweed class=laam_shamsiyah>ل</tajweed>سَّاعَةَ لَأَتِيَ<tajweed class=ikhafa>ةٌ‌ۖ ف</tajweed>َ<tajweed class=ham_wasl>ٱ</tajweed>صْفَحِ <tajweed class=ham_wasl>ٱ</tajweed><tajweed class=laam_shamsiyah>ل</tajweed>صَّفْحَ <tajweed class=ham_wasl>ٱ</tajweed>لْجَم<tajweed class=madda_permissible>ِي</tajweed>لَ <span class=end>٨٥</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_85.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 66318,
+                    "position": 1,
+                    "audio_url": "wbw/015_085_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَمَا",
+                    "text_indopak": "وَمَا",
+                    "text_imlaei": "وَمَا",
+                    "verse_key": "15:85",
+                    "line_number": 10,
+                    "location": "15:85:1",
+                    "code_v1": "ﮥ",
+                    "code_v2": "ﲕ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 10,
+                    "text": "ﲕ",
+                    "translation": {
+                        "text": "And not",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wamā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66319,
+                    "position": 2,
+                    "audio_url": "wbw/015_085_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "خَلَقْنَا",
+                    "text_indopak": "خَلَقۡنَا",
+                    "text_imlaei": "خَلَقْنَا",
+                    "verse_key": "15:85",
+                    "line_number": 10,
+                    "location": "15:85:2",
+                    "code_v1": "ﮦ",
+                    "code_v2": "ﲖ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 10,
+                    "text": "ﲖ",
+                    "translation": {
+                        "text": "We created",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "khalaqnā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66320,
+                    "position": 3,
+                    "audio_url": "wbw/015_085_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلسَّمَـٰوَٰتِ",
+                    "text_indopak": "السَّمٰوٰتِ",
+                    "text_imlaei": "السَّمَاوَاتِ",
+                    "verse_key": "15:85",
+                    "line_number": 10,
+                    "location": "15:85:3",
+                    "code_v1": "ﮧ",
+                    "code_v2": "ﲗ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 10,
+                    "text": "ﲗ",
+                    "translation": {
+                        "text": "the heavens",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-samāwāti",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66321,
+                    "position": 4,
+                    "audio_url": "wbw/015_085_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَٱلْأَرْضَ",
+                    "text_indopak": "وَالۡاَرۡضَ",
+                    "text_imlaei": "وَالْأَرْضَ",
+                    "verse_key": "15:85",
+                    "line_number": 10,
+                    "location": "15:85:4",
+                    "code_v1": "ﮨ",
+                    "code_v2": "ﲘ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 10,
+                    "text": "ﲘ",
+                    "translation": {
+                        "text": "and the earth",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wal-arḍa",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66322,
+                    "position": 5,
+                    "audio_url": "wbw/015_085_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَمَا",
+                    "text_indopak": "وَمَا",
+                    "text_imlaei": "وَمَا",
+                    "verse_key": "15:85",
+                    "line_number": 10,
+                    "location": "15:85:5",
+                    "code_v1": "ﮩ",
+                    "code_v2": "ﲙ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 10,
+                    "text": "ﲙ",
+                    "translation": {
+                        "text": "and whatever",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wamā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66323,
+                    "position": 6,
+                    "audio_url": "wbw/015_085_006.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "بَيْنَهُمَآ",
+                    "text_indopak": "بَيۡنَهُمَاۤ",
+                    "text_imlaei": "بَيْنَهُمَا",
+                    "verse_key": "15:85",
+                    "line_number": 10,
+                    "location": "15:85:6",
+                    "code_v1": "ﮪ",
+                    "code_v2": "ﲚ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 10,
+                    "text": "ﲚ",
+                    "translation": {
+                        "text": "(is) between them",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "baynahumā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66324,
+                    "position": 7,
+                    "audio_url": "wbw/015_085_007.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِلَّا",
+                    "text_indopak": "اِلَّا",
+                    "text_imlaei": "إِلَّا",
+                    "verse_key": "15:85",
+                    "line_number": 10,
+                    "location": "15:85:7",
+                    "code_v1": "ﮫ",
+                    "code_v2": "ﲛ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 10,
+                    "text": "ﲛ",
+                    "translation": {
+                        "text": "except",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "illā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66325,
+                    "position": 8,
+                    "audio_url": "wbw/015_085_008.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "بِٱلْحَقِّ ۗ",
+                    "text_indopak": "بِالۡحَـقِّ​ ؕ",
+                    "text_imlaei": "بِالْحَقِّ ۗ",
+                    "verse_key": "15:85",
+                    "line_number": 10,
+                    "location": "15:85:8",
+                    "code_v1": "ﮬﮭ",
+                    "code_v2": "ﲜﲝ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 10,
+                    "text": "ﲜﲝ",
+                    "translation": {
+                        "text": "in truth",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "bil-ḥaqi",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66327,
+                    "position": 9,
+                    "audio_url": "wbw/015_085_010.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَإِنَّ",
+                    "text_indopak": "وَاِنَّ",
+                    "text_imlaei": "وَإِنَّ",
+                    "verse_key": "15:85",
+                    "line_number": 10,
+                    "location": "15:85:9",
+                    "code_v1": "ﮮ",
+                    "code_v2": "ﲞ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 10,
+                    "text": "ﲞ",
+                    "translation": {
+                        "text": "And indeed",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wa-inna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66328,
+                    "position": 10,
+                    "audio_url": "wbw/015_085_011.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلسَّاعَةَ",
+                    "text_indopak": "السَّاعَةَ",
+                    "text_imlaei": "السَّاعَةَ",
+                    "verse_key": "15:85",
+                    "line_number": 11,
+                    "location": "15:85:10",
+                    "code_v1": "ﮯ",
+                    "code_v2": "ﲟ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 11,
+                    "text": "ﲟ",
+                    "translation": {
+                        "text": "the Hour",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-sāʿata",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66329,
+                    "position": 11,
+                    "audio_url": "wbw/015_085_012.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لَـَٔاتِيَةٌۭ ۖ",
+                    "text_indopak": "لَاٰتِيَةٌ​",
+                    "text_imlaei": "لَآتِيَةٌ ۖ",
+                    "verse_key": "15:85",
+                    "line_number": 11,
+                    "location": "15:85:11",
+                    "code_v1": "ﮰﮱ",
+                    "code_v2": "ﲠﲡ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 11,
+                    "text": "ﲠﲡ",
+                    "translation": {
+                        "text": "(is) surely coming",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "laātiyatun",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66331,
+                    "position": 12,
+                    "audio_url": "wbw/015_085_014.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فَٱصْفَحِ",
+                    "text_indopak": "فَاصۡفَحِ",
+                    "text_imlaei": "فَاصْفَحِ",
+                    "verse_key": "15:85",
+                    "line_number": 11,
+                    "location": "15:85:12",
+                    "code_v1": "ﯓ",
+                    "code_v2": "ﲢ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 11,
+                    "text": "ﲢ",
+                    "translation": {
+                        "text": "So overlook",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "fa-iṣ'faḥi",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66332,
+                    "position": 13,
+                    "audio_url": "wbw/015_085_015.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلصَّفْحَ",
+                    "text_indopak": "الصَّفۡحَ",
+                    "text_imlaei": "الصَّفْحَ",
+                    "verse_key": "15:85",
+                    "line_number": 11,
+                    "location": "15:85:13",
+                    "code_v1": "ﯔ",
+                    "code_v2": "ﲣ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 11,
+                    "text": "ﲣ",
+                    "translation": {
+                        "text": "(with) forgiveness",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-ṣafḥa",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66333,
+                    "position": 14,
+                    "audio_url": "wbw/015_085_016.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْجَمِيلَ",
+                    "text_indopak": "الۡجَمِيۡلَ‏",
+                    "text_imlaei": "الْجَمِيلَ",
+                    "verse_key": "15:85",
+                    "line_number": 11,
+                    "location": "15:85:14",
+                    "code_v1": "ﯕ",
+                    "code_v2": "ﲤ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 11,
+                    "text": "ﲤ",
+                    "translation": {
+                        "text": "gracious",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-jamīla",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66334,
+                    "position": 15,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٨٥",
+                    "text_indopak": "٨٥",
+                    "text_imlaei": "٨٥",
+                    "verse_key": "15:85",
+                    "line_number": 11,
+                    "location": "15:85:15",
+                    "code_v1": "ﯖ",
+                    "code_v2": "ﲥ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 11,
+                    "text": "ﲥ",
+                    "translation": {
+                        "text": "(85)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1888,
+            "verse_number": 86,
+            "verse_key": "15:86",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 223,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "إِنَّ رَبَّكَ هُوَ ٱلْخَلَّـٰقُ ٱلْعَلِيمُ",
+            "text_uthmani_simple": "ان ربك هو الخلق العليم",
+            "text_imlaei": "إِنَّ رَبَّكَ هُوَ الْخَلَّاقُ الْعَلِيمُ",
+            "text_imlaei_simple": "ان ربك هو الخلاق العليم",
+            "text_indopak": "اِنَّ رَبَّكَ هُوَ الۡخَـلّٰقُ الۡعَلِيۡمُ‏",
+            "text_uthmani_tajweed": "إِ<tajweed class=ghunnah>نّ</tajweed>َ رَبَّكَ هُوَ <tajweed class=ham_wasl>ٱ</tajweed>لْخَلَّ<tajweed class=madda_normal>ـٰ</tajweed>قُ <tajweed class=ham_wasl>ٱ</tajweed>لْعَل<tajweed class=madda_permissible>ِي</tajweed>مُ <span class=end>٨٦</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_86.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 66681,
+                    "position": 1,
+                    "audio_url": "wbw/015_086_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِنَّ",
+                    "text_indopak": "اِنَّ",
+                    "text_imlaei": "إِنَّ",
+                    "verse_key": "15:86",
+                    "line_number": 11,
+                    "location": "15:86:1",
+                    "code_v1": "ﯗ",
+                    "code_v2": "ﲦ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 11,
+                    "text": "ﲦ",
+                    "translation": {
+                        "text": "Indeed",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "inna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66682,
+                    "position": 2,
+                    "audio_url": "wbw/015_086_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "رَبَّكَ",
+                    "text_indopak": "رَبَّكَ",
+                    "text_imlaei": "رَبَّكَ",
+                    "verse_key": "15:86",
+                    "line_number": 11,
+                    "location": "15:86:2",
+                    "code_v1": "ﯘ",
+                    "code_v2": "ﲧ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 11,
+                    "text": "ﲧ",
+                    "translation": {
+                        "text": "your Lord",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "rabbaka",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66683,
+                    "position": 3,
+                    "audio_url": "wbw/015_086_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "هُوَ",
+                    "text_indopak": "هُوَ",
+                    "text_imlaei": "هُوَ",
+                    "verse_key": "15:86",
+                    "line_number": 11,
+                    "location": "15:86:3",
+                    "code_v1": "ﯙ",
+                    "code_v2": "ﲨ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 11,
+                    "text": "ﲨ",
+                    "translation": {
+                        "text": "He",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "huwa",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66684,
+                    "position": 4,
+                    "audio_url": "wbw/015_086_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْخَلَّـٰقُ",
+                    "text_indopak": "الۡخَـلّٰقُ",
+                    "text_imlaei": "الْخَلَّاقُ",
+                    "verse_key": "15:86",
+                    "line_number": 12,
+                    "location": "15:86:4",
+                    "code_v1": "ﯚ",
+                    "code_v2": "ﲩ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 12,
+                    "text": "ﲩ",
+                    "translation": {
+                        "text": "(is) the Creator",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-khalāqu",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66685,
+                    "position": 5,
+                    "audio_url": "wbw/015_086_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْعَلِيمُ",
+                    "text_indopak": "الۡعَلِيۡمُ‏",
+                    "text_imlaei": "الْعَلِيمُ",
+                    "verse_key": "15:86",
+                    "line_number": 12,
+                    "location": "15:86:5",
+                    "code_v1": "ﯛ",
+                    "code_v2": "ﲪ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 12,
+                    "text": "ﲪ",
+                    "translation": {
+                        "text": "the All-Knower",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-ʿalīmu",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 66686,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٨٦",
+                    "text_indopak": "٨٦",
+                    "text_imlaei": "٨٦",
+                    "verse_key": "15:86",
+                    "line_number": 12,
+                    "location": "15:86:6",
+                    "code_v1": "ﯜ",
+                    "code_v2": "ﲫ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 12,
+                    "text": "ﲫ",
+                    "translation": {
+                        "text": "(86)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1889,
+            "verse_number": 87,
+            "verse_key": "15:87",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 223,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "وَلَقَدْ ءَاتَيْنَـٰكَ سَبْعًا مِّنَ ٱلْمَثَانِى وَٱلْقُرْءَانَ ٱلْعَظِيمَ",
+            "text_uthmani_simple": "ولقد ءاتينك سبعا من المثانى والقرءان العظيم",
+            "text_imlaei": "وَلَقَدْ آتَيْنَاكَ سَبْعًا مِّنَ الْمَثَانِي وَالْقُرْآنَ الْعَظِيمَ",
+            "text_imlaei_simple": "ولقد اتيناك سبعا من المثاني والقران العظيم",
+            "text_indopak": "وَلَـقَدۡ اٰتَيۡنٰكَ سَبۡعًا مِّنَ الۡمَـثَانِىۡ وَالۡـقُرۡاٰنَ الۡعَظِيۡمَ‏ ﻿﻿",
+            "text_uthmani_tajweed": "وَلَقَ<tajweed class=qalaqah>دْ</tajweed> ءَاتَيْنَ<tajweed class=madda_normal>ـٰ</tajweed>كَ سَ<tajweed class=qalaqah>بْ</tajweed><tajweed class=idgham_ghunnah>عًا م</tajweed>ِّنَ <tajweed class=ham_wasl>ٱ</tajweed>لْمَثَانِى وَ<tajweed class=ham_wasl>ٱ</tajweed>لْقُرْءَانَ <tajweed class=ham_wasl>ٱ</tajweed>لْعَظ<tajweed class=madda_permissible>ِي</tajweed>مَ <span class=end>٨٧</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_87.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 67007,
+                    "position": 1,
+                    "audio_url": "wbw/015_087_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَلَقَدْ",
+                    "text_indopak": "وَلَـقَدۡ",
+                    "text_imlaei": "وَلَقَدْ",
+                    "verse_key": "15:87",
+                    "line_number": 12,
+                    "location": "15:87:1",
+                    "code_v1": "ﯝ",
+                    "code_v2": "ﲬ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 12,
+                    "text": "ﲬ",
+                    "translation": {
+                        "text": "And certainly",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "walaqad",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67008,
+                    "position": 2,
+                    "audio_url": "wbw/015_087_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ءَاتَيْنَـٰكَ",
+                    "text_indopak": "اٰتَيۡنٰكَ",
+                    "text_imlaei": "آتَيْنَاكَ",
+                    "verse_key": "15:87",
+                    "line_number": 12,
+                    "location": "15:87:2",
+                    "code_v1": "ﯞ",
+                    "code_v2": "ﲭ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 12,
+                    "text": "ﲭ",
+                    "translation": {
+                        "text": "We have given you",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ātaynāka",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67009,
+                    "position": 3,
+                    "audio_url": "wbw/015_087_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "سَبْعًۭا",
+                    "text_indopak": "سَبۡعًا",
+                    "text_imlaei": "سَبْعًا",
+                    "verse_key": "15:87",
+                    "line_number": 12,
+                    "location": "15:87:3",
+                    "code_v1": "ﯟ",
+                    "code_v2": "ﲮ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 12,
+                    "text": "ﲮ",
+                    "translation": {
+                        "text": "seven",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "sabʿan",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67010,
+                    "position": 4,
+                    "audio_url": "wbw/015_087_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مِّنَ",
+                    "text_indopak": "مِّنَ",
+                    "text_imlaei": "مِّنَ",
+                    "verse_key": "15:87",
+                    "line_number": 12,
+                    "location": "15:87:4",
+                    "code_v1": "ﯠ",
+                    "code_v2": "ﲯ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 12,
+                    "text": "ﲯ",
+                    "translation": {
+                        "text": "of",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "mina",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67011,
+                    "position": 5,
+                    "audio_url": "wbw/015_087_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْمَثَانِى",
+                    "text_indopak": "الۡمَـثَانِىۡ",
+                    "text_imlaei": "الْمَثَانِي",
+                    "verse_key": "15:87",
+                    "line_number": 12,
+                    "location": "15:87:5",
+                    "code_v1": "ﯡ",
+                    "code_v2": "ﲰ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 12,
+                    "text": "ﲰ",
+                    "translation": {
+                        "text": "the oft-repeated",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-mathānī",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67012,
+                    "position": 6,
+                    "audio_url": "wbw/015_087_006.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَٱلْقُرْءَانَ",
+                    "text_indopak": "وَالۡـقُرۡاٰنَ",
+                    "text_imlaei": "وَالْقُرْآنَ",
+                    "verse_key": "15:87",
+                    "line_number": 12,
+                    "location": "15:87:6",
+                    "code_v1": "ﯢ",
+                    "code_v2": "ﲱ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 13,
+                    "text": "ﲱ",
+                    "translation": {
+                        "text": "and the Quran",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wal-qur'āna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67013,
+                    "position": 7,
+                    "audio_url": "wbw/015_087_007.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْعَظِيمَ",
+                    "text_indopak": "الۡعَظِيۡمَ‏ ﻿﻿",
+                    "text_imlaei": "الْعَظِيمَ",
+                    "verse_key": "15:87",
+                    "line_number": 13,
+                    "location": "15:87:7",
+                    "code_v1": "ﯣ",
+                    "code_v2": "ﲲ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 13,
+                    "text": "ﲲ",
+                    "translation": {
+                        "text": "Great",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-ʿaẓīma",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67014,
+                    "position": 8,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٨٧",
+                    "text_indopak": "٨٧",
+                    "text_imlaei": "٨٧",
+                    "verse_key": "15:87",
+                    "line_number": 13,
+                    "location": "15:87:8",
+                    "code_v1": "ﯤ",
+                    "code_v2": "ﲳ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 13,
+                    "text": "ﲳ",
+                    "translation": {
+                        "text": "(87)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1890,
+            "verse_number": 88,
+            "verse_key": "15:88",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 223,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "لَا تَمُدَّنَّ عَيْنَيْكَ إِلَىٰ مَا مَتَّعْنَا بِهِۦٓ أَزْوَٰجًا مِّنْهُمْ وَلَا تَحْزَنْ عَلَيْهِمْ وَٱخْفِضْ جَنَاحَكَ لِلْمُؤْمِنِينَ",
+            "text_uthmani_simple": "لا تمدن عينيك الى ما متعنا به ازوجا منهم ولا تحزن عليهم واخفض جناحك للمؤمنين",
+            "text_imlaei": "لَا تَمُدَّنَّ عَيْنَيْكَ إِلَىٰ مَا مَتَّعْنَا بِهِ أَزْوَاجًا مِّنْهُمْ وَلَا تَحْزَنْ عَلَيْهِمْ وَاخْفِضْ جَنَاحَكَ لِلْمُؤْمِنِينَ",
+            "text_imlaei_simple": "لا تمدن عينيك الى ما متعنا به ازواجا منهم ولا تحزن عليهم واخفض جناحك للمؤمنين",
+            "text_indopak": "لَا تَمُدَّنَّ عَيۡنَيۡكَ اِلٰى مَا مَتَّعۡنَا بِهٖۤ اَزۡوَاجًا مِّنۡهُمۡ وَلَا تَحۡزَنۡ عَلَيۡهِمۡ وَاخۡفِضۡ جَنَاحَكَ لِلۡمُؤۡمِنِيۡنَ‏",
+            "text_uthmani_tajweed": "لَا تَمُدَّ<tajweed class=ghunnah>نّ</tajweed>َ عَيْنَيْكَ إِلَىٰ مَا مَتَّعْنَا بِه<tajweed class=madda_obligatory>ِۦٓ</tajweed> أَزْو<tajweed class=madda_normal>َٲ</tajweed><tajweed class=idgham_ghunnah>جًا م</tajweed>ِّنْهُمْ وَلَا تَحْزَنْ عَلَيْهِمْ وَ<tajweed class=ham_wasl>ٱ</tajweed>خْفِضْ جَنَاحَكَ لِلْمُؤْمِن<tajweed class=madda_permissible>ِي</tajweed>نَ <span class=end>٨٨</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_88.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 67438,
+                    "position": 1,
+                    "audio_url": "wbw/015_088_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لَا",
+                    "text_indopak": "لَا",
+                    "text_imlaei": "لَا",
+                    "verse_key": "15:88",
+                    "line_number": 13,
+                    "location": "15:88:1",
+                    "code_v1": "ﯥ",
+                    "code_v2": "ﲴ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 13,
+                    "text": "ﲴ",
+                    "translation": {
+                        "text": "(Do) not",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "lā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67439,
+                    "position": 2,
+                    "audio_url": "wbw/015_088_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "تَمُدَّنَّ",
+                    "text_indopak": "تَمُدَّنَّ",
+                    "text_imlaei": "تَمُدَّنَّ",
+                    "verse_key": "15:88",
+                    "line_number": 13,
+                    "location": "15:88:2",
+                    "code_v1": "ﯦ",
+                    "code_v2": "ﲵ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 13,
+                    "text": "ﲵ",
+                    "translation": {
+                        "text": "extend",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "tamuddanna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67440,
+                    "position": 3,
+                    "audio_url": "wbw/015_088_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "عَيْنَيْكَ",
+                    "text_indopak": "عَيۡنَيۡكَ",
+                    "text_imlaei": "عَيْنَيْكَ",
+                    "verse_key": "15:88",
+                    "line_number": 13,
+                    "location": "15:88:3",
+                    "code_v1": "ﯧ",
+                    "code_v2": "ﲶ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 13,
+                    "text": "ﲶ",
+                    "translation": {
+                        "text": "your eyes",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ʿaynayka",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67441,
+                    "position": 4,
+                    "audio_url": "wbw/015_088_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِلَىٰ",
+                    "text_indopak": "اِلٰى",
+                    "text_imlaei": "إِلَىٰ",
+                    "verse_key": "15:88",
+                    "line_number": 13,
+                    "location": "15:88:4",
+                    "code_v1": "ﯨ",
+                    "code_v2": "ﲷ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 13,
+                    "text": "ﲷ",
+                    "translation": {
+                        "text": "towards",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ilā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67442,
+                    "position": 5,
+                    "audio_url": "wbw/015_088_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مَا",
+                    "text_indopak": "مَا",
+                    "text_imlaei": "مَا",
+                    "verse_key": "15:88",
+                    "line_number": 13,
+                    "location": "15:88:5",
+                    "code_v1": "ﯩ",
+                    "code_v2": "ﲸ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 13,
+                    "text": "ﲸ",
+                    "translation": {
+                        "text": "what",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "mā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67443,
+                    "position": 6,
+                    "audio_url": "wbw/015_088_006.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مَتَّعْنَا",
+                    "text_indopak": "مَتَّعۡنَا",
+                    "text_imlaei": "مَتَّعْنَا",
+                    "verse_key": "15:88",
+                    "line_number": 13,
+                    "location": "15:88:6",
+                    "code_v1": "ﯪ",
+                    "code_v2": "ﲹ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 13,
+                    "text": "ﲹ",
+                    "translation": {
+                        "text": "We have bestowed",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "mattaʿnā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67444,
+                    "position": 7,
+                    "audio_url": "wbw/015_088_007.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "بِهِۦٓ",
+                    "text_indopak": "بِهٖۤ",
+                    "text_imlaei": "بِهِ",
+                    "verse_key": "15:88",
+                    "line_number": 13,
+                    "location": "15:88:7",
+                    "code_v1": "ﯫ",
+                    "code_v2": "ﲺ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 13,
+                    "text": "ﲺ",
+                    "translation": {
+                        "text": "with it",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "bihi",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67445,
+                    "position": 8,
+                    "audio_url": "wbw/015_088_008.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "أَزْوَٰجًۭا",
+                    "text_indopak": "اَزۡوَاجًا",
+                    "text_imlaei": "أَزْوَاجًا",
+                    "verse_key": "15:88",
+                    "line_number": 13,
+                    "location": "15:88:8",
+                    "code_v1": "ﯬ",
+                    "code_v2": "ﲻ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 13,
+                    "text": "ﲻ",
+                    "translation": {
+                        "text": "(to) categories",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "azwājan",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67446,
+                    "position": 9,
+                    "audio_url": "wbw/015_088_009.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مِّنْهُمْ",
+                    "text_indopak": "مِّنۡهُمۡ",
+                    "text_imlaei": "مِّنْهُمْ",
+                    "verse_key": "15:88",
+                    "line_number": 13,
+                    "location": "15:88:9",
+                    "code_v1": "ﯭ",
+                    "code_v2": "ﲼ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 14,
+                    "text": "ﲼ",
+                    "translation": {
+                        "text": "of them",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "min'hum",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67447,
+                    "position": 10,
+                    "audio_url": "wbw/015_088_010.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَلَا",
+                    "text_indopak": "وَلَا",
+                    "text_imlaei": "وَلَا",
+                    "verse_key": "15:88",
+                    "line_number": 14,
+                    "location": "15:88:10",
+                    "code_v1": "ﯮ",
+                    "code_v2": "ﲽ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 14,
+                    "text": "ﲽ",
+                    "translation": {
+                        "text": "and (do) not",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "walā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67448,
+                    "position": 11,
+                    "audio_url": "wbw/015_088_011.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "تَحْزَنْ",
+                    "text_indopak": "تَحۡزَنۡ",
+                    "text_imlaei": "تَحْزَنْ",
+                    "verse_key": "15:88",
+                    "line_number": 14,
+                    "location": "15:88:11",
+                    "code_v1": "ﯯ",
+                    "code_v2": "ﲾ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 14,
+                    "text": "ﲾ",
+                    "translation": {
+                        "text": "grieve",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "taḥzan",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67449,
+                    "position": 12,
+                    "audio_url": "wbw/015_088_012.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "عَلَيْهِمْ",
+                    "text_indopak": "عَلَيۡهِمۡ",
+                    "text_imlaei": "عَلَيْهِمْ",
+                    "verse_key": "15:88",
+                    "line_number": 14,
+                    "location": "15:88:12",
+                    "code_v1": "ﯰ",
+                    "code_v2": "ﲿ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 14,
+                    "text": "ﲿ",
+                    "translation": {
+                        "text": "over them",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ʿalayhim",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67450,
+                    "position": 13,
+                    "audio_url": "wbw/015_088_013.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَٱخْفِضْ",
+                    "text_indopak": "وَاخۡفِضۡ",
+                    "text_imlaei": "وَاخْفِضْ",
+                    "verse_key": "15:88",
+                    "line_number": 14,
+                    "location": "15:88:13",
+                    "code_v1": "ﯱ",
+                    "code_v2": "ﳀ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 14,
+                    "text": "ﳀ",
+                    "translation": {
+                        "text": "And lower",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wa-ikh'fiḍ",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67451,
+                    "position": 14,
+                    "audio_url": "wbw/015_088_014.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "جَنَاحَكَ",
+                    "text_indopak": "جَنَاحَكَ",
+                    "text_imlaei": "جَنَاحَكَ",
+                    "verse_key": "15:88",
+                    "line_number": 14,
+                    "location": "15:88:14",
+                    "code_v1": "ﯲ",
+                    "code_v2": "ﳁ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 14,
+                    "text": "ﳁ",
+                    "translation": {
+                        "text": "your wing",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "janāḥaka",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67452,
+                    "position": 15,
+                    "audio_url": "wbw/015_088_015.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "لِلْمُؤْمِنِينَ",
+                    "text_indopak": "لِلۡمُؤۡمِنِيۡنَ‏",
+                    "text_imlaei": "لِلْمُؤْمِنِينَ",
+                    "verse_key": "15:88",
+                    "line_number": 14,
+                    "location": "15:88:15",
+                    "code_v1": "ﯳ",
+                    "code_v2": "ﳂ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 14,
+                    "text": "ﳂ",
+                    "translation": {
+                        "text": "to the believers",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "lil'mu'minīna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67453,
+                    "position": 16,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٨٨",
+                    "text_indopak": "٨٨",
+                    "text_imlaei": "٨٨",
+                    "verse_key": "15:88",
+                    "line_number": 14,
+                    "location": "15:88:16",
+                    "code_v1": "ﯴ",
+                    "code_v2": "ﳃ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 14,
+                    "text": "ﳃ",
+                    "translation": {
+                        "text": "(88)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1891,
+            "verse_number": 89,
+            "verse_key": "15:89",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 223,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "وَقُلْ إِنِّىٓ أَنَا ٱلنَّذِيرُ ٱلْمُبِينُ",
+            "text_uthmani_simple": "وقل انى انا النذير المبين",
+            "text_imlaei": "وَقُلْ إِنِّي أَنَا النَّذِيرُ الْمُبِينُ",
+            "text_imlaei_simple": "وقل اني انا النذير المبين",
+            "text_indopak": "وَقُلۡ اِنِّىۡۤ اَنَا النَّذِيۡرُ الۡمُبِيۡنُ​ۚ‏",
+            "text_uthmani_tajweed": "وَقُلْ إِ<tajweed class=ghunnah>نّ</tajweed><tajweed class=madda_obligatory>ِىٓ</tajweed> أَنَا <tajweed class=ham_wasl>ٱ</tajweed><tajweed class=laam_shamsiyah>ل</tajweed><tajweed class=ghunnah>نّ</tajweed>َذِيرُ <tajweed class=ham_wasl>ٱ</tajweed>لْمُب<tajweed class=madda_permissible>ِي</tajweed>نُ <span class=end>٨٩</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_89.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 67846,
+                    "position": 1,
+                    "audio_url": "wbw/015_089_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَقُلْ",
+                    "text_indopak": "وَقُلۡ",
+                    "text_imlaei": "وَقُلْ",
+                    "verse_key": "15:89",
+                    "line_number": 14,
+                    "location": "15:89:1",
+                    "code_v1": "ﯵ",
+                    "code_v2": "ﳄ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 14,
+                    "text": "ﳄ",
+                    "translation": {
+                        "text": "And say",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "waqul",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67847,
+                    "position": 2,
+                    "audio_url": "wbw/015_089_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِنِّىٓ",
+                    "text_indopak": "اِنِّىۡۤ",
+                    "text_imlaei": "إِنِّي",
+                    "verse_key": "15:89",
+                    "line_number": 14,
+                    "location": "15:89:2",
+                    "code_v1": "ﯶ",
+                    "code_v2": "ﳅ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 15,
+                    "text": "ﳅ",
+                    "translation": {
+                        "text": "Indeed, I",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "innī",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67848,
+                    "position": 3,
+                    "audio_url": "wbw/015_089_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "أَنَا",
+                    "text_indopak": "اَنَا",
+                    "text_imlaei": "أَنَا",
+                    "verse_key": "15:89",
+                    "line_number": 15,
+                    "location": "15:89:3",
+                    "code_v1": "ﯷ",
+                    "code_v2": "ﳆ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 15,
+                    "text": "ﳆ",
+                    "translation": {
+                        "text": "[I] am",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "anā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67849,
+                    "position": 4,
+                    "audio_url": "wbw/015_089_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلنَّذِيرُ",
+                    "text_indopak": "النَّذِيۡرُ",
+                    "text_imlaei": "النَّذِيرُ",
+                    "verse_key": "15:89",
+                    "line_number": 15,
+                    "location": "15:89:4",
+                    "code_v1": "ﯸ",
+                    "code_v2": "ﳇ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 15,
+                    "text": "ﳇ",
+                    "translation": {
+                        "text": "a warner",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-nadhīru",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67850,
+                    "position": 5,
+                    "audio_url": "wbw/015_089_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْمُبِينُ",
+                    "text_indopak": "الۡمُبِيۡنُ​ۚ‏",
+                    "text_imlaei": "الْمُبِينُ",
+                    "verse_key": "15:89",
+                    "line_number": 15,
+                    "location": "15:89:5",
+                    "code_v1": "ﯹ",
+                    "code_v2": "ﳈ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 15,
+                    "text": "ﳈ",
+                    "translation": {
+                        "text": "clear",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-mubīnu",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 67851,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٨٩",
+                    "text_indopak": "٨٩",
+                    "text_imlaei": "٨٩",
+                    "verse_key": "15:89",
+                    "line_number": 15,
+                    "location": "15:89:6",
+                    "code_v1": "ﯺ",
+                    "code_v2": "ﳉ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 15,
+                    "text": "ﳉ",
+                    "translation": {
+                        "text": "(89)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 1892,
+            "verse_number": 90,
+            "verse_key": "15:90",
+            "hizb_number": 27,
+            "rub_el_hizb_number": 106,
+            "ruku_number": 223,
+            "manzil_number": 3,
+            "sajdah_number": null,
+            "chapter_id": 15,
+            "text_uthmani": "كَمَآ أَنزَلْنَا عَلَى ٱلْمُقْتَسِمِينَ",
+            "text_uthmani_simple": "كما انزلنا على المقتسمين",
+            "text_imlaei": "كَمَا أَنزَلْنَا عَلَى الْمُقْتَسِمِينَ",
+            "text_imlaei_simple": "كما انزلنا على المقتسمين",
+            "text_indopak": "كَمَاۤ اَنۡزَلۡنَا عَلَى الۡمُقۡتَسِمِيۡنَۙ‏",
+            "text_uthmani_tajweed": "كَم<tajweed class=madda_obligatory>َآ</tajweed> أَ<tajweed class=ikhafa>نز</tajweed>َلْنَا عَلَى <tajweed class=ham_wasl>ٱ</tajweed>لْمُ<tajweed class=qalaqah>قْ</tajweed>تَسِم<tajweed class=madda_permissible>ِي</tajweed>نَ <span class=end>٩٠</span>",
+            "page_number": 266,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/15_90.png",
+            "image_width": 675,
+            "v1_page": 266,
+            "v2_page": 266,
+            "page_number": 266,
+            "juz_number": 14,
+            "words": [
+                {
+                    "id": 68021,
+                    "position": 1,
+                    "audio_url": "wbw/015_090_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "كَمَآ",
+                    "text_indopak": "كَمَاۤ",
+                    "text_imlaei": "كَمَا",
+                    "verse_key": "15:90",
+                    "line_number": 15,
+                    "location": "15:90:1",
+                    "code_v1": "ﯻ",
+                    "code_v2": "ﳊ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 15,
+                    "text": "ﳊ",
+                    "translation": {
+                        "text": "As",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "kamā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 68022,
+                    "position": 2,
+                    "audio_url": "wbw/015_090_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "أَنزَلْنَا",
+                    "text_indopak": "اَنۡزَلۡنَا",
+                    "text_imlaei": "أَنزَلْنَا",
+                    "verse_key": "15:90",
+                    "line_number": 15,
+                    "location": "15:90:2",
+                    "code_v1": "ﯼ",
+                    "code_v2": "ﳋ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 15,
+                    "text": "ﳋ",
+                    "translation": {
+                        "text": "We sent down",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "anzalnā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 68023,
+                    "position": 3,
+                    "audio_url": "wbw/015_090_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "عَلَى",
+                    "text_indopak": "عَلَى",
+                    "text_imlaei": "عَلَى",
+                    "verse_key": "15:90",
+                    "line_number": 15,
+                    "location": "15:90:3",
+                    "code_v1": "ﯽ",
+                    "code_v2": "ﳌ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 15,
+                    "text": "ﳌ",
+                    "translation": {
+                        "text": "on",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ʿalā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 68024,
+                    "position": 4,
+                    "audio_url": "wbw/015_090_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْمُقْتَسِمِينَ",
+                    "text_indopak": "الۡمُقۡتَسِمِيۡنَۙ‏",
+                    "text_imlaei": "الْمُقْتَسِمِينَ",
+                    "verse_key": "15:90",
+                    "line_number": 15,
+                    "location": "15:90:4",
+                    "code_v1": "ﯾ",
+                    "code_v2": "ﳍ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 15,
+                    "text": "ﳍ",
+                    "translation": {
+                        "text": "those who divided",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-muq'tasimīna",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 68025,
+                    "position": 5,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٩٠",
+                    "text_indopak": "٩٠",
+                    "text_imlaei": "٩٠",
+                    "verse_key": "15:90",
+                    "line_number": 15,
+                    "location": "15:90:5",
+                    "code_v1": "ﯿ",
+                    "code_v2": "ﳎ",
+                    "v1_page": 266,
+                    "v2_page": 266,
+                    "page_number": 266,
+                    "line_number": 15,
+                    "text": "ﳎ",
+                    "translation": {
+                        "text": "(90)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ]
+        }
+    ],
+    "pagination": {
+        "per_page": 20,
+        "current_page": 1,
+        "next_page": null,
+        "total_pages": 1,
+        "total_records": 20
+    }
+}

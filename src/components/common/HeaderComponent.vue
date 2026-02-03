@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { IonHeader, IonToolbar, IonTitle, IonSearchbar } from "@ionic/vue";
-import { IonIcon, IonLabel, IonProgressBar } from "@ionic/vue";
+import { IonIcon, IonLabel, IonProgressBar, IonText } from "@ionic/vue";
 // icons
-import { documentOutline, cogOutline } from 'ionicons/icons';
+import { documentOutline, cogOutline, playBackCircleOutline } from 'ionicons/icons';
 import { bookOutline, newspaperOutline } from 'ionicons/icons';
 // composables
 import { useLocale } from "@/composables/useLocale";
@@ -27,17 +27,18 @@ defineEmits<{
 
 </script>
 <template>
-    <ion-header :translucent="translucent" :collapse="collapse">
+    <ion-header :translucent="true" :collapse="collapse">
         <ion-toolbar>
             <ion-title size="large" class="ion-margin">
                 <ion-icon :icon="icon" size="large"></ion-icon>
                 <ion-label :class="isRtl ? 'header-label-rtl' : 'header-label'">{{ title }}</ion-label>
+                <ion-text><ion-icon :icon="playBackCircleOutline" slot="end"></ion-icon></ion-text>
             </ion-title>
         </ion-toolbar>
         <ion-toolbar v-if="search">
             <ion-searchbar name="filter" @ion-input="$emit('update:searchValue', $event)" :animated="true"
                 :placeholder="searchPlaceholder" autocomplete="on" :inputmode="inputMode ? inputMode : 'text'"
-                :type="type ? type : 'text'"></ion-searchbar>
+                :type="type ? type : 'text'" :debounce="1000"></ion-searchbar>
             <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
         </ion-toolbar>
     </ion-header>

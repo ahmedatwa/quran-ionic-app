@@ -1,5 +1,7 @@
 /// <reference types="vite/client" />
-declare const __JSON_DATA_PATH__: string
+declare const __JSON_DATA_PATH__NAME__: string;
+declare const __Juz_To_Chapters_Path__: string;
+
 
 interface ImportMetaEnv {
   readonly VITE_APP_TITLE: string;

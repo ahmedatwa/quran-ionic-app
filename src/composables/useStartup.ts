@@ -1,18 +1,22 @@
 import { onBeforeMount, shallowRef } from "vue";
+import { storeToRefs } from "pinia";
 // stores
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 import { useRecitionsStore } from "@/stores/RecitionsStore";
+import { useAudioStore } from "@/stores/AudioStore";
 // composables
 import { useStorage } from "@/composables/useStorage";
 import { useLocale } from "@/composables/useLocale";
 // capacitor plugins
 import { Device } from "@capacitor/device";
+import type { AudioPlayerSettings } from "@/types/audio";
 
 const appState = shallowRef(false);
 
 export const useStartup = () => {
   const translationsStore = useTranslationsStore();
   const recitionsStore = useRecitionsStore();
+  const { audioPlayerSetting } = storeToRefs(useAudioStore());
 
   const { setLocale } = useLocale();
   const { getStorage, setStorage } = useStorage("__settingsDB");
@@ -69,28 +73,20 @@ export const useStartup = () => {
   const setAudioPlayerSettings = async () => {
     const audioSettings = await getStorage("audioSettings");
     if (!audioSettings) {
-      setStorage("audioSettings", {
+      const settings: AudioPlayerSettings = {
         autoPlay: true,
         dismissOnEnd: false,
+        playAllJuz: false,
         autoScroll: true,
         tooltip: false,
-        fab: true,
+        fab: false,
         autoDownload: true,
         volume: 100,
+        confirmClosePlayer: true,
         loopAudio: "never",
-      });
-    }
-  };
-
-  const setFontStyles = async () => {
-    const stylesSettings = await getStorage("styles");
-    if (!stylesSettings) {
-      setStorage("styles", {
-        fontSize: "Normal",
-        fontFamily: "Noto-Kufi",
-        fontWeight: "Normal",
-        wordColor: "Primary",
-      });
+      };
+      setStorage("audioSettings", settings);
+      audioPlayerSetting.value = settings;
     }
   };
 
@@ -129,7 +125,6 @@ export const useStartup = () => {
         setTranslation(),
         setScheme(),
         setAudioPlayerSettings(),
-        setFontStyles(),
         setDefaultLocale(),
         setReciter(),
       ]);
@@ -146,7 +141,6 @@ export const useStartup = () => {
     setTranslation,
     setScheme,
     setAudioPlayerSettings,
-    setFontStyles,
     setDefaultLocale,
     setReciter,
     run,

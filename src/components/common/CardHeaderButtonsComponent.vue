@@ -6,11 +6,11 @@ import { pauseOutline, playOutline, languageOutline } from 'ionicons/icons';
 import { informationCircleOutline, downloadOutline } from 'ionicons/icons';
 // stores
 import { useTranslationsStore } from '@/stores/TranslationsStore';
+import { useSettingsStore } from '@/stores/SettingsStore';
 // utils
 import { upperCaseFirst } from '@/utils/string';
 // composables
 import { useLocale } from '@/composables/useLocale';
-import { useSettings } from '@/composables/useSettings';
 import { useAlert } from '@/composables/useAlert';
 // types
 import type { Translation } from '@/types/translations';
@@ -19,7 +19,7 @@ import type { PlayAudioEmit } from '@/types/audio';
 
 const { getLine } = useLocale()
 const { selectedTranslation, translationsList, selectedTranslationId } = storeToRefs(useTranslationsStore())
-const { updateSelectedTranslations } = useSettings()
+const { updateSelectedTranslations } = useSettingsStore()
 const { presentAlert } = useAlert()
 
 const props = defineProps<{

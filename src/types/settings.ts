@@ -1,11 +1,29 @@
 interface Styles {
-  fontSize: number | string;
-  fontFamily: string;
+  quranFontSize: number;
+  translationFontSize: number;
+  quranFontFamily: string;
+  translationFontFamily: string;
   fontWeight: string;
-  wordColor: string
+  wordColor: string;
 }
 
 type FontFamilyGroup = string[];
 type FontWeights = string[] | number[];
 
-export type { Styles, FontFamilyGroup, FontWeights };
+type ComputedQuranCSSReturn = Record<
+  "fontFamily" | "fontSize" | "fontWeight" | "wordColor",
+  string
+>;
+
+type ComputedTranslationCSSReturn = Record<
+  "fontFamily" | "fontSize",
+  string
+>;
+
+export type {
+  Styles,
+  FontFamilyGroup,
+  FontWeights,
+  ComputedQuranCSSReturn,
+  ComputedTranslationCSSReturn,
+};

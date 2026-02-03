@@ -7,11 +7,12 @@ import { playOutline, playForwardOutline, pauseOutline, close } from 'ionicons/i
 import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalComponent.vue';
 // stores
 import { useAudioStore } from '@/stores/AudioStore';
-
+import { useVerseTimingStore } from "@/stores/VerseTimingStore";
 // utils
 import { truncate } from "@/utils/string";
+import { useAlert } from "@/composables/useAlert";
+import { useLocale } from "@/composables/useLocale";
 // composables
-import { useVerseTiming } from '@/composables/useVerseTiming';
 import { useAudioFile } from "@/composables/useAudioFile";
 
 // types
@@ -19,14 +20,17 @@ import type { MapRecitions, Recitations } from "@/types/audio"
 import type { Juz } from "@/types/juz"
 
 const audioStore = useAudioStore()
-const { getCurrentVerseData } = useVerseTiming()
+const verseTimingStore = useVerseTimingStore()
 const { attemptFileSave } = useAudioFile()
+const { presentAlert } = useAlert()
+const { getLine } = useLocale()
 
 defineProps<{
     modelValue: boolean
     selectedReciter?: Recitations
     mapRecitions?: MapRecitions
     juzList?: Juz[]
+    trigger: string
 }>()
 
 defineEmits<{
@@ -41,14 +45,35 @@ const progressTimerValue = computed(() => {
         return 0
     }
 })
+
+const closePlayer = async () => {
+    if (audioStore.audioPlayerSetting?.confirmClosePlayer) {
+        await presentAlert({
+            header: getLine("text.confirm"),
+            buttons: [{
+                text: getLine("buttons.ok"),
+                role: 'Ok',
+                handler: () => {
+                    audioStore.closePlayer()
+                }
+            }, {
+                text: getLine("buttons.cancel"),
+                role: 'cancel',
+            }]
+        })
+    } else {
+        audioStore.closePlayer()
+    }
+
+}
 </script>
 <template>
     <Transition name="slide-fade">
         <ion-footer v-if="modelValue" class="footer ion-no-border">
             <ion-progress-bar :value="progressTimerValue"></ion-progress-bar>
             <ion-toolbar>
-                <div id="audio-modal">
-                    <ion-chip :outline="true" class="reciter-chip">
+                <ion-buttons slot="start">
+                    <ion-chip :outline="true" class="reciter-chip" :id="trigger">
                         <ion-avatar>
                             <img :alt="selectedReciter?.name" class="img"
                                 :src="`/reciters/${selectedReciter?.reciter_id}.jpg`" />
@@ -57,32 +82,32 @@ const progressTimerValue = computed(() => {
                             <p style="margin: 1px;">{{ audioStore.chapterName }} </p>
                         </ion-text>
                     </ion-chip>
-                </div>
+                </ion-buttons>
                 <ion-buttons slot="end">
                     <ion-button fill="clear" @click="audioStore.handlePlay(true)" size="small">
                         <ion-spinner v-if="audioStore.isLoading"></ion-spinner>
                         <ion-icon slot="icon-only" :icon="audioStore.isPlaying ? pauseOutline : playOutline"
                             v-else></ion-icon>
                     </ion-button>
-                    <ion-button fill="clear" @click="audioStore.playNext" size="small">
+                    <ion-button fill="clear" @click="audioStore.playNext" size="small" :disabled="audioStore.isPlaying">
                         <ion-icon slot="icon-only" :icon="playForwardOutline"></ion-icon>
                     </ion-button>
-                     <ion-button fill="clear" @click="audioStore.closePlayer" size="small" color="danger">
+                    <ion-button fill="clear" @click="closePlayer" size="small">
                         <ion-icon slot="icon-only" :icon="close"></ion-icon>
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
-            <audio-player-modal-component trigger="audio-modal" :is-playing="audioStore.isPlaying"
+            <audio-player-modal-component :trigger="trigger" :is-playing="audioStore.isPlaying"
                 :active-audio-id="audioStore.chapterId" :is-loading="audioStore.isLoading"
-                :verse-data="getCurrentVerseData" :juzs="juzList" :selected-reciter="selectedReciter"
-                :audio-files="audioStore.audioFiles" :chapter-name="audioStore.chapterName"
-                :loop-audio="audioStore.audioPlayerSetting.loopAudio" :media-volume="audioStore.mediaVolume"
-                :map-recitions="mapRecitions" :progress-timer="audioStore.progressTimer"
-                @update:change-volume="audioStore.changeMediaVolume" @update:seek="audioStore.playbackSeek"
-                @update:download="attemptFileSave" @update:play-chapter="audioStore.playChapterAudio"
-                @update:play-next="audioStore.playNext" @update:play-prev="audioStore.playPrevious()"
-                @update:play-audio="audioStore.handlePlay" @update:loop-audio="audioStore.setLoopAudio($event)"
-                :recently-played="audioStore.getRecentlyPlayed"
+                :verse-data="verseTimingStore.getCurrentVerseHeaderData" :juzs="juzList"
+                :selected-reciter="selectedReciter" :audio-files="audioStore.audioFiles"
+                :chapter-name="audioStore.chapterName" :audio-player-setting="audioStore.audioPlayerSetting"
+                :media-volume="audioStore.mediaVolume" :map-recitions="mapRecitions"
+                :progress-timer="audioStore.progressTimer" @update:change-volume="audioStore.changeMediaVolume"
+                @update:seek="audioStore.playbackSeek" @update:download="attemptFileSave"
+                @update:play-chapter="audioStore.playChapterAudio" @update:play-next="audioStore.playNext"
+                @update:play-prev="audioStore.playPrevious()" @update:play-audio="audioStore.handlePlay"
+                @update:loop-audio="audioStore.setLoopAudio($event)" :recently-played="audioStore.getRecentlyPlayed"
                 @update:selected-reciter="$emit('update:selectedReciter', $event)">
             </audio-player-modal-component>
         </ion-footer>

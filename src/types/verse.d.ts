@@ -69,16 +69,42 @@ type VersesPagination = {
   total_records: number;
 };
 
-type JSONDataPromise = {
+type JSONVersesPromiseReturn = {
   verses: Verse[];
   pagination: VersesPagination;
 };
 
+type VerseBookmarkValue = {
+  chapterId: number;
+  pageNumber: number;
+  chapterName?: string;
+  verseNumber: number;
+  verseKey: string;
+  verseText: string;
+  path?: string;
+};
+
+type VerseBookmarkedItems = {
+  key: string;
+  value: VerseBookmarkValue;
+};
+
+type VerseHeaderDataReturn = {
+  juzNumber?: string | number;
+  hizbNumber?: string | number;
+  pageNumber?: string | number;
+  surah: number;
+  ayah: number;
+};
+
 export {
   Verse,
+  VerseBookmarkValue,
+  VerseBookmarkedItems,
   MapVersesByPage,
   VerseWord,
   VerseTranslation,
   VersesPagination,
-  JSONDataPromise,
+  JSONVersesPromiseReturn,
+  VerseHeaderDataReturn,
 };

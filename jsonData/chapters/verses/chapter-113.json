@@ -1,0 +1,1207 @@
+{
+    "verses": [
+        {
+            "id": 6226,
+            "verse_number": 1,
+            "verse_key": "113:1",
+            "hizb_number": 60,
+            "rub_el_hizb_number": 240,
+            "ruku_number": 557,
+            "manzil_number": 7,
+            "sajdah_number": null,
+            "chapter_id": 113,
+            "text_uthmani": " قُلْ أَعُوذُ بِرَبِّ ٱلْفَلَقِ",
+            "text_uthmani_simple": "قل اعوذ برب الفلق",
+            "text_imlaei": "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",
+            "text_imlaei_simple": "قل اعوذ برب الفلق",
+            "text_indopak": "قُلۡ اَعُوۡذُ بِرَبِّ الۡفَلَقِۙ‏",
+            "text_uthmani_tajweed": "قُلْ أَعُوذُ بِرَبِّ <tajweed class=ham_wasl>ٱ</tajweed>لْفَلَ<tajweed class=qalaqah>ق</tajweed>ِ <span class=end>١</span>",
+            "page_number": 604,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/113_1.png",
+            "image_width": 675,
+            "v1_page": 604,
+            "v2_page": 604,
+            "page_number": 604,
+            "juz_number": 30,
+            "words": [
+                {
+                    "id": 215,
+                    "position": 1,
+                    "audio_url": "wbw/113_001_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "قُلْ",
+                    "text_indopak": "قُلۡ",
+                    "text_imlaei": "قُلْ",
+                    "verse_key": "113:1",
+                    "line_number": 7,
+                    "location": "113:1:1",
+                    "code_v1": "ﭤ",
+                    "code_v2": "ﱔ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱔ",
+                    "translation": {
+                        "text": "Say",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "qul",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 216,
+                    "position": 2,
+                    "audio_url": "wbw/113_001_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "أَعُوذُ",
+                    "text_indopak": "اَعُوۡذُ",
+                    "text_imlaei": "أَعُوذُ",
+                    "verse_key": "113:1",
+                    "line_number": 7,
+                    "location": "113:1:2",
+                    "code_v1": "ﭥ",
+                    "code_v2": "ﱕ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱕ",
+                    "translation": {
+                        "text": "I seek refuge",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "aʿūdhu",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 217,
+                    "position": 3,
+                    "audio_url": "wbw/113_001_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "بِرَبِّ",
+                    "text_indopak": "بِرَبِّ",
+                    "text_imlaei": "بِرَبِّ",
+                    "verse_key": "113:1",
+                    "line_number": 7,
+                    "location": "113:1:3",
+                    "code_v1": "ﭦ",
+                    "code_v2": "ﱖ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱖ",
+                    "translation": {
+                        "text": "in (the) Lord",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "birabbi",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 218,
+                    "position": 4,
+                    "audio_url": "wbw/113_001_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْفَلَقِ",
+                    "text_indopak": "الۡفَلَقِۙ‏",
+                    "text_imlaei": "الْفَلَقِ",
+                    "verse_key": "113:1",
+                    "line_number": 7,
+                    "location": "113:1:4",
+                    "code_v1": "ﭧ",
+                    "code_v2": "ﱗ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱗ",
+                    "translation": {
+                        "text": "(of) the dawn",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-falaqi",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 219,
+                    "position": 5,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "١",
+                    "text_indopak": "١",
+                    "text_imlaei": "١",
+                    "verse_key": "113:1",
+                    "line_number": 7,
+                    "location": "113:1:5",
+                    "code_v1": "ﭨ",
+                    "code_v2": "ﱘ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱘ",
+                    "translation": {
+                        "text": "(1)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ],
+            "translations": [
+                {
+                    "id": 407929,
+                    "resource_id": 85,
+                    "text": "Say [Prophet], ‘I seek refuge with the Lord of daybreak",
+                    "resource_name": "M.A.S. Abdel Haleem",
+                    "id": 407929,
+                    "language_id": 38,
+                    "language_name": "english",
+                    "verse_key": "113:1",
+                    "chapter_id": 113,
+                    "verse_number": 1,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 935127,
+                    "resource_id": 136,
+                    "text": "Dis : « Je cherche refuge auprès du Seigneur de l’aube naissante,",
+                    "resource_name": "Montada Islamic Foundation",
+                    "id": 935127,
+                    "language_id": 49,
+                    "language_name": "french",
+                    "verse_key": "113:1",
+                    "chapter_id": 113,
+                    "verse_number": 1,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 1301220,
+                    "resource_id": 153,
+                    "text": "Di’: «Mi rifugio nel Signore dell’alba nascente,",
+                    "resource_name": "Hamza Roberto Piccardo",
+                    "id": 1301220,
+                    "language_id": 74,
+                    "language_name": "italian",
+                    "verse_key": "113:1",
+                    "chapter_id": 113,
+                    "verse_number": 1,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 395457,
+                    "resource_id": 83,
+                    "text": "Di: “Me refugio en el Señor del amanecer,",
+                    "resource_name": "Sheikh Isa Garcia",
+                    "id": 395457,
+                    "language_id": 40,
+                    "language_name": "spanish",
+                    "verse_key": "113:1",
+                    "chapter_id": 113,
+                    "verse_number": 1,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                }
+            ]
+        },
+        {
+            "id": 6227,
+            "verse_number": 2,
+            "verse_key": "113:2",
+            "hizb_number": 60,
+            "rub_el_hizb_number": 240,
+            "ruku_number": 557,
+            "manzil_number": 7,
+            "sajdah_number": null,
+            "chapter_id": 113,
+            "text_uthmani": "مِن شَرِّ مَا خَلَقَ",
+            "text_uthmani_simple": "من شر ما خلق",
+            "text_imlaei": "مِن شَرِّ مَا خَلَقَ",
+            "text_imlaei_simple": "من شر ما خلق",
+            "text_indopak": "مِنۡ شَرِّ مَا خَلَقَۙ‏",
+            "text_uthmani_tajweed": "مِ<tajweed class=ikhafa>ن ش</tajweed>َرِّ مَا خَلَ<tajweed class=qalaqah>ق</tajweed>َ <span class=end>٢</span>",
+            "page_number": 604,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/113_2.png",
+            "image_width": 675,
+            "v1_page": 604,
+            "v2_page": 604,
+            "page_number": 604,
+            "juz_number": 30,
+            "words": [
+                {
+                    "id": 969,
+                    "position": 1,
+                    "audio_url": "wbw/113_002_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مِن",
+                    "text_indopak": "مِنۡ",
+                    "text_imlaei": "مِن",
+                    "verse_key": "113:2",
+                    "line_number": 7,
+                    "location": "113:2:1",
+                    "code_v1": "ﭩ",
+                    "code_v2": "ﱙ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱙ",
+                    "translation": {
+                        "text": "From",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "min",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 970,
+                    "position": 2,
+                    "audio_url": "wbw/113_002_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "شَرِّ",
+                    "text_indopak": "شَرِّ",
+                    "text_imlaei": "شَرِّ",
+                    "verse_key": "113:2",
+                    "line_number": 7,
+                    "location": "113:2:2",
+                    "code_v1": "ﭪ",
+                    "code_v2": "ﱚ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱚ",
+                    "translation": {
+                        "text": "(the) evil",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "sharri",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 971,
+                    "position": 3,
+                    "audio_url": "wbw/113_002_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "مَا",
+                    "text_indopak": "مَا",
+                    "text_imlaei": "مَا",
+                    "verse_key": "113:2",
+                    "line_number": 7,
+                    "location": "113:2:3",
+                    "code_v1": "ﭫ",
+                    "code_v2": "ﱛ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱛ",
+                    "translation": {
+                        "text": "(of) what",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "mā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 972,
+                    "position": 4,
+                    "audio_url": "wbw/113_002_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "خَلَقَ",
+                    "text_indopak": "خَلَقَۙ‏",
+                    "text_imlaei": "خَلَقَ",
+                    "verse_key": "113:2",
+                    "line_number": 7,
+                    "location": "113:2:4",
+                    "code_v1": "ﭬ",
+                    "code_v2": "ﱜ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱜ",
+                    "translation": {
+                        "text": "He created",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "khalaqa",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 973,
+                    "position": 5,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٢",
+                    "text_indopak": "٢",
+                    "text_imlaei": "٢",
+                    "verse_key": "113:2",
+                    "line_number": 7,
+                    "location": "113:2:5",
+                    "code_v1": "ﭭ",
+                    "code_v2": "ﱝ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱝ",
+                    "translation": {
+                        "text": "(2)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ],
+            "translations": [
+                {
+                    "id": 407930,
+                    "resource_id": 85,
+                    "text": "against the harm in what He has created,",
+                    "resource_name": "M.A.S. Abdel Haleem",
+                    "id": 407930,
+                    "language_id": 38,
+                    "language_name": "english",
+                    "verse_key": "113:2",
+                    "chapter_id": 113,
+                    "verse_number": 2,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 935128,
+                    "resource_id": 136,
+                    "text": "contre le mal de ce qu’Il a créé,",
+                    "resource_name": "Montada Islamic Foundation",
+                    "id": 935128,
+                    "language_id": 49,
+                    "language_name": "french",
+                    "verse_key": "113:2",
+                    "chapter_id": 113,
+                    "verse_number": 2,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 1301221,
+                    "resource_id": 153,
+                    "text": "contro il male di ciò che ha creato,",
+                    "resource_name": "Hamza Roberto Piccardo",
+                    "id": 1301221,
+                    "language_id": 74,
+                    "language_name": "italian",
+                    "verse_key": "113:2",
+                    "chapter_id": 113,
+                    "verse_number": 2,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 395458,
+                    "resource_id": 83,
+                    "text": "de todo el mal que existe en lo que Él creó,",
+                    "resource_name": "Sheikh Isa Garcia",
+                    "id": 395458,
+                    "language_id": 40,
+                    "language_name": "spanish",
+                    "verse_key": "113:2",
+                    "chapter_id": 113,
+                    "verse_number": 2,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                }
+            ]
+        },
+        {
+            "id": 6228,
+            "verse_number": 3,
+            "verse_key": "113:3",
+            "hizb_number": 60,
+            "rub_el_hizb_number": 240,
+            "ruku_number": 557,
+            "manzil_number": 7,
+            "sajdah_number": null,
+            "chapter_id": 113,
+            "text_uthmani": "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ",
+            "text_uthmani_simple": "ومن شر غاسق اذا وقب",
+            "text_imlaei": "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ",
+            "text_imlaei_simple": "ومن شر غاسق اذا وقب",
+            "text_indopak": "وَمِنۡ شَرِّ غَاسِقٍ اِذَا وَقَبَۙ‏",
+            "text_uthmani_tajweed": "وَمِ<tajweed class=ikhafa>ن ش</tajweed>َرِّ غَاسِقٍ إِذَا وَقَ<tajweed class=qalaqah>ب</tajweed>َ <span class=end>٣</span>",
+            "page_number": 604,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/113_3.png",
+            "image_width": 675,
+            "v1_page": 604,
+            "v2_page": 604,
+            "page_number": 604,
+            "juz_number": 30,
+            "words": [
+                {
+                    "id": 2793,
+                    "position": 1,
+                    "audio_url": "wbw/113_003_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَمِن",
+                    "text_indopak": "وَمِنۡ",
+                    "text_imlaei": "وَمِن",
+                    "verse_key": "113:3",
+                    "line_number": 7,
+                    "location": "113:3:1",
+                    "code_v1": "ﭮ",
+                    "code_v2": "ﱞ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱞ",
+                    "translation": {
+                        "text": "And from",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wamin",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 2794,
+                    "position": 2,
+                    "audio_url": "wbw/113_003_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "شَرِّ",
+                    "text_indopak": "شَرِّ",
+                    "text_imlaei": "شَرِّ",
+                    "verse_key": "113:3",
+                    "line_number": 8,
+                    "location": "113:3:2",
+                    "code_v1": "ﭯ",
+                    "code_v2": "ﱟ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 7,
+                    "text": "ﱟ",
+                    "translation": {
+                        "text": "(the) evil",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "sharri",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 2795,
+                    "position": 3,
+                    "audio_url": "wbw/113_003_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "غَاسِقٍ",
+                    "text_indopak": "غَاسِقٍ",
+                    "text_imlaei": "غَاسِقٍ",
+                    "verse_key": "113:3",
+                    "line_number": 8,
+                    "location": "113:3:3",
+                    "code_v1": "ﭰ",
+                    "code_v2": "ﱠ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 8,
+                    "text": "ﱠ",
+                    "translation": {
+                        "text": "(of) darkness",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ghāsiqin",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 2796,
+                    "position": 4,
+                    "audio_url": "wbw/113_003_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِذَا",
+                    "text_indopak": "اِذَا",
+                    "text_imlaei": "إِذَا",
+                    "verse_key": "113:3",
+                    "line_number": 8,
+                    "location": "113:3:4",
+                    "code_v1": "ﭱ",
+                    "code_v2": "ﱡ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 8,
+                    "text": "ﱡ",
+                    "translation": {
+                        "text": "when",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "idhā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 2797,
+                    "position": 5,
+                    "audio_url": "wbw/113_003_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَقَبَ",
+                    "text_indopak": "وَقَبَۙ‏",
+                    "text_imlaei": "وَقَبَ",
+                    "verse_key": "113:3",
+                    "line_number": 8,
+                    "location": "113:3:5",
+                    "code_v1": "ﭲ",
+                    "code_v2": "ﱢ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 8,
+                    "text": "ﱢ",
+                    "translation": {
+                        "text": "it spreads",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "waqaba",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 2798,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٣",
+                    "text_indopak": "٣",
+                    "text_imlaei": "٣",
+                    "verse_key": "113:3",
+                    "line_number": 8,
+                    "location": "113:3:6",
+                    "code_v1": "ﭳ",
+                    "code_v2": "ﱣ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 8,
+                    "text": "ﱣ",
+                    "translation": {
+                        "text": "(3)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ],
+            "translations": [
+                {
+                    "id": 407931,
+                    "resource_id": 85,
+                    "text": "the harm in the night when darkness gathers,",
+                    "resource_name": "M.A.S. Abdel Haleem",
+                    "id": 407931,
+                    "language_id": 38,
+                    "language_name": "english",
+                    "verse_key": "113:3",
+                    "chapter_id": 113,
+                    "verse_number": 3,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 935129,
+                    "resource_id": 136,
+                    "text": "contre le mal de l’obscurité quand elle devient ténèbres,",
+                    "resource_name": "Montada Islamic Foundation",
+                    "id": 935129,
+                    "language_id": 49,
+                    "language_name": "french",
+                    "verse_key": "113:3",
+                    "chapter_id": 113,
+                    "verse_number": 3,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 1301222,
+                    "resource_id": 153,
+                    "text": "e contro il male dell’oscurità che si estende",
+                    "resource_name": "Hamza Roberto Piccardo",
+                    "id": 1301222,
+                    "language_id": 74,
+                    "language_name": "italian",
+                    "verse_key": "113:3",
+                    "chapter_id": 113,
+                    "verse_number": 3,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 395459,
+                    "resource_id": 83,
+                    "text": "del mal de la oscuridad de la noche cuando se extiende,",
+                    "resource_name": "Sheikh Isa Garcia",
+                    "id": 395459,
+                    "language_id": 40,
+                    "language_name": "spanish",
+                    "verse_key": "113:3",
+                    "chapter_id": 113,
+                    "verse_number": 3,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                }
+            ]
+        },
+        {
+            "id": 6229,
+            "verse_number": 4,
+            "verse_key": "113:4",
+            "hizb_number": 60,
+            "rub_el_hizb_number": 240,
+            "ruku_number": 557,
+            "manzil_number": 7,
+            "sajdah_number": null,
+            "chapter_id": 113,
+            "text_uthmani": "وَمِن شَرِّ ٱلنَّفَّـٰثَـٰتِ فِى ٱلْعُقَدِ",
+            "text_uthmani_simple": "ومن شر النفثت فى العقد",
+            "text_imlaei": "وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ",
+            "text_imlaei_simple": "ومن شر النفاثات في العقد",
+            "text_indopak": "وَمِنۡ شَرِّ النَّفّٰثٰتِ فِى الۡعُقَدِۙ‏",
+            "text_uthmani_tajweed": "وَمِ<tajweed class=ikhafa>ن ش</tajweed>َرِّ <tajweed class=ham_wasl>ٱ</tajweed><tajweed class=laam_shamsiyah>ل</tajweed><tajweed class=ghunnah>نّ</tajweed>َفَّ<tajweed class=madda_normal>ـٰ</tajweed>ثَ<tajweed class=madda_normal>ـٰ</tajweed>تِ فِى <tajweed class=ham_wasl>ٱ</tajweed>لْعُقَ<tajweed class=qalaqah>د</tajweed>ِ <span class=end>٤</span>",
+            "page_number": 604,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/113_4.png",
+            "image_width": 675,
+            "v1_page": 604,
+            "v2_page": 604,
+            "page_number": 604,
+            "juz_number": 30,
+            "words": [
+                {
+                    "id": 4181,
+                    "position": 1,
+                    "audio_url": "wbw/113_004_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَمِن",
+                    "text_indopak": "وَمِنۡ",
+                    "text_imlaei": "وَمِن",
+                    "verse_key": "113:4",
+                    "line_number": 8,
+                    "location": "113:4:1",
+                    "code_v1": "ﭴ",
+                    "code_v2": "ﱤ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 8,
+                    "text": "ﱤ",
+                    "translation": {
+                        "text": "And from",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wamin",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 4182,
+                    "position": 2,
+                    "audio_url": "wbw/113_004_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "شَرِّ",
+                    "text_indopak": "شَرِّ",
+                    "text_imlaei": "شَرِّ",
+                    "verse_key": "113:4",
+                    "line_number": 8,
+                    "location": "113:4:2",
+                    "code_v1": "ﭵ",
+                    "code_v2": "ﱥ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 8,
+                    "text": "ﱥ",
+                    "translation": {
+                        "text": "(the) evil",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "sharri",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 4183,
+                    "position": 3,
+                    "audio_url": "wbw/113_004_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلنَّفَّـٰثَـٰتِ",
+                    "text_indopak": "النَّفّٰثٰتِ",
+                    "text_imlaei": "النَّفَّاثَاتِ",
+                    "verse_key": "113:4",
+                    "line_number": 8,
+                    "location": "113:4:3",
+                    "code_v1": "ﭶ",
+                    "code_v2": "ﱦ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 8,
+                    "text": "ﱦ",
+                    "translation": {
+                        "text": "(of) the blowers",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-nafāthāti",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 4184,
+                    "position": 4,
+                    "audio_url": "wbw/113_004_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "فِى",
+                    "text_indopak": "فِى",
+                    "text_imlaei": "فِي",
+                    "verse_key": "113:4",
+                    "line_number": 8,
+                    "location": "113:4:4",
+                    "code_v1": "ﭷ",
+                    "code_v2": "ﱧ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 8,
+                    "text": "ﱧ",
+                    "translation": {
+                        "text": "in",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "fī",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 4185,
+                    "position": 5,
+                    "audio_url": "wbw/113_004_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "ٱلْعُقَدِ",
+                    "text_indopak": "الۡعُقَدِۙ‏",
+                    "text_imlaei": "الْعُقَدِ",
+                    "verse_key": "113:4",
+                    "line_number": 9,
+                    "location": "113:4:5",
+                    "code_v1": "ﭸ",
+                    "code_v2": "ﱨ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 8,
+                    "text": "ﱨ",
+                    "translation": {
+                        "text": "the knots",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "l-ʿuqadi",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 4186,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٤",
+                    "text_indopak": "٤",
+                    "text_imlaei": "٤",
+                    "verse_key": "113:4",
+                    "line_number": 9,
+                    "location": "113:4:6",
+                    "code_v1": "ﭹ",
+                    "code_v2": "ﱩ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 8,
+                    "text": "ﱩ",
+                    "translation": {
+                        "text": "(4)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ],
+            "translations": [
+                {
+                    "id": 407932,
+                    "resource_id": 85,
+                    "text": "the harm in witches when they blow on knots,",
+                    "resource_name": "M.A.S. Abdel Haleem",
+                    "id": 407932,
+                    "language_id": 38,
+                    "language_name": "english",
+                    "verse_key": "113:4",
+                    "chapter_id": 113,
+                    "verse_number": 4,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 935130,
+                    "resource_id": 136,
+                    "text": "contre le mal des (sorcières) qui soufflent dans les nœuds,",
+                    "resource_name": "Montada Islamic Foundation",
+                    "id": 935130,
+                    "language_id": 49,
+                    "language_name": "french",
+                    "verse_key": "113:4",
+                    "chapter_id": 113,
+                    "verse_number": 4,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 1301223,
+                    "resource_id": 153,
+                    "text": "e contro il male delle soffianti sui nodi <a class=f><sup foot_note=160797>1</sup></a>,",
+                    "resource_name": "Hamza Roberto Piccardo",
+                    "id": 1301223,
+                    "language_id": 74,
+                    "language_name": "italian",
+                    "verse_key": "113:4",
+                    "chapter_id": 113,
+                    "verse_number": 4,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 395460,
+                    "resource_id": 83,
+                    "text": "del mal de las [hechiceras] sopladoras de nudos<sup foot_note=169518>1</sup>,",
+                    "resource_name": "Sheikh Isa Garcia",
+                    "id": 395460,
+                    "language_id": 40,
+                    "language_name": "spanish",
+                    "verse_key": "113:4",
+                    "chapter_id": 113,
+                    "verse_number": 4,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                }
+            ]
+        },
+        {
+            "id": 6230,
+            "verse_number": 5,
+            "verse_key": "113:5",
+            "hizb_number": 60,
+            "rub_el_hizb_number": 240,
+            "ruku_number": 557,
+            "manzil_number": 7,
+            "sajdah_number": null,
+            "chapter_id": 113,
+            "text_uthmani": "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+            "text_uthmani_simple": "ومن شر حاسد اذا حسد",
+            "text_imlaei": "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+            "text_imlaei_simple": "ومن شر حاسد اذا حسد",
+            "text_indopak": "وَمِنۡ شَرِّ حَاسِدٍ اِذَا حَسَدَ‏",
+            "text_uthmani_tajweed": "وَمِ<tajweed class=ikhafa>ن ش</tajweed>َرِّ حَاسِدٍ إِذَا حَسَ<tajweed class=qalaqah>د</tajweed>َ <span class=end>٥</span>",
+            "page_number": 604,
+            "image_url": "//c22506.r6.cf1.rackcdn.com/113_5.png",
+            "image_width": 675,
+            "v1_page": 604,
+            "v2_page": 604,
+            "page_number": 604,
+            "juz_number": 30,
+            "words": [
+                {
+                    "id": 5473,
+                    "position": 1,
+                    "audio_url": "wbw/113_005_001.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "وَمِن",
+                    "text_indopak": "وَمِنۡ",
+                    "text_imlaei": "وَمِن",
+                    "verse_key": "113:5",
+                    "line_number": 9,
+                    "location": "113:5:1",
+                    "code_v1": "ﭺ",
+                    "code_v2": "ﱪ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 9,
+                    "text": "ﱪ",
+                    "translation": {
+                        "text": "And from",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "wamin",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 5474,
+                    "position": 2,
+                    "audio_url": "wbw/113_005_002.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "شَرِّ",
+                    "text_indopak": "شَرِّ",
+                    "text_imlaei": "شَرِّ",
+                    "verse_key": "113:5",
+                    "line_number": 9,
+                    "location": "113:5:2",
+                    "code_v1": "ﭻ",
+                    "code_v2": "ﱫ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 9,
+                    "text": "ﱫ",
+                    "translation": {
+                        "text": "(the) evil",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "sharri",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 5475,
+                    "position": 3,
+                    "audio_url": "wbw/113_005_003.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "حَاسِدٍ",
+                    "text_indopak": "حَاسِدٍ",
+                    "text_imlaei": "حَاسِدٍ",
+                    "verse_key": "113:5",
+                    "line_number": 9,
+                    "location": "113:5:3",
+                    "code_v1": "ﭼ",
+                    "code_v2": "ﱬ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 9,
+                    "text": "ﱬ",
+                    "translation": {
+                        "text": "(of) an envier",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ḥāsidin",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 5476,
+                    "position": 4,
+                    "audio_url": "wbw/113_005_004.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "إِذَا",
+                    "text_indopak": "اِذَا",
+                    "text_imlaei": "إِذَا",
+                    "verse_key": "113:5",
+                    "line_number": 9,
+                    "location": "113:5:4",
+                    "code_v1": "ﭽ",
+                    "code_v2": "ﱭ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 9,
+                    "text": "ﱭ",
+                    "translation": {
+                        "text": "when",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "idhā",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 5477,
+                    "position": 5,
+                    "audio_url": "wbw/113_005_005.mp3",
+                    "char_type_name": "word",
+                    "text_uthmani": "حَسَدَ",
+                    "text_indopak": "حَسَدَ‏",
+                    "text_imlaei": "حَسَدَ",
+                    "verse_key": "113:5",
+                    "line_number": 9,
+                    "location": "113:5:5",
+                    "code_v1": "ﭾ",
+                    "code_v2": "ﱮ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 9,
+                    "text": "ﱮ",
+                    "translation": {
+                        "text": "he envies",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": "ḥasada",
+                        "language_name": "english"
+                    }
+                },
+                {
+                    "id": 5478,
+                    "position": 6,
+                    "audio_url": null,
+                    "char_type_name": "end",
+                    "text_uthmani": "٥",
+                    "text_indopak": "٥",
+                    "text_imlaei": "٥",
+                    "verse_key": "113:5",
+                    "line_number": 9,
+                    "location": "113:5:6",
+                    "code_v1": "ﭿ",
+                    "code_v2": "ﱯ",
+                    "v1_page": 604,
+                    "v2_page": 604,
+                    "page_number": 604,
+                    "line_number": 9,
+                    "text": "ﱯ",
+                    "translation": {
+                        "text": "(5)",
+                        "language_name": "english"
+                    },
+                    "transliteration": {
+                        "text": null,
+                        "language_name": "english"
+                    }
+                }
+            ],
+            "translations": [
+                {
+                    "id": 407933,
+                    "resource_id": 85,
+                    "text": "the harm in the envier when he envies.’",
+                    "resource_name": "M.A.S. Abdel Haleem",
+                    "id": 407933,
+                    "language_id": 38,
+                    "language_name": "english",
+                    "verse_key": "113:5",
+                    "chapter_id": 113,
+                    "verse_number": 5,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 935131,
+                    "resource_id": 136,
+                    "text": "et contre le mal de l’envieux quand il envie. »",
+                    "resource_name": "Montada Islamic Foundation",
+                    "id": 935131,
+                    "language_id": 49,
+                    "language_name": "french",
+                    "verse_key": "113:5",
+                    "chapter_id": 113,
+                    "verse_number": 5,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 1301224,
+                    "resource_id": 153,
+                    "text": "e contro il male dell’invidioso quando invidia» <a class=f><sup foot_note=160798>1</sup></a>. ",
+                    "resource_name": "Hamza Roberto Piccardo",
+                    "id": 1301224,
+                    "language_id": 74,
+                    "language_name": "italian",
+                    "verse_key": "113:5",
+                    "chapter_id": 113,
+                    "verse_number": 5,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                },
+                {
+                    "id": 395461,
+                    "resource_id": 83,
+                    "text": "y del mal del envidioso cuando envidia”.",
+                    "resource_name": "Sheikh Isa Garcia",
+                    "id": 395461,
+                    "language_id": 40,
+                    "language_name": "spanish",
+                    "verse_key": "113:5",
+                    "chapter_id": 113,
+                    "verse_number": 5,
+                    "juz_number": 30,
+                    "hizb_number": 60,
+                    "page_number": 604
+                }
+            ]
+        }
+    ],
+    "pagination": {
+        "per_page": 500,
+        "current_page": 1,
+        "next_page": null,
+        "total_pages": 1,
+        "total_records": 5
+    }
+}

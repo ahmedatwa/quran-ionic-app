@@ -6,7 +6,6 @@ import { cogOutline, bookmarkOutline } from 'ionicons/icons';
 import { useLocale } from '@/composables/useLocale';
 
 const { getLine } = useLocale()
-
 </script>
 
 <template>

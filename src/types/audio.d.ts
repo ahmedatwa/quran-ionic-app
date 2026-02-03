@@ -32,9 +32,9 @@ type VerseTimingsProps = {
   inRange?: boolean;
   wordLocation: string;
   wordPosition: string | number;
-  audioSrc?: string;
+  audioSrc?: AudioPayLoadSrc;
   pageNumber?: number;
-  duration: number
+  duration: number;
 };
 
 interface Recitations {
@@ -68,7 +68,7 @@ type IsAudioPlayingProps = {
 
 type PlayAudioEmit = {
   audioID: number;
-  audioSrc?: string;
+  audioSrc?: AudioPayLoadSrc;
   verseKey?: string;
   pause?: boolean;
 };
@@ -87,10 +87,15 @@ type AudioPlayerSettings = {
   fullwidth?: boolean;
   autoDownload?: boolean;
   fab: boolean;
-  loopType: string
-};
+  playAllJuz: boolean;
+  volume: number;
+  confirmClosePlayer?: boolean
+  loopAudio: "never" | "none" | "repeat" | "once";
+} | null;
 
 type AudioExperience = { autoScroll: boolean; tooltip: boolean } | null;
+
+type AudioPayLoadSrc = "chapter" | "juz" | "page";
 
 export {
   VerseTimings,
@@ -104,4 +109,5 @@ export {
   VerseTimingSegments,
   AudioPlayerSettings,
   AudioExperience,
+  AudioPayLoadSrc,
 };

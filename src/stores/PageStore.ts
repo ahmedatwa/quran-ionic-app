@@ -7,15 +7,15 @@ import { useTranslationsStore } from "@/stores/TranslationsStore";
 import { useAudioStore } from "@/stores/AudioStore";
 // utils
 import { _range } from "@/utils/number";
-import { getAllPagesToChapters, DEFAULT_NUMBER_OF_PAGES } from "@/utils/pages";
-import { getFirstVerseOfPage } from "@/utils/pages";
+import { getAllPagesToChapters } from "@/utils/pages";
+import { getFirstVerseOfPage, loadPageDataFromJSON } from "@/utils/pages";
 // composables
 import { useAlert } from "@/composables/useAlert";
-import { useVerseTiming } from "@/composables/useVerseTiming";
 
 // types
 import type { Page } from "@/types/page";
-import type { JSONDataPromise, Verse } from "@/types/verse";
+import type { Verse } from "@/types/verse";
+import type { InfiniteScrollCustomEvent } from "@ionic/vue";
 
 // router
 import { useRouter } from "vue-router";
@@ -26,7 +26,7 @@ export const usePageStore = defineStore("page-store", () => {
   const audioStore = useAudioStore();
   const { getChapterNameByChapterId } = useChapterStore();
   const { push } = useRouter();
-  const { presentToast, presentLoading } = useAlert();
+  const { presentToast } = useAlert();
   const allVerses = ref<Verse[]>([]);
   const versesTotalRecords = ref(0);
   const isLoading = ref(false);
@@ -35,39 +35,16 @@ export const usePageStore = defineStore("page-store", () => {
   const selectedPageId = computed(() => selectedPage.value?.pageNumber);
   const pagesList = ref<Page[]>([]);
   const loadingVerses = shallowRef(false);
+  const totalPages = shallowRef(604);
   const perPage = shallowRef(20);
-  //const currentPageEnd = shallowRef();
-// const { verseTiming } = useVerseTiming();
   const searchVerseNumberValue = shallowRef("");
-  // const currentVerseNumberFromTiming = computed(
-  //   () => verseTiming.value?.verseNumber
-  // );
 
   const getVerses = async (id: number) => {
-   // loadingVerses.value = true;
-    await loadPageDataFromJSON(id)
-      .then((response) => {
-        allVerses.value = response.verses;
-        versesTotalRecords.value = response.pagination.total_records;
-       // loadingVerses.value = false;
-      })
-      .catch(
-        async (error) =>
-          await presentToast({ id: "json-data-error", message: String(error) })
-      )
-  };
-
-  const loadPageDataFromJSON = async (
-    pageNumber: number
-  ): Promise<JSONDataPromise> => {
-    return new Promise((resolve, reject) => {
-      try {
-        import(`@jsonDataPath/pages/page-${pageNumber}.json`).then((response) =>
-          resolve(response)
-        );
-      } catch (error) {
-        reject(error);
-      }
+    allVerses.value = [];
+    versesTotalRecords.value = 0;
+    await loadPageDataFromJSON(id).then((response) => {
+      allVerses.value = response.verses;
+      versesTotalRecords.value = response.pagination.total_records;
     });
   };
 
@@ -132,84 +109,91 @@ export const usePageStore = defineStore("page-store", () => {
     }
   });
 
-  // const fetchMorePagesVerses = async (
-  //   infiniteScrollEvent?: InfiniteScrollCustomEvent
-  // ) => {
-  //   if (infiniteScrollEvent) {
-  //     infiniteScrollEvent.target.complete();
-  //     if (selectedPageVerses.value.length) {
-  //       loadingVerses.value = true;
-  //       console.log(loadingVerses.value);
+  /**
+   * handle 2 locations 
+   * calls coming from audio store on seek 
+   * and from  infiniteScrollEvent event on manual scroll
 
-  //       currentPageEnd.value = Math.ceil(
-  //         selectedPageVerses.value.length + perPage.value
-  //       );
-  //       const verses = allVerses.value.slice(
-  //         selectedPageVerses.value.length,
-  //         currentPageEnd.value
-  //       );
-  //       if (verses) {
-  //         verses.forEach((v) =>
-  //           selectedPageVerses.value.push({ ...v, bookmarked: false })
-  //         );
-  //       }
-  //     }
-  //   } else {
-  //     // look for number in chapter verses
-  //     const toBFoundVerse: Verse | undefined = selectedPageVerses.value.find(
-  //       (v) => v.verse_number === currentVerseNumberFromTiming.value
-  //     );
+   * @param infiniteScrollEvent 
+   * @returns void
+   */
 
-  //     if (!toBFoundVerse) {
-  //       const lastVerseInComputedVerses = selectedPageVerses.value.slice(-1)[0];
-  //       if (
-  //         lastVerseInComputedVerses?.verse_number &&
-  //         currentVerseNumberFromTiming.value
-  //       ) {
-  //         const calc = Math.ceil(
-  //           currentVerseNumberFromTiming.value -
-  //             lastVerseInComputedVerses?.verse_number
-  //         );
-  //         if (selectedPageVerses.value.length) {
-  //           currentPageEnd.value = Math.ceil(
-  //             selectedPageVerses.value.length + calc
-  //           );
-  //           const verses = allVerses.value.slice(
-  //             selectedPageVerses.value.length,
-  //             currentPageEnd.value + 1
-  //           );
-  //           if (verses) {
-  //             verses.forEach((v) =>
-  //               selectedPageVerses.value.push({ ...v, bookmarked: false })
-  //             );
-  //             await nextTick(async () => {
-  //               if (selectedPageVerses.value.length) {
-  //                 if (selectedPageVerses.value.length >= calc)
-  //                   loadingVerses.value = true;
-  //               }
-  //             });
-  //           }
-  //         }
-  //       }
-  //     } else {
-  //       return;
-  //     }
-  //   }
-  // };
+  const fetchMorePagesVerses = async (
+    infiniteScrollEvent?: InfiniteScrollCustomEvent
+  ) => {
+    //   if (infiniteScrollEvent) {
+    //     infiniteScrollEvent.target.complete();
+    //     if (selectedPageVerses.value.length) {
+    //       loadingVerses.value = true;
+    //       console.log(loadingVerses.value);
+    //       currentPageEnd.value = Math.ceil(
+    //         selectedPageVerses.value.length + perPage.value
+    //       );
+    //       const verses = allVerses.value.slice(
+    //         selectedPageVerses.value.length,
+    //         currentPageEnd.value
+    //       );
+    //       if (verses) {
+    //         verses.forEach((v) =>
+    //           selectedPageVerses.value.push({ ...v, bookmarked: false })
+    //         );
+    //       }
+    //     }
+    //   } else {
+    //     // look for number in chapter verses
+    //     const toBFoundVerse: Verse | undefined = selectedPageVerses.value.find(
+    //       (v) => v.verse_number === currentVerseNumberFromTiming.value
+    //     );
+    //     if (!toBFoundVerse) {
+    //       const lastVerseInComputedVerses = selectedPageVerses.value.slice(-1)[0];
+    //       if (
+    //         lastVerseInComputedVerses?.verse_number &&
+    //         currentVerseNumberFromTiming.value
+    //       ) {
+    //         const calc = Math.ceil(
+    //           currentVerseNumberFromTiming.value -
+    //             lastVerseInComputedVerses?.verse_number
+    //         );
+    //         if (selectedPageVerses.value.length) {
+    //           currentPageEnd.value = Math.ceil(
+    //             selectedPageVerses.value.length + calc
+    //           );
+    //           const verses = allVerses.value.slice(
+    //             selectedPageVerses.value.length,
+    //             currentPageEnd.value + 1
+    //           );
+    //           if (verses) {
+    //             verses.forEach((v) =>
+    //               selectedPageVerses.value.push({ ...v, bookmarked: false })
+    //             );
+    //             await nextTick(async () => {
+    //               if (selectedPageVerses.value.length) {
+    //                 if (selectedPageVerses.value.length >= calc)
+    //                   loadingVerses.value = true;
+    //               }
+    //             });
+    //           }
+    //         }
+    //       }
+    //     } else {
+    //       return;
+    //     }
+    //   }
+  };
 
   /**
    * Fallbak for loading spinner
    * in case of any errors
    */
-  watch(loadingVerses, async (loadingSpinnerState) => {
-    if (loadingSpinnerState) {
-      await presentLoading(false, {
-        id: "loading-page-verses",
-      });
-    } else {
-      await presentLoading(true, { id: "loading-page-verses" });
-    }
-  });
+  // watch(loadingVerses, async (loadingSpinnerState) => {
+  //   if (loadingSpinnerState) {
+  //     await presentLoading({
+  //       id: "loading-page-verses",
+  //     });
+  //   } else {
+  //     await dismissLoading("loading-page-verses");
+  //   }
+  // });
   /**
    * play next chapter and loaddata when needed
    * @param audioSrc
@@ -218,7 +202,7 @@ export const usePageStore = defineStore("page-store", () => {
   const playNextPage = async (pageNumber: number) => {
     if (pageNumber) {
       loadingVerses.value = true;
-      pageNumber = pageNumber > DEFAULT_NUMBER_OF_PAGES ? 1 : pageNumber + 1;
+      pageNumber = pageNumber > totalPages.value ? 1 : pageNumber + 1;
       // get the audio files
       const payload = await getFirstVerseOfPage(pageNumber);
       if (payload) {
@@ -229,7 +213,7 @@ export const usePageStore = defineStore("page-store", () => {
           })
           .catch((e) => console.error(new Error(e)))
           .finally(() => {
-            push({ path: `/page/${pageNumber}`, replace: false });
+            push({ path: `/page/${pageNumber}`, replace: true });
             loadingVerses.value = false;
           });
       }
@@ -250,7 +234,8 @@ export const usePageStore = defineStore("page-store", () => {
     loadingVerses,
     perPage,
     searchVerseNumberValue,
-    //fetchMorePagesVerses,
+    totalPages,
+    fetchMorePagesVerses,
     playNextPage,
     getVerses,
   };

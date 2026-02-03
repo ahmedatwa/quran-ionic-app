@@ -4,6 +4,7 @@ import { ref, computed, onBeforeMount } from "vue";
 import { Translation, TranslationReduceMap } from "@/types/translations";
 // composables
 import { useAlert } from "@/composables/useAlert";
+import { useSettingsStore } from "@/stores/SettingsStore";
 
 export const useTranslationsStore = defineStore("translations-store", () => {
   const isLoading = ref(false);
@@ -12,6 +13,7 @@ export const useTranslationsStore = defineStore("translations-store", () => {
   const selectedTranslationId = computed(() => selectedTranslation.value?.id);
   const defaultTranslationID = ref(85);
   const { presentToast } = useAlert();
+  const settingsStore = useSettingsStore();
 
   const getAllTranslations = (): Promise<Translation[]> => {
     return new Promise((resolve, reject) => {
@@ -64,6 +66,10 @@ export const useTranslationsStore = defineStore("translations-store", () => {
     }
   });
 
+  const handleSelectedTranslation = (transaltion: Translation) => {
+    selectedTranslation.value = transaltion;
+    settingsStore.updateSelectedTranslations(transaltion);
+  };
   return {
     translations,
     isLoading,
@@ -72,5 +78,6 @@ export const useTranslationsStore = defineStore("translations-store", () => {
     selectedTranslationId,
     defaultTranslationID,
     groupTranslationsByLanguage,
+    handleSelectedTranslation,
   };
 });

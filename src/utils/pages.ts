@@ -1,10 +1,25 @@
-import jsonChaptersData from "@jsonDataPath/chapters.json";
 // types
-import type { Verse } from "@/types/verse";
+import type { Verse, JSONVersesPromiseReturn } from "@/types/verse";
 // utils
 import { localizeNumber, _range } from "@/utils/number";
+import { jsonAllChapters } from "@/utils/chapter";
 
 export const DEFAULT_NUMBER_OF_PAGES: number = 604;
+
+
+  export const loadPageDataFromJSON = async (
+    pageNumber: number
+  ): Promise<JSONVersesPromiseReturn> => {
+    return new Promise((resolve, reject) => {
+      try {
+        import(`@jsonDataPath/pages/verses/${pageNumber}.json`)
+          .then((response) => resolve(response))
+      } catch (error) {
+        reject(error);
+      }
+    });
+  };
+
 
 type Pages2ChaptersMappings = {
   [key: string]: string[];
@@ -13,12 +28,14 @@ type Pages2ChaptersMappings = {
 export const getPages2ChaptersMappings =
   (): Promise<Pages2ChaptersMappings> => {
     return new Promise((res) => {
-      import("@jsonDataPath/page-to-chapter-mappings.json").then((data) => {
-        res(data.default);
-      });
+      import("@jsonDataPath/pages/page-to-chapter-mappings.json").then(
+        (data) => {
+          res(data.default);
+        }
+      );
     });
   };
-
+///
 /**
  * get getAllPageMappings for all Pages
  *
@@ -45,9 +62,13 @@ type ChaptersMap = {
 };
 const getChaptersForPage = async (pageId: number): Promise<ChaptersMap[]> => {
   const result: ChaptersMap[] = [];
-  const pageChapters = await getChapterIdsForPage(pageId);
+
+  const [pageChapters, jsonChaptersData] = await Promise.all([
+    getChapterIdsForPage(pageId),
+    jsonAllChapters(),
+  ]);
   pageChapters.forEach((ch) => {
-    const chapter = jsonChaptersData.chapters.find(
+    const chapter = jsonChaptersData.find(
       (chapter) => chapter.id === Number(ch)
     );
     if (chapter) {
@@ -94,7 +115,7 @@ interface GetAllPagesToChapters {
 export const getAllPagesToChapters = (): Promise<GetAllPagesToChapters[]> => {
   return new Promise((resolve, reject) => {
     try {
-      import("@jsonDataPath/pages-to-chapters.json").then((res) =>
+      import("@jsonDataPath/pages/pages-to-chapters.json").then((res) =>
         resolve(res.default)
       );
     } catch (error) {
@@ -106,7 +127,7 @@ export const getAllPagesToChapters = (): Promise<GetAllPagesToChapters[]> => {
 export const getFirstVerseOfPage = (pageNumber: number): Promise<Verse> => {
   return new Promise((resolve, reject) => {
     try {
-      import(`@jsonDataPath/pages/page-${pageNumber}.json`).then((response) =>
+      import(`@jsonDataPath/pages/verses/${pageNumber}.json`).then((response) =>
         resolve(response.verses[0])
       );
     } catch (error) {
@@ -118,8 +139,8 @@ export const getFirstVerseOfPage = (pageNumber: number): Promise<Verse> => {
 export const getLastVerseOfPage = (pageNumber: number): Promise<Verse> => {
   return new Promise((resolve, reject) => {
     try {
-      import(`@jsonDataPath/pages/page-${pageNumber}.json`).then((response) =>
-        resolve(response.verses.slice(-1)[0])
+      import(`@jsonDataPath/pages/verses/${pageNumber}.json`).then(
+        (response) => resolve(response.verses.slice(-1)[0])
       );
     } catch (error) {
       reject(error);
@@ -128,5 +149,5 @@ export const getLastVerseOfPage = (pageNumber: number): Promise<Verse> => {
 };
 
 export const getFirstVerseOfVerses = (verses: Verse[]) => {
-  return verses[0]
-}
+  return verses[0];
+};

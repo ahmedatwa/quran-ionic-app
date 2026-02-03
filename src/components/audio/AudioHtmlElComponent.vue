@@ -12,7 +12,7 @@ watch((audioRef), (x) => {
 </script>
 <template>
     <div v-if="audioStore.isVisible" class="d-none">
-        <audio controls :autoplay="audioStore.audioPlayerSetting.autoPlay" ref="audioRef"
+        <audio controls :autoplay="audioStore.audioPlayerSetting?.autoPlay" ref="audioRef"
             :src="audioStore.audioFiles?.audio_url" :id="`chapter-${audioStore.audioFiles?.chapter_id}`"
             :type="`audio/${audioStore.audioFiles?.format}`" @pause="audioStore.playbackPaused"
             @ended="audioStore.playbackEnded" @playing="audioStore.playbackPlaying"

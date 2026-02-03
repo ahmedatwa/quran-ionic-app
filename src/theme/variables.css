@@ -8,6 +8,7 @@
 /* This sets a different item border color for the default theme on ios and md */
 :root {
   --ion-item-border-color: var(--ion-background-color-step-200);
+  --ion-color-white: #fff;
 }
 
 /* This sets a different background and item background for the default theme on ios */
@@ -41,4 +42,8 @@ ion-card {
 ion-spinner {
   width: 20px;
   height: 20px;
+}
+
+.ion-color-white {
+  --ion-color-base: var(--ion-color-white);
 }

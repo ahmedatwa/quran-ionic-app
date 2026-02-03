@@ -10,9 +10,11 @@ import { useStorage } from "@/composables/useStorage";
 import { useAlert } from "@/composables/useAlert";
 // Stores
 import { useAudioStore } from "@/stores/AudioStore";
+import { useVerseTimingStore } from "@/stores/VerseTimingStore";
 
 export const useRecitionsStore = defineStore("recitions-store", () => {
   const audioStore = useAudioStore();
+  const verseTimingStore = useVerseTimingStore();
   const isLoading = ref(false);
   const settingsDB = useStorage("__settingsDB");
   const { presentToast } = useAlert();
@@ -24,7 +26,9 @@ export const useRecitionsStore = defineStore("recitions-store", () => {
   const getAllRecitations = (): Promise<Recitations[]> => {
     return new Promise((resolve, reject) => {
       try {
-        import("@jsonDataPath/reciters.json").then((res) => resolve(res.reciters));
+        import("@jsonDataPath/reciters.json").then((res) =>
+          resolve(res.reciters)
+        );
       } catch (error) {
         reject(error);
       }
@@ -81,14 +85,23 @@ export const useRecitionsStore = defineStore("recitions-store", () => {
     return `${AVATAR_PLACEHOLDER_API}?name="${selectedReciter.value?.name}`;
   });
 
-  const handleSelectedReciter = async (reciter: Recitations) => {
-    if (reciter) {      
+  /**
+   * 
+   * @param reciter 
+   * @param audioSrc 
+   */
+  const handleSelectedReciter = async (
+    reciter: Recitations,
+    audioSrc: "chapter" | "juz" | "page"
+  ) => {
+     
+    if (reciter) {
       selectedReciter.value = reciter;
       if (audioStore.chapterId) {
         await audioStore.getAudio({
           audioID: audioStore.chapterId,
-          audioSrc: "",
-          verseKey: audioStore.selectedVerseKey,
+          audioSrc,
+          verseKey: verseTimingStore.verseTiming?.verseKey,
           pause: true,
         });
       }

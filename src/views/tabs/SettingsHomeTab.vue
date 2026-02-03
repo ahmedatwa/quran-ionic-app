@@ -1,26 +1,27 @@
 <script setup lang="ts">
 import { ref, computed, shallowRef } from 'vue';
 import { IonContent, IonItem, IonList, IonListHeader, IonAccordion } from '@ionic/vue';
-import { IonToggle, IonPage, IonSelectOption, IonSelect, IonAccordionGroup } from "@ionic/vue"
-import { IonLabel, IonText } from '@ionic/vue';
+import { IonPage, IonSelectOption, IonSelect, IonAccordionGroup } from "@ionic/vue"
+import { IonLabel, IonText, IonButton, IonButtons, IonIcon } from '@ionic/vue';
 // icons
-import { cogOutline } from 'ionicons/icons';
+import { add, cogOutline, remove } from 'ionicons/icons';
 // stores
 import { useAudioStore } from "@/stores/AudioStore";
 import { useRecitionsStore } from '@/stores/RecitionsStore';
 import { useTranslationsStore } from "@/stores/TranslationsStore";
+import { useSettingsStore } from '@/stores/SettingsStore';
 // utils
 import { _range } from '@/utils/number';
 import { getLangFullLocale } from '@/utils/locale';
 import { properCase } from '@/utils/string';
 // composables
-import { useSettings } from '@/composables/useSettings';
 import { useLocale } from '@/composables/useLocale';
-import { useKeepAwake } from '@/composables/useKeepAwake';
 import { useAlert } from '@/composables/useAlert';
 // components
 import HeaderComponent from '@/components/common/HeaderComponent.vue';
-import ModalComponent from '@/components/common/ModalComponent.vue';
+import RecitationsListModalComponent from '@/components/setting/RecitationsListModalComponent.vue';
+import TranslationListModalComponent from '@/components/setting/TranslationListModalComponent.vue';
+import AudioPlayerSettingsComponent from '@/components/setting/AudioPlayerSettingsComponent.vue';
 // types
 import type { Recitations } from '@/types/audio';
 import type { Translation } from '@/types/translations';
@@ -33,21 +34,8 @@ const translationStore = useTranslationsStore()
 const appVersion = computed(() => import.meta.env.VITE_APP_VERSION)
 const colorScheme = ref("auto")
 const pageRef = ref(null)
-const settings = useSettings()
-const keepAwake = useKeepAwake()
-const isAwake = ref(false)
+const settingsStore = useSettingsStore()
 const { presentAlert } = useAlert()
-const loopAudio = shallowRef(false)
-
-const handleSelectedTranslation = (transaltion: Translation) => {
-    translationStore.selectedTranslation = transaltion
-    settings.updateSelectedTranslations(transaltion)
-}
-
-const handleKeepAwake = async () => {
-    await keepAwake.keepAwake()
-    isAwake.value = await keepAwake.isKeptAwake()
-}
 
 const presentCacheAlert = async () => {
     await presentAlert({
@@ -70,10 +58,12 @@ const aboutApp = async () => {
     await presentAlert({
         header: "Nobel Quran",
         message: getLine("quranReader.introSubtitle"),
-        id: "present-info-alert",
-        buttons: ["Close"]
+        id: "present-app-info-alert",
+        buttons: ["Close"],
     })
 }
+
+
 
 </script>
 
@@ -92,39 +82,61 @@ const aboutApp = async () => {
                         <div slot="content">
                             <ion-list class="ion-padding">
                                 <ion-item>
-                                    <ion-select :label="getLine('settings.fontSize')" aria-label="Quran Fonts"
-                                        :placeholder="settings.getSelectedFontSize.value"
-                                        :value="settings.getSelectedFontSize.value"
-                                        @ion-change="settings.applyStyle('fontSize', $event)">
-                                        <ion-select-option v-for="item in settings.fontSizes.value" :key="item"
-                                            :value="item">{{ item }}</ion-select-option>
-                                    </ion-select>
+                                    <ion-label>{{ getLine('settings.quranFontSize') }}</ion-label>
+                                    <ion-buttons slot="end">
+                                        <ion-button @click="settingsStore.setFontSize('quran', 'remove')"
+                                            :disabled="settingsStore.styles.quranFontSize === 1"><ion-icon
+                                                :icon="remove" slot="icon-only"></ion-icon></ion-button>
+                                        <ion-button @click="settingsStore.setFontSize('quran', 'add')"
+                                            :disabled="settingsStore.styles.quranFontSize === 10"><ion-icon :icon="add"
+                                                slot="icon-only"></ion-icon></ion-button>
+                                    </ion-buttons>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-select :label="getLine('settings.fontFamily')" aria-label="Quran Font Family"
-                                        :placeholder="settings.styles.value.fontFamily"
-                                        :value="settings.styles.value.fontFamily"
-                                        @ion-change="settings.applyStyle('fontFamily', $event)">
-                                        <ion-select-option v-for="fg in settings.fontFamilyGroup.value" :key="fg"
+                                    <ion-label>{{ getLine('settings.translationFontSize') }}</ion-label>
+                                    <ion-buttons slot="end">
+                                        <ion-button @click="settingsStore.setFontSize('translation', 'remove')"
+                                            :disabled="settingsStore.styles.translationFontSize === 1"><ion-icon
+                                                :icon="remove" slot="icon-only"></ion-icon></ion-button>
+                                        <ion-button @click="settingsStore.setFontSize('translation', 'add')"
+                                            :disabled="settingsStore.styles.translationFontSize === 10"><ion-icon
+                                                :icon="add" slot="icon-only"></ion-icon></ion-button>
+                                    </ion-buttons>
+                                </ion-item>
+                                <ion-item>
+                                    <ion-select :label="getLine('settings.quranFontFamily')"
+                                        aria-label="Quran Font Family"
+                                        :placeholder="settingsStore.styles.quranFontFamily"
+                                        :value="settingsStore.styles.quranFontFamily" @ion-change="settingsStore.setFontFamily('quran',
+                                            $event)">
+                                        <ion-select-option v-for="fg in settingsStore.fontFamilyGroup" :key="fg"
                                             :value="fg">{{ fg }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
+                                <!-- <ion-item>
+                                    <ion-select :label="getLine('settings.translationFontFamily')"
+                                        aria-label="Translation Font Family"
+                                        :placeholder="settingsStore.styles.translationFontFamily"
+                                        :value="settingsStore.styles.translationFontFamily" @ion-change="settingsStore.setFontFamily('translation',
+                                            $event)">
+                                        <ion-select-option v-for="fg in settingsStore.fontFamilyGroup" :key="fg"
+                                            :value="fg">{{ fg }}</ion-select-option>
+                                    </ion-select>
+                                </ion-item> -->
                                 <ion-item>
-                                    <ion-select :placeholder="settings.styles.value.fontWeight"
+                                    <ion-select :placeholder="settingsStore.styles.fontWeight"
                                         :label="getLine('settings.boldText')" aria-label="Quran Font weight"
-                                        :value="settings.styles.value.fontWeight"
-                                        @ion-change="settings.applyStyle('fontWeight', $event)">
-                                        <ion-select-option v-for="weight in settings.fontWeights.value" :key="weight"
+                                        :value="settingsStore.styles.fontWeight" @ion-change="settingsStore.setFontWight">
+                                        <ion-select-option v-for="weight in settingsStore.fontWeights" :key="weight"
                                             :value="weight">{{ weight }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>
                                 <ion-item>
-                                    <ion-select :placeholder="settings.styles.value.wordColor"
+                                    <ion-select :placeholder="settingsStore.styles.wordColor"
                                         :label="getLine('settings.highlightedWordColor')"
-                                        aria-label="Quran Font word color" :value="settings.styles.value.wordColor"
-                                        @ion-change="settings.applyStyle('wordcolor', $event)">
-
-                                        <ion-select-option v-for="item in settings.wordColors.value" :key="item"
+                                        aria-label="Quran Font word color" :value="settingsStore.styles.wordColor"
+                                        @ion-change="settingsStore.setWordColor">
+                                        <ion-select-option v-for="item in settingsStore.wordColors" :key="item"
                                             :value="item"> {{ item }}
                                         </ion-select-option>
                                     </ion-select>
@@ -138,19 +150,18 @@ const aboutApp = async () => {
                     <ion-label>{{ recitationsStore.selectedReciter?.name }}</ion-label>
                 </ion-item>
                 <!-- reciters Modal -->
-                <modal-component :title="getLine('settings.reciters')" trigger="reciters-modal"
-                    :data="recitationsStore.mapRecitions" :selected="recitationsStore.selectedReciter"
+                <recitations-list-modal-component trigger="reciters-modal"
+                    :map-recitions="recitationsStore.mapRecitions" :selected-reciter="recitationsStore.selectedReciter"
                     @update:selected-recition="recitationsStore.handleSelectedReciter">
-                </modal-component>
+                </recitations-list-modal-component>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.translations") }}</ion-list-header>
                 <ion-item button :detail="true" id="translations-modal">
                     <ion-label>{{ translationStore.selectedTranslation?.author_name }}</ion-label>
                 </ion-item>
-                <modal-component :title="getLine('settings.translations')"
-                    :data="translationStore.groupTranslationsByLanguage" trigger="translations-modal"
-                    :selected="translationStore.selectedTranslation"
-                    @update:selected-translation="handleSelectedTranslation">
-                </modal-component>
+                <translation-list-modal-component :translations-map="translationStore.groupTranslationsByLanguage"
+                    trigger="translations-modal" :selected-translation="translationStore.selectedTranslation"
+                    @update:selected-translation="translationStore.handleSelectedTranslation">
+                </translation-list-modal-component>
                 <ion-list-header class="ion-margin-bottom">{{ getLine("settings.audio") }}</ion-list-header>
                 <ion-accordion-group>
                     <ion-accordion value="first">
@@ -158,50 +169,10 @@ const aboutApp = async () => {
                             <ion-label>{{ getLine("settings.audioPlayer") }}</ion-label>
                         </ion-item>
                         <div slot="content">
-                            <ion-list class="ion-padding">
-                                <ion-item>
-                                    <ion-toggle @ion-change="audioStore.handleAudioSetting" value="autoPlay"
-                                        :checked="audioStore.audioPlayerSetting.autoPlay">{{
-                                            getLine("settings.autoPlay")
-                                        }}</ion-toggle>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-toggle @ion-change="audioStore.handleAudioSetting" value="autoScroll"
-                                        :checked="audioStore.audioPlayerSetting.autoScroll">
-                                        {{ getLine("settings.autoScroll") }}</ion-toggle>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-toggle @ion-change="audioStore.handleAudioSetting" value="autoDownload"
-                                        :checked="audioStore.audioPlayerSetting.autoDownload">
-                                        {{ getLine("settings.autoDownload") }}</ion-toggle>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-select :label="getLine('settings.loopAudio')"
-                                        :aria-label="getLine('settings.loopAudio')"
-                                        :placeholder="getLine('settings.loopAudio')"
-                                        @ion-change="audioStore.handleAudioSetting" :value="audioStore.audioPlayerSetting.loopAudio">
-                                        <ion-select-option value="never">{{ getLine('audio.never') }}</ion-select-option>
-                                        <ion-select-option value="once">{{ getLine('audio.once') }}</ion-select-option>
-                                        <ion-select-option value="repeat">{{ getLine('audio.repeat')
-                                            }}</ion-select-option>
-                                    </ion-select>
-
-                                </ion-item>
-                                <!-- <ion-item>
-                                    <ion-toggle @ion-change="audioStore.handleAudioSetting"
-                                        :checked="audioStore.audioPlayerSetting.fab" value="fab">
-                                        {{ getLine("settings.fab") }}</ion-toggle>
-                                </ion-item> -->
-                                <ion-item>
-                                    <ion-toggle @ion-change="audioStore.handleAudioSetting" value="dismissOnEnd"
-                                        :checked="audioStore.audioPlayerSetting.dismissOnEnd">
-                                        {{ getLine("settings.playerDismiss") }}</ion-toggle>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-toggle @ion-change="handleKeepAwake" :checked="isAwake">
-                                        {{ getLine("settings.keepAwake") }}</ion-toggle>
-                                </ion-item>
-                            </ion-list>
+                            <audio-player-settings-component
+                                @update:audio-player-settings="audioStore.handleAudioSetting"
+                                :audio-player-setting="audioStore.audioPlayerSetting">
+                            </audio-player-settings-component>
                         </div>
                     </ion-accordion>
                 </ion-accordion-group>
@@ -216,7 +187,7 @@ const aboutApp = async () => {
                                 <ion-item>
                                     <ion-select :label="getLine('settings.language')" :value="getLocaleKey"
                                         :aria-label="getLine('settings.language')" interface="popover"
-                                        :placeholder="getLocaleValue" @ion-change="settings.updateSelectedLocale">
+                                        :placeholder="getLocaleValue" @ion-change="settingsStore.updateSelectedLocale">
                                         <ion-select-option :value="locale" v-for="locale in supportedLocales"
                                             :key="locale.key">{{ locale.value }}</ion-select-option>
                                     </ion-select>
@@ -237,8 +208,8 @@ const aboutApp = async () => {
                                 <ion-item>
                                     <ion-select :aria-label="getLine('settings.darkMode')"
                                         :label="getLine('settings.theme')" :placeholder="properCase(colorScheme)"
-                                        @ion-change="settings.appleColorScheme">
-                                        <ion-select-option v-for="item in settings.colorSchemes.value" :key="item.key"
+                                        @ion-change="settingsStore.appleColorScheme">
+                                        <ion-select-option v-for="item in settingsStore.colorSchemes" :key="item.key"
                                             :value="item.key">{{ item.value }}</ion-select-option>
                                     </ion-select>
                                 </ion-item>

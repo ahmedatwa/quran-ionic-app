@@ -1,0 +1,48 @@
+{
+  "translations": [
+    {
+      "id": 85,
+      "name": "M.A.S. Abdel Haleem",
+      "author_name": "Abdul Haleem",
+      "slug": "en-haleem",
+      "language_name": "english",
+      "translated_name": {
+        "name": "M.A.S. Abdel Haleem",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 83,
+      "name": "Sheikh Isa Garcia",
+      "author_name": "Sheikh Isa Garcia",
+      "slug": "es-isa-garcia",
+      "language_name": "spanish",
+      "translated_name": {
+        "name": "Sheikh Isa Garcia",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 136,
+      "name": "Montada Islamic Foundation",
+      "author_name": "Montada Islamic Foundation",
+      "slug": null,
+      "language_name": "french",
+      "translated_name": {
+        "name": "Montada Islamic Foundation",
+        "language_name": "english"
+      }
+    },
+    {
+      "id": 153,
+      "name": "Hamza Roberto Piccardo",
+      "author_name": "Hamza Roberto Piccardo",
+      "slug": "hamza-roberto-piccardo",
+      "language_name": "italian",
+      "translated_name": {
+        "name": "Hamza Roberto Piccardo",
+        "language_name": "english"
+      }
+    }
+  ]
+}

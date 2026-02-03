@@ -1,7 +1,7 @@
 {
   "name": "quran-vue-ionic-a0twa",
   "private": true,
-  "version": "2.4.2",
+  "version": "3.2.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,14 +14,15 @@
   "dependencies": {
     "@capacitor-community/keep-awake": "7.1.0",
     "@capacitor-community/sqlite": "7.0.1",
-    "@capacitor/android": "7.4.2",
+    "@capacitor/android": "7.4.3",
     "@capacitor/app": "7.0.2",
     "@capacitor/clipboard": "7.0.2",
-    "@capacitor/core": "^7.4.2",
+    "@capacitor/core": "^7.4.3",
     "@capacitor/device": "7.0.2",
     "@capacitor/haptics": "7.0.2",
-    "@capacitor/ios": "7.4.2",
+    "@capacitor/ios": "7.4.3",
     "@capacitor/keyboard": "7.0.2",
+    "@capacitor/local-notifications": "^7.0.3",
     "@capacitor/network": "7.0.2",
     "@capacitor/status-bar": "7.0.2",
     "@fontsource-variable/noto-kufi-arabic": "5.2.6",
@@ -30,7 +31,7 @@
     "@ionic/storage": "^4.0.0",
     "@ionic/vue": "8.7.2",
     "@ionic/vue-router": "8.7.2",
-    "axios": "^1.11.0",
+    "axios": "^1.12.2",
     "buffer": "^6.0.3",
     "ionicons": "7.4.0",
     "localforage-cordovasqlitedriver": "^1.8.0",
@@ -39,7 +40,7 @@
     "vue-router": "4.5.1"
   },
   "devDependencies": {
-    "@capacitor/cli": "7.4.2",
+    "@capacitor/cli": "7.4.3",
     "@vitejs/plugin-legacy": "^6.1.1",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/eslint-config-typescript": "^12.0.0",
@@ -50,7 +51,7 @@
     "sass": "1.90.0",
     "terser": "5.43.1",
     "typescript": "5.9.2",
-    "vite": "^6.3.5",
+    "vite": "^6.3.6",
     "vitest": "^3.2.4",
     "vue-tsc": "2.2.12"
   },

@@ -146,7 +146,27 @@ type ChapterDBStorage = {
   pagination: string;
 };
 
+type ReturnChapterNameByChapterId = {
+  nameSimple: string;
+  nameArabic: string;
+  bismillahPre: boolean;
+};
+
 type ChapterAutoScrollData = { activeVerseNumber: number };
+
+type ChapterInfo = {
+  id: string;
+  chapter_id: number;
+  language_name: string;
+  short_text: string;
+  source: string;
+  text: string;
+};
+
+type ChaptersInfo = {
+  [key: string]: ChapterInfo;
+};
+
 export {
   Chapter,
   ChapterInfo,
@@ -158,4 +178,7 @@ export {
   IntersectingData,
   ChapterAutoScrollData,
   ChapterDBStorage,
+  ReturnChapterNameByChapterId,
+  ChapterInfo,
+  ChaptersInfo,
 };

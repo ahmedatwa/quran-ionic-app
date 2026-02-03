@@ -10,21 +10,21 @@ import AudioPlayerModalComponent from '@/components/audio/AudioPlayerModalCompon
 import { useAudioStore } from "@/stores/AudioStore";
 import { useRecitionsStore } from '@/stores/RecitionsStore';
 import { useJuzStore } from "@/stores/JuzStore";
+import { useVerseTimingStore } from '@/stores/VerseTimingStore';
 // composables
-import { useVerseTiming } from '@/composables/useVerseTiming';
 import { useAudioFile } from "@/composables/useAudioFile";
 
 const audioStore = useAudioStore()
 const recitionsStore = useRecitionsStore()
 const { juzList } = storeToRefs(useJuzStore())
-const { verseTiming } = useVerseTiming()
+const verseTimingStore = useVerseTimingStore()
 const { attemptFileSave } = useAudioFile()
 
 const playChapterAudio = (audioID: number) => {
     audioStore.getAudio({ audioID })
 }
 
-const isVisible = computed(() => audioStore.audioPlayerSetting.fab && audioStore.audioFiles)
+const isVisible = computed(() => audioStore.audioPlayerSetting?.fab)
 
 const isPlaying = computed(() => {
     return audioStore.isPlaying && audioStore.audioFiles?.id === audioStore.chapterId
@@ -57,15 +57,15 @@ const isPlaying = computed(() => {
             </ion-fab-list>
         </ion-fab>
         <audio-player-modal-component trigger="audio-modal-fab" :is-playing="isPlaying"
-            :is-loading="audioStore.isLoading" :verse-timing="verseTiming"
+            :is-loading="audioStore.isLoading" :verse-timing="verseTimingStore.verseTiming"
             :selected-reciter="recitionsStore.selectedReciter" :audio-files="audioStore.audioFiles"
-            :chapter-name="audioStore.chapterName" :loop-audio="audioStore.loopAudio"
+            :chapter-name="audioStore.chapterName" :loop-audio="audioStore.audioPlayerSetting?.loopAudio"
             :media-volume="audioStore.mediaVolume" :map-recitions="recitionsStore.mapRecitions"
             :progress-timer="audioStore.progressTimer" @update:change-volume="audioStore.changeMediaVolume"
             @update:seek="audioStore.playbackSeek" @update:download="attemptFileSave"
             @update:play-chapter="playChapterAudio" @update:play-next="audioStore.playNext"
             @update:play-prev="audioStore.playPrevious()" @update:play-audio="audioStore.handlePlay"
-            @update:loop-audio="audioStore.loopAudio = $event" :recently-played="audioStore.getRecentlyPlayed"
+            :recently-played="audioStore.getRecentlyPlayed"
             @update:selected-reciter="recitionsStore.handleSelectedReciter" :juzs="juzList">
         </audio-player-modal-component>
     </div>

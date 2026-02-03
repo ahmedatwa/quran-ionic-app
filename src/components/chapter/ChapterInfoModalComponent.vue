@@ -1,48 +1,55 @@
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue';
-import { IonContent, IonHeader, IonToolbar, IonTitle } from '@ionic/vue';
-import { IonButtons, IonButton, IonModal, IonText, IonIcon } from '@ionic/vue';
-import type { ChapterInfo } from '@/types/chapter';
-import { useChapterStore } from '@/stores/ChapterStore';
+import { onBeforeMount, shallowRef } from 'vue';
+import { IonContent, IonHeader, IonToolbar, IonTitle, modalController } from '@ionic/vue';
+import { IonButtons, IonButton, IonText, IonIcon } from '@ionic/vue';
 import { chevronDownOutline } from 'ionicons/icons';
+// type
+import type { ChapterInfo } from '@/types/chapter';
+// stores
+import { useChapterStore } from '@/stores/ChapterStore';
+// utils
+import { getChapterInfoByChapterId } from '@/utils/chapter';
 
-const modal = ref();
-const { getChapter } = useChapterStore()
-const chapterName = ref("")
-const dismiss = () => {
-    modal.value.$el.dismiss()
-}
+const chapterInfo = shallowRef<ChapterInfo>()
+const chapterName = shallowRef<string | undefined>()
+const { getChapterById } = useChapterStore()
+
+const dismiss = () => modalController.dismiss(null, 'cancel')
 
 const props = defineProps<{
+    chapterId: number
     pageEl?: HTMLElement
-    trigger: string
-    chapterInfo?: ChapterInfo | null
 }>()
 
-watchEffect(() => {
-    if (props.chapterInfo) {
-        const chapter = getChapter(props.chapterInfo.chapter_id)
-        if (chapter) chapterName.value = chapter?.nameSimple
+
+onBeforeMount(async () => {
+    if (props.chapterId) {
+        const [info, name] = await Promise.all([
+            getChapterInfoByChapterId(props.chapterId.toString()),
+            getChapterById(props.chapterId)
+        ])
+
+        chapterInfo.value = info
+        chapterName.value = name?.nameSimple
     }
 })
+
 </script>
 
 <template>
-    <ion-modal ref="modal" :trigger="trigger" :can-dismiss="true">
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>{{ chapterName }}</ion-title>
-                <ion-buttons slot="start">
-                    <ion-button @click="dismiss" color="medium">
+    <ion-header>
+        <ion-toolbar>
+            <ion-buttons slot="start">
+                <ion-button @click="dismiss" color="medium">
                     <ion-icon :icon="chevronDownOutline"></ion-icon>
                 </ion-button>
-                </ion-buttons>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-            <div v-if="chapterInfo">
-                <ion-text v-html="chapterInfo?.text"></ion-text>
-            </div>
-        </ion-content>
-    </ion-modal>
+            </ion-buttons>
+            <ion-title>{{ chapterName }}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+        <div v-if="chapterInfo">
+            <ion-text v-html="chapterInfo?.text"></ion-text>
+        </div>
+    </ion-content>
 </template>

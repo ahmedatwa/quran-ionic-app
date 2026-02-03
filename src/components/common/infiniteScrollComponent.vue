@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { IonInfiniteScroll, IonInfiniteScrollContent } from '@ionic/vue';
+//composables
+import { useLocale } from '@/composables/useLocale';
+// type
 import type { InfiniteScrollCustomEvent } from '@ionic/vue';
 
+const { getLine } = useLocale()
 defineProps<{
     id: string;
     length?: number
@@ -13,10 +17,9 @@ defineEmits<{
 }>()
 </script>
 <template>
-    <div v-if="length !== totalVersesCount">
-         <ion-infinite-scroll @ion-infinite="$emit('update:scroll', $event)" :id="id">
-            <ion-infinite-scroll-content loading-text="Please wait..."
-                loading-spinner="bubbles"></ion-infinite-scroll-content>
-        </ion-infinite-scroll>
-    </div>
+    <ion-infinite-scroll @ion-infinite="$emit('update:scroll', $event)" :id="id"
+        :disabled="length === totalVersesCount">
+        <ion-infinite-scroll-content v-if="length !== totalVersesCount" loading-spinner="bubbles"
+            :loading-text="getLine('text.loadingMoreVerses')"></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 </template>

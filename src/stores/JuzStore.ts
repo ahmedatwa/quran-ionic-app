@@ -1,62 +1,40 @@
 import { defineStore } from "pinia";
-import { ref, computed, onBeforeMount, watch } from "vue";
+import { ref, computed, onBeforeMount, watch, shallowRef } from "vue";
 // stores
 import { useTranslationsStore } from "@/stores/TranslationsStore";
 // types
-import type { Juz, juzVersesByPageMap } from "@/types/juz";
-import type { Verse, JSONDataPromise } from "@/types/verse";
+import type { Juz, juzVersesByPageMap, JuzVerseMapping } from "@/types/juz";
+import type { Verse } from "@/types/verse";
+import type { InfiniteScrollCustomEvent } from "@ionic/vue";
 // utils
 import { _range } from "@/utils/number";
-import { AllJuzsToChapters } from "@/utils/juz";
-// composables
-import { useAlert } from "@/composables/useAlert";
+import { AllJuzsToChapters, loadJuzsJSONData } from "@/utils/juz";
 
 export const useJuzStore = defineStore("juz-store", () => {
-  const verses = ref<Verse[]>();
   const versesTotalRecords = ref(0);
+  const totalJuzs = shallowRef(30);
   const { selectedTranslationId } = useTranslationsStore();
-  const { presentToast } = useAlert();
   const isLoading = ref(false);
   const juzList = ref<Juz[]>([]);
   const selectedJuz = ref<Juz | null>(null);
+  const selectedJuzVerses = ref<Verse[]>([]);
+  const allVerses = ref<Verse[]>([]);
+  const selectedJuzId = computed(() => selectedJuz.value?.juz_number);
+  const currentPageEnd = shallowRef();
+
   const perPage = ref(10);
 
-  const getVerses = async (
-    juzNumber: number,
-    loading: boolean,
-    page?: number,
-    limit?: number
-  ) => {
-    isLoading.value = loading;
-    page = page ? page : 1;
-    limit = limit ? limit : perPage.value;
-    const juz = juzList.value?.find((s) => s.juz_number === juzNumber);
-
+  const getVerses = async (juzNumber: number) => {
+    allVerses.value = [];
+    versesTotalRecords.value = 0;
     await loadJuzsJSONData(juzNumber)
       .then((response) => {
-        verses.value = response.verses;
+        allVerses.value = response.verses;
         versesTotalRecords.value = response.pagination.total_records;
-      })
-      .catch(async (e) => {
-        await presentToast({ message: String(e) });
       })
       .finally(() => {
         isLoading.value = false;
       });
-  };
-
-  const loadJuzsJSONData = async (
-    juzNumber: number
-  ): Promise<JSONDataPromise> => {
-    return new Promise((resolve, reject) => {
-      try {
-        import(`@jsonDataPath/juz/juz-${juzNumber}.json`).then((response) =>
-          resolve(response.default)
-        );
-      } catch (error) {
-        reject(error);
-      }
-    });
   };
 
   onBeforeMount(async () => {
@@ -74,16 +52,15 @@ export const useJuzStore = defineStore("juz-store", () => {
   });
 
   const juzVersesByChapterMap = computed((): juzVersesByPageMap | undefined => {
-    if (selectedJuz.value) {
-      if (selectedJuz.value.verses)
-        return selectedJuz.value?.verses.reduce(
-          (result: any, currentValue: Verse) => {
-            (result[currentValue.chapter_id] =
-              result[currentValue.chapter_id] || []).push(currentValue);
-            return result;
-          },
-          {}
-        );
+    if (selectedJuzVerses.value) {
+      return selectedJuzVerses.value?.reduce(
+        (result: any, currentValue: Verse) => {
+          (result[currentValue.chapter_id] =
+            result[currentValue.chapter_id] || []).push(currentValue);
+          return result;
+        },
+        {}
+      );
     }
   });
 
@@ -93,21 +70,23 @@ export const useJuzStore = defineStore("juz-store", () => {
       if (resources) {
         if (selectedJuz.value) {
           selectedJuz.value.verses = [];
-          await getVerses(selectedJuz.value?.id, true, 1);
+          await getVerses(selectedJuz.value?.id);
         }
       }
     }
   );
 
+  const getSelectedJuzChapters = computed(() => selectedJuz.value?.chapters);
+  
   const getFirstVerseOfJuz = computed(() => {
-    if (selectedJuz.value?.verses) {
-      return selectedJuz.value?.verses[0];
+    if (selectedJuzVerses.value) {
+      return selectedJuzVerses.value[0];
     }
   });
 
   const getLastVerseOfJuz = computed(() => {
-    if (selectedJuz.value) {
-      const verse = selectedJuz.value.verses?.slice(-1)[0];
+    if (selectedJuzVerses.value) {
+      const verse = selectedJuzVerses.value?.slice(-1)[0];
       if (verse) {
         return verse.verse_number;
       }
@@ -115,33 +94,93 @@ export const useJuzStore = defineStore("juz-store", () => {
     return 0;
   });
 
-  const fetchMoreJuzVerses = () => {};
+  const getLastChapterOfSelectedJuz = computed(() => {
+    if (selectedJuz.value?.chapters) {
+      return selectedJuz.value?.chapters.slice(-1)[0];
+    }
+  });
+
+  const getVersesRangeOfLastChapterInSelectedJuz = computed(() => {
+    if (getLastChapterOfSelectedJuz.value) {
+      return getLastChapterOfSelectedJuz.value.verses;
+    }
+  });
+  /**
+   * handle 2 locations 
+   * calls coming from audio store on seek 
+   * and from  infiniteScrollEvent event on manual scroll
+
+   * @param infiniteScrollEvent 
+   * @returns void
+   */
+  const fetchMoreJuzVerses = async (
+    infiniteScrollEvent?: InfiniteScrollCustomEvent
+  ) => {
+    if (infiniteScrollEvent) {
+      currentPageEnd.value = Math.ceil(
+        selectedJuzVerses.value.length + perPage.value
+      );
+      allVerses.value
+        ?.slice(selectedJuzVerses.value.length, currentPageEnd.value)
+        .forEach((v) =>
+          selectedJuzVerses.value?.push({ ...v, bookmarked: false })
+        );
+      setTimeout(() => {
+        infiniteScrollEvent.target.complete();
+      }, 200);
+    } else {
+    }
+  };
   /**
    * play next chapter and loaddata when needed
    * @param audioSrc
    * @return void
    */
-  const playNextJuz = async () => {
-    if (pageNumber) {
-      pageNumber = pageNumber >= DEFAULT_NUMBER_OF_PAGES ? 1 : pageNumber + 1;
+  const playNextJuz = async (juzNumber: number) => {
+    if (juzNumber) {
+      juzNumber = juzNumber > totalJuzs.value ? 1 : juzNumber + 1;
       // get the audio files
-      await getAudio(payload).then(() => {
-        replace(`/page/${pageNumber}`);
-      });
+      const payload = getFirstVerseOfJuz;
+      if (payload) {
+        // await audioStore
+        //   .getAudio({
+        //     audioID: getFirstVerseOfJuz.value,
+        //     verseKey: payload.verse_key,
+        //   })
+        //   .catch((e) => console.error(new Error(e)))
+        //   .finally(() => {
+        //     push({ path: `/juz/${juzNumber}`, replace: true });
+        //     //loadingVerses.value = false;
+        //   });
+      }
     }
   };
 
+  const selectedJuzVerseMapping = computed((): JuzVerseMapping | undefined => {
+    if (selectedJuz.value) {
+      return selectedJuz.value.verse_mapping;
+    }
+  });
+
   return {
     juzList,
-    verses,
+    allVerses,
+    selectedJuzId,
+    selectedJuzVerses,
     versesTotalRecords,
     isLoading,
     selectedJuz,
     juzVersesByChapterMap,
     getFirstVerseOfJuz,
     getLastVerseOfJuz,
-    playNextJuz,
+    getLastChapterOfSelectedJuz,
+    getVersesRangeOfLastChapterInSelectedJuz,
+    perPage,
+    getSelectedJuzChapters,
+    totalJuzs,
+    selectedJuzVerseMapping,
     fetchMoreJuzVerses,
+    playNextJuz,
     getVerses,
   };
 });

@@ -1,24 +1,24 @@
 @import "./fonts.scss";
 :root {
   --direct: rtl;
-  --font-family-amiri: "Amiri", serif;
-  --font-family-noto-kufi: "Noto Kufi Arabic Variable", sans-serif;
-  --font-family-hafs-nastaleeq: "hafs-nastaleeq", serif;
-  --font-family-uthman-taha-naskh: "Uthman-Taha-Naskh", serif;
+  --quran-font-family-amiri: "Amiri", serif;
+  --quran-font-family-noto-kufi: "Noto Kufi Arabic Variable", sans-serif;
+  --quran-font-family-hafs-nastaleeq: "hafs-nastaleeq", serif;
+  --quran-font-family-uthman-taha-naskh: "Uthman-Taha-Naskh", serif;
 
   /* Noto Naskh Arabic Variable', serif */
   --quran-reader-direction: rtl;
   --quran-content-title: "Gulzar", serif;
-  --font-size-1: 2.2vh;
-  --font-size-2: 2.8vh;
-  --font-size-3: 3vh;
-  --font-size-4: 3.2vh;
-  --font-size-5: 3.7vh;
-  --font-size-6: 4vh;
-  --font-size-7: 4.21vh;
-  --font-size-8: 4.7vh;
-  --font-size-9: 5.1vh;
-  --font-size-10: 5.6vh;
+  --quran-font-size-1: 2.2vh;
+  --quran-font-size-2: 2.8vh;
+  --quran-font-size-3: 3vh;
+  --quran-font-size-4: 3.2vh;
+  --quran-font-size-5: 3.7vh;
+  --quran-font-size-6: 4vh;
+  --quran-font-size-7: 4.21vh;
+  --quran-font-size-8: 4.7vh;
+  --quran-font-size-9: 5.1vh;
+  --quran-font-size-10: 5.6vh;
   --translation-font-size-1: 0.85rem;
   --translation-font-size-2: 1rem;
   --translation-font-size-3: 1.18rem;
@@ -104,7 +104,6 @@ ion-loading.custom-loading {
   text-align: end;
   display: inline-flex;
   flex-wrap: wrap;
-  line-height: 3.8vh;
 }
 
 .translations-view-col .end {
@@ -116,14 +115,11 @@ ion-loading.custom-loading {
   position: relative;
 }
 
-.translations-view-col h3 {
+.translations-view-col .word {
   font-weight: var(--font-weight-normal);
-  margin-inline: var(--spacing-micro);
-  padding: 0px 1px;
-  line-height: 3.8vh;
 }
 
-.translation {
+.translation span {
   font-weight: var(--font-weight-normal);
   margin-inline: var(--spacing-micro);
   font-size: 15px;
@@ -132,34 +128,66 @@ ion-loading.custom-loading {
 .quran-reader-content-wrapper {
   text-align: center;
   direction: rtl;
+  display: inline-block;
+  margin: 30px; 
+}
+.quran-reader-content-row {
+  flex-direction: column;
+  
+   
 }
 
-.action-sheet {
-  top: 2px;
+.reading-view-line-wrapper {
+  padding-inline-start: var(--spacing-micro);
 }
+
 .quran-reader-content-wrapper .verse-col {
-  line-height: 4.8vh;
   direction: rtl;
-  /* justify-content: center;
-  padding-inline-start: var(--spacing-xxsmall);
-  margin-inline-end: var(--gap-size);
-  margin-inline-start: var(--gap-size); */
 }
 
-.quran-reader-content-wrapper .verse-col .word {
-  display: inline-flex;
-  padding: 0px 3px;
+.quran-reader-content-wrapper .word h3 {
+  padding-inline: var(--spacing-micro);
+  padding-top: 10px;
+}
+
+.quran-translation-content-wrapper .word p {
+  padding-inline: var(--spacing-micro);
+  padding-top: 10px;
 }
 
 .quran-reader-content-wrapper .verse-col .word .end {
   font-size: small !important;
 }
-.quran-reader-content-wrapper .verse-col .word-wrapper {
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-content: center;
+
+.page-divider {
+  position: relative;
+  text-align: center;
+  float: none;
+  margin: 17px;
+  display: inline-block;
 }
 
+.page-divider::before,
+.page-divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0px;
+  width: 100%;
+  height: 1px;
+  background: #3d3d3d;
+}
+
+.page-divider .text {
+  position: relative;
+  display: inline-block;
+  padding: 2px 30px;
+  background: #3d3d3d;
+  z-index: 9;
+  color: 3d3d3d;
+  font-size: 10px;
+  border-radius: 25px;
+}
 
 /* Selected Translations Alert */
 #translation-alert .alert-button-group {
@@ -181,4 +209,3 @@ ion-loading.custom-loading {
 .d-none {
   display: none !important;
 }
-
